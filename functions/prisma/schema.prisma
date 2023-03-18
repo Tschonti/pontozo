@@ -11,7 +11,7 @@ datasource db {
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-model Aspect {
+model Criteria {
   id  Int @id @default(autoincrement())
   name String
   description String
