@@ -1,16 +1,23 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
+import prisma from "../lib/prisma";
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     context.log('HTTP trigger function processed a request.');
     const name = (req.query.name || (req.body && req.body.name));
-    const responseMessage = name
-        ? "Hello, " + name + ". This HTTP triggered function executed successfully."
-        : "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.";
+    try {
+        const aspect = await prisma.aspect.create({data: {name, description: 'Az első szempont', minValue: 0, maxValue: 3, weight: 100}})
 
-    context.res = {
-        // status: 200, /* Defaults to 200 */
-        body: responseMessage
-    };
+        context.res = {
+            body: aspect
+        };
+    } catch (e) {
+        console.log(e)
+        context.res = {
+            status: 400,
+            body: e
+        }
+    }
+
 
 };
 
