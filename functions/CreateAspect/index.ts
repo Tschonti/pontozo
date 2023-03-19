@@ -5,10 +5,10 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
     context.log('HTTP trigger function processed a request.');
     const name = (req.query.name || (req.body && req.body.name));
     try {
-        const aspect = await prisma.aspect.create({data: {name, description: 'Az első szempont', minValue: 0, maxValue: 3, weight: 100}})
+        //const aspect = await prisma.aspect.create({data: {name, description: 'Az első szempont', minValue: 0, maxValue: 3, weight: 100}})
 
         context.res = {
-            body: aspect
+            body: "alma"
         };
     } catch (e) {
         console.log(e)
