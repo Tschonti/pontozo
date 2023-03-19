@@ -6,7 +6,7 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
     const name = (req.query.name || (req.body && req.body.name));
     try {
         const criteria = await prisma.criteria.create({data: {name, description: 'Az első szempont', minValue: 0, maxValue: 3, weight: 100}})
-
+        context.log('Query executed!' + criteria)
         context.res = {
             body: criteria
         };
