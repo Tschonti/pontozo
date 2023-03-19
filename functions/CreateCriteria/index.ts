@@ -5,13 +5,13 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
     context.log('HTTP trigger function processed a request.');
     const name = (req.query.name || (req.body && req.body.name));
     try {
-        const criteria = await prisma.asper.create({data: {name, description: 'Az első szempont', minValue: 0, maxValue: 3, weight: 100}})
+        const criteria = await prisma.criteria.create({data: {name, description: 'Az első szempont', minValue: 0, maxValue: 3, weight: 100}})
         context.log('Query executed!' + criteria)
         context.res = {
             body: criteria
         };
     } catch (e) {
-        console.log(e)
+        context.log(e)
         context.res = {
             status: 400,
             body: e
