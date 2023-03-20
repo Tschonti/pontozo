@@ -12,11 +12,13 @@
   },
   "dependencies": {
     "@prisma/client": "^4.11.0",
+    "mssql": "^9.1.1",
     "prisma": "^4.11.0",
     "rimraf": "^3.0.2"
   },
   "devDependencies": {
     "@azure/functions": "^3.0.0",
+    "@types/mssql": "^8.1.2",
     "@types/node": "^16.x",
     "typescript": "^4.0.0"
   }
