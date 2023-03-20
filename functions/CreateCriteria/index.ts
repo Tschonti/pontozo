@@ -8,7 +8,7 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
     const name = (req.query.name || (req.body && req.body.name));
     try {
         //const criteria = await prisma.criteria.create({data: {name, description: 'Az első szempont', minValue: 0, maxValue: 3, weight: 100}})
-        const config: config = {user: 'sa', password: process.env.DATABASE_URL, database: 'pontozo-db', server: 'pontozo-db-server.database.windows.net',port: 1433,
+        const config: config = {user: 'dbadmin', password: process.env.DATABASE_URL, database: 'pontozo-db', server: 'pontozo-db-server.database.windows.net',port: 1433,
     options: {trustServerCertificate: true}}
         await connect(config)
         const b = await query("SELECT 1")
