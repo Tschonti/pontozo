@@ -34,7 +34,13 @@ Criterion.init({
         type: DataTypes.INTEGER,
         allowNull: false
     }
-}, {sequelize: seq, modelName: 'Criterion', tableName: 'Criteria'})
+}, {sequelize: seq, modelName: 'Criterion', tableName: 'Criteria', validate: {
+    maxBiggerThanMin() {
+        if (this.minValue >= this.maxValue) {
+            throw new Error("minValue must be smaller than maxValue!")
+        }
+    }
+}})
 
 export class Rating extends Model {}
 

@@ -1,6 +1,6 @@
-import { QueryClient } from '@tanstack/react-query'
 import { Route, Routes } from 'react-router-dom'
 import { PLayout } from './components/commons/PLayout'
+import { CriteriaCreatePage } from './pages/criteria/CriteriaCreate.page'
 import { CriteriaListPage } from './pages/criteria/CriteriaList.page'
 import { CriterionDetailsPage } from './pages/criteria/CriterionDetails.page'
 import { IndexPage } from './pages/index/Index.page'
@@ -15,6 +15,9 @@ export const App = () => {
           <Route path={PATHS.CRITERIA}>
             <Route path=":criterionId">
               <Route index element={<CriterionDetailsPage />} />
+            </Route>
+            <Route path="new">
+              <Route index element={<CriteriaCreatePage />} />
             </Route>
             <Route index element={<CriteriaListPage />} />
           </Route>
