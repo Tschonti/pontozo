@@ -51,7 +51,14 @@ Rating.init({
             isInt: true
         }
     }
-}, {sequelize: seq, modelName: 'Rating'})
+}, {sequelize: seq, modelName: 'Rating', validate: {
+    async validateForeignKey() {
+        const criterion = await Criterion.findByPk(this.criterionId)
+        if (!criterion) {
+            throw new Error("Non-existent criterion!")
+        }
+    }
+}})
 
 Criterion.hasMany(Rating, {foreignKey: {allowNull: false, name: 'criterionId'}, onDelete: 'CASCADE'})
 Rating.belongsTo(Criterion, {foreignKey: {allowNull: false, name: 'criterionId'}, onDelete: 'CASCADE'})
