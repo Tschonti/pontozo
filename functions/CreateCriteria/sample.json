@@ -1,0 +1,6 @@
+{
+    "name": "Teszt szempont",
+    "description": "Ezt a szempontot tesztelésre lett létrehozva.",
+    "minValue": 1,
+    "weight": 3
+}
