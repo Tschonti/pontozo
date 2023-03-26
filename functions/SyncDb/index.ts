@@ -1,19 +1,19 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
-import { Criterion } from "../sequelize/models/criterion";
+import seq from "../sequelize/config";
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
-    context.log('HTTP trigger function processed a request.');
     try {
-        const criteria = await Criterion.findAll();
+        const alter = !!req.query?.alter
+        await seq.sync({alter})
         context.res = {
-            body: criteria
-        };
-      } catch (error) {
+            body: 'Schema synced!'
+        }
+    } catch (e) {
         context.res = {
             status: 500,
-            body: error
+            body: e
         }
-      }
+    }
 
 };
 
