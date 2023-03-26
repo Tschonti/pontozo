@@ -1,8 +1,7 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
-import { Criterion } from "../sequelize/models/criterion";
+import { Criterion } from "../sequelize/models";
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
-    context.log('HTTP trigger function processed a request.');
     try {
         const criteria = await Criterion.findAll();
         context.res = {

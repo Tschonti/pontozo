@@ -1,6 +1,5 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
-import seq from "../sequelize/config";
-import { Criterion } from "../sequelize/models";
+import { Rating } from "../sequelize/models";
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     if (!req.body) {
@@ -12,9 +11,9 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
       }
     try {
         context.log(req.body)
-        const criterion = await Criterion.create(req.body)
+        const rating = await Rating.create(req.body)
         context.res = {
-            body: criterion
+            body: rating
         };
     } catch (e) {
         context.log(e)
@@ -23,7 +22,6 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
             body: e
         }
     }
-
 };
 
 export default httpTrigger;
