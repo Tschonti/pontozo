@@ -1,5 +1,6 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
-import { Criterion, Rating } from "../sequelize/models/models";
+import {AppDataSource} from "../lib/typeorm/config";
+import { Criterion } from "../lib/typeorm/entities/Criterion";
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const id = context.bindingData.id as number
@@ -11,7 +12,7 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
         return
     }
     try {
-        const criteria = await Criterion.findByPk(id, {include: Rating});
+        const criteria = await AppDataSource.manager.findOneBy(Criterion, {id})
         if (!criteria) {
             context.res = {
                 status: 404,

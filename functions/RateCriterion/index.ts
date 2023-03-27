@@ -1,5 +1,6 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
-import { Rating } from "../sequelize/models/models";
+import {AppDataSource} from "../lib/typeorm/config";
+import { Rating } from "../lib/typeorm/entities/Rating";
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     if (!req.body) {
@@ -10,10 +11,10 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
         return
       }
     try {
-        context.log(req.body)
-        const rating = await Rating.create(req.body)
+        const rating = await AppDataSource.createQueryBuilder().insert().into(Rating).values(req.body).execute()
+
         context.res = {
-            body: rating
+            body: rating.raw
         };
     } catch (e) {
         context.log(e)
