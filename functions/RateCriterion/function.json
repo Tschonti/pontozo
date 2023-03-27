@@ -15,5 +15,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/RateCriteria/index.js"
+  "scriptFile": "../dist/RateCriterion/index.js"
 }

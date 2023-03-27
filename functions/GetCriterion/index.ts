@@ -1,5 +1,5 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
-import { Criterion, Rating } from "../sequelize/models";
+import { Criterion, Rating } from "../sequelize/models/models";
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const id = context.bindingData.id as number

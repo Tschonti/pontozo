@@ -1,6 +1,6 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
-import seq from "../sequelize/config";
-import { Criterion } from "../sequelize/models";
+import seq from "../sequelize/config/config";
+import { Criterion } from "../sequelize/models/models";
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     if (!req.body) {

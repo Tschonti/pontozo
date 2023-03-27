@@ -1,5 +1,5 @@
 import { DataTypes, Model } from "sequelize";
-import seq from "./config";
+import seq from "../config/config";
 
 export class Criterion extends Model {}
 

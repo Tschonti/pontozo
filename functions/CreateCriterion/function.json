@@ -15,5 +15,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/CreateCriteria/index.js"
+  "scriptFile": "../dist/CreateCriterion/index.js"
 }
