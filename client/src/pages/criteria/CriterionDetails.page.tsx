@@ -1,8 +1,10 @@
 import { Box, Button, Heading, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Spinner, Text } from '@chakra-ui/react'
 import { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { FaArrowLeft } from 'react-icons/fa'
+import { Link, useParams } from 'react-router-dom'
 import { useRateCriteriaMutation } from '../../api/hooks/criteriaMutationHook'
 import { useFetchCriterion } from '../../api/hooks/criteriaQueryHook'
+import { PATHS } from '../../util/paths'
 
 export const CriterionDetailsPage = () => {
   const { criterionId } = useParams()
@@ -36,6 +38,9 @@ export const CriterionDetailsPage = () => {
           <Text>{r.value}</Text>
         </Box>
       ))}
+      <Button as={Link} to={PATHS.CRITERIA} leftIcon={<FaArrowLeft />}>
+        Vissza
+      </Button>
     </>
   )
 }

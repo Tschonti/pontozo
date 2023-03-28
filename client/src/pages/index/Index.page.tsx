@@ -1,6 +1,8 @@
 import { Button, Heading, Input } from '@chakra-ui/react'
 import axios from 'axios'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { PATHS } from '../../util/paths'
 
 export const IndexPage = () => {
   const [name, setName] = useState('John')
@@ -22,6 +24,9 @@ export const IndexPage = () => {
       <Input type="text" value={name} onChange={(e) => setName(e.target.value)} />
       <Button colorScheme="orange" onClick={onPostClick}>
         POST
+      </Button>
+      <Button as={Link} to={PATHS.CRITERIA}>
+        Admin oldal
       </Button>
     </>
   )

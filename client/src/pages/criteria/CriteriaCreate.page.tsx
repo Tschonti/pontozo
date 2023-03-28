@@ -1,6 +1,7 @@
-import { Button, Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Heading, HStack, Input, VStack } from '@chakra-ui/react'
-import { useForm, SubmitHandler } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, HStack, Input, VStack } from '@chakra-ui/react'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { FaArrowLeft } from 'react-icons/fa'
+import { Link, useNavigate } from 'react-router-dom'
 import { useCreateCriterionMutation } from '../../api/hooks/criteriaMutationHook'
 import { CreateCriterion } from '../../api/model/criterion'
 import { PATHS } from '../../util/paths'
@@ -66,9 +67,14 @@ export const CriteriaCreatePage = () => {
           <FormErrorMessage>Kötelező megadni a szempont súlyát.</FormErrorMessage>
         </FormControl>
 
-        <Button type="submit" colorScheme="green" onClick={handleSubmit(onSubmit)}>
-          Mentés
-        </Button>
+        <Flex width="100%" justifyContent="space-between">
+          <Button as={Link} to={PATHS.CRITERIA} leftIcon={<FaArrowLeft />}>
+            Vissza
+          </Button>
+          <Button type="submit" colorScheme="green" onClick={handleSubmit(onSubmit)}>
+            Mentés
+          </Button>
+        </Flex>
       </VStack>
     </>
   )
