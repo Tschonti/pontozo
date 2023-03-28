@@ -1,6 +1,6 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
 import {AppDataSource} from "../lib/typeorm/config";
-import  Rating  from "../lib/typeorm/entities/Rating";
+import Rating from "../lib/typeorm/entities/Rating";
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const id = context.bindingData.id as number
