@@ -16,6 +16,7 @@ env:
   DB_PWD: ${{ secrets.DB_PWD }}
   DB_SERVER: ${{ secrets.DB_SERVER }}
   DB_NAME: ${{ secrets.DB_NAME }}
+  ENCRYPT: true
 
 jobs:
   build-and-deploy:

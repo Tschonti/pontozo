@@ -9,6 +9,8 @@
     "prestart": "npm run build",
     "start": "func start",
     "typeorm": "typeorm-ts-node-esm",
+    "mig:gen": "typeorm-ts-node-esm migration:generate",
+    "mig:run": "typeorm-ts-node-esm migration:run -d ./lib/typeorm/config.ts",
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {
