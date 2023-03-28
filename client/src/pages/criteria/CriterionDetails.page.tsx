@@ -31,7 +31,7 @@ export const CriterionDetailsPage = () => {
         Mentés
       </Button>
       <Heading size="md">Értékelések</Heading>
-      {data?.Ratings.map((r) => (
+      {data?.ratings.map((r) => (
         <Box key={r.id}>
           <Text>{r.value}</Text>
         </Box>

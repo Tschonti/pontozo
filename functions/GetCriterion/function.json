@@ -8,7 +8,7 @@
       "methods": [
         "get"
       ],
-      "route": "GetCriterion/{id}"
+      "route": "criteria/{id}"
     },
     {
       "type": "http",

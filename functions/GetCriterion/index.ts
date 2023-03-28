@@ -1,6 +1,5 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
-import {AppDataSource} from "../lib/typeorm/config";
-import { Criterion } from "../lib/typeorm/entities/Criterion";
+import { criterionRepo } from "../lib/typeorm/repositories";
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const id = context.bindingData.id as number
@@ -12,7 +11,7 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
         return
     }
     try {
-        const criteria = await AppDataSource.manager.findOneBy(Criterion, {id})
+        const criteria = await criterionRepo.findOneBy({id})
         if (!criteria) {
             context.res = {
                 status: 404,

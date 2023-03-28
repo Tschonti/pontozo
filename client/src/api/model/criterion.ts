@@ -10,7 +10,7 @@ export interface Criterion {
 }
 
 export interface CriterionDetails extends Criterion {
-  Ratings: Rating[]
+  ratings: Rating[]
 }
 
 export type CreateCriterion = Omit<Criterion, 'id'>

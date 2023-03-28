@@ -1,6 +1,5 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
-import {AppDataSource} from "../lib/typeorm/config";
-import { Criterion } from "../lib/typeorm/entities/Criterion";
+import { criterionRepo } from "../lib/typeorm/repositories";
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     if (!req.body) {
@@ -11,10 +10,11 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
         return
       }
     try {
-        const criterion = await AppDataSource.createQueryBuilder().insert().into(Criterion).values(req.body).execute()
+        //const criterion = await AppDataSource.createQueryBuilder().insert().into(Criterion).values(req.body).execute()
+        const c = await criterionRepo.createQueryBuilder().insert().values(req.body).execute()
 
         context.res = {
-            body: criterion.raw
+            body: c.raw
         };
     } catch (e) {
         context.log(e)

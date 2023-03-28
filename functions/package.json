@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "prebuild": "rimraf dist",
+    "prebuild": "rimraf dist && typeorm-ts-node-esm migration:run -d ./lib/typeorm/config.ts",
     "build": "tsc",
     "watch": "tsc -w",
     "prestart": "npm run build",

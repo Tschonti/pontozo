@@ -1,9 +1,8 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
-import {AppDataSource} from "../config"
-import { Rating } from "./Rating"
+import  Rating  from "./Rating"
 
 @Entity()
-export class Criterion {
+class Criterion {
     @PrimaryGeneratedColumn()
     id: number
 
@@ -22,8 +21,8 @@ export class Criterion {
     @Column()
     weight: number
 
-    @OneToMany(() => Rating, (r) => r.criterion)
+    @OneToMany(() => Rating, (r) => r.criterion, {eager: true})
     ratings: Rating[]
 }
 
-export const criterionRepository = AppDataSource.getRepository(Criterion)
+export default Criterion
