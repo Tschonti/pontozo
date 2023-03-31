@@ -1,5 +1,6 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions'
-import { ratingRepo } from '../lib/typeorm/repositories'
+import { getAppDataSource } from '../lib/typeorm/config'
+import Rating from '../lib/typeorm/entities/Rating'
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
   const id = context.bindingData.id as number
@@ -17,6 +18,8 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
     }
     return
   }
+  const ratingRepo = (await getAppDataSource()).getRepository(Rating)
+
   try {
     const rating = await ratingRepo.insert({ criterion: { id }, value: req.body.value })
     context.res = {

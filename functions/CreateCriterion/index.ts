@@ -1,5 +1,6 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions'
-import { criterionRepo } from '../lib/typeorm/repositories'
+import { getAppDataSource } from '../lib/typeorm/config'
+import Criterion from '../lib/typeorm/entities/Criterion'
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
   if (!req.body) {
@@ -9,6 +10,7 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
     }
     return
   }
+  const criterionRepo = (await getAppDataSource()).getRepository(Criterion)
   try {
     const res = await criterionRepo.insert(req.body)
     context.res = {
