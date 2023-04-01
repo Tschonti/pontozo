@@ -16,6 +16,8 @@ jobs:
     name: Build and Deploy Job
     env:
       REACT_APP_API_HOST: https://pontozo.azurewebsites.net/api
+      REACT_APP_CLIENT_ID: ${{ secrets.REACT_APP_CLIENT_ID }}
+      REACT_APP_CLIENT_SECRET: ${{ secrets.REACT_APP_CLIENT_SECRET }}
     steps:
       - uses: actions/checkout@v2
         with:
