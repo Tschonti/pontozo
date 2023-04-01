@@ -2,10 +2,12 @@ import { Button, Heading, Input } from '@chakra-ui/react'
 import axios from 'axios'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useFetchEventsLastMonth } from '../../api/hooks/eventQueryHooks'
 import { PATHS } from '../../util/paths'
 
 export const IndexPage = () => {
   const [name, setName] = useState('John')
+  const query = useFetchEventsLastMonth()
   const onGetClick = async () => {
     const res = await axios.get('/GetCriteria')
     console.log(res)
