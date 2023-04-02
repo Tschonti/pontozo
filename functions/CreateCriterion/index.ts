@@ -1,6 +1,6 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions'
-import { getAppDataSource } from '../lib/typeorm/config'
 import Criterion from '../lib/typeorm/entities/Criterion'
+import { getAppDataSource } from '../lib/typeorm/getConfig'
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
   if (!req.body) {

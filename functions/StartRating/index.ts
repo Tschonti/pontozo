@@ -1,16 +1,8 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions'
-import CriterionRating from '../lib/typeorm/entities/CriterionRating'
+import EventRating from '../lib/typeorm/entities/EventRating'
 import { getAppDataSource } from '../lib/typeorm/getConfig'
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
-  const id = context.bindingData.id as number
-  if (isNaN(id)) {
-    context.res = {
-      status: 400,
-      body: 'Invalid eventRating id!'
-    }
-    return
-  }
   if (!req.body) {
     context.res = {
       status: 400,
@@ -18,12 +10,11 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
     }
     return
   }
-  const ratingRepo = (await getAppDataSource()).getRepository(CriterionRating)
-
+  const ratingRepo = (await getAppDataSource()).getRepository(EventRating)
   try {
-    const rating = await ratingRepo.insert({ criterion: { id: req.body.criterionId }, value: req.body.value, eventRating: { id } })
+    const res = await ratingRepo.insert({ ...req.body, createdAt: new Date() })
     context.res = {
-      body: rating.raw
+      body: res.raw
     }
   } catch (e) {
     context.log(e)
