@@ -21,9 +21,15 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
   const ratingRepo = (await getAppDataSource()).getRepository(CriterionRating)
 
   try {
-    const rating = await ratingRepo.insert({ criterion: { id: req.body.criterionId }, value: req.body.value, eventRating: { id } })
+    const rating = await ratingRepo.findOneBy({ criterion: { id: req.body.criterionId }, eventRating: { id } })
+    if (rating === null) {
+      await ratingRepo.insert({ criterion: { id: req.body.criterionId }, value: req.body.value, eventRating: { id } })
+    } else {
+      rating.value = req.body.value
+      await ratingRepo.save(rating)
+    }
     context.res = {
-      body: rating.raw
+      status: 204
     }
   } catch (e) {
     context.log(e)

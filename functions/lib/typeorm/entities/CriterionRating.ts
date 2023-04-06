@@ -1,8 +1,9 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm'
 import Criterion from './Criterion'
 import EventRating from './EventRating'
 
 @Entity()
+@Unique(['criterion', 'eventRating'])
 class CriterionRating {
   @PrimaryGeneratedColumn()
   id: number
