@@ -14,5 +14,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/func-criteria-create/index.js"
+  "scriptFile": "../dist/func-ratings-create/index.js"
 }

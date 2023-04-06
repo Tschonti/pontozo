@@ -1,6 +1,8 @@
 {
-    "name": "Teszt szempont",
-    "description": "Ezt a szempontot tesztelésre lett létrehozva.",
-    "minValue": 1,
-    "weight": 3
+  "name": "Teszt szempont",
+  "description": "Ezt a szempontot tesztelésre lett létrehozva.",
+  "minValue": 1,
+  "maxValue": 3,
+  "weight": 3,
+  "roles": ["COMPETITOR"]
 }

@@ -1,35 +1,36 @@
-import { Button, Heading, Input } from '@chakra-ui/react'
-import axios from 'axios'
-import { useState } from 'react'
+import { Button, Flex, Heading, SimpleGrid, Spinner } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { useFetchEventsLastMonth } from '../../api/hooks/eventQueryHooks'
 import { PATHS } from '../../util/paths'
+import { EventListItem } from './components/EventListItem'
 
 export const IndexPage = () => {
-  const [name, setName] = useState('John')
-  const query = useFetchEventsLastMonth()
-  const onGetClick = async () => {
-    const res = await axios.get('/GetCriteria')
-    console.log(res)
+  const { data, isLoading, error } = useFetchEventsLastMonth()
+
+  if (isLoading) {
+    return <Spinner />
   }
 
-  const onPostClick = async () => {
-    const res = await axios.post('/CreateCriteria', { name })
-    console.log(res)
+  if (error) {
+    console.error(error)
+    return null
   }
   return (
     <>
-      <Heading>Pontoz-O</Heading>
-      <Button colorScheme="green" onClick={onGetClick}>
-        GET
-      </Button>
-      <Input type="text" value={name} onChange={(e) => setName(e.target.value)} />
-      <Button colorScheme="orange" onClick={onPostClick}>
-        POST
-      </Button>
-      <Button as={Link} to={PATHS.CRITERIA}>
-        Admin oldal
-      </Button>
+      <Flex justify="space-between" my={3}>
+        <Heading>Pontoz-O</Heading>
+        <Button colorScheme="green" as={Link} to={PATHS.CRITERIA}>
+          Admin oldal
+        </Button>
+      </Flex>
+
+      <SimpleGrid spacing={4} columns={2}>
+        {data?.result
+          .sort((e1, e2) => -e1.datum_tol.localeCompare(e2.datum_tol))
+          .map((e) => (
+            <EventListItem key={e.esemeny_id} event={e} />
+          ))}
+      </SimpleGrid>
     </>
   )
 }

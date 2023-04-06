@@ -12,7 +12,7 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
   }
   const criterionRepo = (await getAppDataSource()).getRepository(Criterion)
   try {
-    const res = await criterionRepo.insert(req.body)
+    const res = await criterionRepo.insert({ ...req.body, roles: JSON.stringify(req.body.roles) })
     context.res = {
       body: res.raw
     }
