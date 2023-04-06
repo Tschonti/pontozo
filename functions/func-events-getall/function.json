@@ -5,8 +5,8 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": ["post"],
-      "route": "ratings/{id}"
+      "methods": ["get"],
+      "route": "events"
     },
     {
       "type": "http",
@@ -14,5 +14,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/RateCriterion/index.js"
+  "scriptFile": "../dist/func-events-getall/index.js"
 }

@@ -18,9 +18,10 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
   }
   const url = new URL('esemenyek', 'https://api.mtfsz.hu/api/v1_0/')
   const today = new Date()
-  const oneMonthAgo = new Date(today.getTime() - 300 * 24 * 60 * 60 * 1000)
+  const oneMonthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000)
   url.searchParams.append('datum_tol', formatDate(oneMonthAgo))
   url.searchParams.append('datum_ig', formatDate(today))
+  url.searchParams.append('tipus', 'VERSENY')
   url.searchParams.append('exclude_deleted', 'true')
   const events = (await axios.get(url.toString(), { headers: { Authorization: `Bearer ${res.data.access_token}` } })).data
   context.res = {

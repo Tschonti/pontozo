@@ -5,9 +5,7 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": [
-        "get"
-      ],
+      "methods": ["get"],
       "route": "criteria"
     },
     {
@@ -16,5 +14,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/GetCriteria/index.js"
+  "scriptFile": "../dist/func-criteria-getall/index.js"
 }

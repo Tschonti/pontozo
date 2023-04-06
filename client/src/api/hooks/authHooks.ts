@@ -18,7 +18,8 @@ export const useGetAccessToken = () => {
         Cookies.set(CookieKeys.ACCESS_TOKEN, res.access_token)
       },
       refetchInterval: 60 * 60 * 1000,
-      retry: false
+      retry: false,
+      enabled: false // TODO
     }
   )
 }

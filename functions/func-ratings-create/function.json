@@ -5,10 +5,8 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": [
-        "get"
-      ],
-      "route": "criteria/{id}"
+      "methods": ["post"],
+      "route": "ratings"
     },
     {
       "type": "http",
@@ -16,5 +14,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/GetCriterion/index.js"
+  "scriptFile": "../dist/func-criteria-create/index.js"
 }
