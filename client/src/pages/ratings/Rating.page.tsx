@@ -1,6 +1,7 @@
-import { Heading, Spinner, Text } from '@chakra-ui/react'
+import { Heading, Spinner } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { useFetchRatingQuery } from '../../api/hooks/ratingHooks'
+import { CriterionRateForm } from './components/CriterionRateForm'
 
 export const RatingPage = () => {
   const { ratingId } = useParams()
@@ -19,7 +20,7 @@ export const RatingPage = () => {
     <>
       <Heading>{data?.eventId} értékelése</Heading>
       {data?.criteria.map((c) => (
-        <Text>{c.name}</Text>
+        <CriterionRateForm criterion={c} eventRatingId={+ratingId!!} key={c.id} />
       ))}
     </>
   )
