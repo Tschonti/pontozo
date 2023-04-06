@@ -1,21 +1,42 @@
-import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, HStack, Input, VStack } from '@chakra-ui/react'
+import { Button, Checkbox, Flex, FormControl, FormErrorMessage, FormLabel, Heading, HStack, Input, VStack } from '@chakra-ui/react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCreateCriterionMutation } from '../../api/hooks/criteriaMutationHook'
 import { CreateCriterion } from '../../api/model/criterion'
+import { RatingRole } from '../../api/model/rating'
+import { onlyUnique } from '../../util/onlyUnique'
 import { PATHS } from '../../util/paths'
+import { ratingRolesArray, translateRole } from '../../util/ratingRoleHelpers'
 
 export const CriteriaCreatePage = () => {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors }
   } = useForm<CreateCriterion>()
   const navigate = useNavigate()
   const createMutation = useCreateCriterionMutation()
   const onSubmit: SubmitHandler<CreateCriterion> = (formData) => {
     createMutation.mutate(formData, { onSuccess: (data) => navigate(`${PATHS.CRITERIA}/${data[0].id}`) })
+  }
+
+  const generateChangeFn = (value: RatingRole) => {
+    return (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.checked) {
+        setValue('roles', [...watch('roles'), value].filter(onlyUnique), { shouldValidate: true })
+      } else {
+        setValue(
+          'roles',
+          watch('roles')
+            .filter((v) => v !== value)
+            .filter(onlyUnique),
+          { shouldValidate: true }
+        )
+      }
+    }
   }
   return (
     <>
@@ -63,8 +84,22 @@ export const CriteriaCreatePage = () => {
 
         <FormControl isInvalid={!!errors.weight}>
           <FormLabel>Súly</FormLabel>
-          <Input type="number" {...register('weight', { required: true })} />
+          <Input type="number" {...register('weight', { required: true, valueAsNumber: true })} />
           <FormErrorMessage>Kötelező megadni a szempont súlyát.</FormErrorMessage>
+        </FormControl>
+
+        <FormControl isInvalid={!!errors.roles}>
+          <FormLabel>Szerepkörök, akik számára elérhető</FormLabel>
+          <Input {...register('roles', { validate: (v) => v.length > 0 })} hidden />
+          <VStack alignItems="flex-start">
+            {ratingRolesArray.map((r) => (
+              <Checkbox key={r} onChange={generateChangeFn(r)}>
+                {translateRole[r]}
+              </Checkbox>
+            ))}
+          </VStack>
+
+          <FormErrorMessage>Kötelező legalább egy szerepkört kiválasztani.</FormErrorMessage>
         </FormControl>
 
         <Flex width="100%" justifyContent="space-between">

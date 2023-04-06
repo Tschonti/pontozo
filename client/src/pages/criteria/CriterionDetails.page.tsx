@@ -1,15 +1,9 @@
-import { Box, Button, Heading, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Spinner, Text } from '@chakra-ui/react'
-import { useState } from 'react'
-import { FaArrowLeft } from 'react-icons/fa'
-import { Link, useParams } from 'react-router-dom'
-import { useRateCriteriaMutation } from '../../api/hooks/criteriaMutationHook'
-import { useFetchCriterion } from '../../api/hooks/criteriaQueryHook'
-import { PATHS } from '../../util/paths'
+//import { useRateCriteriaMutation } from '../../api/hooks/criteriaMutationHook'
 
 export const CriterionDetailsPage = () => {
-  const { criterionId } = useParams()
+  /*const { criterionId } = useParams()
   const { isLoading, error, data, refetch } = useFetchCriterion(+criterionId!!, (data) => setRating(data.minValue))
-  const rateMutation = useRateCriteriaMutation(+criterionId!!)
+  //const rateMutation = useRateCriteriaMutation(+criterionId!!)
   const [rating, setRating] = useState(0)
   if (isLoading) {
     return <Spinner />
@@ -17,8 +11,8 @@ export const CriterionDetailsPage = () => {
   if (error) {
     console.error(error)
     return null
-  }
-  return (
+  }*/
+  return null /*(
     <>
       <Heading>{data?.name}</Heading>
       <Text>{data?.description}</Text>
@@ -42,5 +36,5 @@ export const CriterionDetailsPage = () => {
         Vissza
       </Button>
     </>
-  )
+  )*/
 }

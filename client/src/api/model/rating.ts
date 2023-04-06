@@ -1,6 +1,13 @@
-export interface Rating {
+import { Criterion } from './criterion'
+
+export interface EventRating {
   id: number
-  value: number
+  eventId: number
+  /*ratings: CriterionRating*/
+  //status: RatingStatus
+  role: RatingRole
+  createdAt: Date
+  submittedAt?: Date
 }
 
 export enum RatingRole {
@@ -13,4 +20,8 @@ export enum RatingRole {
 export interface StartRatingDto {
   eventId: number
   role: RatingRole
+}
+
+export interface RatingWithCriterionDto extends EventRating {
+  criteria: Criterion[]
 }

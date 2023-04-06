@@ -1,15 +1,16 @@
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { API_HOST } from '../../util/environment'
-import { CreateCriterion, Criterion } from '../model/criterion'
-import { Rating } from '../model/rating'
+import { CreateCriterion } from '../model/criterion'
 
 export type CreateResponse = {
   id: number
 }
 
-export const useRateCriteriaMutation = (criterionId: number) => {
-  return useMutation<Rating, Error, number>(async (value) => (await axios.post(`${API_HOST}/criteria/${criterionId}/rate`, { value })).data)
+export const useRateCriteriaMutation = (ratingId: number, criterionId: number) => {
+  return useMutation<unknown, Error, number>(
+    async (value) => (await axios.post(`${API_HOST}/ratings/${ratingId}`, { value, criterionId })).data
+  )
 }
 
 export const useCreateCriterionMutation = () => {

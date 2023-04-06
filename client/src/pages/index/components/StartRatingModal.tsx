@@ -14,18 +14,21 @@ import {
   useDisclosure
 } from '@chakra-ui/react'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useStartRatingMutation } from '../../../api/hooks/ratingHooks'
 import { Event } from '../../../api/model/event'
 import { RatingRole } from '../../../api/model/rating'
+import { PATHS } from '../../../util/paths'
 
 export const StartRatingModal = ({ event }: { event: Event }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [role, setRole] = useState<RatingRole | undefined>()
   const startRating = useStartRatingMutation()
+  const nav = useNavigate()
 
   const onSubmit = () => {
     if (role) {
-      startRating.mutate({ eventId: event.esemeny_id, role })
+      startRating.mutate({ eventId: event.esemeny_id, role }, { onSuccess: (res) => nav(`${PATHS.RATINGS}/${res[0].id}`) })
     }
   }
 

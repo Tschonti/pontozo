@@ -1,4 +1,4 @@
-import { Rating } from './rating'
+import { EventRating, RatingRole } from './rating'
 
 export interface Criterion {
   id: number
@@ -7,10 +7,11 @@ export interface Criterion {
   minValue: number
   maxValue: number
   weight: number
+  roles: RatingRole[]
 }
 
 export interface CriterionDetails extends Criterion {
-  ratings: Rating[]
+  ratings: EventRating[]
 }
 
 export type CreateCriterion = Omit<Criterion, 'id'>
