@@ -1,27 +1,29 @@
 {
-    "azureFunctions.deploySubpath": "",
-    "azureFunctions.postDeployTask": "npm install (functions)",
-    "azureFunctions.projectLanguage": "TypeScript",
-    "azureFunctions.projectRuntime": "~4",
-    "debug.internalConsoleOptions": "neverOpen",
-    "azureFunctions.preDeployTask": "npm prune (functions)",
-    "azureFunctions.requestTimeout": 100,
-    "editor.tabSize": 2,
-    "editor.insertSpaces": true,
-    "editor.renderWhitespace": "boundary",
-    "editor.rulers": [140],
-    "editor.formatOnSave": true,
-    "files.encoding": "utf8",
-    "files.trimTrailingWhitespace": true,
-    "files.insertFinalNewline": true,
-    "search.exclude": {
-      "public/**": true,
-      "node_modules/**": true
-    },
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": true,
-      "source.formatDocument": true,
-      "source.fixAll.eslint": true
-    }
+  "azureFunctions.deploySubpath": ".",
+  "azureFunctions.postDeployTask": "npm install (functions)",
+  "azureFunctions.projectLanguage": "TypeScript",
+  "azureFunctions.projectRuntime": "~4",
+  "debug.internalConsoleOptions": "neverOpen",
+  "azureFunctions.preDeployTask": "npm prune (functions)",
+  "azureFunctions.requestTimeout": 100,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.renderWhitespace": "boundary",
+  "editor.rulers": [140],
+  "editor.formatOnSave": true,
+  "files.encoding": "utf8",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "search.exclude": {
+    "public/**": true,
+    "node_modules/**": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true,
+    "source.formatDocument": true,
+    "source.fixAll.eslint": true
+  },
+  "azureFunctions.projectLanguageModel": 4,
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }
