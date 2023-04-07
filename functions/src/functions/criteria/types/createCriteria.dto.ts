@@ -1,4 +1,5 @@
-import { RatingRole } from '../lib/typeorm/entities/RatinRole'
+import { RatingRole } from "../../../lib/typeorm/entities/RatinRole"
+
 
 export class CreateCriteriaDTO {
   name: string
