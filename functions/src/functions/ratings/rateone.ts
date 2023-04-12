@@ -1,7 +1,8 @@
 import { app, HttpRequest, InvocationContext } from '@azure/functions'
+import { plainToClass } from 'class-transformer'
 import CriterionRating from '../../lib/typeorm/entities/CriterionRating'
 import { getAppDataSource } from '../../lib/typeorm/getConfig'
-import { JsonResWrapper, ResponseParams } from '../../lib/util'
+import { JsonResWrapper, myvalidate, ResponseParams } from '../../lib/util'
 import { CreateRatingDto } from './types/createRating.dto'
 
 export const rateOne = async (req: HttpRequest, context: InvocationContext): Promise<ResponseParams> => {
@@ -18,15 +19,22 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
       body: `No body attached to POST query.`
     }
   }
-  const ratingRepo = (await getAppDataSource()).getRepository(CriterionRating)
 
   try {
-    const body = (await req.json()) as CreateRatingDto
-    const rating = await ratingRepo.findOneBy({ criterion: { id: body.criterionId }, eventRating: { id } })
+    const dto = plainToClass(CreateRatingDto, await req.json())
+    const errors = await myvalidate(dto)
+    if (errors.length > 0) {
+      return {
+        status: 400,
+        body: errors
+      }
+    }
+    const ratingRepo = (await getAppDataSource()).getRepository(CriterionRating)
+    const rating = await ratingRepo.findOneBy({ criterion: { id: dto.criterionId }, eventRating: { id } })
     if (rating === null) {
-      await ratingRepo.insert({ criterion: { id: body.criterionId }, value: body.value, eventRating: { id } })
+      await ratingRepo.insert({ criterion: { id: dto.criterionId }, value: dto.value, eventRating: { id } })
     } else {
-      rating.value = body.value
+      rating.value = dto.value
       await ratingRepo.save(rating)
     }
     return {

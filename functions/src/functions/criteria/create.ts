@@ -1,7 +1,8 @@
 import { app, HttpRequest, InvocationContext } from '@azure/functions'
+import { plainToClass } from 'class-transformer'
 import Criterion from '../../lib/typeorm/entities/Criterion'
 import { getAppDataSource } from '../../lib/typeorm/getConfig'
-import { JsonResWrapper, ResponseParams } from '../../lib/util'
+import { JsonResWrapper, myvalidate, ResponseParams } from '../../lib/util'
 import { CreateCriteriaDTO } from './types/createCriteria.dto'
 
 export const createCriteria = async (req: HttpRequest, context: InvocationContext): Promise<ResponseParams> => {
@@ -11,10 +12,18 @@ export const createCriteria = async (req: HttpRequest, context: InvocationContex
       body: 'No body attached to POST query.'
     }
   }
-  const criterionRepo = (await getAppDataSource()).getRepository(Criterion)
   try {
-    const body = (await req.json()) as CreateCriteriaDTO
-    const res = await criterionRepo.insert({ ...body, roles: JSON.stringify(body.roles) })
+    const dto = plainToClass(CreateCriteriaDTO, await req.json())
+    const errors = await myvalidate(dto)
+    if (errors.length > 0) {
+      return {
+        status: 400,
+        body: errors
+      }
+    }
+
+    const criterionRepo = (await getAppDataSource()).getRepository(Criterion)
+    const res = await criterionRepo.insert({ ...dto, roles: JSON.stringify(dto.roles) })
     return {
       body: res.raw
     }

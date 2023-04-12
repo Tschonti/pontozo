@@ -1,8 +1,9 @@
 import { app, HttpRequest, InvocationContext } from '@azure/functions'
+import { plainToClass } from 'class-transformer'
 import EventRating from '../../lib/typeorm/entities/EventRating'
 import { getAppDataSource } from '../../lib/typeorm/getConfig'
-import { JsonResWrapper, ResponseParams } from '../../lib/util'
-import { CreateRatingDto } from './types/createRating.dto'
+import { JsonResWrapper, myvalidate, ResponseParams } from '../../lib/util'
+import { CreateEventRatingDto } from './types/createEventRating.dto'
 
 export const createRating = async (req: HttpRequest, context: InvocationContext): Promise<ResponseParams> => {
   if (!req.body) {
@@ -11,10 +12,17 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
       body: `No body attached to POST query.`
     }
   }
-  const ratingRepo = (await getAppDataSource()).getRepository(EventRating)
   try {
-    const body = (await req.json()) as CreateRatingDto
-    const res = await ratingRepo.insert({ ...body, createdAt: new Date() })
+    const dto = plainToClass(CreateEventRatingDto, await req.json())
+    const errors = await myvalidate(dto)
+    if (errors.length > 0) {
+      return {
+        status: 400,
+        body: errors
+      }
+    }
+    const ratingRepo = (await getAppDataSource()).getRepository(EventRating)
+    const res = await ratingRepo.insert({ ...dto, createdAt: new Date() })
     return {
       body: res.raw
     }
