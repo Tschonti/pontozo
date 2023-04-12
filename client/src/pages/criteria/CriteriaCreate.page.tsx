@@ -20,7 +20,7 @@ export const CriteriaCreatePage = () => {
   const navigate = useNavigate()
   const createMutation = useCreateCriterionMutation()
   const onSubmit: SubmitHandler<CreateCriterion> = (formData) => {
-    createMutation.mutate(formData, { onSuccess: (data) => navigate(`${PATHS.CRITERIA}/${data[0].id}`) })
+    createMutation.mutate(formData, { onSuccess: () => navigate(PATHS.CRITERIA) })
   }
 
   const generateChangeFn = (value: RatingRole) => {

@@ -1,6 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import Rating from './CriterionRating'
-import { RatingRole } from './RatinRole'
 
 @Entity()
 class Criterion {
@@ -28,7 +27,7 @@ class Criterion {
   @Column({
     type: 'nvarchar'
   })
-  roles: RatingRole[]
+  roles: string
 }
 
 export default Criterion

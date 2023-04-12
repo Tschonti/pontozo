@@ -1,13 +1,14 @@
-import { HttpRequest, HttpResponseInit, InvocationContext, app } from '@azure/functions'
+import { app, HttpRequest, InvocationContext } from '@azure/functions'
 import Criterion from '../../lib/typeorm/entities/Criterion'
 import { getAppDataSource } from '../../lib/typeorm/getConfig'
+import { JsonResWrapper, ResponseParams } from '../../lib/util'
 
-export const getCriteria = async (_req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
+export const getCriteria = async (_req: HttpRequest, context: InvocationContext): Promise<ResponseParams> => {
   const criterionRepo = (await getAppDataSource()).getRepository(Criterion)
   try {
     const criteria = await criterionRepo.find()
     return {
-      body: JSON.stringify(criteria)
+      body: criteria
     }
   } catch (error) {
     context.log(error)
@@ -21,5 +22,5 @@ export const getCriteria = async (_req: HttpRequest, context: InvocationContext)
 app.http('criteria-getall', {
   methods: ['GET'],
   route: 'criteria',
-  handler: getCriteria
+  handler: (req, context) => JsonResWrapper(getCriteria(req, context))
 })

@@ -1,10 +1,11 @@
-import { HttpRequest, HttpResponseInit, InvocationContext, app } from '@azure/functions'
+import { app, HttpRequest, InvocationContext } from '@azure/functions'
 import axios from 'axios'
 import { MTFSZ_CID, MTFSZ_CSECRET } from '../../lib/env'
+import { JsonResWrapper, ResponseParams } from '../../lib/util'
 
 const formatDate = (d: Date) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
 
-export const getEvents = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
+export const getEvents = async (req: HttpRequest, context: InvocationContext): Promise<ResponseParams> => {
   const fd = new FormData()
   fd.append('grant_type', 'client_credentials')
   const res = await axios.post('https://api.mtfsz.hu/oauth/v2/token', fd, {
@@ -16,13 +17,13 @@ export const getEvents = async (req: HttpRequest, context: InvocationContext): P
       body: 'Failed MTFSZ authentication'
     }
   }
-  const eventId = parseInt(req.params.id)
-  if (isNaN(eventId)) {
+  if (req.params.id && isNaN(parseInt(req.params.id))) {
     return {
       status: 400,
       body: 'Érvénytelen esemény azonosító!'
     }
   }
+  const eventId = parseInt(req.params.id)
   const url = new URL('esemenyek', 'https://api.mtfsz.hu/api/v1_0/')
   if (eventId) {
     url.searchParams.append('esemeny_id', eventId.toString())
@@ -44,5 +45,5 @@ export const getEvents = async (req: HttpRequest, context: InvocationContext): P
 app.http('events-getall', {
   methods: ['GET'],
   route: 'events/{id?}',
-  handler: getEvents
+  handler: (req, context) => JsonResWrapper(getEvents(req, context))
 })

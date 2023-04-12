@@ -1,9 +1,10 @@
-import { HttpRequest, HttpResponseInit, InvocationContext, app } from '@azure/functions'
+import { app, HttpRequest, InvocationContext } from '@azure/functions'
 import CriterionRating from '../../lib/typeorm/entities/CriterionRating'
 import { getAppDataSource } from '../../lib/typeorm/getConfig'
+import { JsonResWrapper, ResponseParams } from '../../lib/util'
 import { CreateRatingDto } from './types/createRating.dto'
 
-export const rateOne = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
+export const rateOne = async (req: HttpRequest, context: InvocationContext): Promise<ResponseParams> => {
   const id = parseInt(req.params.id)
   if (isNaN(id)) {
     return {
@@ -43,5 +44,5 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
 app.http('ratings-rateone', {
   methods: ['POST'],
   route: 'ratings/{id}',
-  handler: rateOne
+  handler: (req, context) => JsonResWrapper(rateOne(req, context))
 })

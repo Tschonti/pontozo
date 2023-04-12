@@ -1,9 +1,10 @@
-import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { app, HttpRequest, InvocationContext } from '@azure/functions'
 import Criterion from '../../lib/typeorm/entities/Criterion'
 import EventRating from '../../lib/typeorm/entities/EventRating'
 import { getAppDataSource } from '../../lib/typeorm/getConfig'
+import { JsonResWrapper, ResponseParams } from '../../lib/util'
 
-export const getCriteria = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
+export const getCriteria = async (req: HttpRequest, context: InvocationContext): Promise<ResponseParams> => {
   const ratingId = parseInt(req.params.id)
   const ads = await getAppDataSource()
   const ratingRepo = ads.getRepository(EventRating)
@@ -20,12 +21,12 @@ export const getCriteria = async (req: HttpRequest, context: InvocationContext):
     .map((c) => ({ ...c, roles: JSON.parse(c.roles as unknown as string) } as Criterion))
     .filter((c) => c.roles.includes(rating.role))
   return {
-    body: JSON.stringify({ ...rating, criteria: rateable })
+    body: { ...rating, criteria: rateable }
   }
 }
 
 app.http('ratings-getcriteria', {
   methods: ['GET'],
   route: 'ratings/{id}',
-  handler: getCriteria
+  handler: (req, context) => JsonResWrapper(getCriteria(req, context))
 })

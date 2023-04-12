@@ -1,8 +1,9 @@
-import { HttpRequest, HttpResponseInit, InvocationContext, app } from '@azure/functions'
+import { app, HttpRequest, InvocationContext } from '@azure/functions'
 import Criterion from '../../lib/typeorm/entities/Criterion'
 import { getAppDataSource } from '../../lib/typeorm/getConfig'
+import { JsonResWrapper, ResponseParams } from '../../lib/util'
 
-export const getCriterion = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
+export const getCriterion = async (req: HttpRequest, context: InvocationContext): Promise<ResponseParams> => {
   const id = parseInt(req.params.id)
   if (isNaN(id)) {
     return {
@@ -20,7 +21,7 @@ export const getCriterion = async (req: HttpRequest, context: InvocationContext)
       }
     }
     return {
-      body: JSON.stringify(criteria)
+      body: criteria
     }
   } catch (error) {
     context.error(error)
@@ -34,5 +35,5 @@ export const getCriterion = async (req: HttpRequest, context: InvocationContext)
 app.http('criteria-getone', {
   methods: ['GET'],
   route: 'criteria/{id}',
-  handler: getCriterion
+  handler: (req, context) => JsonResWrapper(getCriterion(req, context))
 })
