@@ -1,4 +1,4 @@
-import { Criterion } from './criterion'
+import { CriterionDetails } from './criterion'
 
 export interface EventRating {
   id: number
@@ -23,5 +23,10 @@ export interface StartRatingDto {
 }
 
 export interface RatingWithCriterionDto extends EventRating {
-  criteria: Criterion[]
+  criteria: CriterionDetails[]
+}
+
+export interface CriterionRating {
+  value: number
+  id: number
 }

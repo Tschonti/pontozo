@@ -1,16 +1,16 @@
 import { FormControl, FormHelperText, FormLabel, Slider, SliderFilledTrack, SliderThumb, SliderTrack } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useRateCriteriaMutation } from '../../../api/hooks/criteriaMutationHook'
-import { Criterion } from '../../../api/model/criterion'
+import { CriterionDetails } from '../../../api/model/criterion'
 
 type Props = {
-  criterion: Criterion
+  criterion: CriterionDetails
   eventRatingId: number
 }
 
 export const CriterionRateForm = ({ criterion, eventRatingId }: Props) => {
   const mutation = useRateCriteriaMutation(eventRatingId, criterion.id)
-  const [value, setValue] = useState(Math.round((criterion.maxValue - criterion.minValue) / 2) + criterion.minValue)
+  const [value, setValue] = useState(criterion.rating?.value)
 
   const onChange = (newValue: number) => {
     setValue(newValue)
