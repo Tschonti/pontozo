@@ -1,6 +1,8 @@
 import { app, HttpRequest, InvocationContext } from '@azure/functions'
 import { plainToClass } from 'class-transformer'
+import Criterion from '../../lib/typeorm/entities/Criterion'
 import CriterionRating from '../../lib/typeorm/entities/CriterionRating'
+import EventRating from '../../lib/typeorm/entities/EventRating'
 import { getAppDataSource } from '../../lib/typeorm/getConfig'
 import { JsonResWrapper, myvalidate, ResponseParams } from '../../lib/util'
 import { CreateRatingDto } from './types/createRating.dto'
@@ -19,23 +21,48 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
       body: `No body attached to POST query.`
     }
   }
-
+  const dto = plainToClass(CreateRatingDto, await req.json())
+  const errors = await myvalidate(dto)
+  if (errors.length > 0) {
+    return {
+      status: 400,
+      body: errors
+    }
+  }
   try {
-    const dto = plainToClass(CreateRatingDto, await req.json())
-    const errors = await myvalidate(dto)
-    if (errors.length > 0) {
+    const ads = await getAppDataSource()
+    const eventRatingRepo = ads.getRepository(EventRating)
+    const criterionRepo = ads.getRepository(Criterion)
+
+    const eventRatingQuery = eventRatingRepo.findOneBy({ id })
+    const criterionQuery = criterionRepo.findOneBy({ id: dto.criterionId })
+
+    const [eventRating, criterion] = await Promise.all([eventRatingQuery, criterionQuery])
+    if (eventRating === null) {
       return {
-        status: 400,
-        body: errors
+        status: 404,
+        body: 'Rating not found'
       }
     }
-    const ratingRepo = (await getAppDataSource()).getRepository(CriterionRating)
-    const rating = await ratingRepo.findOneBy({ criterion: { id: dto.criterionId }, eventRating: { id } })
+    if (criterion === null) {
+      return {
+        status: 404,
+        body: 'Criterion not found'
+      }
+    }
+    if (!JSON.parse(criterion.roles).includes(eventRating.role)) {
+      return {
+        status: 403,
+        body: 'Rating this criterion with this role is not allowed.'
+      }
+    }
+    const criterionRatingRepo = ads.getRepository(CriterionRating)
+    const rating = await criterionRatingRepo.findOneBy({ criterion: { id: dto.criterionId }, eventRating: { id } })
     if (rating === null) {
-      await ratingRepo.insert({ criterion: { id: dto.criterionId }, value: dto.value, eventRating: { id } })
+      await criterionRatingRepo.insert({ criterion: { id: dto.criterionId }, value: dto.value, eventRating: { id } })
     } else {
       rating.value = dto.value
-      await ratingRepo.save(rating)
+      await criterionRatingRepo.save(rating)
     }
     return {
       status: 204
@@ -43,7 +70,7 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
   } catch (e) {
     context.log(e)
     return {
-      status: 400,
+      status: 500,
       body: e
     }
   }
