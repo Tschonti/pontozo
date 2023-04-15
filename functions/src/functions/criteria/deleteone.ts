@@ -1,9 +1,8 @@
-import { app, HttpRequest, InvocationContext } from '@azure/functions'
-import Criterion from '../../lib/typeorm/entities/Criterion'
-import { getAppDataSource } from '../../lib/typeorm/getConfig'
-import { JsonResWrapper, ResponseParams } from '../../lib/util'
+import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import Criterion from '../../typeorm/entities/Criterion'
+import { getAppDataSource } from '../../typeorm/getConfig'
 
-export const deleteCriterion = async (req: HttpRequest, context: InvocationContext): Promise<ResponseParams> => {
+export const deleteCriterion = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const id = parseInt(req.params.id)
   if (isNaN(id)) {
     return {
@@ -15,7 +14,7 @@ export const deleteCriterion = async (req: HttpRequest, context: InvocationConte
   try {
     const res = await criterionRepo.delete({ id })
     return {
-      body: res
+      jsonBody: res
     }
   } catch (error) {
     context.error(error)
@@ -29,5 +28,5 @@ export const deleteCriterion = async (req: HttpRequest, context: InvocationConte
 app.http('criteria-deleteone', {
   methods: ['DELETE'],
   route: 'criteria/{id}',
-  handler: (req, context) => JsonResWrapper(deleteCriterion(req, context))
+  handler: deleteCriterion
 })

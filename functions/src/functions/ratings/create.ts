@@ -1,11 +1,11 @@
-import { app, HttpRequest, InvocationContext } from '@azure/functions'
+import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { plainToClass } from 'class-transformer'
-import EventRating from '../../lib/typeorm/entities/EventRating'
-import { getAppDataSource } from '../../lib/typeorm/getConfig'
-import { JsonResWrapper, myvalidate, ResponseParams } from '../../lib/util'
+import EventRating from '../../typeorm/entities/EventRating'
+import { getAppDataSource } from '../../typeorm/getConfig'
+import { myvalidate } from '../../util/validation'
 import { CreateEventRatingDto } from './types/createEventRating.dto'
 
-export const createRating = async (req: HttpRequest, context: InvocationContext): Promise<ResponseParams> => {
+export const createRating = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   if (!req.body) {
     return {
       status: 400,
@@ -18,13 +18,13 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
     if (errors.length > 0) {
       return {
         status: 400,
-        body: errors
+        jsonBody: errors
       }
     }
     const ratingRepo = (await getAppDataSource()).getRepository(EventRating)
     const res = await ratingRepo.insert({ ...dto, createdAt: new Date() })
     return {
-      body: res.raw
+      jsonBody: res.raw
     }
   } catch (e) {
     context.log(e)
@@ -38,5 +38,5 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
 app.http('ratings-create', {
   methods: ['POST'],
   route: 'ratings',
-  handler: (req, context) => JsonResWrapper(createRating(req, context))
+  handler: createRating
 })

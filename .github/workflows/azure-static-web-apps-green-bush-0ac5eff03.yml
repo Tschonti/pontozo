@@ -15,7 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     env:
-      REACT_APP_API_HOST: https://pontozo-test.azurewebsites.net/api
+      REACT_APP_FUNC_HOST: https://pontozo-test.azurewebsites.net/api
+      REACT_APP_APIM_HOST: https://pontozo-test.azurewebsites.net/api
+      REACT_APP_APIM_KEY: ${{ secrets.APIM_KEY }}
     steps:
       - uses: actions/checkout@v2
         with:

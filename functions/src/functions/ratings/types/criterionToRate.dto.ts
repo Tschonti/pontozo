@@ -1,4 +1,4 @@
-import Rating from '../../../lib/typeorm/entities/CriterionRating'
+import Rating from '../../../typeorm/entities/CriterionRating'
 
 export interface CriterionToRate {
   id: number

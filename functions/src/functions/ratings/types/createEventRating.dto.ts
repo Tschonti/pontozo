@@ -1,5 +1,5 @@
 import { IsEnum, IsInt, Min } from 'class-validator'
-import { RatingRole } from '../../../lib/typeorm/entities/RatinRole'
+import { RatingRole } from '../../../typeorm/entities/RatinRole'
 
 export class CreateEventRatingDto {
   @IsInt()

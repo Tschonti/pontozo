@@ -1,5 +1,4 @@
 import { Route, Routes } from 'react-router-dom'
-import { useGetAccessToken } from './api/hooks/authHooks'
 import { PLayout } from './components/commons/PLayout'
 import { CriteriaCreatePage } from './pages/criteria/CriteriaCreate.page'
 import { CriteriaListPage } from './pages/criteria/CriteriaList.page'
@@ -10,7 +9,6 @@ import { RatingPage } from './pages/ratings/Rating.page'
 import { PATHS } from './util/paths'
 
 export const App = () => {
-  useGetAccessToken()
   return (
     <PLayout>
       <Routes>

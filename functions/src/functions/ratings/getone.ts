@@ -1,11 +1,10 @@
-import { app, HttpRequest, InvocationContext } from '@azure/functions'
-import Criterion from '../../lib/typeorm/entities/Criterion'
-import EventRating from '../../lib/typeorm/entities/EventRating'
-import { getAppDataSource } from '../../lib/typeorm/getConfig'
-import { JsonResWrapper, ResponseParams } from '../../lib/util'
+import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import Criterion from '../../typeorm/entities/Criterion'
+import EventRating from '../../typeorm/entities/EventRating'
+import { getAppDataSource } from '../../typeorm/getConfig'
 import { CriterionToRate } from './types/criterionToRate.dto'
 
-export const getRating = async (req: HttpRequest, context: InvocationContext): Promise<ResponseParams> => {
+export const getRating = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const ratingId = parseInt(req.params.id)
   const ads = await getAppDataSource()
   const ratingRepo = ads.getRepository(EventRating)
@@ -34,12 +33,12 @@ export const getRating = async (req: HttpRequest, context: InvocationContext): P
     })
     .filter((c) => c.roles.includes(rating.role))
   return {
-    body: { ...rating, criteria: rateable }
+    jsonBody: { ...rating, criteria: rateable }
   }
 }
 
 app.http('ratings-getone', {
   methods: ['GET'],
   route: 'ratings/{id}',
-  handler: (req, context) => JsonResWrapper(getRating(req, context))
+  handler: getRating
 })

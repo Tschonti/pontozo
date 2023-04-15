@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
-import { API_HOST } from '../../util/environment'
+import { FUNC_HOST } from '../../util/environment'
 import { CreateCriterion } from '../model/criterion'
 
 export type CreateResponse = {
@@ -9,12 +9,12 @@ export type CreateResponse = {
 
 export const useRateCriteriaMutation = (ratingId: number, criterionId: number) => {
   return useMutation<unknown, Error, number>(
-    async (value) => (await axios.post(`${API_HOST}/ratings/${ratingId}`, { value, criterionId })).data
+    async (value) => (await axios.post(`${FUNC_HOST}/ratings/${ratingId}`, { value, criterionId })).data
   )
 }
 
 export const useCreateCriterionMutation = () => {
   return useMutation<CreateResponse[], Error, CreateCriterion>(
-    async (formData) => (await axios.post(`${API_HOST}/criteria`, formData)).data
+    async (formData) => (await axios.post(`${FUNC_HOST}/criteria`, formData)).data
   )
 }

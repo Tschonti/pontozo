@@ -1,11 +1,10 @@
-import { app, HttpRequest, InvocationContext } from '@azure/functions'
+import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import axios from 'axios'
-import { MTFSZ_CID, MTFSZ_CSECRET } from '../../lib/env'
-import { JsonResWrapper, ResponseParams } from '../../lib/util'
+import { MTFSZ_CID, MTFSZ_CSECRET } from '../../util/env'
 
 const formatDate = (d: Date) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
 
-export const getEvents = async (req: HttpRequest, context: InvocationContext): Promise<ResponseParams> => {
+export const getEvents = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const fd = new FormData()
   fd.append('grant_type', 'client_credentials')
   const res = await axios.post('https://api.mtfsz.hu/oauth/v2/token', fd, {
@@ -38,12 +37,12 @@ export const getEvents = async (req: HttpRequest, context: InvocationContext): P
 
   const events = (await axios.get(url.toString(), { headers: { Authorization: `Bearer ${res.data.access_token}` } })).data
   return {
-    body: events
+    jsonBody: events
   }
 }
 
 app.http('events-getall', {
   methods: ['GET'],
   route: 'events/{id?}',
-  handler: (req, context) => JsonResWrapper(getEvents(req, context))
+  handler: getEvents
 })

@@ -1,5 +1,5 @@
-export const API_HOST = process.env.REACT_APP_API_HOST || 'http://localhost:7071/api'
-export const CLIENT_ID = process.env.REACT_APP_CLIENT_ID || ''
-export const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET || ''
-export const MTFSZ_TOKEN = process.env.REACT_APP_MTFSZ_TOKEN || 'https://api.mtfsz.hu/oauth/v2/token'
-export const MTFSZ_API_BASE = process.env.REACT_APP_MTFSZ_API_BASE || 'https://api.mtfsz.hu/api/v1_0/'
+import * as env from 'env-var'
+
+export const FUNC_HOST = env.get('REACT_APP_FUNC_HOST').default('http://localhost:7071/api').asString()
+export const APIM_HOST = env.get('REACT_APP_APIM_HOST').default('https://pontozo-apim.azure-api.net').asString()
+export const APIM_KEY = env.get('REACT_APP_APIM_KEY').required().asString()

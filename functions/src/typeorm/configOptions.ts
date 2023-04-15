@@ -1,5 +1,5 @@
 import { DataSourceOptions } from 'typeorm'
-import { DB_NAME, DB_PWD, DB_SERVER, DB_USER, ENCRYPT } from '../env'
+import { DB_NAME, DB_PWD, DB_SERVER, DB_USER, ENCRYPT } from '../util/env'
 import Criterion from './entities/Criterion'
 import CriterionRating from './entities/CriterionRating'
 import EventRating from './entities/EventRating'

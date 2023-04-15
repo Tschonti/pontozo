@@ -1,13 +1,13 @@
-import { app, HttpRequest, InvocationContext } from '@azure/functions'
+import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { plainToClass } from 'class-transformer'
-import Criterion from '../../lib/typeorm/entities/Criterion'
-import CriterionRating from '../../lib/typeorm/entities/CriterionRating'
-import EventRating from '../../lib/typeorm/entities/EventRating'
-import { getAppDataSource } from '../../lib/typeorm/getConfig'
-import { JsonResWrapper, myvalidate, ResponseParams } from '../../lib/util'
+import Criterion from '../../typeorm/entities/Criterion'
+import CriterionRating from '../../typeorm/entities/CriterionRating'
+import EventRating from '../../typeorm/entities/EventRating'
+import { getAppDataSource } from '../../typeorm/getConfig'
+import { myvalidate } from '../../util/validation'
 import { CreateRatingDto } from './types/createRating.dto'
 
-export const rateOne = async (req: HttpRequest, context: InvocationContext): Promise<ResponseParams> => {
+export const rateOne = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const id = parseInt(req.params.id)
   if (isNaN(id)) {
     return {
@@ -26,7 +26,7 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
   if (errors.length > 0) {
     return {
       status: 400,
-      body: errors
+      jsonBody: errors
     }
   }
   try {
@@ -79,5 +79,5 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
 app.http('ratings-rateone', {
   methods: ['POST'],
   route: 'ratings/{id}',
-  handler: (req, context) => JsonResWrapper(rateOne(req, context))
+  handler: rateOne
 })

@@ -1,11 +1,11 @@
-import { app, HttpRequest, InvocationContext } from '@azure/functions'
+import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { plainToClass } from 'class-transformer'
-import Criterion from '../../lib/typeorm/entities/Criterion'
-import { getAppDataSource } from '../../lib/typeorm/getConfig'
-import { JsonResWrapper, myvalidate, ResponseParams } from '../../lib/util'
+import Criterion from '../../typeorm/entities/Criterion'
+import { getAppDataSource } from '../../typeorm/getConfig'
+import { myvalidate } from '../../util/validation'
 import { CreateCriteriaDTO } from './types/createCriteria.dto'
 
-export const createCriteria = async (req: HttpRequest, context: InvocationContext): Promise<ResponseParams> => {
+export const createCriteria = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   if (!req.body) {
     return {
       status: 400,
@@ -18,14 +18,14 @@ export const createCriteria = async (req: HttpRequest, context: InvocationContex
     if (errors.length > 0) {
       return {
         status: 400,
-        body: errors
+        jsonBody: errors
       }
     }
 
     const criterionRepo = (await getAppDataSource()).getRepository(Criterion)
     const res = await criterionRepo.insert({ ...dto, roles: JSON.stringify(dto.roles) })
     return {
-      body: res.raw
+      jsonBody: res
     }
   } catch (e) {
     context.log(e)
@@ -39,5 +39,5 @@ export const createCriteria = async (req: HttpRequest, context: InvocationContex
 app.http('criteria-create', {
   methods: ['POST'],
   route: 'criteria',
-  handler: (req, context) => JsonResWrapper(createCriteria(req, context))
+  handler: createCriteria
 })

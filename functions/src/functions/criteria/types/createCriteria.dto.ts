@@ -1,6 +1,6 @@
 import { ArrayNotEmpty, ArrayUnique, IsEnum, IsInt, IsNotEmpty, Min } from 'class-validator'
-import { RatingRole } from '../../../lib/typeorm/entities/RatinRole'
-import { IsBiggerThan } from '../../../lib/util'
+import { RatingRole } from '../../../typeorm/entities/RatinRole'
+import { IsBiggerThan } from '../../../util/validation'
 
 export class CreateCriteriaDTO {
   @IsNotEmpty()
