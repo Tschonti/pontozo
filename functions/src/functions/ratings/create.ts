@@ -1,5 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { plainToClass } from 'class-transformer'
+import { getOneEvent } from '../../service/mtfsz.service'
 import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { myvalidate } from '../../util/validation'
@@ -19,6 +20,13 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
       return {
         status: 400,
         jsonBody: errors
+      }
+    }
+    const event = await getOneEvent(dto.eventId)
+    if (event === null) {
+      return {
+        status: 400,
+        body: "Event doesn't exist in MTFSZ DB"
       }
     }
     const ratingRepo = (await getAppDataSource()).getRepository(EventRating)
