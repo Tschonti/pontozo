@@ -43,7 +43,7 @@ export const updateCriteria = async (req: HttpRequest, context: InvocationContex
   }
 }
 
-app.http('criteria-create', {
+app.http('criteria-update', {
   methods: ['PUT'],
   route: 'criteria/{id}',
   handler: (req, context) => JsonResWrapper(updateCriteria(req, context))
