@@ -18,7 +18,7 @@ export const RatingPage = () => {
 
   return (
     <>
-      <Heading>{data?.eventId} értékelése</Heading>
+      <Heading>{data?.event.nev_1} értékelése</Heading>
       {data?.criteria.map((c) => (
         <CriterionRateForm criterion={c} eventRatingId={+ratingId!!} key={c.id} />
       ))}

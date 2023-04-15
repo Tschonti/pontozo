@@ -1,4 +1,5 @@
 import { CriterionDetails } from './criterion'
+import { Event } from './event'
 
 export interface EventRating {
   id: number
@@ -24,6 +25,7 @@ export interface StartRatingDto {
 
 export interface RatingWithCriterionDto extends EventRating {
   criteria: CriterionDetails[]
+  event: Event
 }
 
 export interface CriterionRating {
