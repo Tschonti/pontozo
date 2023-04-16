@@ -21,14 +21,7 @@ export const CriterionRateForm = ({ criterion, eventRatingId }: Props) => {
     <FormControl>
       <FormLabel>{criterion.name}</FormLabel>
       <FormHelperText>{criterion.description}</FormHelperText>
-      <Slider
-        min={criterion.minValue}
-        max={criterion.maxValue}
-        isDisabled={mutation.isLoading}
-        aria-label={`slider-${criterion.name}`}
-        value={value}
-        onChange={onChange}
-      >
+      <Slider min={0} max={3} isDisabled={mutation.isLoading} aria-label={`slider-${criterion.name}`} value={value} onChange={onChange}>
         <SliderTrack>
           <SliderFilledTrack />
         </SliderTrack>

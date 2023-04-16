@@ -1,8 +1,9 @@
-import { IsInt, Min } from 'class-validator'
+import { IsInt, Max, Min } from 'class-validator'
 
 export class CreateRatingDto {
   @IsInt()
   @Min(0)
+  @Max(3)
   value: number
 
   @IsInt()

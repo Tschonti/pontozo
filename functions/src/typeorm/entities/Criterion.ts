@@ -12,14 +12,32 @@ class Criterion {
   @Column()
   description: string
 
-  @Column()
-  minValue: number
+  @Column({ nullable: true })
+  text0: string
+
+  @Column({ nullable: true })
+  text1: string
+
+  @Column({ nullable: true })
+  text2: string
+
+  @Column({ nullable: true })
+  text3: string
+
+  @Column({ nullable: true })
+  editorsNote: string
 
   @Column()
-  maxValue: number
+  nationalOnly: boolean
 
   @Column()
-  weight: number
+  stageSpecific: boolean
+
+  @Column({ nullable: true })
+  competitorWeight: number
+
+  @Column({ nullable: true })
+  organiserWeight: number
 
   @OneToMany(() => Rating, (r) => r.criterion, { eager: true })
   ratings: Rating[]

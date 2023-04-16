@@ -1,6 +1,5 @@
-import { ArrayNotEmpty, ArrayUnique, IsEnum, IsInt, IsNotEmpty, Min } from 'class-validator'
+import { ArrayNotEmpty, ArrayUnique, IsBoolean, IsEnum, IsInt, IsNotEmpty, IsOptional } from 'class-validator'
 import { RatingRole } from '../../../typeorm/entities/RatinRole'
-import { IsBiggerThan } from '../../../util/validation'
 
 export class CreateCriteriaDTO {
   @IsNotEmpty()
@@ -9,18 +8,34 @@ export class CreateCriteriaDTO {
   @IsNotEmpty()
   description: string
 
-  @IsInt()
-  @Min(0)
-  minValue: number
+  @IsOptional()
+  text0: string
 
-  @IsInt()
-  @IsBiggerThan('minValue', {
-    message: 'maxValue must be bigger than minValue!'
-  })
-  maxValue: number
+  @IsOptional()
+  text1: string
 
+  @IsOptional()
+  text2: string
+
+  @IsOptional()
+  text3: string
+
+  @IsOptional()
+  editorsNote: string
+
+  @IsBoolean()
+  nationalOnly: boolean
+
+  @IsBoolean()
+  stageSpecific: boolean
+
+  @IsOptional()
   @IsInt()
-  weight: number
+  competitorWeight: number
+
+  @IsOptional()
+  @IsInt()
+  organiserWeight: number
 
   @IsEnum(RatingRole, { each: true })
   @ArrayNotEmpty()

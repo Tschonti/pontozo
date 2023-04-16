@@ -1,12 +1,6 @@
+import Criterion from '../../../typeorm/entities/Criterion'
 import Rating from '../../../typeorm/entities/CriterionRating'
 
-export interface CriterionToRate {
-  id: number
-  name: string
-  description: string
-  minValue: number
-  maxValue: number
-  weight: number
+export interface CriterionToRate extends Omit<Criterion, 'ratings'> {
   rating: Rating
-  roles: string
 }

@@ -4,9 +4,15 @@ export interface Criterion {
   id: number
   name: string
   description: string
-  minValue: number
-  maxValue: number
-  weight: number
+  text0: string
+  text1: string
+  text2: string
+  text3: string
+  editorsNote: string
+  competitorWeight: number
+  organiserWeight: number
+  stageSpecific: boolean
+  nationalOnly: boolean
   roles: RatingRole[]
 }
 
