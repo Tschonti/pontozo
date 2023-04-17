@@ -3,6 +3,8 @@ import { DB_NAME, DB_PWD, DB_SERVER, DB_USER, ENCRYPT } from '../util/env'
 import Criterion from './entities/Criterion'
 import CriterionRating from './entities/CriterionRating'
 import EventRating from './entities/EventRating'
+import { Redo1681640128728 } from './migrations/1681640128728-redo'
+import { StageIdUnique1681660884575 } from './migrations/1681660884575-stageIdUnique'
 
 export const DBConfig: DataSourceOptions = {
   type: 'mssql',
@@ -15,6 +17,6 @@ export const DBConfig: DataSourceOptions = {
   logging: true,
   entities: [Criterion, CriterionRating, EventRating],
   subscribers: [],
-  migrations: [],
+  migrations: [Redo1681640128728, StageIdUnique1681660884575],
   options: { encrypt: ENCRYPT }
 }

@@ -26,7 +26,7 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
     if (event === null) {
       return {
         status: 400,
-        body: "Event doesn't exist in MTFSZ DB"
+        body: "Event doesn't exist in MTFSZ DB or is not ranked!"
       }
     }
     const ratingRepo = (await getAppDataSource()).getRepository(EventRating)

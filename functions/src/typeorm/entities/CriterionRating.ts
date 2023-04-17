@@ -3,7 +3,7 @@ import Criterion from './Criterion'
 import EventRating from './EventRating'
 
 @Entity()
-@Unique(['criterion', 'eventRating'])
+@Unique(['criterion', 'eventRating', 'stageId'])
 class CriterionRating {
   @PrimaryGeneratedColumn()
   id: number
@@ -13,6 +13,11 @@ class CriterionRating {
 
   @ManyToOne(() => EventRating, (er) => er.ratings, { onDelete: 'CASCADE', nullable: false })
   eventRating: EventRating
+
+  //TODO userid
+
+  @Column({ nullable: true })
+  stageId: number
 
   @Column()
   value: number

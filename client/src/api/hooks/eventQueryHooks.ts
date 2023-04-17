@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { APIM_HOST, APIM_KEY } from '../../util/environment'
-import { FetchEventsResult } from '../model/event'
+import { eventFilter } from '../../util/eventFilter'
+import { Event, FetchEventsResult } from '../model/event'
 
 const formatDate = (d: Date) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
 
 export const useFetchEventsLastMonth = () => {
-  return useQuery<FetchEventsResult>(
+  return useQuery<Event[]>(
     ['fetchEvents'],
     async () => {
       const url = new URL('esemenyek', APIM_HOST)
@@ -15,12 +16,12 @@ export const useFetchEventsLastMonth = () => {
       url.searchParams.append('datum_tol', formatDate(oneMonthAgo))
       url.searchParams.append('datum_ig', formatDate(today))
       url.searchParams.append('exclude_deleted', 'true')
-      const res = await axios.get(url.toString(), {
+      const res = await axios.get<FetchEventsResult>(url.toString(), {
         headers: {
           'Ocp-Apim-Subscription-Key': APIM_KEY
         }
       })
-      return res.data
+      return res.data.result.filter(eventFilter)
     },
     { retry: false }
   )

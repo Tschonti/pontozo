@@ -1,4 +1,4 @@
-import { IsInt, Max, Min } from 'class-validator'
+import { IsInt, IsOptional, Max, Min } from 'class-validator'
 
 export class CreateRatingDto {
   @IsInt()
@@ -9,4 +9,9 @@ export class CreateRatingDto {
   @IsInt()
   @Min(1)
   criterionId: number
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  stageId?: number
 }

@@ -3,7 +3,7 @@ import { useFetchEventsLastMonth } from '../../api/hooks/eventQueryHooks'
 import { EventListItem } from './components/EventListItem'
 
 export const IndexPage = () => {
-  const { data, isLoading, error } = useFetchEventsLastMonth()
+  const { data: events, isLoading, error } = useFetchEventsLastMonth()
 
   if (isLoading) {
     return <Spinner />
@@ -15,8 +15,8 @@ export const IndexPage = () => {
   }
   return (
     <SimpleGrid spacing={4} columns={2}>
-      {data?.result
-        .sort((e1, e2) => -e1.datum_tol.localeCompare(e2.datum_tol))
+      {events
+        ?.sort((e1, e2) => -e1.datum_tol.localeCompare(e2.datum_tol))
         .map((e) => (
           <EventListItem key={e.esemeny_id} event={e} />
         ))}

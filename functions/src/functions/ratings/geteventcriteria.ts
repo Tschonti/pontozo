@@ -1,13 +1,19 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
-import { getOneEvent } from '../../service/mtfsz.service'
+import { getOneEvent, stageFilter } from '../../service/mtfsz.service'
 import Criterion from '../../typeorm/entities/Criterion'
 import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { CriterionToRate } from './types/criterionToRate.dto'
 import { EventToRate } from './types/eventToRate.dto'
 
-export const getRating = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
+export const getEventCriteria = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const ratingId = parseInt(req.params.id)
+  if (isNaN(ratingId)) {
+    return {
+      status: 400,
+      body: 'Invalid rating ID'
+    }
+  }
   const ads = await getAppDataSource()
   const ratingRepo = ads.getRepository(EventRating)
   const criterionRepo = ads.getRepository(Criterion)
@@ -19,11 +25,14 @@ export const getRating = async (req: HttpRequest, context: InvocationContext): P
       body: 'Rating not found!'
     }
   }
-  const criteriaQuery = criterionRepo.find({ relations: { ratings: { eventRating: true } } })
-  const eventReq = getOneEvent(rating.eventId)
-  const [criteria, event] = await Promise.all([criteriaQuery, eventReq])
+  const event = await getOneEvent(rating.eventId)
+  const criteriaFilter = event.pontozoOrszagos ? undefined : { nationalOnly: false }
+  const criteria = await criterionRepo.find({
+    relations: { ratings: { eventRating: true } },
+    where: { stageSpecific: false, ...criteriaFilter }
+  })
 
-  const rateable = criteria
+  const eventCriteria = criteria
     .map(({ ratings, ...c }) => {
       const rating = ratings.find((r) => r.eventRating.id === ratingId)
       return {
@@ -39,12 +48,18 @@ export const getRating = async (req: HttpRequest, context: InvocationContext): P
     })
     .filter((c) => c.roles.includes(rating.role))
   return {
-    jsonBody: { ...rating, criteria: rateable, event } as EventToRate
+    jsonBody: {
+      ...rating,
+      eventCriteria,
+      eventName: event.nev_1,
+      eventId: event.esemeny_id,
+      stages: event.programok.filter(stageFilter)
+    } as EventToRate
   }
 }
 
-app.http('ratings-getone', {
+app.http('ratings-geteventcriteria', {
   methods: ['GET'],
   route: 'ratings/{id}',
-  handler: getRating
+  handler: getEventCriteria
 })
