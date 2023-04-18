@@ -7,9 +7,15 @@ export type CreateResponse = {
   id: number
 }
 
-export const useRateCriteriaMutation = (ratingId: number, criterionId: number) => {
+type CreateCriterionRatingMutation = {
+  eventRatingId: number
+  criterionId: number
+  stageId?: number
+}
+
+export const useRateCriteriaMutation = ({ eventRatingId, criterionId, stageId }: CreateCriterionRatingMutation) => {
   return useMutation<unknown, Error, number>(
-    async (value) => (await axios.post(`${FUNC_HOST}/ratings/${ratingId}`, { value, criterionId })).data
+    async (value) => (await axios.post(`${FUNC_HOST}/ratings/${eventRatingId}`, { value, criterionId, stageId })).data
   )
 }
 

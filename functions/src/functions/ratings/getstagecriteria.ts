@@ -46,22 +46,22 @@ export const getStageCriteria = async (req: HttpRequest, context: InvocationCont
       return {
         ...c,
         roles: JSON.parse(c.roles as unknown as string),
-        rating: rating
-          ? {
-              id: rating.id,
-              value: rating.value
-            }
-          : undefined
+        rating
       } as CriterionToRate
     })
     .filter((c) => c.roles.includes(rating.role))
+  const avalStages = event.programok.filter(stageFilter)
+  const idx = avalStages.indexOf(stage)
+
   return {
     jsonBody: {
       ...rating,
       stageCriteria,
       eventName: event.nev_1,
       eventId: event.esemeny_id,
-      stage
+      stage,
+      nextStageId: avalStages.at(idx + 1)?.program_id,
+      prevStageId: idx - 1 >= 0 ? avalStages.at(idx - 1)?.program_id : undefined
     } as StageToRate
   }
 }

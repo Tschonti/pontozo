@@ -2,7 +2,7 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/fu
 import { plainToClass } from 'class-transformer'
 import Criterion from '../../typeorm/entities/Criterion'
 import CriterionRating from '../../typeorm/entities/CriterionRating'
-import EventRating from '../../typeorm/entities/EventRating'
+import EventRating, { RatingStatus } from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { myvalidate } from '../../util/validation'
 import { CreateRatingDto } from './types/createRating.dto'
@@ -44,6 +44,12 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
         body: 'Rating not found'
       }
     }
+    if (eventRating.status === RatingStatus.SUBMITTED) {
+      return {
+        status: 400,
+        body: 'Rating already submitted!'
+      }
+    }
     if (criterion === null) {
       return {
         status: 404,
@@ -57,9 +63,9 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
       }
     }
     const criterionRatingRepo = ads.getRepository(CriterionRating)
-    const rating = await criterionRatingRepo.findOneBy({ criterion: { id: dto.criterionId }, eventRating: { id } })
+    const rating = await criterionRatingRepo.findOneBy({ criterion: { id: dto.criterionId }, eventRating: { id }, stageId: dto.stageId })
     if (rating === null) {
-      await criterionRatingRepo.insert({ criterion: { id: dto.criterionId }, value: dto.value, eventRating: { id } })
+      await criterionRatingRepo.insert({ criterion: { id: dto.criterionId }, value: dto.value, eventRating: { id }, stageId: dto.stageId })
     } else {
       rating.value = dto.value
       await criterionRatingRepo.save(rating)

@@ -4,11 +4,12 @@ import { getOneEvent, stageFilter } from '../../service/mtfsz.service'
 import { EventSection } from '../../service/types'
 import Criterion from '../../typeorm/entities/Criterion'
 import CriterionRating from '../../typeorm/entities/CriterionRating'
-import EventRating from '../../typeorm/entities/EventRating'
+import EventRating, { RatingStatus } from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { myvalidate } from '../../util/validation'
 import { CreateManyRatingsDto } from './types/createManyRatings.dto'
 
+//todo this is unused right now
 export const rateMany = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const id = parseInt(req.params.id)
   if (isNaN(id)) {
@@ -40,6 +41,12 @@ export const rateMany = async (req: HttpRequest, context: InvocationContext): Pr
       return {
         status: 404,
         body: 'Rating not found'
+      }
+    }
+    if (eventRating.status === RatingStatus.SUBMITTED) {
+      return {
+        status: 400,
+        body: 'Rating already submitted!'
       }
     }
 

@@ -5,7 +5,8 @@ import { CriteriaListPage } from './pages/criteria/CriteriaList.page'
 import { CriterionDetailsPage } from './pages/criteria/CriterionDetails.page'
 import { EventDetailsPage } from './pages/index/EventDetails.page'
 import { IndexPage } from './pages/index/Index.page'
-import { RatingPage } from './pages/ratings/Rating.page'
+import { EventRatingPage } from './pages/ratings/EventRating.page'
+import { StageRatingPage } from './pages/ratings/StageRatingPage'
 import { PATHS } from './util/paths'
 
 export const App = () => {
@@ -30,7 +31,12 @@ export const App = () => {
           </Route>
           <Route path={PATHS.RATINGS}>
             <Route path=":ratingId">
-              <Route index element={<RatingPage />} />
+              <Route path="stage">
+                <Route path=":stageId">
+                  <Route index element={<StageRatingPage />} />
+                </Route>
+              </Route>
+              <Route index element={<EventRatingPage />} />
             </Route>
           </Route>
         </Route>

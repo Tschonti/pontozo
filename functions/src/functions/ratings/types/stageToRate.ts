@@ -8,4 +8,6 @@ export interface StageToRate extends EventRating {
   eventName: string
   stageCriteria: CriterionToRate[]
   stage: EventSection
+  nextStageId?: number
+  prevStageId?: number
 }
