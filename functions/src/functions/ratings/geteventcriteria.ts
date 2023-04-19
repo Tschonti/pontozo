@@ -54,7 +54,7 @@ export const getEventCriteria = async (req: HttpRequest, context: InvocationCont
   }
 }
 
-app.http('ratings-geteventcriteria', {
+app.http('ratings-getEventCriteria', {
   methods: ['GET'],
   route: 'ratings/{id}',
   handler: getEventCriteria

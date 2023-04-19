@@ -31,7 +31,7 @@ export const getCriterion = async (req: HttpRequest, context: InvocationContext)
   }
 }
 
-app.http('criteria-getone', {
+app.http('criteria-getOne', {
   methods: ['GET'],
   route: 'criteria/{id}',
   handler: getCriterion

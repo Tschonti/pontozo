@@ -82,7 +82,7 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
   }
 }
 
-app.http('ratings-rateone', {
+app.http('ratings-rateOne', {
   methods: ['POST'],
   route: 'ratings/{id}',
   handler: rateOne

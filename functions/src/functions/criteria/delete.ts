@@ -25,7 +25,7 @@ export const deleteCriterion = async (req: HttpRequest, context: InvocationConte
   }
 }
 
-app.http('criteria-deleteone', {
+app.http('criteria-delete', {
   methods: ['DELETE'],
   route: 'criteria/{id}',
   handler: deleteCriterion

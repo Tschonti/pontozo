@@ -19,7 +19,7 @@ export const getCriteria = async (_req: HttpRequest, context: InvocationContext)
   }
 }
 
-app.http('criteria-getall', {
+app.http('criteria-getAll', {
   methods: ['GET'],
   route: 'criteria',
   handler: getCriteria

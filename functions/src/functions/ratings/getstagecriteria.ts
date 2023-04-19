@@ -66,7 +66,7 @@ export const getStageCriteria = async (req: HttpRequest, context: InvocationCont
   }
 }
 
-app.http('ratings-getstagecriteria', {
+app.http('ratings-getStageCriteria', {
   methods: ['GET'],
   route: 'ratings/{id}/stage/{stageId}',
   handler: getStageCriteria
