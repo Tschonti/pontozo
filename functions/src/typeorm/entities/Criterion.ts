@@ -39,7 +39,7 @@ class Criterion {
   @Column({ nullable: true })
   organiserWeight: number
 
-  @OneToMany(() => Rating, (r) => r.criterion, { eager: true })
+  @OneToMany(() => Rating, (r) => r.criterion, { eager: false })
   ratings: Rating[]
 
   @Column({
