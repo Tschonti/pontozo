@@ -10,9 +10,6 @@ class Season {
   name: string
 
   @Column()
-  description: string
-
-  @Column()
   startDate: Date
 
   @Column()
