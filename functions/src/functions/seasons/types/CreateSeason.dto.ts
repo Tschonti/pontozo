@@ -1,4 +1,5 @@
 import { ArrayUnique, IsDateString, IsInt, IsNotEmpty, Min } from 'class-validator'
+import { IsLaterThan } from '../../../util/validation'
 
 export class CreateSeasonDTO {
   @IsNotEmpty()
@@ -6,7 +7,9 @@ export class CreateSeasonDTO {
 
   @IsDateString()
   startDate: Date
+
   @IsDateString()
+  @IsLaterThan('startDate', { message: 'endDate must be later than startDate!' })
   endDate: Date
 
   @IsInt({ each: true })

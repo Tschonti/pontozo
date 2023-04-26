@@ -1,6 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { plainToClass } from 'class-transformer'
-import { In } from 'typeorm'
+import { Between, In, LessThanOrEqual, MoreThanOrEqual } from 'typeorm'
 import Category from '../../typeorm/entities/Category'
 import Season from '../../typeorm/entities/Season'
 import { getAppDataSource } from '../../typeorm/getConfig'
@@ -24,6 +24,19 @@ export const createSeason = async (req: HttpRequest, context: InvocationContext)
   }
   try {
     const ads = await getAppDataSource()
+    const conflictingSeasons = await ads.getRepository(Season).find({
+      where: [
+        { startDate: Between(dto.startDate, dto.endDate) },
+        { endDate: Between(dto.startDate, dto.endDate) },
+        { startDate: LessThanOrEqual(dto.startDate), endDate: MoreThanOrEqual(dto.endDate) }
+      ]
+    })
+    if (conflictingSeasons.length > 0) {
+      return {
+        status: 400,
+        body: 'This season conflicts with another season!'
+      }
+    }
     const categories = await ads.getRepository(Category).find({ where: { id: In(dto.categoryIds) } })
     let season = new Season()
     season.name = dto.name
