@@ -12,9 +12,7 @@ export interface AuthorizationResponse {
 
 export const getUserFromHeader = (req: HttpRequest): AuthorizationResponse => {
   const authHeader = req.headers.get('Authorization')
-
   if (!authHeader) {
-    console.log('no auth header')
     return {
       isError: true,
       status: 401,
