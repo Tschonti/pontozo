@@ -1,11 +1,13 @@
 import { SimpleGrid, Spinner } from '@chakra-ui/react'
 import OAuth2Login from 'react-simple-oauth2-login'
+import { useAuthContext } from '../../api/contexts/useAuthContext'
 import { useFetchEventsLastMonth } from '../../api/hooks/eventQueryHooks'
 import { CLIENT_ID, FUNC_HOST } from '../../util/environment'
 import { EventListItem } from './components/EventListItem'
 
 export const IndexPage = () => {
   const { data: events, isLoading, error } = useFetchEventsLastMonth()
+  const { onLoginSuccess, isLoggedIn, loggedInUser } = useAuthContext()
 
   if (isLoading) {
     return <Spinner />
@@ -15,7 +17,10 @@ export const IndexPage = () => {
     console.error(error)
     return null
   }
-  const onSuccess = (response: Record<string, any>) => console.log(response)
+  const onSuccess = (response: Record<string, any>) => {
+    console.log(response)
+    onLoginSuccess(response as unknown as string)
+  }
   const onFailure = (response: Record<string, any>) => console.error(response)
 
   return (
@@ -35,6 +40,7 @@ export const IndexPage = () => {
         onFailure={onFailure}
         isCrossOrigin
       />
+      {isLoggedIn && <h1>{loggedInUser?.nev}</h1>}
     </SimpleGrid>
   )
 }
