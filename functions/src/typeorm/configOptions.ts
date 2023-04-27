@@ -5,10 +5,12 @@ import Criterion from './entities/Criterion'
 import CriterionRating from './entities/CriterionRating'
 import EventRating from './entities/EventRating'
 import Season from './entities/Season'
+import UserRoleAssignment from './entities/UserRoleAssignment'
 import { Redo1681640128728 } from './migrations/1681640128728-redo'
 import { StageIdUnique1681660884575 } from './migrations/1681660884575-stageIdUnique'
 import { SeasonForReal1682357692358 } from './migrations/1682357692358-seasonForReal'
 import { DropDescSeason1682361305950 } from './migrations/1682361305950-dropDescSeason'
+import { UserRoleAssignments1682609016992 } from './migrations/1682609016992-userRoleAssignments'
 
 export const DBConfig: DataSourceOptions = {
   type: 'mssql',
@@ -19,8 +21,14 @@ export const DBConfig: DataSourceOptions = {
   database: DB_NAME,
   synchronize: false,
   logging: true,
-  entities: [Criterion, CriterionRating, EventRating, Category, Season],
+  entities: [Criterion, CriterionRating, EventRating, Category, Season, UserRoleAssignment],
   subscribers: [],
-  migrations: [Redo1681640128728, StageIdUnique1681660884575, SeasonForReal1682357692358, DropDescSeason1682361305950],
+  migrations: [
+    Redo1681640128728,
+    StageIdUnique1681660884575,
+    SeasonForReal1682357692358,
+    DropDescSeason1682361305950,
+    UserRoleAssignments1682609016992
+  ],
   options: { encrypt: ENCRYPT }
 }

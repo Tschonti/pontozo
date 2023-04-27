@@ -1,10 +1,16 @@
 import { Check, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import CriterionRating from './CriterionRating'
-import { RatingRole } from './RatinRole'
 
 export enum RatingStatus {
   STARTED = 'STARTED',
   SUBMITTED = 'SUBMITTED'
+}
+
+export enum RatingRole {
+  COMPETITOR = 'COMPETITOR',
+  COACH = 'COACH',
+  ORGANISER = 'ORGANISER',
+  JURY = 'JURY'
 }
 
 @Entity()

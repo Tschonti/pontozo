@@ -1,5 +1,7 @@
-import axios from 'axios'
-import { APIM_HOST, APIM_KEY } from '../util/env'
+import axios, { AxiosResponse } from 'axios'
+import { MtfszUser } from '../functions/auth/types/MtfszUser'
+import { Token } from '../functions/auth/types/Token'
+import { APIM_HOST, APIM_KEY, CLIENT_ID, CLIENT_SECRET, FUNCTION_HOST } from '../util/env'
 import { Event, EventSection, MtfszResponse } from './types'
 
 const acceptedRanks = ['REGIONALIS', 'ORSZAGOS', 'KIEMELT']
@@ -26,4 +28,25 @@ export const getOneEvent = async (eventId: number): Promise<Event> => {
     ...res.data.result[0],
     pontozoOrszagos: isHigherRank(res.data.result[0])
   }
+}
+
+export const getToken = async (authCode: string): Promise<Token> => {
+  const fd = new FormData()
+  fd.append('grant_type', 'authorization_code')
+  fd.append('code', authCode)
+  fd.append('redirect_uri', `${FUNCTION_HOST}/auth/callback`)
+  fd.append('client_id', CLIENT_ID)
+  fd.append('client_secret', CLIENT_SECRET)
+  const response = await axios.post<unknown, AxiosResponse<Token>>('https://api.mtfsz.hu/oauth/v2/token', fd)
+  return response.data
+}
+
+export const getUser = async (accessToken: string): Promise<MtfszUser> => {
+  return (
+    await axios.get<MtfszUser>('https://api.mtfsz.hu/api/v1_0/user/me', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+  ).data
 }

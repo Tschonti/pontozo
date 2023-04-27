@@ -1,7 +1,7 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { plainToClass } from 'class-transformer'
 import Criterion from '../../typeorm/entities/Criterion'
-import { RatingRole } from '../../typeorm/entities/RatinRole'
+import { RatingRole } from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { myvalidate } from '../../util/validation'
 import { CreateCriteriaDTO } from './types/createCriteria.dto'

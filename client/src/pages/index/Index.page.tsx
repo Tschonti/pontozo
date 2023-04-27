@@ -1,6 +1,7 @@
-import { Button, Link, SimpleGrid, Spinner } from '@chakra-ui/react'
+import { SimpleGrid, Spinner } from '@chakra-ui/react'
+import OAuth2Login from 'react-simple-oauth2-login'
 import { useFetchEventsLastMonth } from '../../api/hooks/eventQueryHooks'
-import { APIM_KEY } from '../../util/environment'
+import { CLIENT_ID, FUNC_HOST } from '../../util/environment'
 import { EventListItem } from './components/EventListItem'
 
 export const IndexPage = () => {
@@ -14,6 +15,9 @@ export const IndexPage = () => {
     console.error(error)
     return null
   }
+  const onSuccess = (response: Record<string, any>) => console.log(response)
+  const onFailure = (response: Record<string, any>) => console.error(response)
+
   return (
     <SimpleGrid spacing={4} columns={2}>
       {events
@@ -22,9 +26,15 @@ export const IndexPage = () => {
           <EventListItem key={e.esemeny_id} event={e} />
         ))}
 
-      <Button as={Link} href={`https://pontozo-apim.azure-api.net/user/me?subscription-key=${APIM_KEY}`}>
-        Login
-      </Button>
+      <OAuth2Login
+        authorizationUrl="https://api.mtfsz.hu/oauth/v2/auth"
+        responseType="code"
+        clientId={CLIENT_ID}
+        redirectUri={`${FUNC_HOST}/auth/callback`}
+        onSuccess={onSuccess}
+        onFailure={onFailure}
+        isCrossOrigin
+      />
     </SimpleGrid>
   )
 }
