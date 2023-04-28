@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
 import { FUNC_HOST } from '../../util/environment'
+import { functionAxios } from '../../util/initAxios'
 import { Criterion } from '../model/criterion'
 
 export const useFetchCriteria = () => {
-  return useQuery<Criterion[]>(['fetchCriteria'], async () => (await axios.get(`${FUNC_HOST}/criteria`)).data, { retry: false })
+  return useQuery<Criterion[]>(['fetchCriteria'], async () => (await functionAxios.get(`${FUNC_HOST}/criteria`)).data, { retry: false })
 }
 
 // export const useFetchCriterion = (criterionId: number, onSuccess: (data: CriterionDetails) => void) => {
