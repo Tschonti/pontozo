@@ -49,6 +49,6 @@ export const login = async (req: HttpRequest, context: InvocationContext): Promi
 
 app.http('auth-login', {
   methods: ['GET'],
-  route: 'auth/callback',
+  route: 'api/auth/callback',
   handler: login
 })

@@ -20,7 +20,7 @@ export const LoginButton = ({ renderLoginButton, children }: Props) => {
       authorizationUrl="https://api.mtfsz.hu/oauth/v2/auth"
       responseType="code"
       clientId={CLIENT_ID}
-      redirectUri={`${FUNC_HOST}/auth/callback`}
+      redirectUri={`${FUNC_HOST}/api/auth/callback`}
       onSuccess={onSuccess}
       onFailure={onFailure}
       buttonText="Bejelentkezés"
