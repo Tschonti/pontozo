@@ -26,7 +26,13 @@ export const getStageCriteria = async (req: HttpRequest, context: InvocationCont
       body: 'Rating not found!'
     }
   }
-  const event = await getOneEvent(rating.eventId)
+  const { data: event, isError, message, status } = await getOneEvent(rating.eventId)
+  if (isError) {
+    return {
+      status,
+      body: message
+    }
+  }
   const stage = event.programok.find((p) => p.program_id === stageId)
   if (!stage || !stageFilter(stage)) {
     return {

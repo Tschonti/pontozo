@@ -6,7 +6,7 @@ import { PontozoUser } from './types/PontozoUser'
 
 export const currentUser = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
-    const { isError, status, message, userFromJwt: user } = getUserFromHeader(req)
+    const { isError, status, message, data: user } = getUserFromHeader(req)
     if (isError) {
       return {
         status: status,

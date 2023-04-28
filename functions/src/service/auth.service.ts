@@ -2,15 +2,9 @@ import { HttpRequest } from '@azure/functions'
 import * as jwt from 'jsonwebtoken'
 import { PontozoUser } from '../functions/auth/types/PontozoUser'
 import { JWT_SECRET } from '../util/env'
+import { ServiceResponse } from './types'
 
-export interface AuthorizationResponse {
-  isError: boolean
-  userFromJwt?: PontozoUser
-  status?: number
-  message?: string
-}
-
-export const getUserFromHeader = (req: HttpRequest): AuthorizationResponse => {
+export const getUserFromHeader = (req: HttpRequest): ServiceResponse<PontozoUser> => {
   const authHeader = req.headers.get('Authorization')
   if (!authHeader) {
     return {
@@ -26,10 +20,9 @@ export const getUserFromHeader = (req: HttpRequest): AuthorizationResponse => {
 
     return {
       isError: false,
-      userFromJwt
+      data: userFromJwt
     }
   } catch (error) {
-    console.log(error)
     return {
       isError: true,
       status: 401,

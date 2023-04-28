@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios'
 import { MtfszUser } from '../functions/auth/types/MtfszUser'
 import { Token } from '../functions/auth/types/Token'
 import { APIM_HOST, APIM_KEY, CLIENT_ID, CLIENT_SECRET, FUNCTION_HOST } from '../util/env'
-import { Event, EventSection, MtfszResponse } from './types'
+import { Event, EventSection, MtfszResponse, ServiceResponse } from './types'
 
 const acceptedRanks = ['REGIONALIS', 'ORSZAGOS', 'KIEMELT']
 const higherRanks = ['ORSZAGOS', 'KIEMELT']
@@ -11,22 +11,29 @@ const eventFilter = (e: Event) =>
   e.tipus === 'VERSENY' &&
   e.programok.some((p) => p.tipus === 'FUTAM' && p.futam.szakag === 'TAJFUTAS' && acceptedRanks.includes(p.futam.rangsorolo))
 
-export const stageFilter = (s: EventSection) => s.tipus === 'FUTAM' && acceptedRanks.includes(s.futam.rangsorolo)
-
 const isHigherRank = (e: Event) =>
   e.programok.some((p) => p.tipus === 'FUTAM' && p.futam.szakag === 'TAJFUTAS' && higherRanks.includes(p.futam.rangsorolo))
 
-export const getOneEvent = async (eventId: number): Promise<Event> => {
+export const stageFilter = (s: EventSection) => s.tipus === 'FUTAM' && acceptedRanks.includes(s.futam.rangsorolo)
+
+export const getOneEvent = async (eventId: number): Promise<ServiceResponse<Event>> => {
   const url = new URL('esemenyek', APIM_HOST)
   url.searchParams.append('esemeny_id', eventId.toString())
 
   const res = await axios.get<MtfszResponse>(url.toString(), { headers: { 'Ocp-Apim-Subscription-Key': APIM_KEY } })
   if (res.data.result.length === 0 || !eventFilter(res.data.result[0])) {
-    return null
+    return {
+      isError: true,
+      status: 404,
+      message: 'Event not found or invalid'
+    }
   }
   return {
-    ...res.data.result[0],
-    pontozoOrszagos: isHigherRank(res.data.result[0])
+    isError: false,
+    data: {
+      ...res.data.result[0],
+      pontozoOrszagos: isHigherRank(res.data.result[0])
+    }
   }
 }
 

@@ -22,8 +22,8 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
         jsonBody: errors
       }
     }
-    const event = await getOneEvent(dto.eventId)
-    if (event === null) {
+    const { isError } = await getOneEvent(dto.eventId)
+    if (isError) {
       return {
         status: 400,
         body: "Event doesn't exist in MTFSZ DB or is not ranked!"

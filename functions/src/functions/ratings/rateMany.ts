@@ -50,7 +50,13 @@ export const rateMany = async (req: HttpRequest, context: InvocationContext): Pr
       }
     }
 
-    const event = await getOneEvent(eventRating.eventId)
+    const { data: event, isError, message, status } = await getOneEvent(eventRating.eventId)
+    if (isError) {
+      return {
+        status,
+        body: message
+      }
+    }
     const criteriaFilter = event.pontozoOrszagos ? undefined : { nationalOnly: false }
     let stage: EventSection | undefined = undefined
     if (dto.stageId) {

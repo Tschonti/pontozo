@@ -1,3 +1,10 @@
+export type ServiceResponse<T> = {
+  isError: boolean
+  data?: T
+  status?: number
+  message?: string
+}
+
 export type MtfszResponse = {
   page_size: number
   result: Event[]

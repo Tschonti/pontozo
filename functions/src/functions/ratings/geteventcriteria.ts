@@ -25,7 +25,13 @@ export const getEventCriteria = async (req: HttpRequest, context: InvocationCont
       body: 'Rating not found!'
     }
   }
-  const event = await getOneEvent(rating.eventId)
+  const { data: event, isError, message, status } = await getOneEvent(rating.eventId)
+  if (isError) {
+    return {
+      status,
+      body: message
+    }
+  }
   const criteriaFilter = event.pontozoOrszagos ? undefined : { nationalOnly: false }
   const criteria = await criterionRepo.find({
     relations: { ratings: { eventRating: true } },
