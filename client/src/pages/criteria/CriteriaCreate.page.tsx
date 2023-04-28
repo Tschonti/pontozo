@@ -75,7 +75,7 @@ export const CriteriaCreatePage = () => {
           <Input {...register('description', { required: true })} />
           <FormErrorMessage>Kötelező megadni a szempont leírását.</FormErrorMessage>
         </FormControl>
-        <FormControl isInvalid={!!errors.description}>
+        <FormControl isInvalid={!!errors.editorsNote}>
           <FormLabel>Privát leírás</FormLabel>
           <Input {...register('editorsNote')} />
         </FormControl>
