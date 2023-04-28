@@ -7,11 +7,12 @@ import { CookieKeys } from '../../util/CookieKeys'
 import { FUNC_HOST } from '../../util/environment'
 import { PATHS } from '../../util/paths'
 import { queryClient } from '../../util/queryClient'
-import { User } from '../model/user'
+import { User, UserRole } from '../model/user'
 
 export type AuthContextType = {
   isLoggedIn: boolean
   loggedInUser: User | undefined
+  isAdmin: boolean
   loggedInUserLoading: boolean
   loggedInUserError: unknown
   onLoginSuccess: (jwt: string) => void
@@ -21,6 +22,7 @@ export type AuthContextType = {
 
 export const AuthContext = createContext<AuthContextType>({
   isLoggedIn: false,
+  isAdmin: false,
   loggedInUser: undefined,
   loggedInUserLoading: false,
   loggedInUserError: undefined,
@@ -39,7 +41,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   } = useQuery(
     ['currentUser'],
     async () =>
-      (await axios.get(`${FUNC_HOST}/auth/user`, { headers: { Authorization: `Bearer ${Cookies.get(CookieKeys.JWT_TOKEN)}` } })).data,
+      (await axios.get<User>(`${FUNC_HOST}/auth/user`, { headers: { Authorization: `Bearer ${Cookies.get(CookieKeys.JWT_TOKEN)}` } })).data,
     {
       enabled: isLoggedIn,
       retry: false
@@ -67,6 +69,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     <AuthContext.Provider
       value={{
         isLoggedIn,
+        isAdmin: isLoggedIn && !!user?.roles.includes(UserRole.SITE_ADMIN),
         loggedInUserLoading: isLoading,
         loggedInUser: user,
         loggedInUserError: error,
