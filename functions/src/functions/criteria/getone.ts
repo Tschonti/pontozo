@@ -27,7 +27,7 @@ export const getCriterion = async (req: HttpRequest, context: InvocationContext)
       }
     }
     return {
-      jsonBody: criteria
+      jsonBody: { ...criteria, roles: JSON.parse(criteria.roles) } as Criterion
     }
   } catch (error) {
     context.error(error)

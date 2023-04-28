@@ -6,22 +6,41 @@ import {
   FormErrorMessage,
   FormLabel,
   Heading,
+  HStack,
   Input,
   SimpleGrid,
+  Spinner,
   Stack,
   Switch,
   VStack
 } from '@chakra-ui/react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa'
-import { Link, useNavigate } from 'react-router-dom'
-import { useCreateCriterionMutation } from '../../api/hooks/criteriaMutationHook'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useCreateCriterionMutation, useDeleteCriterionMutation, useUpdateCriterionMutation } from '../../api/hooks/criteriaMutationHook'
+import { useFetchCriterion } from '../../api/hooks/criteriaQueryHook'
 import { CreateCriterion } from '../../api/model/criterion'
 import { RatingRole } from '../../api/model/rating'
 import { onlyUnique } from '../../util/onlyUnique'
 import { PATHS } from '../../util/paths'
 
 export const CriteriaCreatePage = () => {
+  const criterionId = parseInt(useParams<{ criterionId: string }>().criterionId ?? '-1')
+  const criterionQuery = useFetchCriterion(criterionId, (data) => {
+    setValue('name', data.name)
+    setValue('description', data.description)
+    setValue('text0', data.text0)
+    setValue('text1', data.text1)
+    setValue('text2', data.text2)
+    setValue('text3', data.text3)
+    setValue('editorsNote', data.editorsNote)
+    setValue('competitorWeight', data.competitorWeight)
+    setValue('organiserWeight', data.organiserWeight)
+    setValue('stageSpecific', data.stageSpecific)
+    setValue('nationalOnly', data.nationalOnly)
+    setValue('roles', data.roles)
+  })
+
   const {
     register,
     handleSubmit,
@@ -41,8 +60,15 @@ export const CriteriaCreatePage = () => {
   })
   const navigate = useNavigate()
   const createMutation = useCreateCriterionMutation()
+  const updateMutation = useUpdateCriterionMutation(criterionId)
+  const deleteMutation = useDeleteCriterionMutation(criterionId)
+
   const onSubmit: SubmitHandler<CreateCriterion> = (formData) => {
-    createMutation.mutate(formData, { onSuccess: () => navigate(PATHS.CRITERIA) })
+    if (criterionId === -1) {
+      createMutation.mutate(formData, { onSuccess: () => navigate(PATHS.CRITERIA) })
+    } else {
+      updateMutation.mutate(formData, { onSuccess: () => navigate(PATHS.CRITERIA) })
+    }
   }
 
   const generateChangeFn = (values: RatingRole[]) => {
@@ -60,10 +86,14 @@ export const CriteriaCreatePage = () => {
       }
     }
   }
+
+  if (criterionQuery.isLoading) {
+    return <Spinner />
+  }
   return (
     <>
       <VStack spacing={5} alignItems="flex-start">
-        <Heading>Új szempont</Heading>
+        <Heading>{criterionId === -1 ? 'Új szempont' : 'Szempont szerkesztése'}</Heading>
         <FormControl isInvalid={!!errors.name}>
           <FormLabel>Név</FormLabel>
           <Input {...register('name', { required: true })} />
@@ -106,10 +136,18 @@ export const CriteriaCreatePage = () => {
             <FormLabel>Szerepkörök, akik számára elérhető</FormLabel>
             <Input {...register('roles', { validate: (v) => v.length > 0 })} hidden />
             <VStack alignItems="flex-start">
-              <Checkbox colorScheme="green" onChange={generateChangeFn([RatingRole.COMPETITOR, RatingRole.COACH])}>
+              <Checkbox
+                colorScheme="green"
+                defaultChecked={watch('roles').includes(RatingRole.COMPETITOR)}
+                onChange={generateChangeFn([RatingRole.COMPETITOR, RatingRole.COACH])}
+              >
                 Versenyzők és Edzők
               </Checkbox>
-              <Checkbox colorScheme="green" onChange={generateChangeFn([RatingRole.ORGANISER, RatingRole.JURY])}>
+              <Checkbox
+                colorScheme="green"
+                defaultChecked={watch('roles').includes(RatingRole.JURY)}
+                onChange={generateChangeFn([RatingRole.ORGANISER, RatingRole.JURY])}
+              >
                 Rendezők és MTFSZ Zsűrik
               </Checkbox>
             </VStack>
@@ -122,13 +160,23 @@ export const CriteriaCreatePage = () => {
               <FormLabel htmlFor="stageSpecific" mb="0">
                 Futam specifikus
               </FormLabel>
-              <Switch colorScheme="green" id="stageSpecific" onChange={(e) => setValue('stageSpecific', e.target.checked)} />
+              <Switch
+                checked={watch('stageSpecific')}
+                colorScheme="green"
+                id="stageSpecific"
+                onChange={(e) => setValue('stageSpecific', e.target.checked)}
+              />
             </FormControl>
             <FormControl display="flex" w="100%" justifyContent="space-between" alignItems="center">
               <FormLabel htmlFor="nationalOnly" mb="0">
                 Csak országos/kiemelt versenyekre érvényes
               </FormLabel>
-              <Switch colorScheme="green" id="nationalOnly" onChange={(e) => setValue('nationalOnly', e.target.checked)} />
+              <Switch
+                checked={watch('nationalOnly')}
+                colorScheme="green"
+                id="nationalOnly"
+                onChange={(e) => setValue('nationalOnly', e.target.checked)}
+              />
             </FormControl>
           </VStack>
         </SimpleGrid>
@@ -168,9 +216,16 @@ export const CriteriaCreatePage = () => {
           <Button as={Link} to={PATHS.CRITERIA} leftIcon={<FaArrowLeft />}>
             Vissza
           </Button>
-          <Button type="submit" colorScheme="green" onClick={handleSubmit(onSubmit)}>
-            Mentés
-          </Button>
+          <HStack spacing={1}>
+            {criterionId > -1 && (
+              <Button colorScheme="red" onClick={() => deleteMutation.mutate(undefined, { onSuccess: () => navigate(PATHS.CRITERIA) })}>
+                Szempont törlése
+              </Button>
+            )}
+            <Button type="submit" colorScheme="green" onClick={handleSubmit(onSubmit)}>
+              Mentés
+            </Button>
+          </HStack>
         </Flex>
       </VStack>
     </>

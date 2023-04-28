@@ -5,7 +5,6 @@ import { CategoryDetailsPage } from './pages/categories/CategoryDetails.page'
 import { CategoryListPage } from './pages/categories/CategoryList.page'
 import { CriteriaCreatePage } from './pages/criteria/CriteriaCreate.page'
 import { CriteriaListPage } from './pages/criteria/CriteriaList.page'
-import { CriterionDetailsPage } from './pages/criteria/CriterionDetails.page'
 import { EventDetailsPage } from './pages/index/EventDetails.page'
 import { IndexPage } from './pages/index/Index.page'
 import { EventRatingPage } from './pages/ratings/EventRating.page'
@@ -23,7 +22,7 @@ export const App = () => {
           <Route index element={<IndexPage />} />
           <Route path={PATHS.CRITERIA}>
             <Route path=":criterionId">
-              <Route index element={<CriterionDetailsPage />} />
+              <Route path="edit" element={<CriteriaCreatePage />} />
             </Route>
             <Route path="new">
               <Route index element={<CriteriaCreatePage />} />
@@ -33,6 +32,7 @@ export const App = () => {
           <Route path={PATHS.CATEGORIES}>
             <Route path=":categoryId">
               <Route index element={<CategoryDetailsPage />} />
+              <Route path="edit" element={<CategoryCreatePage />} />
             </Route>
             <Route path="new">
               <Route index element={<CategoryCreatePage />} />
@@ -42,6 +42,7 @@ export const App = () => {
           <Route path={PATHS.SEASONS}>
             <Route path=":seasonId">
               <Route index element={<SeasonDetailsPage />} />
+              <Route path="edit" element={<SeasonCreatePage />} />
             </Route>
             <Route path="new">
               <Route index element={<SeasonCreatePage />} />
