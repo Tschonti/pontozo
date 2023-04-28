@@ -1,8 +1,15 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Category from '../../typeorm/entities/Category'
 import { getAppDataSource } from '../../typeorm/getConfig'
+import { httpResServiceRes } from '../../util/httpRes'
 
 export const deleteCategory = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
+  const adminCheck = getUserFromHeaderAndAssertAdmin(req)
+  if (adminCheck.isError) {
+    return httpResServiceRes(adminCheck)
+  }
+
   const id = parseInt(req.params.id)
   if (isNaN(id)) {
     return {

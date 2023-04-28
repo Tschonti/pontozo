@@ -21,6 +21,9 @@ class EventRating {
   @Column()
   eventId: number
 
+  @Column()
+  userId: number
+
   @OneToMany(() => CriterionRating, (cr) => cr.eventRating, { onDelete: 'CASCADE', nullable: false })
   ratings: CriterionRating
 

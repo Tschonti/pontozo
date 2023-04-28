@@ -1,8 +1,10 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { getUserFromHeader } from '../../service/auth.service'
 import { getOneEvent, stageFilter } from '../../service/mtfsz.service'
 import Criterion from '../../typeorm/entities/Criterion'
 import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
+import { httpResServiceRes } from '../../util/httpRes'
 import { CriterionToRate } from './types/criterionToRate.dto'
 import { EventToRate } from './types/eventToRate.dto'
 
@@ -14,6 +16,10 @@ export const getEventCriteria = async (req: HttpRequest, context: InvocationCont
       body: 'Invalid rating ID'
     }
   }
+  const userServiceRes = getUserFromHeader(req)
+  if (userServiceRes.isError) {
+    return httpResServiceRes(userServiceRes)
+  }
   const ads = await getAppDataSource()
   const ratingRepo = ads.getRepository(EventRating)
   const criterionRepo = ads.getRepository(Criterion)
@@ -23,6 +29,12 @@ export const getEventCriteria = async (req: HttpRequest, context: InvocationCont
     return {
       status: 404,
       body: 'Rating not found!'
+    }
+  }
+  if (rating.userId !== userServiceRes.data.szemely_id) {
+    return {
+      status: 403,
+      body: "You're not allowed to get the criteria of this rating"
     }
   }
   const { data: event, isError, message, status } = await getOneEvent(rating.eventId)

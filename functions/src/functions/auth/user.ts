@@ -2,22 +2,21 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/fu
 import { getUserFromHeader } from '../../service/auth.service'
 import UserRoleAssignment from '../../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../../typeorm/getConfig'
+import { httpResServiceRes } from '../../util/httpRes'
 import { PontozoUser } from './types/PontozoUser'
 
 export const currentUser = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
+  const userServiceRes = getUserFromHeader(req)
+  if (userServiceRes.isError) {
+    return httpResServiceRes(userServiceRes)
+  }
   try {
-    const { isError, status, message, data: user } = getUserFromHeader(req)
-    if (isError) {
-      return {
-        status: status,
-        body: message
-      }
-    }
-
-    const roles = await (await getAppDataSource()).getRepository(UserRoleAssignment).find({ where: { userId: user.szemely_id } })
+    const roles = await (await getAppDataSource())
+      .getRepository(UserRoleAssignment)
+      .find({ where: { userId: userServiceRes.data.szemely_id } })
 
     return {
-      jsonBody: { ...user, roles: roles.map((r) => r.role) } as PontozoUser
+      jsonBody: { ...userServiceRes.data, roles: roles.map((r) => r.role) } as PontozoUser
     }
   } catch (e) {
     return {

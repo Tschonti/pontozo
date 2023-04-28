@@ -1,9 +1,16 @@
 import { app, HttpRequest, InvocationContext } from '@azure/functions'
 import { HttpResponseInit } from '@azure/functions/types/http'
+import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Criterion from '../../typeorm/entities/Criterion'
 import { getAppDataSource } from '../../typeorm/getConfig'
+import { httpResServiceRes } from '../../util/httpRes'
 
-export const getCriteria = async (_req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
+export const getCriteria = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
+  const adminCheck = getUserFromHeaderAndAssertAdmin(req)
+  if (adminCheck.isError) {
+    return httpResServiceRes(adminCheck)
+  }
+
   const criterionRepo = (await getAppDataSource()).getRepository(Criterion)
   try {
     const criteria = await criterionRepo.find()

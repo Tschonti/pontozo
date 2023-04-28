@@ -1,6 +1,7 @@
 import { HttpRequest } from '@azure/functions'
 import * as jwt from 'jsonwebtoken'
 import { PontozoUser } from '../functions/auth/types/PontozoUser'
+import { UserRole } from '../typeorm/entities/UserRoleAssignment'
 import { JWT_SECRET } from '../util/env'
 import { ServiceResponse } from './types'
 
@@ -28,5 +29,23 @@ export const getUserFromHeader = (req: HttpRequest): ServiceResponse<PontozoUser
       status: 401,
       message: `Unauthorized - invalid jwt`
     }
+  }
+}
+
+export const getUserFromHeaderAndAssertAdmin = (req: HttpRequest): ServiceResponse<never> => {
+  const { data: user, ...userRes } = getUserFromHeader(req)
+  if (userRes.isError) {
+    return userRes
+  }
+  const isAdmin = user.roles.includes(UserRole.SITE_ADMIN)
+  if (isAdmin) {
+    return {
+      isError: false
+    }
+  }
+  return {
+    isError: true,
+    message: "You're not allowed to perform this action!",
+    status: 403
   }
 }

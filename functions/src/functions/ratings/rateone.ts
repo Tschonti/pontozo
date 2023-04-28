@@ -1,9 +1,11 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { plainToClass } from 'class-transformer'
+import { getUserFromHeader } from '../../service/auth.service'
 import Criterion from '../../typeorm/entities/Criterion'
 import CriterionRating from '../../typeorm/entities/CriterionRating'
 import EventRating, { RatingStatus } from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
+import { httpResServiceRes } from '../../util/httpRes'
 import { myvalidate } from '../../util/validation'
 import { CreateRatingDto } from './types/createRating.dto'
 
@@ -20,6 +22,10 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
       status: 400,
       body: `No body attached to POST query.`
     }
+  }
+  const userServiceRes = getUserFromHeader(req)
+  if (userServiceRes.isError) {
+    return httpResServiceRes(userServiceRes)
   }
   const dto = plainToClass(CreateRatingDto, await req.json())
   const errors = await myvalidate(dto)
@@ -48,6 +54,12 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
       return {
         status: 400,
         body: 'Rating already submitted!'
+      }
+    }
+    if (eventRating.userId !== userServiceRes.data.szemely_id) {
+      return {
+        status: 403,
+        body: "You're not allowed to rate this criteria"
       }
     }
     if (criterion === null) {

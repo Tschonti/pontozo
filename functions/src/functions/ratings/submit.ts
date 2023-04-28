@@ -1,6 +1,8 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { getUserFromHeader } from '../../service/auth.service'
 import EventRating, { RatingStatus } from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
+import { httpResServiceRes } from '../../util/httpRes'
 
 export const submitOne = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const id = parseInt(req.params.id)
@@ -10,6 +12,10 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
       body: 'Invalid eventRating id!'
     }
   }
+  const userServiceRes = getUserFromHeader(req)
+  if (userServiceRes.isError) {
+    return httpResServiceRes(userServiceRes)
+  }
   try {
     const eventRatingRepo = (await getAppDataSource()).getRepository(EventRating)
     const rating = await eventRatingRepo.findOneBy({ id })
@@ -18,6 +24,12 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
       return {
         status: 400,
         body: 'Rating already submitted'
+      }
+    }
+    if (rating.userId !== userServiceRes.data.szemely_id) {
+      return {
+        status: 403,
+        body: "You're not allowed to submit this rating!"
       }
     }
 
