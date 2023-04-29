@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import { PLayout } from './components/commons/PLayout'
+import { AuthorizedPage } from './pages/authorized/Authorized.page'
 import { CategoryCreatePage } from './pages/categories/CategoryCreate.page'
 import { CategoryDetailsPage } from './pages/categories/CategoryDetails.page'
 import { CategoryListPage } from './pages/categories/CategoryList.page'
@@ -20,6 +21,7 @@ export const App = () => {
       <Routes>
         <Route path={PATHS.INDEX}>
           <Route index element={<IndexPage />} />
+          <Route path={PATHS.AUTHORIZED} element={<AuthorizedPage />} />
           <Route path={PATHS.CRITERIA}>
             <Route path=":criterionId">
               <Route path="edit" element={<CriteriaCreatePage />} />

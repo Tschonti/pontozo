@@ -1,5 +1,5 @@
 import { Box, Collapse, Flex, Heading, IconButton, useColorModeValue, useDisclosure, useToast } from '@chakra-ui/react'
-import { FC, useEffect } from 'react'
+import { useEffect } from 'react'
 import { FaBars, FaTimes } from 'react-icons/fa'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../../api/contexts/useAuthContext'
@@ -7,9 +7,9 @@ import { PATHS } from '../../util/paths'
 import DesktopNav from './DesktopNav'
 import MobileNav from './MobileNav'
 
-export const Navbar: FC = () => {
+export const Navbar = () => {
   const { isOpen, onToggle } = useDisclosure()
-  const { isAdmin } = useAuthContext()
+  const { isAdmin, loggedInUserLoading } = useAuthContext()
   const toast = useToast()
   const nav = useNavigate()
   const onNavigate = () => onToggle()
@@ -17,11 +17,11 @@ export const Navbar: FC = () => {
   const isAdminPath = pathname.startsWith('/admin')
 
   useEffect(() => {
-    if (!isAdmin && isAdminPath) {
+    if (!isAdmin && isAdminPath && !loggedInUserLoading) {
       toast({ status: 'error', title: 'Nincs jogosultságod az oldal megtekintéséhez!' })
       nav(PATHS.INDEX)
     }
-  }, [isAdmin, isAdminPath])
+  }, [isAdmin, isAdminPath, loggedInUserLoading])
 
   return (
     <Flex justifyContent="center" w="full" borderBottom="1px solid grey" mr={5}>

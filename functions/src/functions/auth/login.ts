@@ -3,7 +3,7 @@ import * as jwt from 'jsonwebtoken'
 import { getToken, getUser } from '../../service/mtfsz.service'
 import UserRoleAssignment from '../../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { JWT_SECRET } from '../../util/env'
+import { FRONTEND_URL, JWT_SECRET } from '../../util/env'
 
 export const login = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const authorizationCode = req.query.get('code')
@@ -20,7 +20,13 @@ export const login = async (req: HttpRequest, context: InvocationContext): Promi
 
     const roles = await (await getAppDataSource()).getRepository(UserRoleAssignment).find({ where: { userId: user.szemely_id } })
     const jwtToken = jwt.sign({ ...user, roles: roles.map((r) => r.role) }, JWT_SECRET, { expiresIn: '2 days' })
-
+    return {
+      status: 302,
+      headers: {
+        location: `${FRONTEND_URL}/authorized?token=${jwtToken}`
+      }
+    }
+    /*
     const html = `<html>
     <head></head>
     <body>
@@ -38,7 +44,7 @@ export const login = async (req: HttpRequest, context: InvocationContext): Promi
       headers: {
         'Content-Type': 'text/html'
       }
-    }
+    }*/
   } catch (e) {
     return {
       status: 401,
@@ -49,6 +55,6 @@ export const login = async (req: HttpRequest, context: InvocationContext): Promi
 
 app.http('auth-login', {
   methods: ['GET'],
-  route: 'api/auth/callback',
+  route: 'auth/callback',
   handler: login
 })

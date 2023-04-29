@@ -6,5 +6,6 @@ export enum PATHS {
   SEASONS = '/admin/seasons',
   USERS = '/admin/users',
   EVENTS = '/events',
-  RATINGS = '/ratings'
+  RATINGS = '/ratings',
+  AUTHORIZED = '/authorized'
 }
