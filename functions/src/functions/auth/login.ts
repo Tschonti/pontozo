@@ -26,25 +26,6 @@ export const login = async (req: HttpRequest, context: InvocationContext): Promi
         location: `${FRONTEND_URL}/authorized?token=${jwtToken}`
       }
     }
-    /*
-    const html = `<html>
-    <head></head>
-    <body>
-      <script>
-        window.addEventListener("message", function (event) {
-          if (event.data.message === "requestResult") {
-            event.source.postMessage({"message": "deliverResult", result: "${jwtToken}" }, "*");
-          }
-        });
-      </script>
-    </body>
-    </html>`
-    return {
-      body: html,
-      headers: {
-        'Content-Type': 'text/html'
-      }
-    }*/
   } catch (e) {
     return {
       status: 401,

@@ -8,6 +8,7 @@ import { CriteriaCreatePage } from './pages/criteria/CriteriaCreate.page'
 import { CriteriaListPage } from './pages/criteria/CriteriaList.page'
 import { EventDetailsPage } from './pages/index/EventDetails.page'
 import { IndexPage } from './pages/index/Index.page'
+import { ProfilePage } from './pages/profile/Profile.page'
 import { EventRatingPage } from './pages/ratings/EventRating.page'
 import { StageRatingPage } from './pages/ratings/StageRatingPage'
 import { SeasonCreatePage } from './pages/seasons/SeasonCreate.page'
@@ -22,6 +23,7 @@ export const App = () => {
         <Route path={PATHS.INDEX}>
           <Route index element={<IndexPage />} />
           <Route path={PATHS.AUTHORIZED} element={<AuthorizedPage />} />
+          <Route path={PATHS.PROFILE} element={<ProfilePage />} />
           <Route path={PATHS.CRITERIA}>
             <Route path=":criterionId">
               <Route path="edit" element={<CriteriaCreatePage />} />

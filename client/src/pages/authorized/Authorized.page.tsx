@@ -16,15 +16,14 @@ export const AuthorizedPage = () => {
     if (token && !isLoggedIn) {
       onLoginSuccess(token)
     }
-  }, [])
+    if (isLoggedIn) {
+      nav(PATHS.INDEX, { replace: true })
+    }
+    if (!token) {
+      toast({ status: 'error', title: 'Hiba bejelentkezés közben!' })
+      nav(PATHS.INDEX, { replace: true })
+    }
+  }, [isLoggedIn])
 
-  if (isLoggedIn) {
-    nav(PATHS.INDEX, { replace: true })
-  }
-
-  if (!token) {
-    toast({ status: 'error', title: 'Hiba bejelentkezés közben!' })
-  }
-  nav(PATHS.INDEX, { replace: true })
   return null
 }

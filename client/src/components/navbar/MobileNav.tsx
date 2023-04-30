@@ -10,7 +10,7 @@ type Props = {
 
 const MobileNav = ({ onNavigate }: Props) => {
   const { pathname } = useLocation()
-  const { onLogout, isLoggedIn } = useAuthContext()
+  const { isLoggedIn } = useAuthContext()
   const navItemsToRender = pathname.startsWith('/admin') ? adminNavItems : navItems
 
   return (
@@ -20,11 +20,7 @@ const MobileNav = ({ onNavigate }: Props) => {
           <Text textAlign="center">{item.label}</Text>
         </HStack>
       ))}
-      {isLoggedIn ? (
-        <HStack cursor="pointer" onClick={() => onLogout()}>
-          <Text textAlign="center">Kijelentkezés</Text>
-        </HStack>
-      ) : (
+      {!isLoggedIn && (
         <HStack cursor="pointer" onClick={onLoginClick}>
           <Text textAlign="center">Bejelentkezés</Text>
         </HStack>
