@@ -10,8 +10,10 @@ type Props = {
 
 const MobileNav = ({ onNavigate }: Props) => {
   const { pathname } = useLocation()
-  const { isLoggedIn } = useAuthContext()
-  const navItemsToRender = pathname.startsWith('/admin') ? adminNavItems : navItems
+  const { isLoggedIn, isAdmin } = useAuthContext()
+  const navItemsToRender = (pathname.startsWith('/admin') ? adminNavItems : navItems).filter((navItem) =>
+    navItem.shown(isLoggedIn, isAdmin)
+  )
 
   return (
     <Stack display={{ lg: 'none' }} fontWeight={700} fontSize="xl" ml={6} mb={6}>

@@ -6,7 +6,7 @@ import { onLoginClick } from '../../util/onLoginClick'
 
 const DesktopNav = () => {
   const { pathname } = useLocation()
-  const { onLogout, isLoggedIn, isAdmin } = useAuthContext()
+  const { isLoggedIn, isAdmin } = useAuthContext()
   const navItemsToRender = (pathname.startsWith('/admin') ? adminNavItems : navItems).filter((navItem) =>
     navItem.shown(isLoggedIn, isAdmin)
   )
