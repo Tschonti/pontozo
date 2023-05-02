@@ -20,4 +20,12 @@ export interface CriterionDetails extends Criterion {
   rating?: CriterionRating
 }
 
-export type CreateCriterion = Omit<Criterion, 'id'>
+export interface CreateCriterion extends Omit<Criterion, 'id' | 'competitorWeight' | 'organiserWeight'> {
+  organiserWeight?: number
+  competitorWeight?: number
+}
+
+export interface CreateCriterionForm extends Omit<Criterion, 'id' | 'roles'> {
+  competitorAllowed: boolean
+  juryAllowed: boolean
+}

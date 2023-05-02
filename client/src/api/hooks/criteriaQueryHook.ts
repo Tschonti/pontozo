@@ -6,11 +6,10 @@ export const useFetchCriteria = () => {
   return useQuery<Criterion[]>(['fetchCriteria'], async () => (await functionAxios.get(`/criteria`)).data, { retry: false })
 }
 
-export const useFetchCriterion = (criterionId: number, onSuccess: (data: Criterion) => void) => {
+export const useFetchCriterion = (criterionId: number) => {
   return useQuery<Criterion>(['fetchCriterion', criterionId], async () => (await functionAxios.get(`/criteria/${criterionId}`)).data, {
     retry: false,
     refetchInterval: false,
-    enabled: criterionId > 0,
-    onSuccess
+    enabled: criterionId > 0
   })
 }
