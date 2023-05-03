@@ -121,15 +121,27 @@ export const CriteriaCreatePage = () => {
             <Input {...register('text3')} />
           </FormControl>
         </Stack>
-
+        {/* TODO listából érkezve első alkalommal a checkbox értékek nem frissek!  */}
         <SimpleGrid columns={[1, 1, 2]} spacing={10}>
-          <FormControl>
+          <FormControl isInvalid={!!errors.competitorAllowed}>
             <FormLabel>Szerepkörök, akik számára elérhető</FormLabel>
             <VStack alignItems="flex-start">
-              <Checkbox colorScheme="green" {...register('competitorAllowed')}>
+              <Checkbox
+                colorScheme="green"
+                {...register('competitorAllowed', {
+                  validate: (val, formVal) => val || formVal.juryAllowed,
+                  deps: 'juryAllowed'
+                })}
+              >
                 Versenyzők és Edzők
               </Checkbox>
-              <Checkbox colorScheme="green" {...register('juryAllowed')}>
+              <Checkbox
+                colorScheme="green"
+                {...register('juryAllowed', {
+                  validate: (val, formVal) => val || formVal.competitorAllowed,
+                  deps: 'competitorAllowed'
+                })}
+              >
                 Rendezők és MTFSZ Zsűrik
               </Checkbox>
             </VStack>
@@ -162,7 +174,7 @@ export const CriteriaCreatePage = () => {
                 {...register('competitorWeight', {
                   valueAsNumber: true,
                   validate: (val, formVal) => !formVal.competitorAllowed || val > 0,
-                  deps: ['roles']
+                  deps: ['competitorAllowed']
                 })}
               />
               <FormErrorMessage>Kötelező megadni a szempont súlyát a szerepkörhöz.</FormErrorMessage>
@@ -176,7 +188,7 @@ export const CriteriaCreatePage = () => {
                 {...register('organiserWeight', {
                   valueAsNumber: true,
                   validate: (val, formVal) => !formVal.juryAllowed || val > 0,
-                  deps: ['roles']
+                  deps: ['juryAllowed']
                 })}
               />
               <FormErrorMessage>Kötelező megadni a szempont súlyát a szerepkörhöz.</FormErrorMessage>
