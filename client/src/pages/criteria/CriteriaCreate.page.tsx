@@ -17,8 +17,12 @@ import {
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { useCreateCriterionMutation, useDeleteCriterionMutation, useUpdateCriterionMutation } from '../../api/hooks/criteriaMutationHook'
-import { useFetchCriterion } from '../../api/hooks/criteriaQueryHook'
+import {
+  useCreateCriterionMutation,
+  useDeleteCriterionMutation,
+  useFetchCriterion,
+  useUpdateCriterionMutation
+} from '../../api/hooks/criteriaHooks'
 import { CreateCriterion, CreateCriterionForm } from '../../api/model/criterion'
 import { RatingRole } from '../../api/model/rating'
 import { PATHS } from '../../util/paths'

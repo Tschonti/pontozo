@@ -8,5 +8,6 @@ export enum PATHS {
   EVENTS = '/events',
   RATINGS = '/ratings',
   AUTHORIZED = '/authorized',
-  PROFILE = '/profile'
+  PROFILE = '/profile',
+  ADMIN = '/admin'
 }

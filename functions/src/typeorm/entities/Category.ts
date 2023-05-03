@@ -1,4 +1,3 @@
-import exp = require('constants')
 import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm'
 import Criterion from './Criterion'
 

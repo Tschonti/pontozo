@@ -1,6 +1,6 @@
 import { FormControl, FormHelperText, FormLabel, Radio, RadioGroup, Stack } from '@chakra-ui/react'
 import { useState } from 'react'
-import { useRateCriteriaMutation } from '../../../api/hooks/criteriaMutationHook'
+import { useRateCriteriaMutation } from '../../../api/hooks/criteriaHooks'
 import { CriterionDetails } from '../../../api/model/criterion'
 
 type Props = {

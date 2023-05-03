@@ -1,13 +1,13 @@
 import { Route, Routes } from 'react-router-dom'
 import { PLayout } from './components/commons/PLayout'
+import { AdminIndex } from './pages/adminIndex/AdminIndex.page'
 import { AuthorizedPage } from './pages/authorized/Authorized.page'
 import { CategoryCreatePage } from './pages/categories/CategoryCreate.page'
-import { CategoryDetailsPage } from './pages/categories/CategoryDetails.page'
 import { CategoryListPage } from './pages/categories/CategoryList.page'
 import { CriteriaCreatePage } from './pages/criteria/CriteriaCreate.page'
 import { CriteriaListPage } from './pages/criteria/CriteriaList.page'
-import { EventDetailsPage } from './pages/index/EventDetails.page'
-import { IndexPage } from './pages/index/Index.page'
+import { EventDetailsPage } from './pages/events/EventDetails.page'
+import { IndexPage } from './pages/events/Index.page'
 import { ProfilePage } from './pages/profile/Profile.page'
 import { EventRatingPage } from './pages/ratings/EventRating.page'
 import { StageRatingPage } from './pages/ratings/StageRatingPage'
@@ -22,6 +22,7 @@ export const App = () => {
       <Routes>
         <Route path={PATHS.INDEX}>
           <Route index element={<IndexPage />} />
+          <Route path={PATHS.ADMIN} element={<AdminIndex />} />
           <Route path={PATHS.AUTHORIZED} element={<AuthorizedPage />} />
           <Route path={PATHS.PROFILE} element={<ProfilePage />} />
           <Route path={PATHS.CRITERIA}>
@@ -35,7 +36,6 @@ export const App = () => {
           </Route>
           <Route path={PATHS.CATEGORIES}>
             <Route path=":categoryId">
-              <Route index element={<CategoryDetailsPage />} />
               <Route path="edit" element={<CategoryCreatePage />} />
             </Route>
             <Route path="new">

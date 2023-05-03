@@ -19,7 +19,7 @@ export const getCategory = async (req: HttpRequest, context: InvocationContext):
   }
   const categoryRepo = (await getAppDataSource()).getRepository(Category)
   try {
-    const category = await categoryRepo.findOneBy({ id })
+    const category = await categoryRepo.findOne({ where: { id }, relations: { criteria: true } })
     if (!category) {
       return {
         status: 404,

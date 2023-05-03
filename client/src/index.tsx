@@ -5,10 +5,8 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { AuthProvider } from './api/contexts/AuthContext'
 import { App } from './App'
-import { initAxios } from './util/initAxios'
 import theme from './util/theme'
 
-initAxios()
 const queryClient = new QueryClient()
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
