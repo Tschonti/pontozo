@@ -5,14 +5,14 @@ import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Category from '../../typeorm/entities/Category'
 import Criterion from '../../typeorm/entities/Criterion'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResServiceRes } from '../../util/httpRes'
+import { httpResFromServiceRes } from '../../util/httpRes'
 import { myvalidate } from '../../util/validation'
 import { CreateCategoryDTO } from './types/CreateCategory.dto'
 
 export const updateCategory = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const adminCheck = getUserFromHeaderAndAssertAdmin(req)
   if (adminCheck.isError) {
-    return httpResServiceRes(adminCheck)
+    return httpResFromServiceRes(adminCheck)
   }
 
   if (!req.body) {

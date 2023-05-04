@@ -4,7 +4,7 @@ import { getOneEvent, stageFilter } from '../../service/mtfsz.service'
 import Criterion from '../../typeorm/entities/Criterion'
 import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResServiceRes } from '../../util/httpRes'
+import { httpResFromServiceRes } from '../../util/httpRes'
 import { CriterionToRate } from './types/criterionToRate.dto'
 import { StageToRate } from './types/stageToRate'
 
@@ -19,7 +19,7 @@ export const getStageCriteria = async (req: HttpRequest, context: InvocationCont
   }
   const userServiceRes = getUserFromHeader(req)
   if (userServiceRes.isError) {
-    return httpResServiceRes(userServiceRes)
+    return httpResFromServiceRes(userServiceRes)
   }
   const ads = await getAppDataSource()
   const ratingRepo = ads.getRepository(EventRating)

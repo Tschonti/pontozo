@@ -2,7 +2,7 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/fu
 import { getUserFromHeader } from '../../service/auth.service'
 import EventRating, { RatingStatus } from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResServiceRes } from '../../util/httpRes'
+import { httpResFromServiceRes } from '../../util/httpRes'
 
 export const submitOne = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const id = parseInt(req.params.id)
@@ -14,7 +14,7 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
   }
   const userServiceRes = getUserFromHeader(req)
   if (userServiceRes.isError) {
-    return httpResServiceRes(userServiceRes)
+    return httpResFromServiceRes(userServiceRes)
   }
   try {
     const eventRatingRepo = (await getAppDataSource()).getRepository(EventRating)

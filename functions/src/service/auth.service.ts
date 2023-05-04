@@ -37,8 +37,7 @@ export const getUserFromHeaderAndAssertAdmin = (req: HttpRequest): ServiceRespon
   if (userRes.isError) {
     return userRes
   }
-  const isAdmin = user.roles.includes(UserRole.SITE_ADMIN)
-  if (isAdmin) {
+  if (user.roles.includes(UserRole.SITE_ADMIN)) {
     return {
       isError: false
     }

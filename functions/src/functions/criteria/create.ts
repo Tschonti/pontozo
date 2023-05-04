@@ -4,14 +4,14 @@ import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Criterion from '../../typeorm/entities/Criterion'
 import { RatingRole } from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResServiceRes } from '../../util/httpRes'
+import { httpResFromServiceRes } from '../../util/httpRes'
 import { myvalidate } from '../../util/validation'
 import { CreateCriteriaDTO } from './types/createCriteria.dto'
 
 export const createCriteria = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const adminCheck = getUserFromHeaderAndAssertAdmin(req)
   if (adminCheck.isError) {
-    return httpResServiceRes(adminCheck)
+    return httpResFromServiceRes(adminCheck)
   }
 
   if (!req.body) {

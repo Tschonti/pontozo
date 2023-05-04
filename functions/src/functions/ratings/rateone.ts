@@ -5,7 +5,7 @@ import Criterion from '../../typeorm/entities/Criterion'
 import CriterionRating from '../../typeorm/entities/CriterionRating'
 import EventRating, { RatingStatus } from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResServiceRes } from '../../util/httpRes'
+import { httpResFromServiceRes } from '../../util/httpRes'
 import { myvalidate } from '../../util/validation'
 import { CreateRatingDto } from './types/createRating.dto'
 
@@ -25,7 +25,7 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
   }
   const userServiceRes = getUserFromHeader(req)
   if (userServiceRes.isError) {
-    return httpResServiceRes(userServiceRes)
+    return httpResFromServiceRes(userServiceRes)
   }
   const dto = plainToClass(CreateRatingDto, await req.json())
   const errors = await myvalidate(dto)

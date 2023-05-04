@@ -2,13 +2,13 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/fu
 import { getUserFromHeader } from '../../service/auth.service'
 import UserRoleAssignment from '../../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResServiceRes } from '../../util/httpRes'
+import { httpResFromServiceRes } from '../../util/httpRes'
 import { PontozoUser } from './types/PontozoUser'
 
 export const currentUser = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const userServiceRes = getUserFromHeader(req)
   if (userServiceRes.isError) {
-    return httpResServiceRes(userServiceRes)
+    return httpResFromServiceRes(userServiceRes)
   }
   try {
     const roles = await (await getAppDataSource())

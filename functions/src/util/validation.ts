@@ -2,7 +2,7 @@ import { registerDecorator, validate, ValidationArguments, ValidationError, Vali
 
 export const myvalidate = async (object: object): Promise<ValidationError[]> => validate(object, { whitelist: true })
 
-export function IsBiggerThan(property: string, validationOptions?: ValidationOptions) {
+export const IsBiggerThan = (property: string, validationOptions?: ValidationOptions) => {
   return function (object: Object, propertyName: string) {
     registerDecorator({
       name: 'isBiggerThan',
@@ -21,7 +21,7 @@ export function IsBiggerThan(property: string, validationOptions?: ValidationOpt
   }
 }
 
-export function IsLaterThan(property: string, validationOptions?: ValidationOptions) {
+export const IsLaterThan = (property: string, validationOptions?: ValidationOptions) => {
   return function (object: Object, propertyName: string) {
     registerDecorator({
       name: 'isBiggerThan',

@@ -5,7 +5,7 @@ import { getOneEvent } from '../../service/mtfsz.service'
 import EventRating, { RatingRole } from '../../typeorm/entities/EventRating'
 import { UserRole } from '../../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResServiceRes } from '../../util/httpRes'
+import { httpResFromServiceRes } from '../../util/httpRes'
 import { myvalidate } from '../../util/validation'
 import { CreateEventRatingDto } from './types/createEventRating.dto'
 
@@ -19,7 +19,7 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
 
   const userServiceRes = getUserFromHeader(req)
   if (userServiceRes.isError) {
-    return httpResServiceRes(userServiceRes)
+    return httpResFromServiceRes(userServiceRes)
   }
 
   try {

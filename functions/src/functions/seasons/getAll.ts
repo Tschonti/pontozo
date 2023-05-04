@@ -3,12 +3,12 @@ import { HttpResponseInit } from '@azure/functions/types/http'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Season from '../../typeorm/entities/Season'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResServiceRes } from '../../util/httpRes'
+import { httpResFromServiceRes } from '../../util/httpRes'
 
 export const getSeasons = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const adminCheck = getUserFromHeaderAndAssertAdmin(req)
   if (adminCheck.isError) {
-    return httpResServiceRes(adminCheck)
+    return httpResFromServiceRes(adminCheck)
   }
 
   const seasonRepo = (await getAppDataSource()).getRepository(Season)
