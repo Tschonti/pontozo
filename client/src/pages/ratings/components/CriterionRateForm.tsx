@@ -1,4 +1,4 @@
-import { FormControl, FormHelperText, FormLabel, Radio, RadioGroup, Stack } from '@chakra-ui/react'
+import { FormControl, FormHelperText, FormLabel, HStack, Radio, RadioGroup } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useRateCriteriaMutation } from '../../../api/hooks/criteriaHooks'
 import { CriterionDetails } from '../../../api/model/criterion'
@@ -23,12 +23,12 @@ export const CriterionRateForm = ({ criterion, eventRatingId, stageId }: Props) 
       <FormLabel>{criterion.name}</FormLabel>
       <FormHelperText>{criterion.description}</FormHelperText>
       <RadioGroup colorScheme="green" onChange={onChange} value={value}>
-        <Stack direction="row">
-          <Radio value="0">{criterion.text0}</Radio>
-          <Radio value="1">{criterion.text1}</Radio>
-          <Radio value="2">{criterion.text2}</Radio>
-          <Radio value="3">{criterion.text3}</Radio>
-        </Stack>
+        <HStack spacing={5}>
+          {criterion.text0 && <Radio value="0">{criterion.text0}</Radio>}
+          {criterion.text1 && <Radio value="1">{criterion.text1}</Radio>}
+          {criterion.text2 && <Radio value="2">{criterion.text2}</Radio>}
+          {criterion.text3 && <Radio value="3">{criterion.text3}</Radio>}
+        </HStack>
       </RadioGroup>
     </FormControl>
   )

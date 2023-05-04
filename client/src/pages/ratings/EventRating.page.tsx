@@ -22,6 +22,7 @@ export const EventRatingPage = () => {
   return (
     <>
       <Heading>{data?.eventName} értékelése</Heading>
+      <Heading size="sm">A teljes versenyre vonatkozó szempontok szerint</Heading>
       <VStack my={5}>
         {data?.eventCriteria.map((c) => (
           <CriterionRateForm criterion={c} eventRatingId={+ratingId!!} key={c.id} />

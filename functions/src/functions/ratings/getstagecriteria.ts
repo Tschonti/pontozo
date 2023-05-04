@@ -78,6 +78,8 @@ export const getStageCriteria = async (req: HttpRequest, context: InvocationCont
       eventName: event.nev_1,
       eventId: event.esemeny_id,
       stage,
+      stageIdx: idx,
+      stageCount: avalStages.length,
       nextStageId: avalStages.at(idx + 1)?.program_id,
       prevStageId: idx - 1 >= 0 ? avalStages.at(idx - 1)?.program_id : undefined
     } as StageToRate

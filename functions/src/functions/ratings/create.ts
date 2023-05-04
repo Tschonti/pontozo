@@ -34,7 +34,7 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
 
     if (
       (dto.role === RatingRole.COACH && !userServiceRes.data.roles.includes(UserRole.COACH)) ||
-      (dto.role === RatingRole.JURY && !!userServiceRes.data.roles.includes(UserRole.JURY))
+      (dto.role === RatingRole.JURY && !userServiceRes.data.roles.includes(UserRole.JURY))
     ) {
       return {
         status: 403,

@@ -74,6 +74,12 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
         body: 'Rating this criterion with this role is not allowed.'
       }
     }
+    if (!criterion[`text${dto.value}`]) {
+      return {
+        status: 400,
+        body: 'Invalid rating value!'
+      }
+    }
     const criterionRatingRepo = ads.getRepository(CriterionRating)
     const rating = await criterionRatingRepo.findOneBy({ criterion: { id: dto.criterionId }, eventRating: { id }, stageId: dto.stageId })
     if (rating === null) {

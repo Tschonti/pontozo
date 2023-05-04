@@ -34,6 +34,8 @@ export interface StageToRate {
   eventId: number
   eventName: string
   stageCriteria: CriterionDetails[]
+  stageIdx: number
+  stageCount: number
   nextStageId?: number
   prevStageId?: number
   stage: EventSection

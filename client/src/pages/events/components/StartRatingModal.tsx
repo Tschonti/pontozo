@@ -15,13 +15,16 @@ import {
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuthContext } from '../../../api/contexts/useAuthContext'
 import { useStartRatingMutation } from '../../../api/hooks/ratingHooks'
 import { Event } from '../../../api/model/event'
 import { RatingRole } from '../../../api/model/rating'
+import { UserRole } from '../../../api/model/user'
 import { PATHS } from '../../../util/paths'
 
 export const StartRatingModal = ({ event }: { event: Event }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { loggedInUser } = useAuthContext()
   const [role, setRole] = useState<RatingRole | undefined>()
   const startRating = useStartRatingMutation()
   const nav = useNavigate()
@@ -56,9 +59,9 @@ export const StartRatingModal = ({ event }: { event: Event }) => {
             <FormLabel mt={5}>Szerepköröd:</FormLabel>
             <Select placeholder="Válassz szerepkört!" value={role} onChange={(e) => setRole(e.target.value as RatingRole)}>
               <option value={RatingRole.COMPETITOR}>Versenyző</option>
-              <option value={RatingRole.COACH}>Edző</option>
+              {loggedInUser?.roles.includes(UserRole.COACH) && <option value={RatingRole.COACH}>Edző</option>}
               <option value={RatingRole.ORGANISER}>Rendező</option>
-              <option value={RatingRole.JURY}>MTFSZ Zsűri</option>
+              {loggedInUser?.roles.includes(UserRole.JURY) && <option value={RatingRole.JURY}>MTFSZ Zsűri</option>}
             </Select>
           </ModalBody>
           <ModalFooter>
