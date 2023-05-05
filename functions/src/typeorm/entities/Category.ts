@@ -12,7 +12,7 @@ class Category {
   @Column()
   description: string
 
-  @OneToMany(() => CategoryToCriterion, (ctc) => ctc.category, { cascade: true, onDelete: 'CASCADE' })
+  @OneToMany(() => CategoryToCriterion, (ctc) => ctc.category, { cascade: true })
   criteria: CategoryToCriterion[]
 }
 

@@ -4,6 +4,7 @@ import { In } from 'typeorm'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Category from '../../typeorm/entities/Category'
 import Season from '../../typeorm/entities/Season'
+import { SeasonToCategory } from '../../typeorm/entities/SeasonToCategory'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
 import { myvalidate } from '../../util/validation'
@@ -49,7 +50,28 @@ export const updateSeason = async (req: HttpRequest, context: InvocationContext)
     season.name = dto.name
     season.startDate = dto.startDate
     season.endDate = dto.endDate
-    season.categories = categories
+    const newStcs: SeasonToCategory[] = []
+    season.categories.forEach(async (stc) => {
+      if (dto.categoryIds.includes(stc.category.id)) {
+        newStcs.push(stc)
+      } else {
+        await ads.manager.delete(SeasonToCategory, stc)
+      }
+    })
+    newStcs.forEach((stc) => {
+      if (stc.order !== dto.categoryIds.indexOf(stc.category.id)) {
+        stc.order = dto.categoryIds.indexOf(stc.category.id)
+      }
+    })
+    dto.categoryIds.forEach((cId, idx) => {
+      if (!newStcs.map((stc) => stc.category.id).includes(cId)) {
+        const newStc = new SeasonToCategory()
+        newStc.category = categories.find((c) => c.id === cId)
+        newStc.order = idx
+        newStcs.push(newStc)
+      }
+    })
+    season.categories = newStcs
     season = await ads.manager.save(season)
 
     return {

@@ -1,5 +1,5 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm'
-import Category from './Category'
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { SeasonToCategory } from './SeasonToCategory'
 
 @Entity()
 class Season {
@@ -15,9 +15,8 @@ class Season {
   @Column()
   endDate: Date
 
-  @ManyToMany(() => Category)
-  @JoinTable()
-  categories: Category[]
+  @OneToMany(() => SeasonToCategory, (ctc) => ctc.season, { cascade: true })
+  categories: SeasonToCategory[]
 }
 
 export default Season

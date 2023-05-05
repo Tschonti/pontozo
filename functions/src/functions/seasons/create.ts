@@ -4,6 +4,7 @@ import { Between, In, LessThanOrEqual, MoreThanOrEqual } from 'typeorm'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Category from '../../typeorm/entities/Category'
 import Season from '../../typeorm/entities/Season'
+import { SeasonToCategory } from '../../typeorm/entities/SeasonToCategory'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
 import { myvalidate } from '../../util/validation'
@@ -49,7 +50,13 @@ export const createSeason = async (req: HttpRequest, context: InvocationContext)
     season.name = dto.name
     season.startDate = dto.startDate
     season.endDate = dto.endDate
-    season.categories = categories
+    const stcs = categories.map((cat) => {
+      const stc = new SeasonToCategory()
+      stc.category = cat
+      stc.order = dto.categoryIds.indexOf(cat.id)
+      return stc
+    })
+    season.categories = stcs
     season = await ads.manager.save(season)
 
     return {

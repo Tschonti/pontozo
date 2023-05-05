@@ -10,9 +10,9 @@ export class CategoryToCriterion {
   @Column()
   order: number
 
-  @ManyToOne(() => Category, (c) => c.criteria, { nullable: false })
+  @ManyToOne(() => Category, (c) => c.criteria, { nullable: false, onDelete: 'CASCADE' })
   category: Category
 
-  @ManyToOne(() => Criterion, { nullable: false })
+  @ManyToOne(() => Criterion, { nullable: false, onDelete: 'CASCADE' })
   criterion: Criterion
 }

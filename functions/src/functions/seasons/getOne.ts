@@ -19,7 +19,7 @@ export const getSeason = async (req: HttpRequest, context: InvocationContext): P
   }
   const seasonRepo = (await getAppDataSource()).getRepository(Season)
   try {
-    const season = await seasonRepo.findOneBy({ id })
+    const season = await seasonRepo.findOne({ where: { id }, relations: { categories: { category: true } } })
     if (!season) {
       return {
         status: 404,
@@ -27,7 +27,7 @@ export const getSeason = async (req: HttpRequest, context: InvocationContext): P
       }
     }
     return {
-      jsonBody: season
+      jsonBody: { ...season, categories: season.categories.sort((stc1, stc2) => stc1.order - stc2.order).map((stc) => stc.category) }
     }
   } catch (error) {
     context.error(error)
