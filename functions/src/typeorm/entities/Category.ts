@@ -1,5 +1,5 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm'
-import Criterion from './Criterion'
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { CategoryToCriterion } from './CategoryToCriterion'
 
 @Entity()
 class Category {
@@ -12,9 +12,8 @@ class Category {
   @Column()
   description: string
 
-  @ManyToMany(() => Criterion)
-  @JoinTable()
-  criteria: Criterion[]
+  @OneToMany(() => CategoryToCriterion, (ctc) => ctc.category, { cascade: true, onDelete: 'CASCADE' })
+  criteria: CategoryToCriterion[]
 }
 
 export default Category

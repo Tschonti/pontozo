@@ -19,7 +19,7 @@ export const getCategory = async (req: HttpRequest, context: InvocationContext):
   }
   const categoryRepo = (await getAppDataSource()).getRepository(Category)
   try {
-    const category = await categoryRepo.findOne({ where: { id }, relations: { criteria: true } })
+    const category = await categoryRepo.findOne({ where: { id }, relations: { criteria: { criterion: true } } })
     if (!category) {
       return {
         status: 404,
@@ -27,7 +27,7 @@ export const getCategory = async (req: HttpRequest, context: InvocationContext):
       }
     }
     return {
-      jsonBody: category
+      jsonBody: { ...category, criteria: category.criteria.sort((ctc1, ctc2) => ctc1.order - ctc2.order).map((ctc) => ctc.criterion) }
     }
   } catch (error) {
     context.error(error)

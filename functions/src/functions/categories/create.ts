@@ -3,6 +3,7 @@ import { plainToClass } from 'class-transformer'
 import { In } from 'typeorm'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Category from '../../typeorm/entities/Category'
+import { CategoryToCriterion } from '../../typeorm/entities/CategoryToCriterion'
 import Criterion from '../../typeorm/entities/Criterion'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
@@ -35,7 +36,13 @@ export const createCategory = async (req: HttpRequest, context: InvocationContex
     let category = new Category()
     category.name = dto.name
     category.description = dto.description
-    category.criteria = criteria
+    const ctcs = criteria.map((criterion) => {
+      const ctc = new CategoryToCriterion()
+      ctc.criterion = criterion
+      ctc.order = dto.criterionIds.indexOf(criterion.id)
+      return ctc
+    })
+    category.criteria = ctcs
     category = await ads.manager.save(category)
 
     return {
