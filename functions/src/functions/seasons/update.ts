@@ -40,7 +40,7 @@ export const updateSeason = async (req: HttpRequest, context: InvocationContext)
     }
     const ads = await getAppDataSource()
     const categories = await ads.getRepository(Category).find({ where: { id: In(dto.categoryIds) } })
-    let season = await ads.manager.findOne(Season, { where: { id } })
+    let season = await ads.manager.findOne(Season, { where: { id }, relations: { categories: { category: true } } })
     if (season === null) {
       return {
         status: 404,

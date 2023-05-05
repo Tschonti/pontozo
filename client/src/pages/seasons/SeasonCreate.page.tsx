@@ -1,5 +1,108 @@
-import { Heading } from '@chakra-ui/react'
+import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, HStack, Input, Spinner, Stack, VStack } from '@chakra-ui/react'
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
+import { FaArrowLeft } from 'react-icons/fa'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useCreateSeasonMutation, useDeleteSeasonMutation, useFetchSeason, useUpdateSeasonMutation } from '../../api/hooks/seasonHook'
+import { CreateSeason, CreateSeasonForm } from '../../api/model/season'
+import { PATHS } from '../../util/paths'
+import { CategorySelector } from './components/CategorySelector'
 
 export const SeasonCreatePage = () => {
-  return <Heading>Új szezon</Heading>
+  const seasonId = parseInt(useParams<{ seasonId: string }>().seasonId ?? '-1')
+  const { data, isLoading, isFetching } = useFetchSeason(seasonId)
+
+  const form = useForm<CreateSeasonForm>({
+    values: {
+      name: data?.name || '',
+      startDate: data?.startDate || '',
+      endDate: data?.endDate || '',
+      categories: data?.categories || []
+    }
+  })
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = form
+  const navigate = useNavigate()
+  const createMutation = useCreateSeasonMutation()
+  const updateMutation = useUpdateSeasonMutation(seasonId)
+  const deleteMutation = useDeleteSeasonMutation(seasonId)
+
+  const onSubmit: SubmitHandler<CreateSeasonForm> = ({ categories, ...restOfData }) => {
+    const data: CreateSeason = {
+      ...restOfData,
+      categoryIds: categories.map((c) => c.id)
+    }
+    if (seasonId === -1) {
+      createMutation.mutate(data, { onSuccess: () => navigate(PATHS.SEASONS) })
+    } else {
+      updateMutation.mutate(data, { onSuccess: () => navigate(PATHS.SEASONS) })
+    }
+  }
+
+  if (isLoading && isFetching) {
+    return <Spinner />
+  }
+  return (
+    <>
+      <VStack spacing={5} alignItems="flex-start">
+        <Heading>{seasonId === -1 ? 'Új szezon' : 'Szezon szerkesztése'}</Heading>
+        <FormControl isInvalid={!!errors.name}>
+          <FormLabel>Név</FormLabel>
+          <Input {...register('name', { required: true })} />
+          <FormErrorMessage>Kötelező megadni a szezon nevét.</FormErrorMessage>
+        </FormControl>
+
+        <FormControl isInvalid={!!errors.startDate || !!errors.endDate}>
+          <Stack direction={['column', 'column', 'row']} spacing={5} w="100%">
+            <FormControl isInvalid={!!errors.startDate}>
+              <FormLabel>Kezdő dátum</FormLabel>
+              <Input
+                type="date"
+                {...register('startDate', {
+                  required: true,
+                  validate: (sd, formValues) => new Date(sd) < new Date(formValues.endDate),
+                  deps: 'endDate'
+                })}
+              />
+            </FormControl>
+            <FormControl isInvalid={!!errors.endDate}>
+              <FormLabel>Befejező dátum</FormLabel>
+              <Input
+                type="date"
+                {...register('endDate', {
+                  required: true,
+                  validate: (ed, formValues) => new Date(ed) > new Date(formValues.startDate),
+                  deps: 'startDate'
+                })}
+              />
+            </FormControl>
+          </Stack>
+          <FormErrorMessage>A kezdő dátumnak előbb kell lennie, mint a befejező dátumnak!</FormErrorMessage>
+        </FormControl>
+
+        <FormProvider {...form}>
+          <CategorySelector />
+        </FormProvider>
+
+        <Flex width="100%" justifyContent="space-between">
+          <Button as={Link} to={PATHS.SEASONS} leftIcon={<FaArrowLeft />}>
+            Vissza
+          </Button>
+          <HStack spacing={1}>
+            {seasonId > -1 && (
+              <Button colorScheme="red" onClick={() => deleteMutation.mutate(undefined, { onSuccess: () => navigate(PATHS.SEASONS) })}>
+                Szezon törlése
+              </Button>
+            )}
+            <Button type="submit" colorScheme="green" onClick={handleSubmit(onSubmit)}>
+              Mentés
+            </Button>
+          </HStack>
+        </Flex>
+      </VStack>
+    </>
+  )
 }

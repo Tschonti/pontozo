@@ -12,7 +12,6 @@ import { ProfilePage } from './pages/profile/Profile.page'
 import { EventRatingPage } from './pages/ratings/EventRating.page'
 import { StageRatingPage } from './pages/ratings/StageRatingPage'
 import { SeasonCreatePage } from './pages/seasons/SeasonCreate.page'
-import { SeasonDetailsPage } from './pages/seasons/SeasonDetails.page'
 import { SeasonListPage } from './pages/seasons/SeasonList.page'
 import { PATHS } from './util/paths'
 
@@ -45,7 +44,6 @@ export const App = () => {
           </Route>
           <Route path={PATHS.SEASONS}>
             <Route path=":seasonId">
-              <Route index element={<SeasonDetailsPage />} />
               <Route path="edit" element={<SeasonCreatePage />} />
             </Route>
             <Route path="new">
