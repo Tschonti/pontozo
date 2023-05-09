@@ -1,9 +1,9 @@
 import EventRating from '../../../typeorm/entities/EventRating'
-import { CriterionToRate } from './criterionToRate.dto'
+import { CategoryWithCriteria } from './categoryWithCriteria'
 
 export interface EventToRate extends EventRating {
   eventId: number
   eventName: string
-  eventCriteria: CriterionToRate[]
+  categoriesWithCriteria: CategoryWithCriteria[]
   nextStageId?: number
 }

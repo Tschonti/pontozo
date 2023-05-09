@@ -49,7 +49,9 @@ export const updateSeason = async (req: HttpRequest, context: InvocationContext)
     }
     season.name = dto.name
     season.startDate = dto.startDate
-    season.endDate = dto.endDate
+    const endDate = new Date(dto.endDate)
+    endDate.setHours(23, 59, 59)
+    season.endDate = endDate
     const newStcs: SeasonToCategory[] = []
     season.categories.forEach(async (stc) => {
       if (dto.categoryIds.includes(stc.category.id)) {

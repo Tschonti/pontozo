@@ -1,4 +1,5 @@
 import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, HStack, Input, Spinner, Stack, VStack } from '@chakra-ui/react'
+import { useEffect } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -14,8 +15,8 @@ export const SeasonCreatePage = () => {
   const form = useForm<CreateSeasonForm>({
     values: {
       name: data?.name || '',
-      startDate: data?.startDate || '',
-      endDate: data?.endDate || '',
+      startDate: '',
+      endDate: '',
       categories: data?.categories || []
     }
   })
@@ -23,12 +24,25 @@ export const SeasonCreatePage = () => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors }
   } = form
   const navigate = useNavigate()
   const createMutation = useCreateSeasonMutation()
   const updateMutation = useUpdateSeasonMutation(seasonId)
   const deleteMutation = useDeleteSeasonMutation(seasonId)
+
+  useEffect(() => {
+    if (seasonId !== -1 && data && !isLoading) {
+      const sd = new Date(data.startDate)
+      const ed = new Date(data.endDate)
+      const startStr = `${sd.getFullYear()}-${String(sd.getMonth() + 1).padStart(2, '0')}-${String(sd.getDate()).padStart(2, '0')}`
+      const endStr = `${ed.getFullYear()}-${String(ed.getMonth() + 1).padStart(2, '0')}-${String(ed.getDate()).padStart(2, '0')}`
+
+      setValue('startDate', startStr)
+      setValue('endDate', endStr)
+    }
+  }, [data, isLoading])
 
   const onSubmit: SubmitHandler<CreateSeasonForm> = ({ categories, ...restOfData }) => {
     const data: CreateSeason = {
@@ -63,7 +77,7 @@ export const SeasonCreatePage = () => {
                 type="date"
                 {...register('startDate', {
                   required: true,
-                  validate: (sd, formValues) => new Date(sd) < new Date(formValues.endDate),
+                  validate: (sd, formValues) => new Date(sd) < new Date(formValues?.endDate),
                   deps: 'endDate'
                 })}
               />

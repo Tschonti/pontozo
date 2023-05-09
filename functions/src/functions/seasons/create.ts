@@ -49,7 +49,9 @@ export const createSeason = async (req: HttpRequest, context: InvocationContext)
     let season = new Season()
     season.name = dto.name
     season.startDate = dto.startDate
-    season.endDate = dto.endDate
+    const endDate = new Date(dto.endDate)
+    endDate.setHours(23, 59, 59)
+    season.endDate = endDate
     const stcs = categories.map((cat) => {
       const stc = new SeasonToCategory()
       stc.category = cat

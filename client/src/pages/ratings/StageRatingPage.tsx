@@ -1,9 +1,9 @@
-import { Button, Heading, HStack, Spinner, useToast, VStack } from '@chakra-ui/react'
+import { Button, Heading, HStack, Spinner, useToast } from '@chakra-ui/react'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useFetchStageRatingQuery, useSubmitRatingMutation } from '../../api/hooks/ratingHooks'
 import { PATHS } from '../../util/paths'
-import { CriterionRateForm } from './components/CriterionRateForm'
+import { CategoryWithCriteriaList } from './components/CategoryWithCriteriaList'
 
 export const StageRatingPage = () => {
   const { ratingId, stageId } = useParams()
@@ -36,11 +36,9 @@ export const StageRatingPage = () => {
       <Heading size="sm">
         A futamra vonatkozó szempontok szerint (futam {(data?.stageIdx || 0) + 1}/{data?.stageCount || 1})
       </Heading>
-      <VStack my={5}>
-        {data?.stageCriteria.map((c) => (
-          <CriterionRateForm criterion={c} eventRatingId={+ratingId!!} key={c.id} stageId={+stageId!!} />
-        ))}
-      </VStack>
+      {data?.categoriesWithCriteria.map((category) => (
+        <CategoryWithCriteriaList category={category} ratingId={+ratingId!!} />
+      ))}
       <HStack justify="space-between" w="100%">
         <Button
           leftIcon={<FaArrowLeft />}

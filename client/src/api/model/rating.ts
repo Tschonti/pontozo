@@ -1,4 +1,4 @@
-import { CriterionDetails } from './criterion'
+import { CategoryWithCriteria } from './category'
 import { EventSection } from './event'
 
 export interface EventRating {
@@ -26,14 +26,14 @@ export interface StartRatingDto {
 export interface EventToRate {
   eventId: number
   eventName: string
-  eventCriteria: CriterionDetails[]
+  categoriesWithCriteria: CategoryWithCriteria[]
   nextStageId?: number
 }
 
 export interface StageToRate {
   eventId: number
   eventName: string
-  stageCriteria: CriterionDetails[]
+  categoriesWithCriteria: CategoryWithCriteria[]
   stageIdx: number
   stageCount: number
   nextStageId?: number

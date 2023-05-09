@@ -1,8 +1,9 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { LessThanOrEqual, MoreThanOrEqual } from 'typeorm'
 import { getUserFromHeader } from '../../service/auth.service'
 import { getOneEvent, stageFilter } from '../../service/mtfsz.service'
-import Criterion from '../../typeorm/entities/Criterion'
 import EventRating from '../../typeorm/entities/EventRating'
+import Season from '../../typeorm/entities/Season'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
 import { CriterionToRate } from './types/criterionToRate.dto'
@@ -23,7 +24,7 @@ export const getStageCriteria = async (req: HttpRequest, context: InvocationCont
   }
   const ads = await getAppDataSource()
   const ratingRepo = ads.getRepository(EventRating)
-  const criterionRepo = ads.getRepository(Criterion)
+  const seasonRepo = ads.getRepository(Season)
 
   const rating = await ratingRepo.findOneBy({ id: ratingId })
   if (rating === null) {
@@ -52,29 +53,43 @@ export const getStageCriteria = async (req: HttpRequest, context: InvocationCont
       body: 'Stage not found or not rateable!'
     }
   }
-  const criteriaFilter = event.pontozoOrszagos ? undefined : { nationalOnly: false }
-  const criteria = await criterionRepo.find({
-    relations: { ratings: { eventRating: true } },
-    where: { stageSpecific: true, ...criteriaFilter }
+
+  const season = await seasonRepo.findOne({
+    where: { startDate: LessThanOrEqual(new Date()), endDate: MoreThanOrEqual(new Date()) },
+    relations: { categories: { category: { criteria: { criterion: { ratings: { eventRating: true } } } } } } // TODO ez nagyon inefficient
   })
 
-  const stageCriteria = criteria
-    .map(({ ratings, ...c }) => {
-      const rating = ratings.find((r) => r.eventRating.id === ratingId && r.stageId === stageId)
-      return {
-        ...c,
-        roles: JSON.parse(c.roles as unknown as string),
-        rating
-      } as CriterionToRate
-    })
-    .filter((c) => c.roles.includes(rating.role))
+  if (season === null) {
+    return {
+      status: 400,
+      body: 'Jelenleg nincs értékelési szezon!'
+    }
+  }
+  const categories = season.categories
+    .sort((stc1, stc2) => stc1.order - stc2.order)
+    .map((stc) => ({
+      ...stc.category,
+      criteria: stc.category.criteria
+        .sort((ctc1, ctc2) => ctc1.order - ctc2.order)
+        .map((ctc) => {
+          const { ratings, ...c } = ctc.criterion
+          const rating = ratings.find((r) => r.eventRating.id === ratingId)
+          return {
+            ...c,
+            roles: JSON.parse(c.roles as unknown as string),
+            rating
+          } as CriterionToRate
+        })
+        .filter((c) => c.roles.includes(rating.role) && c.stageSpecific && (event.pontozoOrszagos || !c.nationalOnly))
+    }))
+
   const avalStages = event.programok.filter(stageFilter)
   const idx = avalStages.indexOf(stage)
 
   return {
     jsonBody: {
       ...rating,
-      stageCriteria,
+      categoriesWithCriteria: categories,
       eventName: event.nev_1,
       eventId: event.esemeny_id,
       stage,

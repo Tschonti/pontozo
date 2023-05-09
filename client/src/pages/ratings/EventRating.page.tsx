@@ -1,9 +1,9 @@
-import { Button, Heading, HStack, Spinner, VStack } from '@chakra-ui/react'
+import { Button, Heading, HStack, Spinner } from '@chakra-ui/react'
 import { FaArrowLeft } from 'react-icons/fa'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useFetchEventRatingQuery } from '../../api/hooks/ratingHooks'
 import { PATHS } from '../../util/paths'
-import { CriterionRateForm } from './components/CriterionRateForm'
+import { CategoryWithCriteriaList } from './components/CategoryWithCriteriaList'
 
 export const EventRatingPage = () => {
   const { ratingId } = useParams()
@@ -23,11 +23,9 @@ export const EventRatingPage = () => {
     <>
       <Heading>{data?.eventName} értékelése</Heading>
       <Heading size="sm">A teljes versenyre vonatkozó szempontok szerint</Heading>
-      <VStack my={5}>
-        {data?.eventCriteria.map((c) => (
-          <CriterionRateForm criterion={c} eventRatingId={+ratingId!!} key={c.id} />
-        ))}
-      </VStack>
+      {data?.categoriesWithCriteria.map((category) => (
+        <CategoryWithCriteriaList category={category} ratingId={+ratingId!!} />
+      ))}
 
       <HStack justify="space-between" w="100%">
         <Button leftIcon={<FaArrowLeft />} onClick={() => nav(`${PATHS.EVENTS}/${data?.eventId}`)}>
