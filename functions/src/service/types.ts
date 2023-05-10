@@ -54,6 +54,8 @@ export interface EventSection {
   fajlok: EventFile[]
 }
 
+export interface EventSectionPreview extends Omit<EventSection, 'helyszinek' | 'hivatkozasok' | 'fajlok'> {}
+
 export interface Stage {
   szakag: string
   napszak: string

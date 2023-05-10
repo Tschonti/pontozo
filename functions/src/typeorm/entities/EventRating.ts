@@ -25,7 +25,7 @@ class EventRating {
   userId: number
 
   @OneToMany(() => CriterionRating, (cr) => cr.eventRating, { onDelete: 'CASCADE', nullable: false })
-  ratings: CriterionRating
+  ratings: CriterionRating[]
 
   @Column({ default: RatingStatus.STARTED })
   @Check("status in('STARTED', 'SUBMITTED')")

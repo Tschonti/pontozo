@@ -1,14 +1,4 @@
-import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
-import { LessThanOrEqual, MoreThanOrEqual } from 'typeorm'
-import { getUserFromHeader } from '../../service/auth.service'
-import { getOneEvent, stageFilter } from '../../service/mtfsz.service'
-import EventRating from '../../typeorm/entities/EventRating'
-import Season from '../../typeorm/entities/Season'
-import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResFromServiceRes } from '../../util/httpRes'
-import { CriterionToRate } from './types/criterionToRate.dto'
-import { EventToRate } from './types/eventToRate.dto'
-
+/*
 export const getEventCriteria = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const ratingId = parseInt(req.params.id)
   if (isNaN(ratingId)) {
@@ -92,3 +82,4 @@ app.http('ratings-getEventCriteria', {
   route: 'ratings/{id}',
   handler: getEventCriteria
 })
+*/

@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios'
 import { MtfszUser } from '../functions/auth/types/MtfszUser'
 import { Token } from '../functions/auth/types/Token'
 import { APIM_HOST, APIM_KEY, CLIENT_ID, CLIENT_SECRET, FUNCTION_HOST } from '../util/env'
-import { Event, EventSection, MtfszResponse, ServiceResponse } from './types'
+import { Event, EventSection, EventSectionPreview, MtfszResponse, ServiceResponse } from './types'
 
 const acceptedRanks = ['REGIONALIS', 'ORSZAGOS', 'KIEMELT']
 const higherRanks = ['ORSZAGOS', 'KIEMELT']
@@ -15,6 +15,10 @@ const isHigherRank = (e: Event) =>
   e.programok.some((p) => p.tipus === 'FUTAM' && p.futam.szakag === 'TAJFUTAS' && higherRanks.includes(p.futam.rangsorolo))
 
 export const stageFilter = (s: EventSection) => s.tipus === 'FUTAM' && acceptedRanks.includes(s.futam.rangsorolo)
+
+export const stageProjection: (e: EventSection) => EventSectionPreview = ({ fajlok, hivatkozasok, helyszinek, ...restOfData }) => ({
+  ...restOfData
+})
 
 export const getOneEvent = async (eventId: number): Promise<ServiceResponse<Event>> => {
   const url = new URL('esemenyek', APIM_HOST)

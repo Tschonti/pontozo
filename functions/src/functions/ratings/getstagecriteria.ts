@@ -1,14 +1,4 @@
-import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
-import { LessThanOrEqual, MoreThanOrEqual } from 'typeorm'
-import { getUserFromHeader } from '../../service/auth.service'
-import { getOneEvent, stageFilter } from '../../service/mtfsz.service'
-import EventRating from '../../typeorm/entities/EventRating'
-import Season from '../../typeorm/entities/Season'
-import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResFromServiceRes } from '../../util/httpRes'
-import { CriterionToRate } from './types/criterionToRate.dto'
-import { StageToRate } from './types/stageToRate'
-
+/*
 export const getStageCriteria = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const ratingId = parseInt(req.params.id)
   const stageId = parseInt(req.params.stageId)
@@ -106,3 +96,4 @@ app.http('ratings-getStageCriteria', {
   route: 'ratings/{id}/stage/{stageId}',
   handler: getStageCriteria
 })
+*/
