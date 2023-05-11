@@ -1,19 +1,37 @@
 import { Heading, Text, VStack } from '@chakra-ui/react'
-import { CategoryWithCriteria } from '../../../api/model/category'
+import { useEffect } from 'react'
+import { useRatingContext } from '../../../api/contexts/useRatingContext'
+import { useFetchRatingsMutation } from '../../../api/hooks/ratingHooks'
 import { CriterionRateForm } from './CriterionRateForm'
 
 type Props = {
-  category: CategoryWithCriteria
   ratingId: number
 }
 
-export const CategoryWithCriteriaList = ({ category, ratingId }: Props) => {
+export const CategoryWithCriteriaList = ({ ratingId }: Props) => {
+  const mutation = useFetchRatingsMutation(+ratingId!!)
+  const { eventRatingInfo, currentCategory, currentStage, categoryIdx } = useRatingContext()
+
+  useEffect(() => {
+    if (eventRatingInfo) {
+      mutation.mutate({ criterionIds: (currentCategory?.criteria || []).map((c) => c.id), stageId: currentStage?.program_id })
+    }
+  }, [eventRatingInfo, currentCategory, currentStage])
+
+  const criteria = currentCategory?.criteria.map((c) => ({
+    ...c,
+    rating: mutation.data?.find((cr) => cr.criterionId === c.id)
+  }))
+
   return (
     <VStack my={5} alignItems="flex-start">
-      <Heading size="sm">{category.name}</Heading>
-      <Text>{category.description}</Text>
-      {category.criteria.map((criteria) => (
-        <CriterionRateForm criterion={criteria} eventRatingId={ratingId} key={criteria.id} />
+      <Heading size="sm">
+        Kategória: {currentCategory?.name} ({categoryIdx + 1}/
+        {currentStage ? eventRatingInfo?.stageCategories.length : eventRatingInfo?.eventCategories.length})
+      </Heading>
+      <Text>{currentCategory?.description}</Text>
+      {criteria?.map((criteria) => (
+        <CriterionRateForm criterion={criteria} key={criteria.id} />
       ))}
     </VStack>
   )

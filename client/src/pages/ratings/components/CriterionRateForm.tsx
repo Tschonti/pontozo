@@ -1,17 +1,23 @@
 import { FormControl, FormHelperText, FormLabel, HStack, Radio, RadioGroup } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useRatingContext } from '../../../api/contexts/useRatingContext'
 import { useRateCriteriaMutation } from '../../../api/hooks/criteriaHooks'
 import { CriterionDetails } from '../../../api/model/criterion'
 
 type Props = {
   criterion: CriterionDetails
-  eventRatingId: number
-  stageId?: number
 }
 
-export const CriterionRateForm = ({ criterion, eventRatingId, stageId }: Props) => {
-  const mutation = useRateCriteriaMutation({ eventRatingId, criterionId: criterion.id, stageId })
+export const CriterionRateForm = ({ criterion }: Props) => {
+  const { ratingId, currentStage } = useRatingContext()
+  const mutation = useRateCriteriaMutation({ eventRatingId: ratingId, criterionId: criterion.id, stageId: currentStage?.program_id })
   const [value, setValue] = useState<string | undefined>(criterion.rating?.value?.toString())
+
+  useEffect(() => {
+    if (!value && criterion.rating) {
+      setValue(criterion.rating.value.toString())
+    }
+  }, [criterion, value])
 
   const onChange = (newValue: string) => {
     setValue(newValue)

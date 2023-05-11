@@ -93,9 +93,9 @@ export const getCriteria = async (req: HttpRequest, context: InvocationContext):
     criteria: stc.category.criteria
       .sort((ctc1, ctc2) => ctc1.order - ctc2.order)
       .map(({ criterion }) => ({ ...criterion, roles: JSON.parse(criterion.roles) } as Criterion))
-      .filter((c) => c.roles.includes(eventRating.role) && !c.stageSpecific && (event.pontozoOrszagos || !c.nationalOnly))
+      .filter((c) => c.roles.includes(eventRating.role) && c.stageSpecific === stageId > 0 && (event.pontozoOrszagos || !c.nationalOnly))
       .map((criterion) => {
-        const rating = eventRating.ratings.find((r) => r.criterion.id === criterion.id && r.stageId === stageId)
+        const rating = eventRating.ratings.find((r) => r.criterionId === criterion.id && r.stageId === stageId)
         return {
           ...criterion,
           rating

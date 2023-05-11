@@ -7,6 +7,7 @@ import EventRating from '../../typeorm/entities/EventRating'
 import Season from '../../typeorm/entities/Season'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
+import { CategoryWithCriteria } from './types/categoryWithCriteria'
 import { EventRatingInfo } from './types/eventRatingInfo'
 
 export const getEventInfo = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
@@ -60,8 +61,8 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
       body: 'Jelenleg nincs értékelési szezon!'
     }
   }
-  let eventCategoryCount = 0
-  let stageCategoryCount = 0
+  const eventCategories: CategoryWithCriteria[] = []
+  const stageCategories: CategoryWithCriteria[] = []
 
   season.categories.forEach((stc) => {
     const filteredCriteria = stc.category.criteria
@@ -72,20 +73,26 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
         } as Criterion
       })
       .filter((c) => c.roles.includes(eventRating.role) && (event.pontozoOrszagos || !c.nationalOnly))
-    let eventCriteria = 0
-    let stageCriteria = 0
+    const eventCriteria = []
+    const stageCriteria = []
     filteredCriteria.forEach((c) => {
       if (c.stageSpecific) {
-        stageCriteria++
+        stageCriteria.push(c)
       } else {
-        eventCriteria++
+        eventCriteria.push(c)
       }
     })
-    if (stageCriteria > 0) {
-      stageCategoryCount++
+    if (stageCriteria.length > 0) {
+      stageCategories.push({
+        ...stc.category,
+        criteria: stageCriteria
+      })
     }
-    if (eventCriteria > 0) {
-      eventCategoryCount++
+    if (eventCriteria.length > 0) {
+      eventCategories.push({
+        ...stc.category,
+        criteria: eventCriteria
+      })
     }
   })
 
@@ -94,8 +101,8 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
       ...eventRating,
       eventName: event.nev_1,
       stages: event.programok.filter(stageFilter).map(stageProjection),
-      eventCategoryCount: eventCategoryCount,
-      stageCategoryCount: stageCategoryCount
+      eventCategories,
+      stageCategories
     } as EventRatingInfo
   }
 }

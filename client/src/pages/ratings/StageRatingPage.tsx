@@ -1,11 +1,5 @@
-import { Button, Heading, HStack, Spinner, useToast } from '@chakra-ui/react'
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useFetchStageRatingQuery, useSubmitRatingMutation } from '../../api/hooks/ratingHooks'
-import { PATHS } from '../../util/paths'
-import { CategoryWithCriteriaList } from './components/CategoryWithCriteriaList'
-
 export const StageRatingPage = () => {
+  /*
   const { ratingId, stageId } = useParams()
   const { data, isLoading, error } = useFetchStageRatingQuery(+ratingId!!, +stageId!!)
   const { mutate: submitRating } = useSubmitRatingMutation(+ratingId!!)
@@ -63,5 +57,5 @@ export const StageRatingPage = () => {
         )}
       </HStack>
     </>
-  )
+  )*/
 }

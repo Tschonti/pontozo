@@ -16,11 +16,11 @@ import {
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../../../api/contexts/useAuthContext'
+import { useRatingContext } from '../../../api/contexts/useRatingContext'
 import { useStartRatingMutation } from '../../../api/hooks/ratingHooks'
 import { Event } from '../../../api/model/event'
 import { RatingRole } from '../../../api/model/rating'
 import { UserRole } from '../../../api/model/user'
-import { PATHS } from '../../../util/paths'
 
 export const StartRatingModal = ({ event }: { event: Event }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -28,10 +28,16 @@ export const StartRatingModal = ({ event }: { event: Event }) => {
   const [role, setRole] = useState<RatingRole | undefined>()
   const startRating = useStartRatingMutation()
   const nav = useNavigate()
+  const { startRating: startRatingWithContext } = useRatingContext()
 
   const onSubmit = () => {
     if (role) {
-      startRating.mutate({ eventId: event.esemeny_id, role }, { onSuccess: (res) => nav(`${PATHS.RATINGS}/${res[0].id}`) })
+      startRating.mutate(
+        { eventId: event.esemeny_id, role },
+        {
+          onSuccess: (res) => startRatingWithContext(res[0].id)
+        }
+      )
     }
   }
 

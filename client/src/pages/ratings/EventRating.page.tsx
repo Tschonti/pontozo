@@ -1,11 +1,5 @@
-import { Button, Heading, HStack, Spinner } from '@chakra-ui/react'
-import { FaArrowLeft } from 'react-icons/fa'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useFetchEventRatingQuery } from '../../api/hooks/ratingHooks'
-import { PATHS } from '../../util/paths'
-import { CategoryWithCriteriaList } from './components/CategoryWithCriteriaList'
-
 export const EventRatingPage = () => {
+  /*
   const { ratingId } = useParams()
   const { data, isLoading, error } = useFetchEventRatingQuery(+ratingId!!)
   const nav = useNavigate()
@@ -36,5 +30,5 @@ export const EventRatingPage = () => {
         </Button>
       </HStack>
     </>
-  )
+  )*/
 }

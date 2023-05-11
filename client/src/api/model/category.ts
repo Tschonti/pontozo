@@ -1,4 +1,4 @@
-import { Criterion, CriterionDetails } from './criterion'
+import { Criterion } from './criterion'
 
 export interface Category {
   id: number
@@ -17,5 +17,5 @@ export interface CreateCategory extends Omit<Category, 'id'> {
 export interface CreateCategoryForm extends Omit<CategoryDetails, 'id'> {}
 
 export interface CategoryWithCriteria extends Category {
-  criteria: CriterionDetails[]
+  criteria: Criterion[]
 }

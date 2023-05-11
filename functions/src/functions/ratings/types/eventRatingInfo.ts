@@ -1,9 +1,10 @@
 import { EventSectionPreview } from '../../../service/types'
 import EventRating from '../../../typeorm/entities/EventRating'
+import { CategoryWithCriteria } from './categoryWithCriteria'
 
 export interface EventRatingInfo extends EventRating {
   eventName: string
   stages: EventSectionPreview[]
-  eventCategoryCount: number
-  stageCategoryCount: number
+  eventCategories: CategoryWithCriteria[]
+  stageCategories: CategoryWithCriteria[]
 }

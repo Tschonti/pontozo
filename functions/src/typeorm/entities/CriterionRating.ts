@@ -11,8 +11,14 @@ class CriterionRating {
   @ManyToOne(() => Criterion, (c) => c.ratings, { onDelete: 'CASCADE', nullable: false })
   criterion: Criterion
 
+  @Column()
+  criterionId: number
+
   @ManyToOne(() => EventRating, (er) => er.ratings, { onDelete: 'CASCADE', nullable: false })
   eventRating: EventRating
+
+  @Column()
+  eventRatingId: number
 
   @Column({ nullable: true })
   stageId: number

@@ -9,8 +9,7 @@ import { CriteriaListPage } from './pages/criteria/CriteriaList.page'
 import { EventDetailsPage } from './pages/events/EventDetails.page'
 import { IndexPage } from './pages/events/Index.page'
 import { ProfilePage } from './pages/profile/Profile.page'
-import { EventRatingPage } from './pages/ratings/EventRating.page'
-import { StageRatingPage } from './pages/ratings/StageRatingPage'
+import { RatingPage } from './pages/ratings/Rating.page'
 import { SeasonCreatePage } from './pages/seasons/SeasonCreate.page'
 import { SeasonListPage } from './pages/seasons/SeasonList.page'
 import { PATHS } from './util/paths'
@@ -57,14 +56,7 @@ export const App = () => {
             </Route>
           </Route>
           <Route path={PATHS.RATINGS}>
-            <Route path=":ratingId">
-              <Route path="stage">
-                <Route path=":stageId">
-                  <Route index element={<StageRatingPage />} />
-                </Route>
-              </Route>
-              <Route index element={<EventRatingPage />} />
-            </Route>
+            <Route path=":ratingId" element={<RatingPage />} />
           </Route>
         </Route>
       </Routes>

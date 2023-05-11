@@ -1,13 +1,14 @@
 import { ChakraProvider } from '@chakra-ui/react'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { AuthProvider } from './api/contexts/AuthContext'
+import { RatingProvider } from './api/contexts/RatingContext'
 import { App } from './App'
+import { queryClient } from './util/queryClient'
 import theme from './util/theme'
 
-const queryClient = new QueryClient()
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
@@ -15,7 +16,9 @@ root.render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <AuthProvider>
-            <App />
+            <RatingProvider>
+              <App />
+            </RatingProvider>
           </AuthProvider>
         </BrowserRouter>
       </QueryClientProvider>

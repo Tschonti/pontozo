@@ -80,6 +80,13 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
         body: 'Invalid rating value!'
       }
     }
+
+    if (criterion.stageSpecific !== !!dto.stageId) {
+      return {
+        status: 400,
+        body: 'Stage ID missing or not allowed!'
+      }
+    }
     const criterionRatingRepo = ads.getRepository(CriterionRating)
     const rating = await criterionRatingRepo.findOneBy({ criterion: { id: dto.criterionId }, eventRating: { id }, stageId: dto.stageId })
     if (rating === null) {

@@ -1,5 +1,5 @@
 import { CategoryWithCriteria } from './category'
-import { EventSection } from './event'
+import { EventSection, EventSectionPreview } from './event'
 
 export interface EventRating {
   id: number
@@ -42,6 +42,19 @@ export interface StageToRate {
 }
 
 export interface CriterionRating {
-  value: number
   id: number
+  value: number
+  criterionId: number
+}
+
+export interface EventRatingInfo extends EventRating {
+  eventName: string
+  stages: EventSectionPreview[]
+  eventCategories: CategoryWithCriteria[]
+  stageCategories: CategoryWithCriteria[]
+}
+
+export interface GetCriterionRatings {
+  criterionIds: number[]
+  stageId?: number
 }
