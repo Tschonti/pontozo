@@ -1,14 +1,22 @@
-import { Button, Flex, Heading, Spinner, Text, VStack } from '@chakra-ui/react'
+import { Button, Flex, Heading, Spinner, Text, useToast, VStack } from '@chakra-ui/react'
 import { FaArrowLeft } from 'react-icons/fa'
-import { Link, useParams } from 'react-router-dom'
+import { Link, Navigate, useParams } from 'react-router-dom'
+import { useAuthContext } from '../../api/contexts/useAuthContext'
 import { useFetchEvent } from '../../api/hooks/eventQueryHooks'
 import { PATHS } from '../../util/paths'
+import { GoToRatingButton } from './components/GoToRatingButton'
 import { StageListItem } from './components/StageListItem'
-import { StartRatingModal } from './components/StartRatingModal'
 
 export const EventDetailsPage = () => {
   const { eventId } = useParams()
   const { data, isLoading, error } = useFetchEvent(+eventId!!)
+  const { isLoggedIn } = useAuthContext()
+  const toast = useToast()
+
+  if (!isLoggedIn) {
+    toast({ title: 'Jelentkezz be az oldal megtekintéséhez!', status: 'warning' })
+    return <Navigate to={PATHS.INDEX} />
+  }
   if (isLoading) {
     return <Spinner />
   }
@@ -21,7 +29,7 @@ export const EventDetailsPage = () => {
     <VStack alignItems="flex-start">
       <Flex justify="space-between" w="100%">
         <Heading>{event.nev_1}</Heading>
-        <StartRatingModal event={event} />
+        <GoToRatingButton event={event} />
       </Flex>
       <Text>
         {event.datum_tol}

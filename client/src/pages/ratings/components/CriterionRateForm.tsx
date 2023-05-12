@@ -1,17 +1,19 @@
-import { FormControl, FormHelperText, FormLabel, HStack, Radio, RadioGroup } from '@chakra-ui/react'
+import { FormControl, FormHelperText, FormLabel, HStack, Radio, RadioGroup, useToast } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { useRatingContext } from '../../../api/contexts/useRatingContext'
 import { useRateCriteriaMutation } from '../../../api/hooks/criteriaHooks'
 import { CriterionDetails } from '../../../api/model/criterion'
+import { RatingStatus } from '../../../api/model/rating'
 
 type Props = {
   criterion: CriterionDetails
 }
 
 export const CriterionRateForm = ({ criterion }: Props) => {
-  const { ratingId, currentStage } = useRatingContext()
+  const { ratingId, currentStage, eventRatingInfo } = useRatingContext()
   const mutation = useRateCriteriaMutation({ eventRatingId: ratingId, criterionId: criterion.id, stageId: currentStage?.program_id })
   const [value, setValue] = useState<string | undefined>(criterion.rating?.value?.toString())
+  const toast = useToast()
 
   useEffect(() => {
     if (!value && criterion.rating) {
@@ -20,15 +22,21 @@ export const CriterionRateForm = ({ criterion }: Props) => {
   }, [criterion, value])
 
   const onChange = (newValue: string) => {
-    setValue(newValue)
-    mutation.mutate(+newValue)
+    mutation.mutate(+newValue, {
+      onSuccess: () => {
+        setValue(newValue)
+      },
+      onError: (e) => {
+        toast({ title: e.message, description: e.name, status: 'error' })
+      }
+    })
   }
 
   return (
     <FormControl>
       <FormLabel>{criterion.name}</FormLabel>
       <FormHelperText>{criterion.description}</FormHelperText>
-      <RadioGroup colorScheme="green" onChange={onChange} value={value}>
+      <RadioGroup isDisabled={eventRatingInfo?.status === RatingStatus.SUBMITTED} colorScheme="green" onChange={onChange} value={value}>
         <HStack spacing={5}>
           {criterion.text0 && <Radio value="0">{criterion.text0}</Radio>}
           {criterion.text1 && <Radio value="1">{criterion.text1}</Radio>}

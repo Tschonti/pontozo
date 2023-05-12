@@ -14,7 +14,6 @@ import {
   useDisclosure
 } from '@chakra-ui/react'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../../../api/contexts/useAuthContext'
 import { useRatingContext } from '../../../api/contexts/useRatingContext'
 import { useStartRatingMutation } from '../../../api/hooks/ratingHooks'
@@ -27,7 +26,6 @@ export const StartRatingModal = ({ event }: { event: Event }) => {
   const { loggedInUser } = useAuthContext()
   const [role, setRole] = useState<RatingRole | undefined>()
   const startRating = useStartRatingMutation()
-  const nav = useNavigate()
   const { startRating: startRatingWithContext } = useRatingContext()
 
   const onSubmit = () => {
@@ -43,9 +41,11 @@ export const StartRatingModal = ({ event }: { event: Event }) => {
 
   return (
     <>
-      <Button colorScheme="green" onClick={onOpen}>
-        Értékelés
-      </Button>
+      {
+        <Button colorScheme="green" onClick={onOpen}>
+          Értékelés
+        </Button>
+      }
 
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
@@ -73,7 +73,7 @@ export const StartRatingModal = ({ event }: { event: Event }) => {
           <ModalFooter>
             <Flex w="100%" justify="space-between">
               <Button onClick={onClose}>Mégse</Button>
-              <Button isDisabled={!role} colorScheme="green" onClick={onSubmit}>
+              <Button isDisabled={!role} isLoading={startRating.isLoading} colorScheme="green" onClick={onSubmit}>
                 Tovább
               </Button>
             </Flex>

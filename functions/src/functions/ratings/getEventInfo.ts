@@ -64,37 +64,40 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
   const eventCategories: CategoryWithCriteria[] = []
   const stageCategories: CategoryWithCriteria[] = []
 
-  season.categories.forEach((stc) => {
-    const filteredCriteria = stc.category.criteria
-      .map(({ criterion }) => {
-        return {
-          ...criterion,
-          roles: JSON.parse(criterion.roles as unknown as string)
-        } as Criterion
+  season.categories
+    .sort((stc1, stc2) => stc1.order - stc2.order)
+    .forEach((stc) => {
+      const filteredCriteria = stc.category.criteria
+        .sort((ctc1, ctc2) => ctc1.order - ctc2.order)
+        .map(({ criterion }) => {
+          return {
+            ...criterion,
+            roles: JSON.parse(criterion.roles as unknown as string)
+          } as Criterion
+        })
+        .filter((c) => c.roles.includes(eventRating.role) && (event.pontozoOrszagos || !c.nationalOnly))
+      const eventCriteria = []
+      const stageCriteria = []
+      filteredCriteria.forEach((c) => {
+        if (c.stageSpecific) {
+          stageCriteria.push(c)
+        } else {
+          eventCriteria.push(c)
+        }
       })
-      .filter((c) => c.roles.includes(eventRating.role) && (event.pontozoOrszagos || !c.nationalOnly))
-    const eventCriteria = []
-    const stageCriteria = []
-    filteredCriteria.forEach((c) => {
-      if (c.stageSpecific) {
-        stageCriteria.push(c)
-      } else {
-        eventCriteria.push(c)
+      if (stageCriteria.length > 0) {
+        stageCategories.push({
+          ...stc.category,
+          criteria: stageCriteria
+        })
+      }
+      if (eventCriteria.length > 0) {
+        eventCategories.push({
+          ...stc.category,
+          criteria: eventCriteria
+        })
       }
     })
-    if (stageCriteria.length > 0) {
-      stageCategories.push({
-        ...stc.category,
-        criteria: stageCriteria
-      })
-    }
-    if (eventCriteria.length > 0) {
-      eventCategories.push({
-        ...stc.category,
-        criteria: eventCriteria
-      })
-    }
-  })
 
   return {
     jsonBody: {

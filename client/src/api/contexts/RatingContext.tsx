@@ -1,8 +1,10 @@
+import { useToast } from '@chakra-ui/react'
 import { useQuery } from '@tanstack/react-query'
 import { createContext, PropsWithChildren, useEffect, useState } from 'react'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { functionAxios } from '../../util/initAxios'
 import { PATHS } from '../../util/paths'
+import { useSubmitRatingMutation } from '../hooks/ratingHooks'
 import { CategoryWithCriteria } from '../model/category'
 import { EventSectionPreview } from '../model/event'
 import { EventRatingInfo } from '../model/rating'
@@ -15,6 +17,8 @@ export type RatingContextType = {
   categoryIdx: number
   stageIdx: number
   ratingId: number
+  hasPrev: boolean
+  hasNext: boolean
   startRating: (ratingId: number) => void
   nextCategory: () => void
   previousCategory: () => void
@@ -28,6 +32,8 @@ export const RatingContext = createContext<RatingContextType>({
   currentCategory: undefined,
   categoryIdx: 0,
   stageIdx: -1,
+  hasPrev: false,
+  hasNext: true,
   startRating: () => {},
   nextCategory: () => {},
   previousCategory: () => {}
@@ -42,6 +48,7 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
   const [stageIdx, setStageIdx] = useState(-1)
   const [categoryIdx, setCategoryIdx] = useState(0)
   const navigate = useNavigate()
+  const toast = useToast()
   const { data, isLoading } = useQuery(
     ['ratingInfo', ratingId],
     async () => (await functionAxios.get<EventRatingInfo>(`/ratings/${ratingId}/info`)).data,
@@ -59,6 +66,7 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
       }
     }
   )
+  const submitMutation = useSubmitRatingMutation()
 
   useEffect(() => {
     const splitPath = pathname.split('/')
@@ -155,8 +163,13 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
   }
 
   const submitRating = () => {
-    // TODO
-    console.log('submit')
+    submitMutation.mutate(ratingId, {
+      onSuccess: () => {
+        reset()
+        toast({ title: 'Értékelés véglegesítve!', status: 'success' })
+        navigate(`${PATHS.EVENTS}/${data?.eventId}`)
+      }
+    })
   }
 
   const reset = () => {
@@ -177,6 +190,8 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
         categoryIdx,
         stageIdx,
         ratingId,
+        hasPrev: !!stage || categoryIdx > 0,
+        hasNext: !stage || !data || categoryIdx < data?.stageCategories.length - 1 || stageIdx < data.stages.length - 1,
         startRating,
         nextCategory,
         previousCategory

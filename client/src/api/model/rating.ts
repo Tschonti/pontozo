@@ -1,14 +1,19 @@
 import { CategoryWithCriteria } from './category'
-import { EventSection, EventSectionPreview } from './event'
+import { EventSectionPreview } from './event'
 
 export interface EventRating {
   id: number
   eventId: number
   /*ratings: CriterionRating*/
-  //status: RatingStatus
+  status: RatingStatus
   role: RatingRole
   createdAt: Date
   submittedAt?: Date
+}
+
+export enum RatingStatus {
+  STARTED = 'STARTED',
+  SUBMITTED = 'SUBMITTED'
 }
 
 export enum RatingRole {
@@ -21,24 +26,6 @@ export enum RatingRole {
 export interface StartRatingDto {
   eventId: number
   role: RatingRole
-}
-
-export interface EventToRate {
-  eventId: number
-  eventName: string
-  categoriesWithCriteria: CategoryWithCriteria[]
-  nextStageId?: number
-}
-
-export interface StageToRate {
-  eventId: number
-  eventName: string
-  categoriesWithCriteria: CategoryWithCriteria[]
-  stageIdx: number
-  stageCount: number
-  nextStageId?: number
-  prevStageId?: number
-  stage: EventSection
 }
 
 export interface CriterionRating {
@@ -57,4 +44,8 @@ export interface EventRatingInfo extends EventRating {
 export interface GetCriterionRatings {
   criterionIds: number[]
   stageId?: number
+}
+
+export interface GetEvenRating {
+  rating: EventRating | null
 }
