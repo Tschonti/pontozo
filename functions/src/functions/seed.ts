@@ -3,7 +3,9 @@ import { getUserFromHeaderAndAssertAdmin } from '../service/auth.service'
 import Category from '../typeorm/entities/Category'
 import Criterion from '../typeorm/entities/Criterion'
 import Season from '../typeorm/entities/Season'
+import UserRoleAssignment, { UserRole } from '../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../typeorm/getConfig'
+import { ADMIN_IDS } from '../util/env'
 import { httpResFromServiceRes } from '../util/httpRes'
 
 const terep = [
@@ -384,10 +386,12 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
   const seasonRepo = ads.getRepository(Season)
   const categoryRepo = ads.getRepository(Category)
   const criterionRepo = ads.getRepository(Criterion)
+  const userRepo = ads.getRepository(UserRoleAssignment)
 
   const criteria = (await criterionRepo.find({ select: { id: true } })).map((c) => c.id)
   const categories = (await categoryRepo.find({ select: { id: true } })).map((c) => c.id)
   const seasons = (await seasonRepo.find({ select: { id: true } })).map((s) => s.id)
+  const uras = (await userRepo.find({ select: { id: true } })).map((u) => u.id)
 
   if (criteria.length > 0) {
     await criterionRepo.delete(criteria)
@@ -398,6 +402,21 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
   if (seasons.length > 0) {
     await seasonRepo.delete(seasons)
   }
+  if (uras.length > 0) {
+    await userRepo.delete(uras)
+  }
+
+  if (ADMIN_IDS.length > 0) {
+    await userRepo.save(
+      ADMIN_IDS.map((id) => {
+        const ura = new UserRoleAssignment()
+        ura.userId = id
+        ura.role = UserRole.SITE_ADMIN
+        return ura
+      })
+    )
+  }
+
   const newTerep = await Promise.all(
     terep.map(async (t) => {
       return await criterionRepo.save(t)
