@@ -1,6 +1,7 @@
 import { app, HttpRequest, InvocationContext } from '@azure/functions'
 import { HttpResponseInit } from '@azure/functions/types/http'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
+import { getUserById, userProjection } from '../../service/mtfsz.service'
 import UserRoleAssignment from '../../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
@@ -14,8 +15,18 @@ export const getURAs = async (req: HttpRequest, context: InvocationContext): Pro
   try {
     const urasRepo = (await getAppDataSource()).getRepository(UserRoleAssignment)
     const uras = await urasRepo.find()
+
     return {
-      jsonBody: uras
+      jsonBody: await Promise.all(
+        uras.map(async (u) => {
+          const userRes = await getUserById(u.userId)
+          return {
+            id: u.id,
+            user: userProjection(userRes.data),
+            role: u.role
+          }
+        })
+      )
     }
   } catch (error) {
     context.log(error)

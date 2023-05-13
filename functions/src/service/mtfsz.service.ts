@@ -20,6 +20,8 @@ export const stageProjection: (e: EventSection) => EventSectionPreview = ({ fajl
   ...restOfData
 })
 
+export const userProjection = ({ szemely_szervezetek, versenyengedelyek, ...restOfUser }: User) => ({ ...restOfUser })
+
 export const getOneEvent = async (eventId: number): Promise<ServiceResponse<Event>> => {
   const url = new URL('esemenyek', APIM_HOST)
   url.searchParams.append('esemeny_id', eventId.toString())

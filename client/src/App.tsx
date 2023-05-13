@@ -12,6 +12,8 @@ import { ProfilePage } from './pages/profile/Profile.page'
 import { RatingPage } from './pages/ratings/Rating.page'
 import { SeasonCreatePage } from './pages/seasons/SeasonCreate.page'
 import { SeasonListPage } from './pages/seasons/SeasonList.page'
+import { UraCreatePage } from './pages/uras/UraCreate.page'
+import { UraListPage } from './pages/uras/UraList.page'
 import { PATHS } from './util/paths'
 
 export const App = () => {
@@ -49,6 +51,15 @@ export const App = () => {
               <Route index element={<SeasonCreatePage />} />
             </Route>
             <Route index element={<SeasonListPage />} />
+          </Route>
+          <Route path={PATHS.USERS}>
+            <Route path=":uraId">
+              <Route path="edit" element={<UraCreatePage />} />
+            </Route>
+            <Route path="new">
+              <Route index element={<UraCreatePage />} />
+            </Route>
+            <Route index element={<UraListPage />} />
           </Route>
           <Route path={PATHS.EVENTS}>
             <Route path=":eventId">

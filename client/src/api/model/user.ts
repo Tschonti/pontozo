@@ -18,3 +18,16 @@ export enum UserRole {
   JURY = 'JURY',
   COACH = 'COACH'
 }
+
+export interface UserRoleAssignment {
+  id: number
+  user: Omit<User, 'roles'>
+  role: UserRole
+}
+
+export interface CreateUra {
+  userId: number
+  role: UserRole
+}
+
+export interface UpdateUra extends Omit<CreateUra, 'userId'> {}

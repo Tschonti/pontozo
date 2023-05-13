@@ -1,5 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
+import { getUserById, userProjection } from '../../service/mtfsz.service'
 import UserRoleAssignment from '../../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
@@ -26,8 +27,13 @@ export const getURA = async (req: HttpRequest, context: InvocationContext): Prom
         body: 'User role assignment not found!'
       }
     }
+    const userRes = await getUserById(ura.userId)
     return {
-      jsonBody: ura
+      jsonBody: {
+        id: ura.id,
+        user: userProjection(userRes.data),
+        role: ura.role
+      }
     }
   } catch (error) {
     context.error(error)
