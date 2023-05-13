@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios'
 import { MtfszUser } from '../functions/auth/types/MtfszUser'
 import { Token } from '../functions/auth/types/Token'
 import { APIM_HOST, APIM_KEY, CLIENT_ID, CLIENT_SECRET, FUNCTION_HOST } from '../util/env'
-import { Event, EventSection, EventSectionPreview, MtfszResponse, ServiceResponse } from './types'
+import { Event, EventSection, EventSectionPreview, MtfszResponse, ServiceResponse, User } from './types'
 
 const acceptedRanks = ['REGIONALIS', 'ORSZAGOS', 'KIEMELT']
 const higherRanks = ['ORSZAGOS', 'KIEMELT']
@@ -60,4 +60,20 @@ export const getUser = async (accessToken: string): Promise<MtfszUser> => {
       }
     })
   ).data
+}
+
+export const getUserById = async (userId: number): Promise<ServiceResponse<User>> => {
+  try {
+    const res = await axios.get<User>(`${APIM_HOST}/szemelyek/${userId}`, { headers: { 'Ocp-Apim-Subscription-Key': APIM_KEY } })
+    return {
+      isError: false,
+      data: res.data
+    }
+  } catch {
+    return {
+      isError: true,
+      status: 404,
+      message: 'User not found'
+    }
+  }
 }
