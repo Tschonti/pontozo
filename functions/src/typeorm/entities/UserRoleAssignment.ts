@@ -17,6 +17,12 @@ class UserRoleAssignment {
   @Column()
   @Check("role in('SITE_ADMIN', 'COACH', 'JURY')")
   role: UserRole
+
+  @Column()
+  userFullName: string
+
+  @Column()
+  userDOB: string
 }
 
 export default UserRoleAssignment

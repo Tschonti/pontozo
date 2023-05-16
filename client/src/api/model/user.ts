@@ -21,7 +21,8 @@ export enum UserRole {
 
 export interface UserRoleAssignment {
   id: number
-  user: Omit<User, 'roles'>
+  userFullName: string
+  userDOB: string
   role: UserRole
 }
 

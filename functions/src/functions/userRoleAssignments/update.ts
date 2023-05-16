@@ -1,6 +1,7 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { plainToClass } from 'class-transformer'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
+import { getUserById } from '../../service/mtfsz.service'
 import UserRoleAssignment from '../../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
@@ -37,9 +38,17 @@ export const updateURA = async (req: HttpRequest, context: InvocationContext): P
     }
 
     const uraRepo = (await getAppDataSource()).getRepository(UserRoleAssignment)
-    const res = await uraRepo.update({ id }, dto)
+    const ura = await uraRepo.findOne({ where: { id } })
+    const serviceRes = await getUserById(ura.userId)
+    if (serviceRes.isError) {
+      return httpResFromServiceRes(serviceRes)
+    }
+    ura.role = dto.role
+    ura.userFullName = `${serviceRes.data.vezeteknev} ${serviceRes.data.keresztnev}`
+    ura.userDOB = serviceRes.data.szul_dat
+
     return {
-      jsonBody: res
+      jsonBody: await uraRepo.save(ura)
     }
   } catch (e) {
     context.log(e)

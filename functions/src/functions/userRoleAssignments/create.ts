@@ -36,7 +36,11 @@ export const createURA = async (req: HttpRequest, context: InvocationContext): P
   }
   try {
     const uraRepo = (await getAppDataSource()).getRepository(UserRoleAssignment)
-    const res = await uraRepo.insert(dto)
+    const res = await uraRepo.insert({
+      ...dto,
+      userFullName: `${userQueryRes.data.vezeteknev} ${userQueryRes.data.keresztnev}`,
+      userDOB: userQueryRes.data.szul_dat
+    })
     return {
       jsonBody: res.raw
     }

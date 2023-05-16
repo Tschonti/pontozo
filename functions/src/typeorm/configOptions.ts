@@ -9,6 +9,7 @@ import Season from './entities/Season'
 import { SeasonToCategory } from './entities/SeasonToCategory'
 import UserRoleAssignment from './entities/UserRoleAssignment'
 import { Redo1683283337013 } from './migrations/1683283337013-redo'
+import { UraUpdate1684261944434 } from './migrations/1684261944434-ura_update'
 
 export const DBConfig: DataSourceOptions = {
   type: 'mssql',
@@ -21,6 +22,6 @@ export const DBConfig: DataSourceOptions = {
   logging: true,
   entities: [Criterion, CriterionRating, EventRating, Category, Season, UserRoleAssignment, CategoryToCriterion, SeasonToCategory],
   subscribers: [],
-  migrations: [Redo1683283337013],
+  migrations: [Redo1683283337013, UraUpdate1684261944434],
   options: { encrypt: ENCRYPT }
 }
