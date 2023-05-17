@@ -6,11 +6,11 @@ import { CookieKeys } from '../../util/CookieKeys'
 import { functionAxios } from '../../util/initAxios'
 import { PATHS } from '../../util/paths'
 import { queryClient } from '../../util/queryClient'
-import { User, UserRole } from '../model/user'
+import { UserDetails, UserRole } from '../model/user'
 
 export type AuthContextType = {
   isLoggedIn: boolean
-  loggedInUser: User | undefined
+  loggedInUser: UserDetails | undefined
   isAdmin: boolean
   loggedInUserLoading: boolean
   loggedInUserError: unknown
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     isLoading,
     data: user,
     error
-  } = useQuery(['currentUser'], async () => (await functionAxios.get<User>('/auth/user')).data, {
+  } = useQuery(['currentUser'], async () => (await functionAxios.get<UserDetails>('/auth/user')).data, {
     enabled: isLoggedIn,
     retry: false
   })

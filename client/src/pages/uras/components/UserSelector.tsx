@@ -1,38 +1,71 @@
 import {
   Box,
   Button,
+  FormControl,
   FormLabel,
+  Heading,
+  HStack,
   Input,
-  InputGroup,
-  InputLeftElement,
-  InputRightElement,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Spinner,
   Text,
   useDisclosure,
   VStack
 } from '@chakra-ui/react'
-import { useForm } from 'react-hook-form'
-import { FaSearch, FaTimes } from 'react-icons/fa'
-import { Criterion } from '../../../api/model/criterion'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { useFetchUsersMutation } from '../../../api/hooks/mtfszHooks'
+import { User } from '../../../api/model/user'
 import { UserSelectorForm } from '../types/UserSelectorForm'
 
-export const UserSelector = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const { register, handleSubmit, reset } = useForm<UserSelectorForm>()
+type Props = {
+  setUser: (u: User) => void
+  user?: User
+}
 
+export const UserSelector = ({ setUser, user }: Props) => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { register, handleSubmit, setValue, reset } = useForm<UserSelectorForm>()
+
+  const mutation = useFetchUsersMutation()
+
+  const onSubmit: SubmitHandler<UserSelectorForm> = (data) => {
+    if (Object.values(data).reduce((v, a) => v + a, '').length > 0) {
+      mutation.mutate(data)
+    }
+  }
+
+  const clear = () => {
+    setValue('firstName', '')
+    setValue('lastName', '')
+    setValue('yob', undefined)
+    setValue('userId', undefined)
+  }
   return (
     <>
       <FormLabel>Személy</FormLabel>
+      {user ? (
+        <Box w="100%" borderRadius={6} borderWidth={1} p={2}>
+          <Heading size="sm">
+            {user.vezeteknev} {user.keresztnev}
+          </Heading>
 
+          <Text>{user.szul_dat}</Text>
+        </Box>
+      ) : (
+        <Text my={2} fontStyle="italic" textAlign="center">
+          Válassz ki egy személyt!
+        </Text>
+      )}
       <Button
         onClick={() => {
           onOpen()
           reset()
+          mutation.reset()
         }}
       >
         Személy kiválasztása
@@ -43,56 +76,64 @@ export const UserSelector = () => {
           <ModalHeader>Személy keresése</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <InputGroup my={5}>
-              <InputLeftElement h="100%">
-                <FaSearch />
-              </InputLeftElement>
-              <Input
-                autoFocus
-                placeholder="Keresés..."
-                size="lg"
-                onChange={(e) => {
-                  setSearch(e.target.value)
-                }}
-                value={search}
-              />
-              <InputRightElement h="100%">
-                <FaTimes
-                  onClick={() => {
-                    setSearch('')
-                  }}
-                  cursor="pointer"
-                />
-              </InputRightElement>
-            </InputGroup>
-            <Input
-              {...register('criteria', {
-                validate: (c: Criterion[]) => c.length > 0
-              })}
-              hidden
-            />
-            <VStack mb={2} maxHeight="500px" overflowY="auto">
-              {isLoading || !filteredCriterionList || filteredCriterionList.length === 0 ? (
-                <Text fontStyle="italic">Nincs találat</Text>
-              ) : (
-                filteredCriterionList.map((c) => (
+            <VStack>
+              <FormControl>
+                <FormLabel>MTFSZ azonosító (felülírja a többi mezőt)</FormLabel>
+                <Input type="number" placeholder="Azonosító" {...register('userId')} />
+              </FormControl>
+
+              <FormControl>
+                <FormLabel>Vezetéknév</FormLabel>
+                <Input placeholder="Vezetéknév" {...register('lastName')} />
+              </FormControl>
+
+              <FormControl>
+                <FormLabel>Keresztnév</FormLabel>
+                <Input placeholder="Keresztnév" {...register('firstName')} />
+              </FormControl>
+
+              <FormControl>
+                <FormLabel>Születési év</FormLabel>
+                <Input type="number" placeholder="Születési év" {...register('yob')} />
+              </FormControl>
+            </VStack>
+
+            <HStack w="100%" justify="space-between" my={3}>
+              <Button type="submit" colorScheme="green" onClick={handleSubmit(onSubmit)}>
+                Keresés
+              </Button>
+              <Button onClick={() => clear()}>Visszaállítás</Button>
+            </HStack>
+
+            <VStack my={2}>
+              {mutation.data &&
+                mutation.data.map((u) => (
                   <Box
+                    w="100%"
                     borderRadius={6}
                     borderWidth={1}
                     p={2}
+                    key={u.szemely_id}
                     cursor="pointer"
-                    key={c.id}
-                    width="100%"
                     onClick={() => {
-                      addCriterion(c)
+                      setUser(u)
                       onClose()
                     }}
                   >
-                    <Text width="100%">{c.name}</Text>
+                    <Heading size="sm">
+                      {u.vezeteknev} {u.keresztnev}
+                    </Heading>
+
+                    <Text>{u.szul_dat}</Text>
                   </Box>
-                ))
-              )}
+                ))}
             </VStack>
+            {mutation.data && mutation.data.length === 0 && (
+              <Text my={2} fontStyle="italic" textAlign="center">
+                Nincs találat!
+              </Text>
+            )}
+            {mutation.isLoading && <Spinner />}
           </ModalBody>
         </ModalContent>
       </Modal>

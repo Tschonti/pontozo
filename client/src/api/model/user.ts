@@ -10,6 +10,9 @@ export interface User {
   szul_dat: string
   username: string
   v_nytsz: string
+}
+
+export interface UserDetails extends User {
   roles: UserRole[]
 }
 
