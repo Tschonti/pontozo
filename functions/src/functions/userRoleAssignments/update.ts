@@ -1,5 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { plainToClass } from 'class-transformer'
+import { QueryFailedError } from 'typeorm'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import { getUserById } from '../../service/mtfsz.service'
 import UserRoleAssignment from '../../typeorm/entities/UserRoleAssignment'
@@ -51,9 +52,24 @@ export const updateURA = async (req: HttpRequest, context: InvocationContext): P
       jsonBody: await uraRepo.save(ura)
     }
   } catch (e) {
+    switch (e.constructor) {
+      case QueryFailedError:
+        if ((e as QueryFailedError).message.startsWith('Error: Violation of UNIQUE KEY constraint')) {
+          return {
+            status: 400,
+            jsonBody: [
+              {
+                constraints: {
+                  unique: 'Ez a személy már rendelkezik ezzel a szerepkörrel!'
+                }
+              }
+            ]
+          }
+        }
+    }
     context.log(e)
     return {
-      status: 400,
+      status: 500,
       body: e
     }
   }

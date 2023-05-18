@@ -19,15 +19,17 @@ import {
 } from '@chakra-ui/react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useFetchUsersMutation } from '../../../api/hooks/mtfszHooks'
-import { User } from '../../../api/model/user'
+import { UserPreview } from '../../../api/model/user'
+import { transformUser } from '../../../util/transformUser'
 import { UserSelectorForm } from '../types/UserSelectorForm'
 
 type Props = {
-  setUser: (u: User) => void
-  user?: User
+  setUser: (u: UserPreview) => void
+  user?: UserPreview
+  edit: boolean
 }
 
-export const UserSelector = ({ setUser, user }: Props) => {
+export const UserSelector = ({ setUser, user, edit }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { register, handleSubmit, setValue, reset } = useForm<UserSelectorForm>()
 
@@ -45,66 +47,70 @@ export const UserSelector = ({ setUser, user }: Props) => {
     setValue('yob', undefined)
     setValue('userId', undefined)
   }
+
+  const onModalOpen = () => {
+    onOpen()
+    reset()
+    mutation.reset()
+  }
+
   return (
     <>
       <FormLabel>Személy</FormLabel>
       {user ? (
-        <Box w="100%" borderRadius={6} borderWidth={1} p={2}>
-          <Heading size="sm">
-            {user.vezeteknev} {user.keresztnev}
-          </Heading>
+        <Box
+          w="100%"
+          borderRadius={6}
+          borderWidth={1}
+          p={2}
+          onClick={edit ? undefined : onModalOpen}
+          cursor={edit ? 'not-allowed' : 'pointer'}
+          bg={edit ? 'gray.200' : undefined}
+        >
+          <Heading size="sm">{user.userFullName}</Heading>
 
-          <Text>{user.szul_dat}</Text>
+          <Text>{user.userDOB}</Text>
         </Box>
       ) : (
-        <Text my={2} fontStyle="italic" textAlign="center">
-          Válassz ki egy személyt!
-        </Text>
+        <Button onClick={edit ? undefined : onModalOpen}>Személy kiválasztása</Button>
       )}
-      <Button
-        onClick={() => {
-          onOpen()
-          reset()
-          mutation.reset()
-        }}
-      >
-        Személy kiválasztása
-      </Button>
+
       <Modal scrollBehavior="inside" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Személy keresése</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <VStack>
-              <FormControl>
-                <FormLabel>MTFSZ azonosító (felülírja a többi mezőt)</FormLabel>
-                <Input type="number" placeholder="Azonosító" {...register('userId')} />
-              </FormControl>
+            <form>
+              <VStack>
+                <FormControl>
+                  <FormLabel>MTFSZ azonosító (felülírja a többi mezőt)</FormLabel>
+                  <Input type="number" placeholder="Azonosító" {...register('userId')} />
+                </FormControl>
 
-              <FormControl>
-                <FormLabel>Vezetéknév</FormLabel>
-                <Input placeholder="Vezetéknév" {...register('lastName')} />
-              </FormControl>
+                <FormControl>
+                  <FormLabel>Vezetéknév</FormLabel>
+                  <Input placeholder="Vezetéknév" {...register('lastName')} />
+                </FormControl>
 
-              <FormControl>
-                <FormLabel>Keresztnév</FormLabel>
-                <Input placeholder="Keresztnév" {...register('firstName')} />
-              </FormControl>
+                <FormControl>
+                  <FormLabel>Keresztnév</FormLabel>
+                  <Input placeholder="Keresztnév" {...register('firstName')} />
+                </FormControl>
 
-              <FormControl>
-                <FormLabel>Születési év</FormLabel>
-                <Input type="number" placeholder="Születési év" {...register('yob')} />
-              </FormControl>
-            </VStack>
+                <FormControl>
+                  <FormLabel>Születési év</FormLabel>
+                  <Input type="number" placeholder="Születési év" {...register('yob')} />
+                </FormControl>
+              </VStack>
 
-            <HStack w="100%" justify="space-between" my={3}>
-              <Button type="submit" colorScheme="green" onClick={handleSubmit(onSubmit)}>
-                Keresés
-              </Button>
-              <Button onClick={() => clear()}>Visszaállítás</Button>
-            </HStack>
-
+              <HStack w="100%" justify="space-between" my={3}>
+                <Button type="submit" colorScheme="green" onClick={handleSubmit(onSubmit)}>
+                  Keresés
+                </Button>
+                <Button onClick={() => clear()}>Visszaállítás</Button>
+              </HStack>
+            </form>
             <VStack my={2}>
               {mutation.data &&
                 mutation.data.map((u) => (
@@ -116,7 +122,7 @@ export const UserSelector = ({ setUser, user }: Props) => {
                     key={u.szemely_id}
                     cursor="pointer"
                     onClick={() => {
-                      setUser(u)
+                      setUser(transformUser(u))
                       onClose()
                     }}
                   >

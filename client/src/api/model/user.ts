@@ -16,16 +16,20 @@ export interface UserDetails extends User {
   roles: UserRole[]
 }
 
+export interface UserPreview {
+  userId: number
+  userFullName: string
+  userDOB: string
+}
+
 export enum UserRole {
   SITE_ADMIN = 'SITE_ADMIN',
   JURY = 'JURY',
   COACH = 'COACH'
 }
 
-export interface UserRoleAssignment {
+export interface UserRoleAssignment extends UserPreview {
   id: number
-  userFullName: string
-  userDOB: string
   role: UserRole
 }
 

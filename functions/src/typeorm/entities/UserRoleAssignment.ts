@@ -1,4 +1,4 @@
-import { Check, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Check, Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm'
 
 export enum UserRole {
   SITE_ADMIN = 'SITE_ADMIN',
@@ -7,6 +7,7 @@ export enum UserRole {
 }
 
 @Entity()
+@Unique(['userId', 'role'])
 class UserRoleAssignment {
   @PrimaryGeneratedColumn()
   id: number

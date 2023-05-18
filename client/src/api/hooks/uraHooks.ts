@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import { functionAxios } from '../../util/initAxios'
-import { Criterion } from '../model/criterion'
+import { PontozoError } from '../model/error'
 import { CreateUra, UpdateUra, UserRoleAssignment } from '../model/user'
 import { CreateResponse } from './categoryHooks'
 
@@ -9,21 +10,25 @@ export const useFetchUras = () => {
 }
 
 export const useFetchUra = (uraId: number) => {
-  return useQuery<Criterion>(['fetchUra', uraId], async () => (await functionAxios.get(`/uras/${uraId}`)).data, {
+  return useQuery<UserRoleAssignment>(['fetchUra', uraId], async () => (await functionAxios.get(`/uras/${uraId}`)).data, {
     retry: false,
     refetchInterval: false,
     enabled: uraId > 0
   })
 }
 
-export const useCreateCriterionMutation = () => {
-  return useMutation<CreateResponse[], Error, CreateUra>(async (formData) => (await functionAxios.post(`/uras`, formData)).data)
+export const useCreateUraMutation = () => {
+  return useMutation<CreateResponse[], AxiosError<PontozoError[]>, CreateUra>(
+    async (formData) => (await functionAxios.post(`/uras`, formData)).data
+  )
 }
 
-export const useUpdateCriterionMutation = (uraId: number) => {
-  return useMutation<CreateResponse[], Error, UpdateUra>(async (formData) => (await functionAxios.put(`/uras/${uraId}`, formData)).data)
+export const useUpdateUraMutation = (uraId: number) => {
+  return useMutation<CreateResponse[], AxiosError<PontozoError[]>, UpdateUra>(
+    async (formData) => (await functionAxios.put(`/uras/${uraId}`, formData)).data
+  )
 }
 
-export const useDeleteCriterionMutation = (uraId: number) => {
+export const useDeleteUraMutation = (uraId: number) => {
   return useMutation<CreateResponse[], Error>(async () => (await functionAxios.delete(`/uras/${uraId}`)).data)
 }
