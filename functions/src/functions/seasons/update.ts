@@ -11,7 +11,7 @@ import { myvalidate } from '../../util/validation'
 import { CreateSeasonDTO } from './types/CreateSeason.dto'
 
 export const updateSeason = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-  const adminCheck = getUserFromHeaderAndAssertAdmin(req)
+  const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
   if (adminCheck.isError) {
     return httpResFromServiceRes(adminCheck)
   }

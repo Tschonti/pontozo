@@ -1,7 +1,8 @@
 import { HttpRequest } from '@azure/functions'
 import * as jwt from 'jsonwebtoken'
 import { PontozoUser } from '../functions/auth/types/PontozoUser'
-import { UserRole } from '../typeorm/entities/UserRoleAssignment'
+import UserRoleAssignment, { UserRole } from '../typeorm/entities/UserRoleAssignment'
+import { getAppDataSource } from '../typeorm/getConfig'
 import { JWT_SECRET } from '../util/env'
 import { ServiceResponse } from './types'
 
@@ -32,12 +33,15 @@ export const getUserFromHeader = (req: HttpRequest): ServiceResponse<PontozoUser
   }
 }
 
-export const getUserFromHeaderAndAssertAdmin = (req: HttpRequest): ServiceResponse<never> => {
+export const getUserFromHeaderAndAssertAdmin = async (req: HttpRequest): Promise<ServiceResponse<never>> => {
   const { data: user, ...userRes } = getUserFromHeader(req)
   if (userRes.isError) {
     return userRes
   }
-  if (user.roles.includes(UserRole.SITE_ADMIN)) {
+  const ura = await (await getAppDataSource())
+    .getRepository(UserRoleAssignment)
+    .findOne({ where: { userId: user.szemely_id, role: UserRole.SITE_ADMIN } })
+  if (ura) {
     return {
       isError: false
     }

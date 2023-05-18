@@ -377,7 +377,7 @@ const kommunikáció = [
 ]
 
 export const seed = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-  const adminCheck = getUserFromHeaderAndAssertAdmin(req)
+  const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
   if (adminCheck.isError) {
     return httpResFromServiceRes(adminCheck)
   }

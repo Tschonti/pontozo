@@ -5,7 +5,7 @@ import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
 
 export const getSeason = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-  const adminCheck = getUserFromHeaderAndAssertAdmin(req)
+  const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
   if (adminCheck.isError) {
     return httpResFromServiceRes(adminCheck)
   }

@@ -9,7 +9,7 @@ import { myvalidate } from '../../util/validation'
 import { CreateCriteriaDTO } from './types/createCriteria.dto'
 
 export const createCriteria = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-  const adminCheck = getUserFromHeaderAndAssertAdmin(req)
+  const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
   if (adminCheck.isError) {
     return httpResFromServiceRes(adminCheck)
   }
