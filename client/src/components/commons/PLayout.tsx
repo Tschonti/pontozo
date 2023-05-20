@@ -8,9 +8,8 @@ import { ScrollToTop } from './ScrollToTop'
 export const PLayout = ({ children }: PropsWithChildren) => {
   return (
     <>
-      {/* <Helmet titleTemplate="Pontoz-O | %s" defaultTitle="Pontoz-O" /> */}
       <ScrollToTop />
-      <Flex direction="column" minHeight="100vh">
+      <Flex direction="column" minHeight="100vh" backgroundImage="url(/img/hatter.png)">
         <Navbar />
         <Box flex={1} pb={15}>
           <PContainer>{children}</PContainer>
