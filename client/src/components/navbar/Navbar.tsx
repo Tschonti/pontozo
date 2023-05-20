@@ -1,4 +1,4 @@
-import { Box, Collapse, Flex, Heading, IconButton, useColorModeValue, useDisclosure, useToast } from '@chakra-ui/react'
+import { Box, Collapse, Flex, Heading, IconButton, useDisclosure, useToast } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { FaBars, FaTimes } from 'react-icons/fa'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
@@ -25,7 +25,7 @@ export const Navbar = () => {
 
   return (
     <Flex justifyContent="center" w="full" borderBottom="1px solid grey" mr={5}>
-      <Box mx="auto" maxW="6xl" w="full" color={useColorModeValue('brand.500', 'white')}>
+      <Box mx="auto" maxW="6xl" w="full">
         <Flex h="4rem" w="full" px={4} py={2} align="center" justifyContent="space-between">
           <Heading as={Link} to={isAdminPath ? PATHS.ADMIN : PATHS.INDEX} _hover={{ textDecoration: 'none' }}>
             Pontoz-O {isAdminPath && 'Admin'}

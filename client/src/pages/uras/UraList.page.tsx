@@ -18,7 +18,7 @@ export const UraListPage = () => {
     <>
       <Flex w="100%" justifyContent="space-between" mb={3}>
         <Heading>Kiemelt felhasználók</Heading>
-        <Button colorScheme="green" as={Link} to={`${PATHS.USERS}/new`}>
+        <Button colorScheme="brand" as={Link} to={`${PATHS.USERS}/new`}>
           Új kinevezés
         </Button>
       </Flex>

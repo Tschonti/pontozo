@@ -28,7 +28,7 @@ export const RatingPage = () => {
         <Button leftIcon={<FaArrowLeft />} onClick={() => previousCategory()}>
           {hasPrev ? 'Előző' : 'Vissza a versenyhez'}
         </Button>
-        <Button rightIcon={<FaArrowRight />} colorScheme="green" onClick={() => nextCategory()}>
+        <Button rightIcon={<FaArrowRight />} colorScheme="brand" onClick={() => nextCategory()}>
           {hasNext ? 'Következő' : 'Véglegesítés'}
         </Button>
       </HStack>

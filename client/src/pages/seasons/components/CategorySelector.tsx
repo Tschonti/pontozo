@@ -87,7 +87,7 @@ export const CategorySelector = () => {
                   size="xs"
                   isDisabled={idx === 0}
                   icon={<FaCaretUp />}
-                  colorScheme="green"
+                  colorScheme="brand"
                   onClick={() => moveCategory(idx, c, -1)}
                 />
                 <IconButton
@@ -95,7 +95,7 @@ export const CategorySelector = () => {
                   size="xs"
                   isDisabled={idx === watch('categories').length - 1}
                   icon={<FaCaretDown />}
-                  colorScheme="green"
+                  colorScheme="brand"
                   onClick={() => moveCategory(idx, c, 1)}
                 />
                 <IconButton

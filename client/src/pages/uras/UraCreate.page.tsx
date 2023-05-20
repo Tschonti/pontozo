@@ -79,7 +79,7 @@ export const UraCreatePage = () => {
         <HStack spacing={1}>
           <Button
             type="submit"
-            colorScheme="green"
+            colorScheme="brand"
             onClick={onSubmit}
             isDisabled={!role || !user}
             isLoading={createMutation.isLoading || updateMutation.isLoading}

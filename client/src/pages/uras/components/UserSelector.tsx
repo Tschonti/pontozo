@@ -105,7 +105,7 @@ export const UserSelector = ({ setUser, user, edit }: Props) => {
               </VStack>
 
               <HStack w="100%" justify="space-between" my={3}>
-                <Button type="submit" colorScheme="green" onClick={handleSubmit(onSubmit)}>
+                <Button type="submit" colorScheme="brand" onClick={handleSubmit(onSubmit)}>
                   Keresés
                 </Button>
                 <Button onClick={() => clear()}>Visszaállítás</Button>

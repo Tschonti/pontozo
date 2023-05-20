@@ -75,7 +75,7 @@ export const CategoryCreatePage = () => {
                 Kategória törlése
               </Button>
             )}
-            <Button type="submit" colorScheme="green" onClick={handleSubmit(onSubmit)}>
+            <Button type="submit" colorScheme="brand" onClick={handleSubmit(onSubmit)}>
               Mentés
             </Button>
           </HStack>

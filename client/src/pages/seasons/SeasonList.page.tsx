@@ -17,7 +17,7 @@ export const SeasonListPage = () => {
     <>
       <Flex w="100%" justifyContent="space-between" mb={3}>
         <Heading>Szezonok</Heading>
-        <Button colorScheme="green" as={Link} to={`${PATHS.SEASONS}/new`}>
+        <Button colorScheme="brand" as={Link} to={`${PATHS.SEASONS}/new`}>
           Új szezon
         </Button>
       </Flex>

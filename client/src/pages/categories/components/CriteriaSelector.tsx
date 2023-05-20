@@ -87,7 +87,7 @@ export const CriteriaSelector = () => {
                   size="xs"
                   isDisabled={idx === 0}
                   icon={<FaCaretUp />}
-                  colorScheme="green"
+                  colorScheme="brand"
                   onClick={() => moveCriterion(idx, c, -1)}
                 />
                 <IconButton
@@ -95,7 +95,7 @@ export const CriteriaSelector = () => {
                   size="xs"
                   isDisabled={idx === watch('criteria').length - 1}
                   icon={<FaCaretDown />}
-                  colorScheme="green"
+                  colorScheme="brand"
                   onClick={() => moveCriterion(idx, c, 1)}
                 />
                 <IconButton

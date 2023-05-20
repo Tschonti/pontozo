@@ -17,7 +17,7 @@ export const CategoryListPage = () => {
     <>
       <Flex w="100%" justifyContent="space-between" mb={3}>
         <Heading>Kategóriák</Heading>
-        <Button colorScheme="green" as={Link} to={`${PATHS.CATEGORIES}/new`}>
+        <Button colorScheme="brand" as={Link} to={`${PATHS.CATEGORIES}/new`}>
           Új kategória
         </Button>
       </Flex>

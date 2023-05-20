@@ -17,7 +17,7 @@ export const CriteriaListPage = () => {
     <>
       <Flex w="100%" justifyContent="space-between" mb={3}>
         <Heading>Szempontok</Heading>
-        <Button colorScheme="green" as={Link} to={`${PATHS.CRITERIA}/new`}>
+        <Button colorScheme="brand" as={Link} to={`${PATHS.CRITERIA}/new`}>
           Új szempont
         </Button>
       </Flex>

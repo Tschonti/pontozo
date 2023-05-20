@@ -24,7 +24,7 @@ export const ProfilePage = () => {
     <>
       <HStack w="100%" justify="space-between">
         <Heading>{loggedInUser?.nev}</Heading>
-        <Button onClick={() => onLogout()} colorScheme="green">
+        <Button onClick={() => onLogout()} colorScheme="brand">
           Kijelentkezés
         </Button>
       </HStack>

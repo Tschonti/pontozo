@@ -11,7 +11,7 @@ export const GoToRatingButton = ({ event }: { event: Event }) => {
 
   if (isLoading) {
     return (
-      <Button colorScheme="green" isLoading>
+      <Button colorScheme="brand" isLoading>
         Értékelés
       </Button>
     )
@@ -19,7 +19,7 @@ export const GoToRatingButton = ({ event }: { event: Event }) => {
 
   if (data?.rating) {
     return (
-      <Button as={Link} to={`${PATHS.RATINGS}/${data.rating.id}?categoryIdx=0`} colorScheme="green">
+      <Button as={Link} to={`${PATHS.RATINGS}/${data.rating.id}?categoryIdx=0`} colorScheme="brand">
         {data.rating.status === RatingStatus.SUBMITTED ? 'Értékelésed megtekintése' : 'Értékelésed szerkesztése'}
       </Button>
     )

@@ -26,7 +26,7 @@ export const translateStatus: StatusDict = {
 
 export const statusColor: StatusDict = {
   [RatingStatus.STARTED]: 'orange',
-  [RatingStatus.SUBMITTED]: 'green'
+  [RatingStatus.SUBMITTED]: 'brand'
 }
 
 type UserRoleDictionary = {
@@ -40,7 +40,7 @@ export const translateUR: UserRoleDictionary = {
 }
 
 export const urColor: UserRoleDictionary = {
-  [UserRole.COACH]: 'green',
+  [UserRole.COACH]: 'brand',
   [UserRole.SITE_ADMIN]: 'purple',
   [UserRole.JURY]: 'orange'
 }
@@ -69,7 +69,7 @@ export const translateRank: RankDict = {
 }
 
 export const rankColor: RankDict = {
-  [EventRank.REGIONAL]: 'green',
+  [EventRank.REGIONAL]: 'brand',
   [EventRank.NATIONAL]: 'orange',
   [EventRank.FEATURED]: 'red',
   [EventRank.NONE]: 'gray'

@@ -131,7 +131,7 @@ export const CriteriaCreatePage = () => {
             <FormLabel>Szerepkörök, akik számára elérhető</FormLabel>
             <VStack alignItems="flex-start">
               <Checkbox
-                colorScheme="green"
+                colorScheme="brand"
                 {...register('competitorAllowed', {
                   validate: (val, formVal) => val || formVal.juryAllowed,
                   deps: 'juryAllowed'
@@ -140,7 +140,7 @@ export const CriteriaCreatePage = () => {
                 Versenyzők és Edzők
               </Checkbox>
               <Checkbox
-                colorScheme="green"
+                colorScheme="brand"
                 {...register('juryAllowed', {
                   validate: (val, formVal) => val || formVal.competitorAllowed,
                   deps: 'competitorAllowed'
@@ -158,13 +158,13 @@ export const CriteriaCreatePage = () => {
               <FormLabel htmlFor="stageSpecific" mb="0">
                 Futam specifikus
               </FormLabel>
-              <Switch {...register('stageSpecific')} colorScheme="green" id="stageSpecific" />
+              <Switch {...register('stageSpecific')} colorScheme="brand" id="stageSpecific" />
             </FormControl>
             <FormControl display="flex" w="100%" justifyContent="space-between" alignItems="center">
               <FormLabel htmlFor="nationalOnly" mb="0">
                 Csak országos/kiemelt versenyekre érvényes
               </FormLabel>
-              <Switch {...register('nationalOnly')} colorScheme="green" id="nationalOnly" />
+              <Switch {...register('nationalOnly')} colorScheme="brand" id="nationalOnly" />
             </FormControl>
           </VStack>
         </SimpleGrid>
@@ -210,7 +210,7 @@ export const CriteriaCreatePage = () => {
                 Szempont törlése
               </Button>
             )}
-            <Button type="submit" colorScheme="green" onClick={handleSubmit(onSubmit)}>
+            <Button type="submit" colorScheme="brand" onClick={handleSubmit(onSubmit)}>
               Mentés
             </Button>
           </HStack>

@@ -14,17 +14,7 @@ const DesktopNav = () => {
   return (
     <Stack direction="row" spacing={4}>
       {navItemsToRender.map((item) => (
-        <Button
-          flexDir="column"
-          alignItems="center"
-          key={item.label}
-          as={Link}
-          to={item.path}
-          px={2}
-          py={4}
-          variant="ghost"
-          colorScheme="brand"
-        >
+        <Button flexDir="column" alignItems="center" key={item.label} as={Link} to={item.path} px={2} py={4} variant="ghost">
           {item.label}
         </Button>
       ))}

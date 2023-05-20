@@ -42,7 +42,7 @@ export const StartRatingModal = ({ event }: { event: Event }) => {
   return (
     <>
       {
-        <Button colorScheme="green" onClick={onOpen}>
+        <Button colorScheme="brand" onClick={onOpen}>
           Értékelés
         </Button>
       }
@@ -73,7 +73,7 @@ export const StartRatingModal = ({ event }: { event: Event }) => {
           <ModalFooter>
             <Flex w="100%" justify="space-between">
               <Button onClick={onClose}>Mégse</Button>
-              <Button isDisabled={!role} isLoading={startRating.isLoading} colorScheme="green" onClick={onSubmit}>
+              <Button isDisabled={!role} isLoading={startRating.isLoading} colorScheme="brand" onClick={onSubmit}>
                 Tovább
               </Button>
             </Flex>
