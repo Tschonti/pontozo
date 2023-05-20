@@ -118,3 +118,9 @@ export interface Link {
   created_at: string
   updated_at: string
 }
+
+export enum EventRank {
+  REGIONAL = 'REGIONALIS',
+  NATIONAL = 'ORSZAGOS',
+  FEATURED = 'KIEMELT'
+}

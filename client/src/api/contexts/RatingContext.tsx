@@ -56,7 +56,6 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
       enabled: ratingId > 0,
       retry: false,
       onSuccess: (data) => {
-        console.log(data)
         if (categoryIdx >= 0) {
           setCategory(stageIdx > -1 ? data.stageCategories[categoryIdx] : data.eventCategories[categoryIdx])
         }

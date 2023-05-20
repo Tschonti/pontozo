@@ -15,7 +15,7 @@ export const IndexPage = () => {
   }
 
   return (
-    <SimpleGrid spacing={4} columns={2}>
+    <SimpleGrid spacing={4} columns={[1, 1, 2]}>
       {events
         ?.sort((e1, e2) => -e1.datum_tol.localeCompare(e2.datum_tol))
         .map((e) => (

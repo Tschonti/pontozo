@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 import { APIM_HOST, APIM_KEY } from '../../util/environment'
 import { eventFilter } from '../../util/eventFilter'
-import { apimAxios } from '../../util/initAxios'
+import { apimAxios, functionAxios } from '../../util/initAxios'
 import { Event, FetchEventsResult } from '../model/event'
+import { RatingStatus } from '../model/rating'
 
 const formatDate = (d: Date) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
 
@@ -41,5 +42,13 @@ export const useFetchEvent = (eventId: number) => {
       return res.data
     },
     { retry: false, enabled: !isNaN(eventId) && eventId > 0 }
+  )
+}
+
+export const useFecthUserRatedEvents = () => {
+  return useQuery<(Event & { status: RatingStatus })[]>(
+    ['fetchUserRatedEvents'],
+    async () => (await functionAxios.get('auth/rated')).data,
+    { retry: false }
   )
 }
