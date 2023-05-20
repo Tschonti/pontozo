@@ -64,11 +64,13 @@ type RankDict = {
 export const translateRank: RankDict = {
   [EventRank.REGIONAL]: 'REGIONÁLIS',
   [EventRank.NATIONAL]: 'ORSZÁGOS',
-  [EventRank.FEATURED]: 'KIEMELT'
+  [EventRank.FEATURED]: 'KIEMELT',
+  [EventRank.NONE]: 'NEM RANGSOROLÓ'
 }
 
 export const rankColor: RankDict = {
   [EventRank.REGIONAL]: 'green',
   [EventRank.NATIONAL]: 'orange',
-  [EventRank.FEATURED]: 'red'
+  [EventRank.FEATURED]: 'red',
+  [EventRank.NONE]: 'gray'
 }

@@ -1,17 +1,15 @@
-import { Card, CardBody, CardHeader, Heading, Text } from '@chakra-ui/react'
-import { EventSection } from '../../../api/model/event'
+import { Card, CardHeader, Heading } from '@chakra-ui/react'
+import { EventRank, EventSection } from '../../../api/model/event'
+import { EventRankBadge } from './EventRankBadge'
 
-export const StageListItem = ({ stage }: { stage: EventSection }) => {
+export const StageListItem = ({ stage, idx }: { stage: EventSection; idx: number }) => {
   return (
-    <Card variant="outline">
+    <Card variant="outline" w="100%">
       <CardHeader>
-        <Heading size="md">{stage.nev_1}</Heading>
+        <Heading size="md">{stage.nev_1 || idx + '. futam'}</Heading>
+        <Heading size="sm">{new Date(parseInt(stage.idopont_tol) * 1000).toLocaleString('hu-HU')}</Heading>
+        <EventRankBadge rank={stage.futam.rangsorolo as EventRank} />
       </CardHeader>
-
-      <CardBody>
-        <Text>{new Date(parseInt(stage.idopont_tol) * 1000).toLocaleString('hu-HU')}</Text>
-        <Text>Rangsor típus: {stage.futam.rangsorolo}</Text>
-      </CardBody>
     </Card>
   )
 }

@@ -122,5 +122,6 @@ export interface Link {
 export enum EventRank {
   REGIONAL = 'REGIONALIS',
   NATIONAL = 'ORSZAGOS',
-  FEATURED = 'KIEMELT'
+  FEATURED = 'KIEMELT',
+  NONE = 'NEM'
 }
