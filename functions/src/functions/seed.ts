@@ -5,7 +5,7 @@ import Criterion from '../typeorm/entities/Criterion'
 import Season from '../typeorm/entities/Season'
 import UserRoleAssignment, { UserRole } from '../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../typeorm/getConfig'
-import { ADMIN_IDS } from '../util/env'
+import { ADMINS } from '../util/env'
 import { httpResFromServiceRes } from '../util/httpRes'
 
 const terep = [
@@ -406,11 +406,13 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
     await userRepo.delete(uras)
   }
 
-  if (ADMIN_IDS.length > 0) {
+  if (ADMINS.length > 0) {
     await userRepo.save(
-      ADMIN_IDS.map((id) => {
+      ADMINS.map((a) => {
         const ura = new UserRoleAssignment()
-        ura.userId = id
+        ura.userId = a.userId
+        ura.userDOB = a.dob
+        ura.userFullName = a.name
         ura.role = UserRole.SITE_ADMIN
         return ura
       })

@@ -19,7 +19,7 @@ const DesktopNav = () => {
         </Button>
       ))}
       {!isLoggedIn && (
-        <Button flexDir="column" alignItems="center" px={2} py={4} onClick={onLoginClick} variant="ghost" colorScheme="brand">
+        <Button flexDir="column" alignItems="center" px={2} py={4} onClick={onLoginClick} variant="ghost">
           Bejelentkezés
         </Button>
       )}
