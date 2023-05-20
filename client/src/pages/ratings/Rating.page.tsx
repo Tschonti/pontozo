@@ -6,21 +6,15 @@ import { CategoryWithCriteriaList } from './components/CategoryWithCriteriaList'
 
 export const RatingPage = () => {
   const { ratingId } = useParams()
-  const { eventRatingInfo, infoLoading, nextCategory, previousCategory, currentCategory, currentStage, hasNext, hasPrev, stageIdx } =
-    useRatingContext()
+  const { eventRatingInfo, infoLoading, nextCategory, previousCategory, currentStage, hasNext, hasPrev, stageIdx } = useRatingContext()
 
   if (infoLoading) {
     return <Spinner />
   }
 
-  if (!currentCategory) {
-    //console.error(error)
-    return null
-  }
-
   return (
     <>
-      <Heading>{currentStage ? currentStage.nev_1 || `${stageIdx + 1}. futam` : eventRatingInfo?.eventName} értékelése</Heading>
+      <Heading mb={2}>{currentStage ? currentStage.nev_1 || `${stageIdx + 1}. futam` : eventRatingInfo?.eventName} értékelése</Heading>
       {currentStage ? (
         <Heading size="sm">
           A futamra vonatkozó szempontok szerint (futam {stageIdx + 1}/{eventRatingInfo?.stages.length})

@@ -24,15 +24,19 @@ export const CategoryWithCriteriaList = ({ ratingId }: Props) => {
   }))
 
   return (
-    <VStack my={5} alignItems="flex-start">
-      <Heading size="sm">
+    <>
+      <Heading size="md">
         Kategória: {currentCategory?.name} ({categoryIdx + 1}/
         {currentStage ? eventRatingInfo?.stageCategories.length : eventRatingInfo?.eventCategories.length})
       </Heading>
-      <Text>{currentCategory?.description}</Text>
-      {criteria?.map((criteria) => (
-        <CriterionRateForm criterion={criteria} key={criteria.id} />
-      ))}
-    </VStack>
+      <Text mt={2} mb={5}>
+        {currentCategory?.description}
+      </Text>
+      <VStack my={5} spacing={5} alignItems="flex-start">
+        {criteria?.map((criteria) => (
+          <CriterionRateForm criterion={criteria} key={criteria.id} />
+        ))}
+      </VStack>
+    </>
   )
 }

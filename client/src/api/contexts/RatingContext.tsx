@@ -90,6 +90,7 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
   }
 
   const nextCategory = () => {
+    window.scrollTo(0, 0)
     if (!data) {
       return
     }
@@ -126,6 +127,7 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
   }
 
   const previousCategory = () => {
+    window.scrollTo(0, 0)
     if (!data) {
       return
     }

@@ -1,4 +1,4 @@
-import { FormControl, FormHelperText, FormLabel, HStack, Radio, RadioGroup, useToast } from '@chakra-ui/react'
+import { FormControl, FormHelperText, FormLabel, Radio, RadioGroup, Stack, useToast } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { useRatingContext } from '../../../api/contexts/useRatingContext'
 import { useRateCriteriaMutation } from '../../../api/hooks/criteriaHooks'
@@ -35,14 +35,14 @@ export const CriterionRateForm = ({ criterion }: Props) => {
   return (
     <FormControl>
       <FormLabel>{criterion.name}</FormLabel>
-      <FormHelperText>{criterion.description}</FormHelperText>
+      <FormHelperText mb={2}>{criterion.description}</FormHelperText>
       <RadioGroup isDisabled={eventRatingInfo?.status === RatingStatus.SUBMITTED} colorScheme="green" onChange={onChange} value={value}>
-        <HStack spacing={5}>
+        <Stack direction={['column', 'row']} spacing={5}>
           {criterion.text0 && <Radio value="0">{criterion.text0}</Radio>}
           {criterion.text1 && <Radio value="1">{criterion.text1}</Radio>}
           {criterion.text2 && <Radio value="2">{criterion.text2}</Radio>}
           {criterion.text3 && <Radio value="3">{criterion.text3}</Radio>}
-        </HStack>
+        </Stack>
       </RadioGroup>
     </FormControl>
   )
