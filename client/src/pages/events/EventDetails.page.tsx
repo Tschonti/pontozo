@@ -1,8 +1,9 @@
-import { Button, Heading, Spinner, Stack, Text, useToast, VStack } from '@chakra-ui/react'
+import { Button, Heading, Stack, Text, useToast, VStack } from '@chakra-ui/react'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { useAuthContext } from '../../api/contexts/useAuthContext'
 import { useFetchEvent } from '../../api/hooks/eventQueryHooks'
+import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 import { GoToRatingButton } from './components/GoToRatingButton'
 import { StageListItem } from './components/StageListItem'
@@ -18,7 +19,7 @@ export const EventDetailsPage = () => {
     return <Navigate to={PATHS.INDEX} />
   }
   if (isLoading) {
-    return <Spinner />
+    return <LoadingSpinner />
   }
   if (error) {
     console.error(error)

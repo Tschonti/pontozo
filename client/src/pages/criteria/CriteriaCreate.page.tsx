@@ -9,7 +9,6 @@ import {
   HStack,
   Input,
   SimpleGrid,
-  Spinner,
   Stack,
   Switch,
   VStack
@@ -25,6 +24,7 @@ import {
 } from '../../api/hooks/criteriaHooks'
 import { CreateCriterion, CreateCriterionForm } from '../../api/model/criterion'
 import { RatingRole } from '../../api/model/rating'
+import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 
 export const CriteriaCreatePage = () => {
@@ -83,7 +83,7 @@ export const CriteriaCreatePage = () => {
   }
 
   if (isLoading && isFetching) {
-    return <Spinner />
+    return <LoadingSpinner />
   }
   return (
     <>

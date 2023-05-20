@@ -1,12 +1,13 @@
-import { Box, Button, Flex, Heading, Spinner, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Text, VStack } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { useFetchCategories } from '../../api/hooks/categoryHooks'
+import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 
 export const CategoryListPage = () => {
   const { isLoading, error, data } = useFetchCategories()
   if (isLoading) {
-    return <Spinner />
+    return <LoadingSpinner />
   }
   if (error) {
     console.error(error)

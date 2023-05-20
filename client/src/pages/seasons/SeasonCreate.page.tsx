@@ -1,10 +1,11 @@
-import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, HStack, Input, Spinner, Stack, VStack } from '@chakra-ui/react'
+import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, HStack, Input, Stack, VStack } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useCreateSeasonMutation, useDeleteSeasonMutation, useFetchSeason, useUpdateSeasonMutation } from '../../api/hooks/seasonHook'
 import { CreateSeason, CreateSeasonForm } from '../../api/model/season'
+import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 import { CategorySelector } from './components/CategorySelector'
 
@@ -57,7 +58,7 @@ export const SeasonCreatePage = () => {
   }
 
   if (isLoading && isFetching) {
-    return <Spinner />
+    return <LoadingSpinner />
   }
   return (
     <>

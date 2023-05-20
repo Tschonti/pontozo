@@ -1,13 +1,14 @@
-import { Badge, Box, Button, Flex, Heading, HStack, Spinner, Text, VStack } from '@chakra-ui/react'
+import { Badge, Box, Button, Flex, Heading, HStack, Text, VStack } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { useFetchUras } from '../../api/hooks/uraHooks'
+import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { translateUR, urColor } from '../../util/enumHelpers'
 import { PATHS } from '../../util/paths'
 
 export const UraListPage = () => {
   const { isLoading, error, data } = useFetchUras()
   if (isLoading) {
-    return <Spinner />
+    return <LoadingSpinner />
   }
   if (error) {
     console.error(error)

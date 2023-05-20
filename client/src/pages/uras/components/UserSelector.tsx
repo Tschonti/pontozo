@@ -12,7 +12,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Spinner,
   Text,
   useDisclosure,
   VStack
@@ -20,6 +19,7 @@ import {
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useFetchUsersMutation } from '../../../api/hooks/mtfszHooks'
 import { UserPreview } from '../../../api/model/user'
+import { LoadingSpinner } from '../../../components/commons/LoadingSpinner'
 import { transformUser } from '../../../util/transformUser'
 import { UserSelectorForm } from '../types/UserSelectorForm'
 
@@ -139,7 +139,7 @@ export const UserSelector = ({ setUser, user, edit }: Props) => {
                 Nincs találat!
               </Text>
             )}
-            {mutation.isLoading && <Spinner />}
+            {mutation.isLoading && <LoadingSpinner />}
           </ModalBody>
         </ModalContent>
       </Modal>

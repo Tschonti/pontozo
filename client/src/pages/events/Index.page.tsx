@@ -1,12 +1,13 @@
-import { SimpleGrid, Spinner } from '@chakra-ui/react'
+import { SimpleGrid } from '@chakra-ui/react'
 import { useFetchEventsLastMonth } from '../../api/hooks/eventQueryHooks'
+import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { EventListItem } from './components/EventListItem'
 
 export const IndexPage = () => {
   const { data: events, isLoading, error } = useFetchEventsLastMonth()
 
   if (isLoading) {
-    return <Spinner />
+    return <LoadingSpinner />
   }
 
   if (error) {

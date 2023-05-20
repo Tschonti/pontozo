@@ -16,7 +16,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Spinner,
   Text,
   useDisclosure,
   useToast,
@@ -28,6 +27,7 @@ import { FaCaretDown, FaCaretUp, FaMinus, FaSearch, FaTimes } from 'react-icons/
 import { useFetchCategories } from '../../../api/hooks/categoryHooks'
 import { Category } from '../../../api/model/category'
 import { CreateSeasonForm } from '../../../api/model/season'
+import { LoadingSpinner } from '../../../components/commons/LoadingSpinner'
 
 export const CategorySelector = () => {
   const {
@@ -64,7 +64,7 @@ export const CategorySelector = () => {
   }
 
   if (isLoading) {
-    return <Spinner />
+    return <LoadingSpinner />
   }
 
   const filteredCategoryList = category

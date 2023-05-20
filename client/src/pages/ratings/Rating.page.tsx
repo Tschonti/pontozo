@@ -1,7 +1,8 @@
-import { Button, Heading, HStack, Spinner } from '@chakra-ui/react'
+import { Button, Heading, HStack } from '@chakra-ui/react'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import { useParams } from 'react-router-dom'
 import { useRatingContext } from '../../api/contexts/useRatingContext'
+import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { CategoryWithCriteriaList } from './components/CategoryWithCriteriaList'
 
 export const RatingPage = () => {
@@ -9,7 +10,7 @@ export const RatingPage = () => {
   const { eventRatingInfo, infoLoading, nextCategory, previousCategory, currentStage, hasNext, hasPrev, stageIdx } = useRatingContext()
 
   if (infoLoading) {
-    return <Spinner />
+    return <LoadingSpinner />
   }
 
   return (

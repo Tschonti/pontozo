@@ -1,12 +1,13 @@
-import { Box, Button, Flex, Heading, Spinner, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Text, VStack } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { useFetchSeasons } from '../../api/hooks/seasonHook'
+import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 
 export const SeasonListPage = () => {
   const { isLoading, error, data } = useFetchSeasons()
   if (isLoading) {
-    return <Spinner />
+    return <LoadingSpinner />
   }
   if (error) {
     console.error(error)

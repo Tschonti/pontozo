@@ -1,8 +1,9 @@
-import { Button, Heading, HStack, SimpleGrid, Spinner, useToast } from '@chakra-ui/react'
+import { Button, Heading, HStack, SimpleGrid, useToast } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../../api/contexts/useAuthContext'
 import { useFecthUserRatedEvents } from '../../api/hooks/eventQueryHooks'
+import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 import { EventListItem } from '../events/components/EventListItem'
 
@@ -31,7 +32,7 @@ export const ProfilePage = () => {
       <Heading mt={5} size="md">
         Értékelt versenyeid
       </Heading>
-      {eventQuery.isLoading && <Spinner />}
+      {eventQuery.isLoading && <LoadingSpinner />}
       <SimpleGrid mt={3} spacing={4} columns={2}>
         {eventQuery.data
           ?.sort((e1, e2) => -e1.datum_tol.localeCompare(e2.datum_tol))

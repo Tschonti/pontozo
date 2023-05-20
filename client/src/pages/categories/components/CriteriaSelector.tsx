@@ -16,7 +16,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Spinner,
   Text,
   useDisclosure,
   useToast,
@@ -28,6 +27,7 @@ import { FaCaretDown, FaCaretUp, FaMinus, FaSearch, FaTimes } from 'react-icons/
 import { useFetchCriteria } from '../../../api/hooks/criteriaHooks'
 import { CreateCategoryForm } from '../../../api/model/category'
 import { Criterion } from '../../../api/model/criterion'
+import { LoadingSpinner } from '../../../components/commons/LoadingSpinner'
 
 export const CriteriaSelector = () => {
   const {
@@ -64,7 +64,7 @@ export const CriteriaSelector = () => {
   }
 
   if (isLoading) {
-    return <Spinner />
+    return <LoadingSpinner />
   }
 
   const filteredCriterionList = criteria

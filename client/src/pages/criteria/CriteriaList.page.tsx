@@ -1,12 +1,13 @@
-import { Box, Button, Flex, Heading, Spinner, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Text, VStack } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { useFetchCriteria } from '../../api/hooks/criteriaHooks'
+import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 
 export const CriteriaListPage = () => {
   const { isLoading, error, data } = useFetchCriteria()
   if (isLoading) {
-    return <Spinner />
+    return <LoadingSpinner />
   }
   if (error) {
     console.error(error)

@@ -1,4 +1,4 @@
-import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, HStack, Input, Spinner, VStack } from '@chakra-ui/react'
+import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, HStack, Input, VStack } from '@chakra-ui/react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -9,6 +9,7 @@ import {
   useUpdateCategoryMutation
 } from '../../api/hooks/categoryHooks'
 import { CreateCategoryForm } from '../../api/model/category'
+import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 import { CriteriaSelector } from './components/CriteriaSelector'
 
@@ -27,7 +28,6 @@ export const CategoryCreatePage = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors }
   } = form
   const navigate = useNavigate()
@@ -44,7 +44,7 @@ export const CategoryCreatePage = () => {
   }
 
   if (isLoading && isFetching) {
-    return <Spinner />
+    return <LoadingSpinner />
   }
   return (
     <>
