@@ -1,7 +1,7 @@
 import { Box, Collapse, Flex, IconButton, Image, useDisclosure, useToast } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { FaBars, FaTimes } from 'react-icons/fa'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../../api/contexts/useAuthContext'
 import { PATHS } from '../../util/paths'
 import DesktopNav from './DesktopNav'
@@ -28,7 +28,7 @@ export const Navbar = () => {
       <Flex direction="column">
         <Box flex={1}>
           <Flex flexDirection="column" maxWidth={['100%', '48rem', '48rem', '64rem']} mx="auto">
-            <Box p={4}>
+            <Box as={Link} to={PATHS.INDEX} p={4}>
               <Image src="img/logo.png" />
             </Box>
           </Flex>
