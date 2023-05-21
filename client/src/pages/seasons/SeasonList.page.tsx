@@ -1,6 +1,6 @@
 import { Box, Button, Flex, Heading, Text, VStack } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
-import { useFetchSeasons } from '../../api/hooks/seasonHook'
+import { useFetchSeasons } from '../../api/hooks/seasonHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 

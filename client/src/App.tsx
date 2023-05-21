@@ -1,4 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
+import { usePing } from './api/hooks/utilHooks'
 import { PLayout } from './components/commons/PLayout'
 import { AdminIndex } from './pages/adminIndex/AdminIndex.page'
 import { AuthorizedPage } from './pages/authorized/Authorized.page'
@@ -17,6 +18,7 @@ import { UraListPage } from './pages/uras/UraList.page'
 import { PATHS } from './util/paths'
 
 export const App = () => {
+  usePing()
   return (
     <PLayout>
       <Routes>

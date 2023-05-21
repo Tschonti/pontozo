@@ -1,5 +1,5 @@
 import { DataSourceOptions } from 'typeorm'
-import { DB_NAME, DB_PWD, DB_SERVER, DB_USER, ENCRYPT } from '../util/env'
+import { DB_NAME, DB_PWD, DB_SERVER, DB_USER, ENCRYPT, ENV } from '../util/env'
 import Category from './entities/Category'
 import { CategoryToCriterion } from './entities/CategoryToCriterion'
 import Criterion from './entities/Criterion'
@@ -20,7 +20,8 @@ export const DBConfig: DataSourceOptions = {
   password: DB_PWD,
   database: DB_NAME,
   synchronize: false,
-  logging: true,
+  logging: !(ENV === 'production'),
+  connectionTimeout: 60000,
   entities: [Criterion, CriterionRating, EventRating, Category, Season, UserRoleAssignment, CategoryToCriterion, SeasonToCategory],
   subscribers: [],
   migrations: [Redo1683283337013, UraUpdate1684261944434, UraUnique1684414296319],
