@@ -18,7 +18,13 @@ const MobileNav = ({ onNavigate }: Props) => {
   return (
     <Stack display={{ lg: 'none' }} fontWeight={700} fontSize="xl" ml={6} mb={6}>
       {navItemsToRender.map((item) => (
-        <HStack key={item.label} as={Link} to={item.path} onClick={() => onNavigate()}>
+        <HStack
+          color={pathname === item.path ? 'mtfszYellow' : 'white'}
+          key={item.label}
+          as={Link}
+          to={item.path}
+          onClick={() => onNavigate()}
+        >
           <Text textAlign="center">{item.label}</Text>
         </HStack>
       ))}

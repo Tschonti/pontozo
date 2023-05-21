@@ -7,16 +7,16 @@ export interface INavItem {
 }
 
 export const navItems: INavItem[] = [
-  { label: 'Versenyek', path: PATHS.INDEX, shown: () => true },
-  { label: 'Admin', path: PATHS.ADMIN, shown: (l, a) => l && a },
-  { label: 'Profil', path: PATHS.PROFILE, shown: (l) => l }
+  { label: 'VERSENYEK', path: PATHS.INDEX, shown: () => true },
+  { label: 'ADMIN', path: PATHS.ADMIN, shown: (l, a) => l && a },
+  { label: 'PROFIL', path: PATHS.PROFILE, shown: (l) => l }
 ]
 
 export const adminNavItems: INavItem[] = [
-  { label: 'Tudnivalók', path: PATHS.ADMIN, shown: (l, a) => l && a },
-  { label: 'Értékelések', path: PATHS.INDEX, shown: (l, a) => l && a },
-  { label: 'Szempontok', path: PATHS.CRITERIA, shown: (l, a) => l && a },
-  { label: 'Kategóriák', path: PATHS.CATEGORIES, shown: (l, a) => l && a },
-  { label: 'Szezonok', path: PATHS.SEASONS, shown: (l, a) => l && a },
-  { label: 'Felhasználók', path: PATHS.USERS, shown: (l, a) => l && a }
+  { label: 'TUDNIVALÓK', path: PATHS.ADMIN, shown: (l, a) => l && a },
+  { label: 'ÉRTÉKELÉSEK', path: PATHS.INDEX, shown: (l, a) => l && a },
+  { label: 'SZEMPONTOK', path: PATHS.CRITERIA, shown: (l, a) => l && a },
+  { label: 'KATEGÓRIÁK', path: PATHS.CATEGORIES, shown: (l, a) => l && a },
+  { label: 'SZEZONOK', path: PATHS.SEASONS, shown: (l, a) => l && a },
+  { label: 'FELHASZNÁLÓK', path: PATHS.USERS, shown: (l, a) => l && a }
 ]
