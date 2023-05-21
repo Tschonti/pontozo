@@ -29,7 +29,7 @@ export const Navbar = () => {
         <Box flex={1}>
           <Flex flexDirection="column" maxWidth={['100%', '48rem', '48rem', '64rem']} mx="auto">
             <Box as={Link} to={PATHS.INDEX} p={4}>
-              <Image src="img/logo.png" />
+              <Image src={isAdminPath ? 'img/logo-admin.png' : 'img/logo.png'} />
             </Box>
           </Flex>
         </Box>

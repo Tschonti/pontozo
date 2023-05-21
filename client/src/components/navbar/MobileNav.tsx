@@ -29,8 +29,8 @@ const MobileNav = ({ onNavigate }: Props) => {
         </HStack>
       ))}
       {!isLoggedIn && (
-        <HStack cursor="pointer" onClick={onLoginClick}>
-          <Text textAlign="center">Bejelentkezés</Text>
+        <HStack cursor="pointer" onClick={onLoginClick} color="white">
+          <Text textAlign="center">BEJELENTKEZÉS</Text>
         </HStack>
       )}
     </Stack>

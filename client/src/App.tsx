@@ -1,5 +1,6 @@
+import { useQuery } from '@tanstack/react-query'
 import { Route, Routes } from 'react-router-dom'
-import { usePing } from './api/hooks/utilHooks'
+import { useAuthContext } from './api/contexts/useAuthContext'
 import { PLayout } from './components/commons/PLayout'
 import { AdminIndex } from './pages/adminIndex/AdminIndex.page'
 import { AuthorizedPage } from './pages/authorized/Authorized.page'
@@ -15,10 +16,12 @@ import { SeasonCreatePage } from './pages/seasons/SeasonCreate.page'
 import { SeasonListPage } from './pages/seasons/SeasonList.page'
 import { UraCreatePage } from './pages/uras/UraCreate.page'
 import { UraListPage } from './pages/uras/UraList.page'
+import { functionAxios } from './util/initAxios'
 import { PATHS } from './util/paths'
 
 export const App = () => {
-  usePing()
+  const { isLoggedIn } = useAuthContext()
+  useQuery(['ping'], async () => await functionAxios.get('/ping'), { retry: false, refetchInterval: false, enabled: !isLoggedIn })
   return (
     <PLayout>
       <Routes>

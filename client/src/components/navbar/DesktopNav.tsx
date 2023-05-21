@@ -22,7 +22,7 @@ const DesktopNav = () => {
       ))}
       {!isLoggedIn && (
         <NavbarButton onClick={onLoginClick} active={false}>
-          Bejelentkezés
+          BEJELENTKEZÉS
         </NavbarButton>
       )}
     </Stack>
