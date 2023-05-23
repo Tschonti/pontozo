@@ -33,7 +33,7 @@ export const ProfilePage = () => {
         Értékelt versenyeid
       </Heading>
       {eventQuery.isLoading && <LoadingSpinner />}
-      <SimpleGrid mt={3} spacing={4} columns={2}>
+      <SimpleGrid mt={3} spacing={4} columns={[1, 1, 2]}>
         {eventQuery.data
           ?.sort((e1, e2) => -e1.datum_tol.localeCompare(e2.datum_tol))
           .map((e) => (
