@@ -1,0 +1,66 @@
+@startuml
+hide footbox
+skinparam sequenceMessageAlign center
+participant user[
+    =User
+    ----
+    """"
+]
+
+participant webapp[
+    =Pontoz-O Client
+    ----
+    ""React Application""
+]
+
+participant mauth[
+    =MTFSZ Auth
+    ----
+    ""OAuth Server""
+]
+
+participant mapi[
+    =MTFSZ API
+    ----
+    ""Public REST API""
+]
+
+participant funcapp[
+    =Pontoz-O Server
+    ----
+    ""Azure Functions App""
+]
+
+participant db[
+    =Pontoz-O DB
+    ----
+    ""Azure SQL""
+]
+
+user -> webapp ++: Click on Login button
+webapp -> mauth ++: Redirect to /auth
+|||
+mauth -> user ++: Ask login credentials
+|||
+return login credentials
+|||
+mauth -> user++: Share user data with Pontoz-O?
+|||
+return Yes
+mauth -> funcapp --++: Redirect to redirectURI with authorizationCode
+|||
+funcapp -> mauth++: Call /token to exchange code for token
+|||
+return tokens
+funcapp -> mapi ++: Get user data with token
+|||
+return user data
+funcapp -> db ++: Get user roles
+|||
+return user roles
+|||
+funcapp -> funcapp: Create JWT with user data and roles
+funcapp --> webapp--: JWT
+webapp -> webapp: store JWT in cookie
+return User logged in!
+@enduml
