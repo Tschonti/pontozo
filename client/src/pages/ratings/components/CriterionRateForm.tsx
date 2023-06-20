@@ -10,7 +10,7 @@ type Props = {
 }
 
 export const CriterionRateForm = ({ criterion }: Props) => {
-  const { ratingId, currentStage, eventRatingInfo } = useRatingContext()
+  const { ratingId, currentStage, eventRatingInfo, validate, rateCriterion } = useRatingContext()
   const mutation = useRateCriteriaMutation({ eventRatingId: ratingId, criterionId: criterion.id, stageId: currentStage?.program_id })
   const [value, setValue] = useState<string | undefined>(criterion.rating?.value?.toString())
   const toast = useToast()
@@ -22,9 +22,10 @@ export const CriterionRateForm = ({ criterion }: Props) => {
   }, [criterion, value])
 
   const onChange = (newValue: string) => {
+    setValue(newValue)
     mutation.mutate(+newValue, {
       onSuccess: () => {
-        setValue(newValue)
+        rateCriterion(criterion.id)
       },
       onError: (e) => {
         toast({ title: e.message, description: e.name, status: 'error' })
@@ -33,7 +34,7 @@ export const CriterionRateForm = ({ criterion }: Props) => {
   }
 
   return (
-    <FormControl>
+    <FormControl isInvalid={validate && !value}>
       <FormLabel>{criterion.name}</FormLabel>
       <FormHelperText mb={2}>{criterion.description}</FormHelperText>
       <RadioGroup isDisabled={eventRatingInfo?.status === RatingStatus.SUBMITTED} colorScheme="brand" onChange={onChange} value={value}>
@@ -42,6 +43,7 @@ export const CriterionRateForm = ({ criterion }: Props) => {
           {criterion.text1 && <Radio value="1">{criterion.text1}</Radio>}
           {criterion.text2 && <Radio value="2">{criterion.text2}</Radio>}
           {criterion.text3 && <Radio value="3">{criterion.text3}</Radio>}
+          {criterion.allowEmpty && <Radio value="-1">Nem tudom megítélni</Radio>}
         </Stack>
       </RadioGroup>
     </FormControl>

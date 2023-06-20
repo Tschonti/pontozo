@@ -10,11 +10,14 @@ type Props = {
 
 export const CategoryWithCriteriaList = ({ ratingId }: Props) => {
   const mutation = useFetchRatingsMutation(+ratingId!!)
-  const { eventRatingInfo, currentCategory, currentStage, categoryIdx } = useRatingContext()
+  const { eventRatingInfo, currentCategory, currentStage, categoryIdx, rateCriteria } = useRatingContext()
 
   useEffect(() => {
     if (eventRatingInfo) {
-      mutation.mutate({ criterionIds: (currentCategory?.criteria || []).map((c) => c.id), stageId: currentStage?.program_id })
+      mutation.mutate(
+        { criterionIds: (currentCategory?.criteria || []).map((c) => c.id), stageId: currentStage?.program_id },
+        { onSuccess: (data) => rateCriteria(data.map((r) => r.criterionId)) }
+      )
     }
   }, [eventRatingInfo, currentCategory, currentStage])
 

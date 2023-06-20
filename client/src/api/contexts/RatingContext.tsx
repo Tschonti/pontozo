@@ -19,7 +19,10 @@ export type RatingContextType = {
   ratingId: number
   hasPrev: boolean
   hasNext: boolean
+  validate: boolean
   startRating: (ratingId: number) => void
+  rateCriterion: (criterionId: number) => void
+  rateCriteria: (criterionId: number[]) => void
   nextCategory: () => void
   previousCategory: () => void
 }
@@ -34,7 +37,10 @@ export const RatingContext = createContext<RatingContextType>({
   stageIdx: -1,
   hasPrev: false,
   hasNext: true,
+  validate: false,
   startRating: () => {},
+  rateCriterion: () => {},
+  rateCriteria: () => {},
   nextCategory: () => {},
   previousCategory: () => {}
 })
@@ -46,7 +52,9 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
   const [category, setCategory] = useState<CategoryWithCriteria>()
   const [ratingId, setRatingId] = useState(-1)
   const [stageIdx, setStageIdx] = useState(-1)
+  const [validate, setValidate] = useState(false)
   const [categoryIdx, setCategoryIdx] = useState(0)
+  const [ratedCriteria, setRatedCriteria] = useState<number[]>([])
   const navigate = useNavigate()
   const toast = useToast()
   const { data, isLoading } = useQuery(
@@ -89,11 +97,33 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
     navigate(`${PATHS.RATINGS}/${ratingId}?categoryIdx=0`)
   }
 
+  const rateCriterion = (criterionId: number) => {
+    if (!ratedCriteria.includes(criterionId)) {
+      setRatedCriteria([...ratedCriteria, criterionId])
+    }
+  }
+
+  const rateCriteria = (criterionIds: number[]) => {
+    const newArray = [...ratedCriteria]
+    criterionIds.forEach((cId) => {
+      if (!ratedCriteria.includes(cId)) {
+        newArray.push(cId)
+      }
+    })
+    setRatedCriteria(newArray)
+  }
+
   const nextCategory = () => {
-    window.scrollTo(0, 0)
     if (!data) {
       return
     }
+    if (category?.criteria.some((c) => !ratedCriteria.includes(c.id))) {
+      setValidate(true)
+      toast({ title: 'Minden szempont kitöltése kötelező!', status: 'warning' })
+      return
+    }
+    window.scrollTo(0, 0)
+    setValidate(false)
     if (stage) {
       if (categoryIdx < data.stageCategories.length - 1) {
         navigate(`${PATHS.RATINGS}/${ratingId}?stageIdx=${stageIdx}&categoryIdx=${categoryIdx + 1}`)
@@ -179,6 +209,8 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
     setStageIdx(-1)
     setCategory(undefined)
     setCategoryIdx(0)
+    setRatedCriteria([])
+    setValidate(false)
   }
 
   return (
@@ -193,7 +225,10 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
         ratingId,
         hasPrev: !!stage || categoryIdx > 0,
         hasNext: !stage || !data || categoryIdx < data?.stageCategories.length - 1 || stageIdx < data.stages.length - 1,
+        validate,
         startRating,
+        rateCriteria,
+        rateCriterion,
         nextCategory,
         previousCategory
       }}
