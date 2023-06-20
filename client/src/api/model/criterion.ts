@@ -13,6 +13,7 @@ export interface Criterion {
   organiserWeight: number
   stageSpecific: boolean
   nationalOnly: boolean
+  allowEmpty: boolean
   roles: RatingRole[]
 }
 

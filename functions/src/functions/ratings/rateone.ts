@@ -74,10 +74,17 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
         body: 'Rating this criterion with this role is not allowed.'
       }
     }
-    if (!criterion[`text${dto.value}`]) {
+    if (dto.value > 0) {
+      if (!criterion[`text${dto.value}`]) {
+        return {
+          status: 400,
+          body: 'Invalid rating value!'
+        }
+      }
+    } else if (!criterion.allowEmpty) {
       return {
         status: 400,
-        body: 'Invalid rating value!'
+        body: 'This criterion must be rated!'
       }
     }
 

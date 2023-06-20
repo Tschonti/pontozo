@@ -8,9 +8,7 @@ import EventRating from './entities/EventRating'
 import Season from './entities/Season'
 import { SeasonToCategory } from './entities/SeasonToCategory'
 import UserRoleAssignment from './entities/UserRoleAssignment'
-import { Redo1683283337013 } from './migrations/1683283337013-redo'
-import { UraUpdate1684261944434 } from './migrations/1684261944434-ura_update'
-import { UraUnique1684414296319 } from './migrations/1684414296319-ura_unique'
+import { Init1687282895144 } from './migrations/1687282895144-init'
 
 export const DBConfig: DataSourceOptions = {
   type: 'mssql',
@@ -24,6 +22,6 @@ export const DBConfig: DataSourceOptions = {
   connectionTimeout: 60000,
   entities: [Criterion, CriterionRating, EventRating, Category, Season, UserRoleAssignment, CategoryToCriterion, SeasonToCategory],
   subscribers: [],
-  migrations: [Redo1683283337013, UraUpdate1684261944434, UraUnique1684414296319],
+  migrations: [Init1687282895144],
   options: { encrypt: ENCRYPT }
 }

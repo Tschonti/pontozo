@@ -2,7 +2,7 @@ import { IsInt, IsOptional, Max, Min } from 'class-validator'
 
 export class CreateRatingDto {
   @IsInt()
-  @Min(0)
+  @Min(-1)
   @Max(3)
   value: number
 

@@ -49,6 +49,7 @@ export const CriteriaCreatePage = () => {
       organiserWeight: data?.organiserWeight || 1,
       stageSpecific: !!data?.stageSpecific,
       nationalOnly: !!data?.nationalOnly,
+      allowEmpty: !!data?.allowEmpty,
       competitorAllowed: !!data?.roles.includes(RatingRole.COMPETITOR),
       juryAllowed: !!data?.roles.includes(RatingRole.JURY)
     }
@@ -165,6 +166,12 @@ export const CriteriaCreatePage = () => {
                 Csak országos/kiemelt versenyekre érvényes
               </FormLabel>
               <Switch {...register('nationalOnly')} colorScheme="brand" id="nationalOnly" />
+            </FormControl>
+            <FormControl display="flex" w="100%" justifyContent="space-between" alignItems="center">
+              <FormLabel htmlFor="allowEmpty" mb="0">
+                "Nem tudom" válasz engedett
+              </FormLabel>
+              <Switch {...register('allowEmpty')} colorScheme="brand" id="allowEmpty" />
             </FormControl>
           </VStack>
         </SimpleGrid>

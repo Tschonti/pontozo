@@ -33,6 +33,9 @@ class Criterion {
   @Column()
   stageSpecific: boolean
 
+  @Column()
+  allowEmpty: boolean
+
   @Column({ nullable: true })
   competitorWeight: number
 

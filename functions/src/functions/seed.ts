@@ -18,6 +18,7 @@ const terep = [
     text3: 'Kiváló',
     nationalOnly: false,
     stageSpecific: true,
+    allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
@@ -31,6 +32,7 @@ const terep = [
     text3: 'Kiváló',
     nationalOnly: false,
     stageSpecific: true,
+    allowEmpty: true,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
@@ -44,6 +46,7 @@ const terep = [
     text3: 'Kiváló',
     nationalOnly: false,
     stageSpecific: true,
+    allowEmpty: true,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
@@ -57,6 +60,7 @@ const terep = [
     text3: 'Kiváló',
     nationalOnly: false,
     stageSpecific: true,
+    allowEmpty: true,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
@@ -70,6 +74,7 @@ const terep = [
     text3: 'Kiváló',
     nationalOnly: false,
     stageSpecific: true,
+    allowEmpty: true,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
@@ -86,6 +91,7 @@ const terkep = [
     text3: 'Kiváló',
     nationalOnly: false,
     stageSpecific: true,
+    allowEmpty: true,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
@@ -99,6 +105,7 @@ const terkep = [
     text3: 'Kiváló',
     nationalOnly: false,
     stageSpecific: true,
+    allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
@@ -112,6 +119,7 @@ const terkep = [
     text3: 'Kiváló',
     nationalOnly: false,
     stageSpecific: true,
+    allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
@@ -128,6 +136,7 @@ const vk = [
     text3: 'Kiváló',
     nationalOnly: false,
     stageSpecific: false,
+    allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
@@ -141,6 +150,7 @@ const vk = [
     text3: 'Kiváló',
     nationalOnly: true,
     stageSpecific: false,
+    allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
@@ -154,6 +164,7 @@ const vk = [
     text3: 'Kiváló',
     nationalOnly: true,
     stageSpecific: false,
+    allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
@@ -167,6 +178,7 @@ const vk = [
     text3: 'Kiváló',
     nationalOnly: true,
     stageSpecific: false,
+    allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
@@ -180,6 +192,7 @@ const vk = [
     text3: 'Kiváló',
     nationalOnly: true,
     stageSpecific: false,
+    allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
@@ -193,6 +206,7 @@ const vk = [
     text3: 'Kiváló',
     nationalOnly: true,
     stageSpecific: false,
+    allowEmpty: true,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
@@ -206,6 +220,7 @@ const vk = [
     text3: 'Kiváló',
     nationalOnly: true,
     stageSpecific: false,
+    allowEmpty: true,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
@@ -219,6 +234,7 @@ const vk = [
     text3: 'Kiváló',
     nationalOnly: true,
     stageSpecific: false,
+    allowEmpty: true,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
@@ -235,6 +251,7 @@ const rajt = [
     text3: 'Kiváló',
     nationalOnly: true,
     stageSpecific: true,
+    allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
@@ -248,6 +265,7 @@ const rajt = [
     text3: 'Kiváló',
     nationalOnly: true,
     stageSpecific: true,
+    allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
@@ -261,6 +279,7 @@ const rajt = [
     text3: 'Kiváló',
     nationalOnly: false,
     stageSpecific: true,
+    allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
@@ -274,6 +293,7 @@ const rajt = [
     text3: 'Kiváló',
     nationalOnly: true,
     stageSpecific: true,
+    allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
@@ -290,9 +310,10 @@ const szabalyzat = [
     text3: 'Szabályzatnak megfelelő',
     nationalOnly: false,
     stageSpecific: false,
+    allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
+    roles: '["ORGANISER", "JURY"]'
   },
   {
     name: 'Értesítő, rajtlista',
@@ -303,9 +324,10 @@ const szabalyzat = [
     text3: 'Szabályzatnak megfelelő',
     nationalOnly: false,
     stageSpecific: false,
+    allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
+    roles: '["ORGANISER", "JURY"]'
   },
   {
     name: 'Versenynapi szabályeltérések',
@@ -315,9 +337,10 @@ const szabalyzat = [
     text3: 'Nincs eltérés',
     nationalOnly: false,
     stageSpecific: false,
+    allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
+    roles: '["ORGANISER", "JURY"]'
   },
   {
     name: 'Súlyos rendezői hiba',
@@ -328,9 +351,10 @@ const szabalyzat = [
     text3: 'Nem volt eredményt befolyásoló súlyos hiba',
     nationalOnly: false,
     stageSpecific: false,
+    allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
+    roles: '["ORGANISER", "JURY"]'
   }
 ]
 
@@ -344,6 +368,7 @@ const kommunikáció = [
     text3: 'Kiváló',
     nationalOnly: false,
     stageSpecific: false,
+    allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
@@ -357,6 +382,7 @@ const kommunikáció = [
     text3: 'Kiváló',
     nationalOnly: true,
     stageSpecific: false,
+    allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
@@ -370,6 +396,7 @@ const kommunikáció = [
     text3: 'Kiváló',
     nationalOnly: true,
     stageSpecific: false,
+    allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'

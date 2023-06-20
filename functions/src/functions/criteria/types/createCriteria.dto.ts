@@ -29,6 +29,9 @@ export class CreateCriteriaDTO {
   @IsBoolean()
   stageSpecific: boolean
 
+  @IsBoolean()
+  allowEmpty: boolean
+
   @IsOptional()
   @IsInt()
   competitorWeight: number
