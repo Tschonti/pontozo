@@ -13,6 +13,12 @@ export class CategoryToCriterion {
   @ManyToOne(() => Category, (c) => c.criteria, { nullable: false, onDelete: 'CASCADE' })
   category: Category
 
+  @Column()
+  categoryId: number
+
   @ManyToOne(() => Criterion, { nullable: false, onDelete: 'CASCADE' })
   criterion: Criterion
+
+  @Column()
+  criterionId: number
 }

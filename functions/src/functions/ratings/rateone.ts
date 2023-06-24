@@ -1,10 +1,14 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { plainToClass } from 'class-transformer'
+import { In } from 'typeorm'
 import { getUserFromHeader } from '../../service/auth.service'
+import { CategoryToCriterion } from '../../typeorm/entities/CategoryToCriterion'
 import Criterion from '../../typeorm/entities/Criterion'
 import CriterionRating from '../../typeorm/entities/CriterionRating'
 import EventRating, { RatingStatus } from '../../typeorm/entities/EventRating'
+import { SeasonToCategory } from '../../typeorm/entities/SeasonToCategory'
 import { getAppDataSource } from '../../typeorm/getConfig'
+import { currentSeasonFilter } from '../../util/currentSeasonFilter'
 import { httpResFromServiceRes } from '../../util/httpRes'
 import { myvalidate } from '../../util/validation'
 import { CreateRatingDto } from './types/createRating.dto'
@@ -94,6 +98,19 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
         body: 'Stage ID missing or not allowed!'
       }
     }
+
+    const ctcRepo = ads.getRepository(CategoryToCriterion)
+    const stcRepo = ads.getRepository(SeasonToCategory)
+    const ctcs = await ctcRepo.find({ where: { criterionId: dto.criterionId } })
+    const stcs = await stcRepo.find({ where: { season: currentSeasonFilter, categoryId: In(ctcs.map((ctc) => ctc.categoryId)) } })
+
+    if (stcs.length === 0) {
+      return {
+        status: 400,
+        body: 'This criterion cannot be rated this season!'
+      }
+    }
+
     const criterionRatingRepo = ads.getRepository(CriterionRating)
     const rating = await criterionRatingRepo.findOneBy({ criterion: { id: dto.criterionId }, eventRating: { id }, stageId: dto.stageId })
     if (rating === null) {

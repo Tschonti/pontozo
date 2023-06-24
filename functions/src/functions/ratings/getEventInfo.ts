@@ -1,11 +1,11 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
-import { LessThanOrEqual, MoreThanOrEqual } from 'typeorm'
 import { getUserFromHeader } from '../../service/auth.service'
 import { getOneEvent, stageFilter, stageProjection } from '../../service/mtfsz.service'
 import Criterion from '../../typeorm/entities/Criterion'
 import EventRating from '../../typeorm/entities/EventRating'
 import Season from '../../typeorm/entities/Season'
 import { getAppDataSource } from '../../typeorm/getConfig'
+import { currentSeasonFilter } from '../../util/currentSeasonFilter'
 import { httpResFromServiceRes } from '../../util/httpRes'
 import { CategoryWithCriteria } from './types/categoryWithCriteria'
 import { EventRatingInfo } from './types/eventRatingInfo'
@@ -28,7 +28,7 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
   const seasonRepo = ads.getRepository(Season)
 
   const seasonQuery = seasonRepo.findOne({
-    where: { startDate: LessThanOrEqual(new Date()), endDate: MoreThanOrEqual(new Date()) },
+    where: currentSeasonFilter,
     relations: { categories: { category: { criteria: { criterion: true } } } }
   })
   const eventRating = await ratingRepo.findOne({ where: { id: ratingId } })

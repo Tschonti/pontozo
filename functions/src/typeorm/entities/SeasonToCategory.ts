@@ -13,6 +13,12 @@ export class SeasonToCategory {
   @ManyToOne(() => Season, (s) => s.categories, { nullable: false, onDelete: 'CASCADE' })
   season: Season
 
+  @Column()
+  seasonId: number
+
   @ManyToOne(() => Category, { nullable: false, onDelete: 'CASCADE' })
   category: Category
+
+  @Column()
+  categoryId: number
 }

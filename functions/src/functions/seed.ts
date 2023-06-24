@@ -458,6 +458,8 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
     criterion: t,
     order: i,
     category: terepCat,
+    criterionId: t.id,
+    categoryId: terepCat.id,
     id: i + 1
   }))
 
@@ -473,6 +475,8 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
     criterion: t,
     order: i,
     category: terkepCat,
+    criterionId: t.id,
+    categoryId: terkepCat.id,
     id: i + 100
   }))
 
@@ -488,6 +492,8 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
     criterion: t,
     order: i,
     category: vkCat,
+    criterionId: t.id,
+    categoryId: vkCat.id,
     id: i + 200
   }))
 
@@ -503,6 +509,8 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
     criterion: t,
     order: i,
     category: rajtCat,
+    criterionId: t.id,
+    categoryId: rajtCat.id,
     id: i + 300
   }))
 
@@ -518,6 +526,8 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
     criterion: t,
     order: i,
     category: szabCat,
+    criterionId: t.id,
+    categoryId: szabCat.id,
     id: i + 400
   }))
 
@@ -533,6 +543,8 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
     criterion: t,
     order: i,
     category: kommCat,
+    criterionId: t.id,
+    categoryId: kommCat.id,
     id: i + 500
   }))
 
@@ -553,9 +565,11 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
 
   season.categories = newCategories.map((c, i) => ({
     category: c,
+    categoryId: c.id,
     order: i,
     id: i + 1,
-    season
+    season,
+    seasonId: season.id
   }))
   await seasonRepo.save(season)
 }
