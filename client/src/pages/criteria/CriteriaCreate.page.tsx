@@ -129,7 +129,7 @@ export const CriteriaCreatePage = () => {
         {/* TODO listából érkezve első alkalommal a checkbox értékek nem frissek!  */}
         <SimpleGrid columns={[1, 1, 2]} spacing={10}>
           <FormControl isInvalid={!!errors.competitorAllowed}>
-            <FormLabel>Szerepkörök, akik számára elérhető</FormLabel>
+            <FormLabel htmlFor="">Szerepkörök, akik számára elérhető</FormLabel>
             <VStack alignItems="flex-start">
               <Checkbox
                 colorScheme="brand"

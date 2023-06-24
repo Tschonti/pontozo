@@ -72,7 +72,7 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
         .map(({ criterion }) => {
           return {
             ...criterion,
-            roles: JSON.parse(criterion.roles as unknown as string)
+            roles: JSON.parse(criterion.roles)
           } as Criterion
         })
         .filter((c) => c.roles.includes(eventRating.role) && (event.pontozoOrszagos || !c.nationalOnly))
