@@ -20,6 +20,8 @@ export const stageProjection: (e: EventSection) => EventSectionPreview = ({ fajl
   ...restOfData
 })
 
+const formatDate = (d: Date) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
+
 export const userProjection = ({ szemely_szervezetek, versenyengedelyek, ...restOfUser }: User) => ({ ...restOfUser })
 
 export const getOneEvent = async (eventId: number): Promise<ServiceResponse<Event>> => {
@@ -41,6 +43,22 @@ export const getOneEvent = async (eventId: number): Promise<ServiceResponse<Even
       pontozoOrszagos: isHigherRank(res.data.result[0])
     }
   }
+}
+
+export const getRateableEvents = async (): Promise<Event[]> => {
+  const url = new URL('esemenyek', APIM_HOST)
+  const today = new Date()
+  const twoWeeksAgo = new Date(today.getTime() - 35 * 24 * 60 * 60 * 1000) // TODO finalize no of days
+  url.searchParams.append('datum_tol', formatDate(twoWeeksAgo))
+  url.searchParams.append('datum_ig', formatDate(today))
+  url.searchParams.append('exclude_deleted', 'true')
+  const res = await axios.get<MtfszResponse>(url.toString(), {
+    headers: {
+      'Ocp-Apim-Subscription-Key': APIM_KEY
+    }
+  })
+
+  return res.data.result.filter(eventFilter)
 }
 
 export const getToken = async (authCode: string): Promise<Token> => {

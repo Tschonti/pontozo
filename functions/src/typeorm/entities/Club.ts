@@ -1,5 +1,5 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm'
-import EventToClub from './EventToClub'
+import { Column, Entity, ManyToMany, PrimaryColumn } from 'typeorm'
+import Event from './Event'
 
 @Entity()
 class Club {
@@ -15,8 +15,8 @@ class Club {
   @Column()
   longName: string
 
-  @OneToMany(() => EventToClub, (etc) => etc.club, { cascade: true })
-  events: EventToClub[]
+  @ManyToMany(() => Event, (c) => c.organisers)
+  events: Event[]
 }
 
 export default Club

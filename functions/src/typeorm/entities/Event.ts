@@ -1,6 +1,6 @@
-import { Check, Column, Entity, OneToMany, PrimaryColumn } from 'typeorm'
+import { Check, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn } from 'typeorm'
+import Club from './Club'
 import EventRating from './EventRating'
-import EventToClub from './EventToClub'
 import Stage from './Stage'
 
 export enum Rank {
@@ -26,7 +26,7 @@ class Event {
   @Column({ nullable: true })
   endDate?: string
 
-  @OneToMany(() => Stage, (s) => s.event, { eager: false })
+  @OneToMany(() => Stage, (s) => s.event, { eager: false, cascade: true })
   stages: Stage[]
 
   @OneToMany(() => EventRating, (er) => er.event, { eager: false })
@@ -39,8 +39,9 @@ class Event {
   @Check("highestRank in('REGIONALIS', 'ORSZAGOS', 'KIEMELT')")
   highestRank: Rank
 
-  @OneToMany(() => EventToClub, (etc) => etc.event, { cascade: true })
-  organisers: EventToClub[]
+  @ManyToMany(() => Club, (c) => c.events, { cascade: true })
+  @JoinTable()
+  organisers: Club[]
 }
 
 export default Event
