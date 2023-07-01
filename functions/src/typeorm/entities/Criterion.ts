@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
-import Rating from './CriterionRating'
+import CriterionRating from './CriterionRating'
 
 @Entity()
 class Criterion {
@@ -42,8 +42,8 @@ class Criterion {
   @Column({ nullable: true })
   organiserWeight: number
 
-  @OneToMany(() => Rating, (r) => r.criterion, { eager: false })
-  ratings: Rating[]
+  @OneToMany(() => CriterionRating, (r) => r.criterion, { eager: false })
+  ratings: CriterionRating[]
 
   @Column({
     type: 'nvarchar'

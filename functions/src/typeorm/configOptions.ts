@@ -2,13 +2,17 @@ import { DataSourceOptions } from 'typeorm'
 import { DB_NAME, DB_PWD, DB_SERVER, DB_USER, ENCRYPT, ENV } from '../util/env'
 import Category from './entities/Category'
 import { CategoryToCriterion } from './entities/CategoryToCriterion'
+import Club from './entities/Club'
 import Criterion from './entities/Criterion'
 import CriterionRating from './entities/CriterionRating'
+import Event from './entities/Event'
 import EventRating from './entities/EventRating'
+import EventToClub from './entities/EventToClub'
 import Season from './entities/Season'
 import { SeasonToCategory } from './entities/SeasonToCategory'
+import Stage from './entities/Stage'
 import UserRoleAssignment from './entities/UserRoleAssignment'
-import { Init1687282895144 } from './migrations/1687282895144-init'
+import { Init1688218687034 } from './migrations/1688218687034-init'
 
 export const DBConfig: DataSourceOptions = {
   type: 'mssql',
@@ -20,8 +24,21 @@ export const DBConfig: DataSourceOptions = {
   synchronize: false,
   logging: !(ENV === 'production'),
   connectionTimeout: 60000,
-  entities: [Criterion, CriterionRating, EventRating, Category, Season, UserRoleAssignment, CategoryToCriterion, SeasonToCategory],
+  entities: [
+    Criterion,
+    CriterionRating,
+    EventRating,
+    Category,
+    Season,
+    UserRoleAssignment,
+    CategoryToCriterion,
+    SeasonToCategory,
+    Event,
+    Stage,
+    Club,
+    EventToClub
+  ],
   subscribers: [],
-  migrations: [Init1687282895144],
+  migrations: [Init1688218687034],
   options: { encrypt: ENCRYPT }
 }

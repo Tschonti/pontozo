@@ -1,9 +1,10 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm'
 import Criterion from './Criterion'
 import EventRating from './EventRating'
+import Stage from './Stage'
 
 @Entity()
-@Unique(['criterion', 'eventRating', 'stageId'])
+@Unique(['criterionId', 'eventRatingId', 'stageId'])
 class CriterionRating {
   @PrimaryGeneratedColumn()
   id: number
@@ -21,7 +22,10 @@ class CriterionRating {
   eventRatingId: number
 
   @Column({ nullable: true })
-  stageId: number
+  stageId?: number
+
+  @ManyToOne(() => Stage, (s) => s.ratings, { onDelete: 'NO ACTION', nullable: true })
+  stage?: Stage
 
   @Column()
   value: number

@@ -1,5 +1,6 @@
-import { Check, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { Check, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import CriterionRating from './CriterionRating'
+import Event from './Event'
 
 export enum RatingStatus {
   STARTED = 'STARTED',
@@ -20,6 +21,9 @@ class EventRating {
 
   @Column()
   eventId: number
+
+  @ManyToOne(() => Event, (e) => e.ratings, { onDelete: 'CASCADE', nullable: false })
+  event: Event
 
   @Column()
   userId: number
