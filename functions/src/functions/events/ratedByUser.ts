@@ -4,7 +4,10 @@ import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
 
-export const ratedEvents = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
+/**
+ * Called when the user visits their profile to get all the events they've rated
+ */
+export const getRatedEvents = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const userServiceRes = getUserFromHeader(req)
   if (userServiceRes.isError) {
     return httpResFromServiceRes(userServiceRes)
@@ -26,8 +29,8 @@ export const ratedEvents = async (req: HttpRequest, context: InvocationContext):
   }
 }
 
-app.http('auth-ratedEvents', {
+app.http('events-ratedByUser', {
   methods: ['GET'],
-  route: 'auth/rated',
-  handler: ratedEvents
+  route: 'events/ratedByUser',
+  handler: getRatedEvents
 })

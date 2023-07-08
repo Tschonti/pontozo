@@ -1,11 +1,14 @@
 import { app, InvocationContext, Timer } from '@azure/functions'
-import { getRateableEvents, stageFilter } from '../service/mtfsz.service'
-import Club from '../typeorm/entities/Club'
-import Event from '../typeorm/entities/Event'
-import Stage from '../typeorm/entities/Stage'
-import { getAppDataSource } from '../typeorm/getConfig'
-import { getHighestRank } from '../util/getHighestRank'
+import { getRateableEvents, stageFilter } from '../../service/mtfsz.service'
+import Club from '../../typeorm/entities/Club'
+import Event from '../../typeorm/entities/Event'
+import Stage from '../../typeorm/entities/Stage'
+import { getAppDataSource } from '../../typeorm/getConfig'
+import { getHighestRank } from '../../util/getHighestRank'
 
+/**
+ * Called every night automatically to import events from MTFSZ DB.
+ */
 export const importEvents = async (myTimer: Timer, context: InvocationContext): Promise<void> => {
   const pevents = getRateableEvents()
   const pads = getAppDataSource()
@@ -57,7 +60,7 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
   await eventRepo.save(eventsToSave)
 }
 
-app.timer('import-events', {
+app.timer('events-import', {
   schedule: '0 1 * * *', // 1 AM every day
   handler: importEvents
 })
