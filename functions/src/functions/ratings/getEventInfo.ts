@@ -1,6 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { getUserFromHeader } from '../../service/auth.service'
-import { getOneEvent, stageFilter, stageProjection } from '../../service/mtfsz.service'
+import { isHigherRankDB } from '../../service/mtfsz.service'
 import Criterion from '../../typeorm/entities/Criterion'
 import EventRating from '../../typeorm/entities/EventRating'
 import Season from '../../typeorm/entities/Season'
@@ -10,6 +10,9 @@ import { httpResFromServiceRes } from '../../util/httpRes'
 import { CategoryWithCriteria } from './types/categoryWithCriteria'
 import { EventRatingInfo } from './types/eventRatingInfo'
 
+/**
+ * Called after the users starts the rating of an event to get all the rating categories and criteria.
+ */
 export const getEventInfo = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const ratingId = parseInt(req.params.id)
 
@@ -26,12 +29,8 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
   const ads = await getAppDataSource()
   const ratingRepo = ads.getRepository(EventRating)
   const seasonRepo = ads.getRepository(Season)
-
-  const seasonQuery = seasonRepo.findOne({
-    where: currentSeasonFilter,
-    relations: { categories: { category: { criteria: { criterion: true } } } }
-  })
-  const eventRating = await ratingRepo.findOne({ where: { id: ratingId } })
+  const eventRatingAndEvent = await ratingRepo.findOne({ where: { id: ratingId }, relations: { event: { stages: true } } })
+  const { event, ...eventRating } = eventRatingAndEvent
 
   if (eventRating === null) {
     return {
@@ -46,21 +45,17 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
     }
   }
 
-  const { data: event, isError, message, status } = await getOneEvent(eventRating.eventId)
-  if (isError) {
-    return {
-      status,
-      body: message
-    }
-  }
-
-  const season = await seasonQuery
+  const season = await seasonRepo.findOne({
+    where: currentSeasonFilter,
+    relations: { categories: { category: { criteria: { criterion: true } } } }
+  })
   if (season === null) {
     return {
       status: 400,
       body: 'Jelenleg nincs értékelési szezon!'
     }
   }
+
   const eventCategories: CategoryWithCriteria[] = []
   const stageCategories: CategoryWithCriteria[] = []
 
@@ -75,7 +70,7 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
             roles: JSON.parse(criterion.roles)
           } as Criterion
         })
-        .filter((c) => c.roles.includes(eventRating.role) && (event.pontozoOrszagos || !c.nationalOnly))
+        .filter((c) => c.roles.includes(eventRating.role) && (isHigherRankDB(event) || !c.nationalOnly))
       const eventCriteria = []
       const stageCriteria = []
       filteredCriteria.forEach((c) => {
@@ -102,8 +97,8 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
   return {
     jsonBody: {
       ...eventRating,
-      eventName: event.nev_1,
-      stages: event.programok.filter(stageFilter).map(stageProjection),
+      eventName: event.name,
+      stages: event.stages,
       eventCategories,
       stageCategories
     } as EventRatingInfo

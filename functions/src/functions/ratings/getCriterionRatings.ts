@@ -9,6 +9,10 @@ import { httpResFromServiceRes } from '../../util/httpRes'
 import { myvalidate } from '../../util/validation'
 import { GetCriterionRatings } from './types/getCriterionRatings.dto'
 
+/**
+ * Called when the user switches pages during the rating of an event to get their previous ratings on the current criteria.
+ * HTTP body should be GetCriterionRatings, with an array of criterionIds, whose ratings will be returned.
+ */
 export const getCriterionRatings = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const ratingId = parseInt(req.params.id)
 

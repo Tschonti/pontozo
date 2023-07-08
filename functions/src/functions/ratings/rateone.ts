@@ -13,6 +13,10 @@ import { httpResFromServiceRes } from '../../util/httpRes'
 import { myvalidate } from '../../util/validation'
 import { CreateRatingDto } from './types/createRating.dto'
 
+/**
+ * Called when the user changes the rating of a criteria during the rating of an event.
+ * HTTP body should be CreateRatingDto
+ */
 export const rateOne = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const id = parseInt(req.params.id)
   if (isNaN(id)) {

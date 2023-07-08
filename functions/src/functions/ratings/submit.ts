@@ -1,12 +1,16 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { getUserFromHeader } from '../../service/auth.service'
-import { getOneEvent, stageFilter } from '../../service/mtfsz.service'
+import { isHigherRankDB } from '../../service/mtfsz.service'
 import EventRating, { RatingStatus } from '../../typeorm/entities/EventRating'
 import Season from '../../typeorm/entities/Season'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { currentSeasonFilter } from '../../util/currentSeasonFilter'
 import { httpResFromServiceRes } from '../../util/httpRes'
 
+/**
+ * Called when the users submits their rating of an event.
+ * Checks that all criteria has been rated.
+ */
 export const submitOne = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const id = parseInt(req.params.id)
   if (isNaN(id)) {
@@ -23,7 +27,7 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
     const ads = await getAppDataSource()
     const seasonRepo = ads.getRepository(Season)
     const eventRatingRepo = ads.getRepository(EventRating)
-    const rating = await eventRatingRepo.findOne({ where: { id }, relations: { ratings: true } })
+    const rating = await eventRatingRepo.findOne({ where: { id }, relations: { ratings: true, event: { stages: true } } })
 
     if (rating.status === RatingStatus.SUBMITTED) {
       return {
@@ -37,18 +41,10 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
         body: "You're not allowed to submit this rating!"
       }
     }
-    const seasonQuery = seasonRepo.findOne({
+    const season = await seasonRepo.findOne({
       where: currentSeasonFilter,
       relations: { categories: { category: { criteria: { criterion: true } } } }
     })
-    const eventQuery = getOneEvent(rating.eventId)
-    const [season, { data: event, isError, message, status }] = await Promise.all([seasonQuery, eventQuery])
-    if (isError) {
-      return {
-        status,
-        body: message
-      }
-    }
     if (season === null) {
       return {
         status: 400,
@@ -56,13 +52,12 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
       }
     }
 
-    const stageCount = event.programok.filter(stageFilter).length
     let criterionCount = 0
     season.categories.forEach((stc) => {
       stc.category.criteria.forEach(({ criterion: c }) => {
-        if (c.roles.includes(rating.role) && (event.pontozoOrszagos || !c.nationalOnly)) {
+        if (c.roles.includes(rating.role) && (isHigherRankDB(rating.event) || !c.nationalOnly)) {
           if (c.stageSpecific) {
-            criterionCount = criterionCount + stageCount
+            criterionCount = criterionCount + rating.event.stages.length
           } else {
             criterionCount++
           }

@@ -4,6 +4,9 @@ import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
 
+/**
+ * Called when a user visits an events page to get their rating of that event.
+ */
 export const getEventRating = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const eventId = parseInt(req.params.eventId)
 

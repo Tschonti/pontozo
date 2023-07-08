@@ -1,6 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { getUserFromHeader } from '../../service/auth.service'
-import { getOneEvent } from '../../service/mtfsz.service'
 import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
@@ -13,18 +12,10 @@ export const ratedEvents = async (req: HttpRequest, context: InvocationContext):
   try {
     const eventRatings = await (await getAppDataSource())
       .getRepository(EventRating)
-      .find({ where: { userId: userServiceRes.data.szemely_id } })
-
-    const events = []
-    for (const er of eventRatings) {
-      const eventRes = await getOneEvent(er.eventId)
-      if (!eventRes.isError) {
-        events.push({ ...eventRes.data, status: er.status })
-      }
-    }
+      .find({ where: { userId: userServiceRes.data.szemely_id }, relations: { event: true } })
 
     return {
-      jsonBody: events
+      jsonBody: eventRatings
     }
   } catch (e) {
     context.log(e)

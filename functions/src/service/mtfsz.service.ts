@@ -1,18 +1,23 @@
 import axios, { AxiosResponse } from 'axios'
 import { MtfszUser } from '../functions/auth/types/MtfszUser'
 import { Token } from '../functions/auth/types/Token'
+import DbEvent from '../typeorm/entities/Event'
 import { APIM_HOST, APIM_KEY, CLIENT_ID, CLIENT_SECRET, FUNCTION_HOST } from '../util/env'
-import { Event, EventSection, EventSectionPreview, MtfszResponse, ServiceResponse, User } from './types'
+import { Event as MTFSZEvent, EventSection, EventSectionPreview, MtfszResponse, ServiceResponse, User } from './types'
 
 const acceptedRanks = ['REGIONALIS', 'ORSZAGOS', 'KIEMELT']
 const higherRanks = ['ORSZAGOS', 'KIEMELT']
 
-const eventFilter = (e: Event) =>
+const eventFilter = (e: MTFSZEvent) =>
   e.tipus === 'VERSENY' &&
   e.programok.some((p) => p.tipus === 'FUTAM' && p.futam.szakag === 'TAJFUTAS' && acceptedRanks.includes(p.futam.rangsorolo))
 
-const isHigherRank = (e: Event) =>
+const isHigherRankMTFSZ = (e: MTFSZEvent) =>
   e.programok.some((p) => p.tipus === 'FUTAM' && p.futam.szakag === 'TAJFUTAS' && higherRanks.includes(p.futam.rangsorolo))
+
+export const isHigherRankDB = (e: DbEvent) => {
+  return higherRanks.includes(e.highestRank)
+}
 
 export const stageFilter = (s: EventSection) => s.tipus === 'FUTAM' && acceptedRanks.includes(s.futam.rangsorolo)
 
@@ -31,7 +36,7 @@ const mtfszAxios = axios.create({
   }
 })
 
-export const getOneEvent = async (eventId: number): Promise<ServiceResponse<Event>> => {
+export const getOneEvent = async (eventId: number): Promise<ServiceResponse<MTFSZEvent>> => {
   const res = await mtfszAxios.get<MtfszResponse>(`/esemenyek?esemeny_id=${eventId}`)
   if (res.data.result.length === 0 || !eventFilter(res.data.result[0])) {
     return {
@@ -44,12 +49,12 @@ export const getOneEvent = async (eventId: number): Promise<ServiceResponse<Even
     isError: false,
     data: {
       ...res.data.result[0],
-      pontozoOrszagos: isHigherRank(res.data.result[0])
+      pontozoOrszagos: isHigherRankMTFSZ(res.data.result[0])
     }
   }
 }
 
-export const getRateableEvents = async (): Promise<Event[]> => {
+export const getRateableEvents = async (): Promise<MTFSZEvent[]> => {
   const url = new URL('esemenyek', APIM_HOST)
   const today = new Date()
   const twoWeeksAgo = new Date(today.getTime() - 35 * 24 * 60 * 60 * 1000) // TODO finalize no of days

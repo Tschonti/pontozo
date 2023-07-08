@@ -1,7 +1,7 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { plainToClass } from 'class-transformer'
 import { getUserFromHeader } from '../../service/auth.service'
-import { getOneEvent } from '../../service/mtfsz.service'
+import Event from '../../typeorm/entities/Event'
 import EventRating, { RatingRole } from '../../typeorm/entities/EventRating'
 import { UserRole } from '../../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../../typeorm/getConfig'
@@ -9,6 +9,10 @@ import { httpResFromServiceRes } from '../../util/httpRes'
 import { myvalidate } from '../../util/validation'
 import { CreateEventRatingDto } from './types/createEventRating.dto'
 
+/**
+ * Called when a user starts rating an event to initialize the EventRating entity.
+ * HTTP body should be CreateEventRatingDto
+ */
 export const createRating = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   if (!req.body) {
     return {
@@ -41,15 +45,18 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
         body: 'You are not allowed to rate an event with this role'
       }
     }
+    const ads = await getAppDataSource()
+    const eventRepo = ads.getRepository(Event)
+    const ratingRepo = ads.getRepository(EventRating)
 
-    const { isError } = await getOneEvent(dto.eventId)
-    if (isError) {
+    const event = await eventRepo.findOne({ where: { id: dto.eventId, rateable: true } })
+    if (event === null) {
       return {
         status: 400,
-        body: "Event doesn't exist in MTFSZ DB or is not ranked!"
+        body: "Event can't be found or it can't be rated!"
       }
     }
-    const ratingRepo = (await getAppDataSource()).getRepository(EventRating)
+
     const res = await ratingRepo.insert({ ...dto, createdAt: new Date(), userId: userServiceRes.data.szemely_id })
     return {
       status: 201,
