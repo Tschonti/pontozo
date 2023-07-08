@@ -17,11 +17,11 @@ import { useState } from 'react'
 import { useAuthContext } from '../../../api/contexts/useAuthContext'
 import { useRatingContext } from '../../../api/contexts/useRatingContext'
 import { useStartRatingMutation } from '../../../api/hooks/ratingHooks'
-import { Event } from '../../../api/model/event'
+import { MtfszEvent } from '../../../api/model/mtfszEvent'
 import { RatingRole } from '../../../api/model/rating'
 import { UserRole } from '../../../api/model/user'
 
-export const StartRatingModal = ({ event }: { event: Event }) => {
+export const StartRatingModal = ({ event }: { event: MtfszEvent }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { loggedInUser } = useAuthContext()
   const [role, setRole] = useState<RatingRole | undefined>()

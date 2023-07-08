@@ -5,7 +5,7 @@ import { useAuthContext } from '../../api/contexts/useAuthContext'
 import { useFecthUserRatedEvents } from '../../api/hooks/eventQueryHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
-import { EventListItem } from '../events/components/EventListItem'
+import { DbEventListItem } from '../events/components/DbEventListItem'
 
 export const ProfilePage = () => {
   const { loggedInUser, onLogout, isLoggedIn } = useAuthContext()
@@ -35,9 +35,9 @@ export const ProfilePage = () => {
       {eventQuery.isLoading && <LoadingSpinner />}
       <SimpleGrid mt={3} spacing={4} columns={[1, 1, 2]}>
         {eventQuery.data
-          ?.sort((e1, e2) => -e1.datum_tol.localeCompare(e2.datum_tol))
+          ?.sort(({ event: e1 }, { event: e2 }) => -e1.startDate.localeCompare(e2.startDate))
           .map((e) => (
-            <EventListItem key={e.esemeny_id} event={e} />
+            <DbEventListItem key={e.eventId} eventRating={e} />
           ))}
       </SimpleGrid>
     </>

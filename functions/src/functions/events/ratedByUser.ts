@@ -15,7 +15,7 @@ export const getRatedEvents = async (req: HttpRequest, context: InvocationContex
   try {
     const eventRatings = await (await getAppDataSource())
       .getRepository(EventRating)
-      .find({ where: { userId: userServiceRes.data.szemely_id }, relations: { event: true } })
+      .find({ where: { userId: userServiceRes.data.szemely_id }, relations: { event: { organisers: true } } })
 
     return {
       jsonBody: eventRatings

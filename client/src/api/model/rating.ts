@@ -1,10 +1,11 @@
 import { CategoryWithCriteria } from './category'
-import { EventSectionPreview } from './event'
+import { DbEvent } from './dbEvent'
+import { EventSectionPreview } from './mtfszEvent'
 
 export interface EventRating {
   id: number
   eventId: number
-  /*ratings: CriterionRating*/
+  event: DbEvent
   status: RatingStatus
   role: RatingRole
   createdAt: Date

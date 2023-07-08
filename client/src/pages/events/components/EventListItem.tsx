@@ -1,12 +1,12 @@
 import { Badge, Card, CardBody, CardHeader, Heading, HStack, Text } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
-import { Event } from '../../../api/model/event'
+import { MtfszEvent } from '../../../api/model/mtfszEvent'
 import { RatingStatus } from '../../../api/model/rating'
 import { statusColor, translateStatus } from '../../../util/enumHelpers'
 import { PATHS } from '../../../util/paths'
 import { EventRankBadge } from './EventRankBadge'
 
-export const EventListItem = ({ event }: { event: Event & { status?: RatingStatus } }) => {
+export const EventListItem = ({ event }: { event: MtfszEvent & { status?: RatingStatus } }) => {
   return (
     <Card variant="outline" as={Link} to={`${PATHS.EVENTS}/${event.esemeny_id}`}>
       <CardHeader>

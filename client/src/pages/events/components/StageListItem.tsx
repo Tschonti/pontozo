@@ -1,5 +1,5 @@
 import { Card, CardHeader, Heading } from '@chakra-ui/react'
-import { EventRank, EventSection } from '../../../api/model/event'
+import { EventRank, EventSection } from '../../../api/model/mtfszEvent'
 import { EventRankBadge } from './EventRankBadge'
 
 export const StageListItem = ({ stage, idx }: { stage: EventSection; idx: number }) => {

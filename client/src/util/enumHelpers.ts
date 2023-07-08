@@ -1,4 +1,4 @@
-import { EventRank } from '../api/model/event'
+import { EventRank } from '../api/model/mtfszEvent'
 import { RatingRole, RatingStatus } from '../api/model/rating'
 import { UserRole } from '../api/model/user'
 

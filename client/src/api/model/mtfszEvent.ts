@@ -1,8 +1,8 @@
 export type FetchEventsResult = {
-  result: Event[]
+  result: MtfszEvent[]
 }
 
-export interface Event {
+export interface MtfszEvent {
   esemeny_id: number
   tipus: string
   nev_1: string
@@ -39,7 +39,7 @@ export interface EventSection {
   is_deleted: boolean
   created_at: string
   updated_at: string
-  futam: Stage
+  futam: MtfszStage
   helyszinek: Location[]
   hivatkozasok: Link[]
   fajlok: EventFile[]
@@ -47,7 +47,7 @@ export interface EventSection {
 
 export interface EventSectionPreview extends Omit<EventSection, 'helyszinek' | 'hivatkozasok' | 'fajlok'> {}
 
-export interface Stage {
+export interface MtfszStage {
   szakag: string
   napszak: string
   versenytav_id: number

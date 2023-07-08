@@ -6,7 +6,7 @@ import { functionAxios } from '../../util/initAxios'
 import { PATHS } from '../../util/paths'
 import { useSubmitRatingMutation } from '../hooks/ratingHooks'
 import { CategoryWithCriteria } from '../model/category'
-import { EventSectionPreview } from '../model/event'
+import { EventSectionPreview } from '../model/mtfszEvent'
 import { EventRatingInfo } from '../model/rating'
 
 export type RatingContextType = {
