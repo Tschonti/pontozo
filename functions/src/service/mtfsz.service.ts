@@ -24,11 +24,15 @@ const formatDate = (d: Date) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getD
 
 export const userProjection = ({ szemely_szervezetek, versenyengedelyek, ...restOfUser }: User) => ({ ...restOfUser })
 
-export const getOneEvent = async (eventId: number): Promise<ServiceResponse<Event>> => {
-  const url = new URL('esemenyek', APIM_HOST)
-  url.searchParams.append('esemeny_id', eventId.toString())
+const mtfszAxios = axios.create({
+  baseURL: APIM_HOST,
+  headers: {
+    'Ocp-Apim-Subscription-Key': APIM_KEY
+  }
+})
 
-  const res = await axios.get<MtfszResponse>(url.toString(), { headers: { 'Ocp-Apim-Subscription-Key': APIM_KEY } })
+export const getOneEvent = async (eventId: number): Promise<ServiceResponse<Event>> => {
+  const res = await mtfszAxios.get<MtfszResponse>(`/esemenyek?esemeny_id=${eventId}`)
   if (res.data.result.length === 0 || !eventFilter(res.data.result[0])) {
     return {
       isError: true,
@@ -52,11 +56,7 @@ export const getRateableEvents = async (): Promise<Event[]> => {
   url.searchParams.append('datum_tol', formatDate(twoWeeksAgo))
   url.searchParams.append('datum_ig', formatDate(today))
   url.searchParams.append('exclude_deleted', 'true')
-  const res = await axios.get<MtfszResponse>(url.toString(), {
-    headers: {
-      'Ocp-Apim-Subscription-Key': APIM_KEY
-    }
-  })
+  const res = await mtfszAxios.get<MtfszResponse>(url.toString())
 
   return res.data.result.filter(eventFilter)
 }
@@ -84,7 +84,7 @@ export const getUser = async (accessToken: string): Promise<MtfszUser> => {
 
 export const getUserById = async (userId: number): Promise<ServiceResponse<User>> => {
   try {
-    const res = await axios.get<User>(`${APIM_HOST}/szemelyek/${userId}`, { headers: { 'Ocp-Apim-Subscription-Key': APIM_KEY } })
+    const res = await mtfszAxios.get<User>(`/szemelyek/${userId}`)
     return {
       isError: false,
       data: res.data
