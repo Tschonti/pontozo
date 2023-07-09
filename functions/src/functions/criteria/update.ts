@@ -26,17 +26,30 @@ export const updateCriteria = async (req: HttpRequest, context: InvocationContex
       body: 'Invalid id!'
     }
   }
+
+  const dto = plainToClass(CreateCriteriaDTO, await req.json())
+  const errors = await myvalidate(dto)
+  if (errors.length > 0) {
+    return {
+      status: 400,
+      jsonBody: errors
+    }
+  }
   try {
-    const dto = plainToClass(CreateCriteriaDTO, await req.json())
-    const errors = await myvalidate(dto)
-    if (errors.length > 0) {
+    const criterionRepo = (await getAppDataSource()).getRepository(Criterion)
+    const criterion = await criterionRepo.findOne({ where: { id }, relations: { categories: { category: { seasons: { season: true } } } } })
+    if (criterion === null) {
       return {
-        status: 400,
-        jsonBody: errors
+        status: 404,
+        body: 'Criterion not found!'
       }
     }
-
-    const criterionRepo = (await getAppDataSource()).getRepository(Criterion)
+    if (criterion.categories.some(({ category }) => category.seasons.some(({ season }) => season.startDate < new Date()))) {
+      return {
+        status: 400,
+        body: "This criterion can no longer be edited, because it's part of a season that has already started!"
+      }
+    }
     const res = await criterionRepo.update({ id }, { ...dto, roles: JSON.stringify(dto.roles) })
     return {
       jsonBody: res

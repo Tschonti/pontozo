@@ -40,11 +40,20 @@ export const updateCategory = async (req: HttpRequest, context: InvocationContex
     }
     const ads = await getAppDataSource()
     const criteria = await ads.getRepository(Criterion).find({ where: { id: In(dto.criterionIds) } })
-    let category = await ads.manager.findOne(Category, { where: { id }, relations: { criteria: { criterion: true } } })
+    let category = await ads.manager.findOne(Category, {
+      where: { id },
+      relations: { criteria: { criterion: true }, seasons: { season: true } }
+    })
     if (category === null) {
       return {
         status: 404,
         body: 'Category not found!'
+      }
+    }
+    if (category.seasons.some(({ season }) => season.startDate < new Date())) {
+      return {
+        status: 400,
+        body: "This category can no longer be edited, because it's part of a season that has already started!"
       }
     }
     category.name = dto.name

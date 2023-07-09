@@ -44,7 +44,13 @@ export const updateSeason = async (req: HttpRequest, context: InvocationContext)
     if (season === null) {
       return {
         status: 404,
-        body: 'Category not found!'
+        body: 'Season not found!'
+      }
+    }
+    if (season.startDate < new Date()) {
+      return {
+        status: 400,
+        body: 'This season can no longer be edited because it has already started!'
       }
     }
     season.name = dto.name

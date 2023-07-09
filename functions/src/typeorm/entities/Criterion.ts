@@ -1,4 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { CategoryToCriterion } from './CategoryToCriterion'
 import CriterionRating from './CriterionRating'
 
 @Entity()
@@ -49,6 +50,9 @@ class Criterion {
     type: 'nvarchar'
   })
   roles: string
+
+  @OneToMany(() => CategoryToCriterion, (ctc) => ctc.criterion, { cascade: true })
+  categories: CategoryToCriterion[]
 }
 
 export default Criterion
