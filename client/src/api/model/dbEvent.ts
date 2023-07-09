@@ -7,6 +7,7 @@ export type DbEvent = {
   rateable: boolean
   highestRank: Rank
   organisers: Club[]
+  stages?: DbStage[]
 }
 
 export enum Rank {
@@ -17,10 +18,10 @@ export enum Rank {
 
 export type DbStage = {
   id: number
-  event: Event
+  event?: Event
   eventId: number
   startTime: string
-  endTime: string
+  endTime?: string
   name: string
   disciplineId: number
   rank: Rank

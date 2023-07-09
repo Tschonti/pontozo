@@ -18,9 +18,9 @@ export const IndexPage = () => {
   return (
     <SimpleGrid spacing={4} columns={[1, 1, 2]}>
       {events
-        ?.sort((e1, e2) => -e1.datum_tol.localeCompare(e2.datum_tol))
+        ?.sort((e1, e2) => -e1.startDate.localeCompare(e2.startDate))
         .map((e) => (
-          <EventListItem key={e.esemeny_id} event={e} />
+          <EventListItem key={e.id} event={e} />
         ))}
     </SimpleGrid>
   )

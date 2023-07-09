@@ -17,11 +17,11 @@ import { useState } from 'react'
 import { useAuthContext } from '../../../api/contexts/useAuthContext'
 import { useRatingContext } from '../../../api/contexts/useRatingContext'
 import { useStartRatingMutation } from '../../../api/hooks/ratingHooks'
-import { MtfszEvent } from '../../../api/model/mtfszEvent'
+import { DbEvent } from '../../../api/model/dbEvent'
 import { RatingRole } from '../../../api/model/rating'
 import { UserRole } from '../../../api/model/user'
 
-export const StartRatingModal = ({ event }: { event: MtfszEvent }) => {
+export const StartRatingModal = ({ event }: { event: DbEvent }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { loggedInUser } = useAuthContext()
   const [role, setRole] = useState<RatingRole | undefined>()
@@ -31,7 +31,7 @@ export const StartRatingModal = ({ event }: { event: MtfszEvent }) => {
   const onSubmit = () => {
     if (role) {
       startRating.mutate(
-        { eventId: event.esemeny_id, role },
+        { eventId: event.id, role },
         {
           onSuccess: (res) => startRatingWithContext(res[0].id)
         }
@@ -50,7 +50,7 @@ export const StartRatingModal = ({ event }: { event: MtfszEvent }) => {
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{event.nev_1} értékelése</ModalHeader>
+          <ModalHeader>{event.name} értékelése</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Text fontWeight="bold">Tudnivalók az értékelésről</Text>

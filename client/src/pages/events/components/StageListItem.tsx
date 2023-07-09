@@ -1,14 +1,14 @@
 import { Card, CardHeader, Heading } from '@chakra-ui/react'
-import { EventRank, EventSection } from '../../../api/model/mtfszEvent'
+import { DbStage } from '../../../api/model/dbEvent'
 import { EventRankBadge } from './EventRankBadge'
 
-export const StageListItem = ({ stage, idx }: { stage: EventSection; idx: number }) => {
+export const StageListItem = ({ stage }: { stage: DbStage }) => {
   return (
     <Card variant="outline" w="100%">
       <CardHeader>
-        <Heading size="md">{stage.nev_1 || idx + '. futam'}</Heading>
-        <Heading size="sm">{new Date(parseInt(stage.idopont_tol) * 1000).toLocaleString('hu-HU')}</Heading>
-        <EventRankBadge rank={stage.futam.rangsorolo as EventRank} />
+        <Heading size="md">{stage.name}</Heading>
+        <Heading size="sm">{new Date(parseInt(stage.startTime) * 1000).toLocaleString('hu-HU')}</Heading>
+        <EventRankBadge stage={stage} />
       </CardHeader>
     </Card>
   )

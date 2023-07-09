@@ -1,13 +1,13 @@
 import { Button } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { useFetchEventRatingQuery } from '../../../api/hooks/ratingHooks'
-import { MtfszEvent } from '../../../api/model/mtfszEvent'
+import { DbEvent } from '../../../api/model/dbEvent'
 import { RatingStatus } from '../../../api/model/rating'
 import { PATHS } from '../../../util/paths'
 import { StartRatingModal } from './StartRatingModal'
 
-export const GoToRatingButton = ({ event }: { event: MtfszEvent }) => {
-  const { data, isLoading } = useFetchEventRatingQuery(event.esemeny_id)
+export const GoToRatingButton = ({ event }: { event: DbEvent }) => {
+  const { data, isLoading } = useFetchEventRatingQuery(event.id)
 
   if (isLoading) {
     return (
