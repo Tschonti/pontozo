@@ -29,7 +29,7 @@ import { CreateCategoryForm } from '../../../api/model/category'
 import { Criterion } from '../../../api/model/criterion'
 import { LoadingSpinner } from '../../../components/commons/LoadingSpinner'
 
-export const CriteriaSelector = () => {
+export const CriteriaSelector = ({ editable }: { editable: boolean }) => {
   const {
     register,
     watch,
@@ -85,7 +85,7 @@ export const CriteriaSelector = () => {
                 <IconButton
                   aria-label="Szempont előrehozása"
                   size="xs"
-                  isDisabled={idx === 0}
+                  isDisabled={idx === 0 || !editable}
                   icon={<FaCaretUp />}
                   colorScheme="brand"
                   onClick={() => moveCriterion(idx, c, -1)}
@@ -93,7 +93,7 @@ export const CriteriaSelector = () => {
                 <IconButton
                   aria-label="Szempont hátrébb vitele"
                   size="xs"
-                  isDisabled={idx === watch('criteria').length - 1}
+                  isDisabled={idx === watch('criteria').length - 1 || !editable}
                   icon={<FaCaretDown />}
                   colorScheme="brand"
                   onClick={() => moveCriterion(idx, c, 1)}
@@ -102,6 +102,7 @@ export const CriteriaSelector = () => {
                   aria-label="Szempont eltávolítása a kategóriából"
                   size="xs"
                   icon={<FaMinus />}
+                  isDisabled={!editable}
                   colorScheme="red"
                   onClick={() => removeCriterion(c)}
                 />
@@ -121,6 +122,7 @@ export const CriteriaSelector = () => {
             setSearch('')
           }}
           mt={watch('criteria').length > 0 || !!errors.criteria ? 2 : 0}
+          isDisabled={!editable}
         >
           Szempont hozzáadása
         </Button>

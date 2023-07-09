@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { EntityWithEditableIndicator } from '../../util/EntityWithEditableIndicator.dto'
 import { functionAxios } from '../../util/initAxios'
 import { Category, CategoryDetails, CreateCategory } from '../model/category'
 
@@ -11,11 +12,15 @@ export const useFetchCategories = () => {
 }
 
 export const useFetchCategory = (categoryId: number) => {
-  return useQuery<CategoryDetails>(['fetchCategory', categoryId], async () => (await functionAxios.get(`/categories/${categoryId}`)).data, {
-    retry: false,
-    refetchInterval: false,
-    enabled: categoryId > 0
-  })
+  return useQuery<EntityWithEditableIndicator<CategoryDetails>>(
+    ['fetchCategory', categoryId],
+    async () => (await functionAxios.get(`/categories/${categoryId}`)).data,
+    {
+      retry: false,
+      refetchInterval: false,
+      enabled: categoryId > 0
+    }
+  )
 }
 
 export const useCreateCategoryMutation = () => {

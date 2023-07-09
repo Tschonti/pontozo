@@ -1,4 +1,4 @@
-import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, HStack, Input, Stack, VStack } from '@chakra-ui/react'
+import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, HStack, Input, Stack, Text, VStack } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa'
@@ -12,6 +12,7 @@ import { CategorySelector } from './components/CategorySelector'
 export const SeasonCreatePage = () => {
   const seasonId = parseInt(useParams<{ seasonId: string }>().seasonId ?? '-1')
   const { data, isLoading, isFetching } = useFetchSeason(seasonId)
+  const seasonEditable = new Date(data?.startDate ?? new Date(Date.now() + 1000)) > new Date()
 
   const form = useForm<CreateSeasonForm>({
     values: {
@@ -64,9 +65,10 @@ export const SeasonCreatePage = () => {
     <>
       <VStack spacing={5} alignItems="flex-start">
         <Heading>{seasonId === -1 ? 'Új szezon' : 'Szezon szerkesztése'}</Heading>
+        {!seasonEditable && <Text>TODO ide valami szöveg hogy mért nem szerkeszthető</Text>}
         <FormControl isInvalid={!!errors.name}>
           <FormLabel>Név</FormLabel>
-          <Input {...register('name', { required: true })} />
+          <Input {...register('name', { required: true, disabled: !seasonEditable })} />
           <FormErrorMessage>Kötelező megadni a szezon nevét.</FormErrorMessage>
         </FormControl>
 
@@ -77,6 +79,7 @@ export const SeasonCreatePage = () => {
               <Input
                 type="date"
                 {...register('startDate', {
+                  disabled: !seasonEditable,
                   required: true,
                   validate: (sd, formValues) => new Date(sd) < new Date(formValues?.endDate),
                   deps: 'endDate'
@@ -88,6 +91,7 @@ export const SeasonCreatePage = () => {
               <Input
                 type="date"
                 {...register('endDate', {
+                  disabled: !seasonEditable,
                   required: true,
                   validate: (ed, formValues) => new Date(ed) > new Date(formValues.startDate),
                   deps: 'startDate'
@@ -99,7 +103,7 @@ export const SeasonCreatePage = () => {
         </FormControl>
 
         <FormProvider {...form}>
-          <CategorySelector />
+          <CategorySelector editable={seasonEditable} />
         </FormProvider>
 
         <Flex width="100%" justifyContent="space-between">
@@ -108,11 +112,15 @@ export const SeasonCreatePage = () => {
           </Button>
           <HStack spacing={1}>
             {seasonId > -1 && (
-              <Button colorScheme="red" onClick={() => deleteMutation.mutate(undefined, { onSuccess: () => navigate(PATHS.SEASONS) })}>
+              <Button
+                colorScheme="red"
+                isDisabled={!seasonEditable}
+                onClick={() => deleteMutation.mutate(undefined, { onSuccess: () => navigate(PATHS.SEASONS) })}
+              >
                 Szezon törlése
               </Button>
             )}
-            <Button type="submit" colorScheme="brand" onClick={handleSubmit(onSubmit)}>
+            <Button type="submit" isDisabled={!seasonEditable} colorScheme="brand" onClick={handleSubmit(onSubmit)}>
               Mentés
             </Button>
           </HStack>

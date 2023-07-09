@@ -19,15 +19,20 @@ export const getCategory = async (req: HttpRequest, context: InvocationContext):
   }
   const categoryRepo = (await getAppDataSource()).getRepository(Category)
   try {
-    const category = await categoryRepo.findOne({ where: { id }, relations: { criteria: { criterion: true } } })
+    const category = await categoryRepo.findOne({ where: { id }, relations: { criteria: { criterion: true }, seasons: { season: true } } })
     if (!category) {
       return {
         status: 404,
         body: 'Category not found!'
       }
     }
+    const { seasons, ...plainCategory } = category
     return {
-      jsonBody: { ...category, criteria: category.criteria.sort((ctc1, ctc2) => ctc1.order - ctc2.order).map((ctc) => ctc.criterion) }
+      jsonBody: {
+        ...plainCategory,
+        criteria: category.criteria.sort((ctc1, ctc2) => ctc1.order - ctc2.order).map((ctc) => ctc.criterion),
+        editable: !seasons.some(({ season }) => season.startDate < new Date())
+      }
     }
   } catch (error) {
     context.error(error)

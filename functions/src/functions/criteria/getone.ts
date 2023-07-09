@@ -2,6 +2,7 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/fu
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Criterion from '../../typeorm/entities/Criterion'
 import { getAppDataSource } from '../../typeorm/getConfig'
+import { EntityWithEditableIndicator } from '../../util/EntityWithEditableIndicator.dto'
 import { httpResFromServiceRes } from '../../util/httpRes'
 
 export const getCriterion = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
@@ -19,15 +20,20 @@ export const getCriterion = async (req: HttpRequest, context: InvocationContext)
   }
   const criterionRepo = (await getAppDataSource()).getRepository(Criterion)
   try {
-    const criteria = await criterionRepo.findOneBy({ id })
-    if (!criteria) {
+    const criterion = await criterionRepo.findOne({ where: { id }, relations: { categories: { category: { seasons: { season: true } } } } })
+    if (!criterion) {
       return {
         status: 404,
         body: 'Criterion not found!'
       }
     }
+    const { categories, ...plainCriterion } = criterion
     return {
-      jsonBody: { ...criteria, roles: JSON.parse(criteria.roles) } as Criterion
+      jsonBody: {
+        ...plainCriterion,
+        roles: JSON.parse(criterion.roles),
+        editable: !categories.some(({ category }) => category.seasons.some(({ season }) => season.startDate < new Date()))
+      } as EntityWithEditableIndicator<Criterion>
     }
   } catch (error) {
     context.error(error)

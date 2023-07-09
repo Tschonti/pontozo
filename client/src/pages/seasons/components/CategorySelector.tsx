@@ -29,7 +29,7 @@ import { Category } from '../../../api/model/category'
 import { CreateSeasonForm } from '../../../api/model/season'
 import { LoadingSpinner } from '../../../components/commons/LoadingSpinner'
 
-export const CategorySelector = () => {
+export const CategorySelector = ({ editable }: { editable: boolean }) => {
   const {
     register,
     watch,
@@ -85,7 +85,7 @@ export const CategorySelector = () => {
                 <IconButton
                   aria-label="Kategória előrehozása"
                   size="xs"
-                  isDisabled={idx === 0}
+                  isDisabled={idx === 0 || !editable}
                   icon={<FaCaretUp />}
                   colorScheme="brand"
                   onClick={() => moveCategory(idx, c, -1)}
@@ -93,7 +93,7 @@ export const CategorySelector = () => {
                 <IconButton
                   aria-label="Kategória hátrébb vitele"
                   size="xs"
-                  isDisabled={idx === watch('categories').length - 1}
+                  isDisabled={idx === watch('categories').length - 1 || !editable}
                   icon={<FaCaretDown />}
                   colorScheme="brand"
                   onClick={() => moveCategory(idx, c, 1)}
@@ -102,6 +102,7 @@ export const CategorySelector = () => {
                   aria-label="Kategória eltávolítása a kategóriából"
                   size="xs"
                   icon={<FaMinus />}
+                  isDisabled={!editable}
                   colorScheme="red"
                   onClick={() => removeCategory(c)}
                 />
@@ -116,6 +117,7 @@ export const CategorySelector = () => {
         </VStack>
         <FormErrorMessage>Legalább egy kategóriát válassz ki!</FormErrorMessage>
         <Button
+          isDisabled={!editable}
           onClick={() => {
             onOpen()
             setSearch('')

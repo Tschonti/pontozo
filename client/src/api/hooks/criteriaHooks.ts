@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { EntityWithEditableIndicator } from '../../util/EntityWithEditableIndicator.dto'
 import { functionAxios } from '../../util/initAxios'
 import { CreateCriterion, Criterion } from '../model/criterion'
 
@@ -17,11 +18,15 @@ export const useFetchCriteria = () => {
 }
 
 export const useFetchCriterion = (criterionId: number) => {
-  return useQuery<Criterion>(['fetchCriterion', criterionId], async () => (await functionAxios.get(`/criteria/${criterionId}`)).data, {
-    retry: false,
-    refetchInterval: false,
-    enabled: criterionId > 0
-  })
+  return useQuery<EntityWithEditableIndicator<Criterion>>(
+    ['fetchCriterion', criterionId],
+    async () => (await functionAxios.get(`/criteria/${criterionId}`)).data,
+    {
+      retry: false,
+      refetchInterval: false,
+      enabled: criterionId > 0
+    }
+  )
 }
 
 export const useRateCriteriaMutation = ({ eventRatingId, criterionId, stageId }: CreateCriterionRatingMutation) => {
