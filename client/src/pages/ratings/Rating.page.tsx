@@ -15,7 +15,7 @@ export const RatingPage = () => {
 
   return (
     <>
-      <Heading mb={2}>{currentStage ? currentStage.nev_1 || `${stageIdx + 1}. futam` : eventRatingInfo?.eventName} értékelése</Heading>
+      <Heading mb={2}>{currentStage ? currentStage.name || `${stageIdx + 1}. futam` : eventRatingInfo?.eventName} értékelése</Heading>
       {currentStage ? (
         <Heading size="sm">
           A futamra vonatkozó szempontok szerint (futam {stageIdx + 1}/{eventRatingInfo?.stages.length})

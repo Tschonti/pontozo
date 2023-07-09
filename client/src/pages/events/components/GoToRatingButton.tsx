@@ -1,28 +1,17 @@
 import { Button } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
-import { useFetchEventRatingQuery } from '../../../api/hooks/ratingHooks'
-import { DbEvent } from '../../../api/model/dbEvent'
+import { EventWithRating } from '../../../api/model/dbEvent'
 import { RatingStatus } from '../../../api/model/rating'
 import { PATHS } from '../../../util/paths'
 import { StartRatingModal } from './StartRatingModal'
 
-export const GoToRatingButton = ({ event }: { event: DbEvent }) => {
-  const { data, isLoading } = useFetchEventRatingQuery(event.id)
-
-  if (isLoading) {
+export const GoToRatingButton = ({ eventWithRating }: { eventWithRating: EventWithRating }) => {
+  if (eventWithRating.userRating) {
     return (
-      <Button colorScheme="brand" isLoading>
-        Értékelés
+      <Button as={Link} to={`${PATHS.RATINGS}/${eventWithRating.userRating.id}?categoryIdx=0`} colorScheme="brand">
+        {eventWithRating.userRating.status === RatingStatus.SUBMITTED ? 'Értékelésed megtekintése' : 'Értékelésed szerkesztése'}
       </Button>
     )
   }
-
-  if (data?.rating) {
-    return (
-      <Button as={Link} to={`${PATHS.RATINGS}/${data.rating.id}?categoryIdx=0`} colorScheme="brand">
-        {data.rating.status === RatingStatus.SUBMITTED ? 'Értékelésed megtekintése' : 'Értékelésed szerkesztése'}
-      </Button>
-    )
-  }
-  return <StartRatingModal event={event} />
+  return <StartRatingModal event={eventWithRating.event} />
 }

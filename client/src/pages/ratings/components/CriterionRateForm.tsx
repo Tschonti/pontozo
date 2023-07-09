@@ -11,7 +11,7 @@ type Props = {
 
 export const CriterionRateForm = ({ criterion }: Props) => {
   const { ratingId, currentStage, eventRatingInfo, validate, rateCriterion } = useRatingContext()
-  const mutation = useRateCriteriaMutation({ eventRatingId: ratingId, criterionId: criterion.id, stageId: currentStage?.program_id })
+  const mutation = useRateCriteriaMutation({ eventRatingId: ratingId, criterionId: criterion.id, stageId: currentStage?.id })
   const [value, setValue] = useState<string | undefined>(criterion.rating?.value?.toString())
   const toast = useToast()
 

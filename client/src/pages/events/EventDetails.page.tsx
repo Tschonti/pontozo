@@ -10,7 +10,7 @@ import { StageListItem } from './components/StageListItem'
 
 export const EventDetailsPage = () => {
   const { eventId } = useParams()
-  const { data: event, isLoading, error } = useFetchEvent(+eventId!!)
+  const { data: eventWithRating, isLoading, error } = useFetchEvent(+eventId!!)
   const { isLoggedIn } = useAuthContext()
   const toast = useToast()
 
@@ -21,15 +21,16 @@ export const EventDetailsPage = () => {
   if (isLoading) {
     return <LoadingSpinner />
   }
-  if (error || !event) {
+  if (error || !eventWithRating) {
     console.error(error)
     return null
   }
+  const { event } = eventWithRating
   return (
     <VStack alignItems="flex-start" spacing={3}>
       <Stack direction={['column', 'row']} justify="space-between" w="100%">
         <Heading>{event.name}</Heading>
-        <GoToRatingButton event={event} />
+        <GoToRatingButton eventWithRating={eventWithRating} />
       </Stack>
       <Heading size="md">
         {event.startDate}

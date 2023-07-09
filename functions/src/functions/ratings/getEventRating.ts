@@ -5,7 +5,7 @@ import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
 
 /**
- * Called when a user visits an events page to get their rating of that event.
+ * Called when a user visits an events page to get their rating of that event and also the event data.
  */
 export const getEventRating = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const eventId = parseInt(req.params.eventId)
@@ -23,11 +23,12 @@ export const getEventRating = async (req: HttpRequest, context: InvocationContex
   }
 
   const ratingRepo = (await getAppDataSource()).getRepository(EventRating)
-  const eventRating = await ratingRepo.findOne({ where: { eventId, userId: userServiceRes.data.szemely_id } })
+  const eventRating = await ratingRepo.findOne({
+    where: { eventId, userId: userServiceRes.data.szemely_id },
+    relations: { event: { organisers: true, stages: true } }
+  })
   return {
-    jsonBody: {
-      rating: eventRating
-    }
+    jsonBody: eventRating
   }
 }
 

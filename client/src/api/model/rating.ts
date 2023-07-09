@@ -1,15 +1,18 @@
 import { CategoryWithCriteria } from './category'
-import { DbEvent } from './dbEvent'
-import { EventSectionPreview } from './mtfszEvent'
+import { DbEvent, DbStage } from './dbEvent'
 
 export interface EventRating {
   id: number
   eventId: number
-  event: DbEvent
   status: RatingStatus
   role: RatingRole
+  userId: number
   createdAt: Date
   submittedAt?: Date
+}
+
+export interface EventRatingWithEvent extends EventRating {
+  event: DbEvent
 }
 
 export enum RatingStatus {
@@ -37,7 +40,7 @@ export interface CriterionRating {
 
 export interface EventRatingInfo extends EventRating {
   eventName: string
-  stages: EventSectionPreview[]
+  stages: DbStage[]
   eventCategories: CategoryWithCriteria[]
   stageCategories: CategoryWithCriteria[]
 }

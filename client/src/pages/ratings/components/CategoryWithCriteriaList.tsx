@@ -15,7 +15,7 @@ export const CategoryWithCriteriaList = ({ ratingId }: Props) => {
   useEffect(() => {
     if (eventRatingInfo) {
       mutation.mutate(
-        { criterionIds: (currentCategory?.criteria || []).map((c) => c.id), stageId: currentStage?.program_id },
+        { criterionIds: (currentCategory?.criteria || []).map((c) => c.id), stageId: currentStage?.id },
         { onSuccess: (data) => rateCriteria(data.map((r) => r.criterionId)) }
       )
     }

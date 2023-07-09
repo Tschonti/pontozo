@@ -3,9 +3,9 @@ import { APIM_HOST, APIM_KEY } from '../../util/environment'
 import { eventFilter } from '../../util/eventFilter'
 import { apimAxios, functionAxios } from '../../util/initAxios'
 import { transformEvent } from '../../util/mtfszEventToDbEvent'
-import { DbEvent } from '../model/dbEvent'
+import { DbEvent, EventWithRating } from '../model/dbEvent'
 import { FetchEventsResult } from '../model/mtfszEvent'
-import { EventRating } from '../model/rating'
+import { EventRatingWithEvent } from '../model/rating'
 
 const formatDate = (d: Date) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
 
@@ -31,7 +31,7 @@ export const useFetchEventsLastMonth = () => {
 }
 
 export const useFetchEvent = (eventId: number) => {
-  return useQuery<DbEvent>(
+  return useQuery<EventWithRating>(
     ['fetchEvent', eventId],
     async () => {
       const res = await functionAxios.get(`events/${eventId}`)
@@ -42,7 +42,7 @@ export const useFetchEvent = (eventId: number) => {
 }
 
 export const useFecthUserRatedEvents = () => {
-  return useQuery<EventRating[]>(['fetchUserRatedEvents'], async () => (await functionAxios.get('events/ratedByUser')).data, {
+  return useQuery<EventRatingWithEvent[]>(['fetchUserRatedEvents'], async () => (await functionAxios.get('events/ratedByUser')).data, {
     retry: false
   })
 }

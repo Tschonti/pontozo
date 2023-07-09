@@ -1,3 +1,5 @@
+import { EventRating } from './rating'
+
 export type DbEvent = {
   id: number
   name: string
@@ -32,4 +34,9 @@ export type Club = {
   code: string
   shortName: string
   longName: string
+}
+
+export interface EventWithRating {
+  event: DbEvent
+  userRating?: EventRating
 }

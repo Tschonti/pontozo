@@ -6,13 +6,13 @@ import { functionAxios } from '../../util/initAxios'
 import { PATHS } from '../../util/paths'
 import { useSubmitRatingMutation } from '../hooks/ratingHooks'
 import { CategoryWithCriteria } from '../model/category'
-import { EventSectionPreview } from '../model/mtfszEvent'
+import { DbStage } from '../model/dbEvent'
 import { EventRatingInfo } from '../model/rating'
 
 export type RatingContextType = {
   eventRatingInfo: EventRatingInfo | undefined
   infoLoading: boolean
-  currentStage: EventSectionPreview | undefined
+  currentStage: DbStage | undefined
   currentCategory: CategoryWithCriteria | undefined
   categoryIdx: number
   stageIdx: number
@@ -48,7 +48,7 @@ export const RatingContext = createContext<RatingContextType>({
 export const RatingProvider = ({ children }: PropsWithChildren) => {
   const { pathname } = useLocation()
   const [searchParams] = useSearchParams()
-  const [stage, setStage] = useState<EventSectionPreview>()
+  const [stage, setStage] = useState<DbStage>()
   const [category, setCategory] = useState<CategoryWithCriteria>()
   const [ratingId, setRatingId] = useState(-1)
   const [stageIdx, setStageIdx] = useState(-1)
