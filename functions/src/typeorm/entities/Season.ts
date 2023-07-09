@@ -1,4 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import Event from './Event'
 import { SeasonToCategory } from './SeasonToCategory'
 
 @Entity()
@@ -17,6 +18,9 @@ class Season {
 
   @OneToMany(() => SeasonToCategory, (ctc) => ctc.season, { cascade: true })
   categories: SeasonToCategory[]
+
+  @OneToMany(() => Event, (e) => e.season)
+  events: Event[]
 }
 
 export default Season

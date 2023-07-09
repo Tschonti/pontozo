@@ -20,7 +20,10 @@ export const useFetchEventsLastMonthFromMtfsz = () => {
       url.searchParams.append('datum_ig', formatDate(today))
       url.searchParams.append('exclude_deleted', 'true')
       const res = await apimAxios.get<FetchEventsResult>(url.toString())
-      return res.data.result.filter(eventFilter).map(transformEvent)
+      return res.data.result
+        .filter(eventFilter)
+        .map(transformEvent)
+        .sort((e1, e2) => -e1.startDate.localeCompare(e2.startDate))
     },
     { retry: false }
   )
@@ -31,7 +34,7 @@ export const useFetchEventsLastMonthFromDb = () => {
     ['fetchEventsDb'],
     async () => {
       const res = await functionAxios.get<DbEvent[]>('events/rateable')
-      return res.data
+      return res.data.sort((e1, e2) => -e1.startDate.localeCompare(e2.startDate))
     },
     { retry: false }
   )

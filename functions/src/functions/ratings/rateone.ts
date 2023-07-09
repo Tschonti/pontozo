@@ -8,7 +8,6 @@ import CriterionRating from '../../typeorm/entities/CriterionRating'
 import EventRating, { RatingStatus } from '../../typeorm/entities/EventRating'
 import { SeasonToCategory } from '../../typeorm/entities/SeasonToCategory'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { currentSeasonFilter } from '../../util/currentSeasonFilter'
 import { httpResFromServiceRes } from '../../util/httpRes'
 import { myvalidate } from '../../util/validation'
 import { CreateRatingDto } from './types/createRating.dto'
@@ -48,7 +47,7 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
     const eventRatingRepo = ads.getRepository(EventRating)
     const criterionRepo = ads.getRepository(Criterion)
 
-    const eventRatingQuery = eventRatingRepo.findOneBy({ id })
+    const eventRatingQuery = eventRatingRepo.findOne({ where: { id }, relations: { event: true } })
     const criterionQuery = criterionRepo.findOneBy({ id: dto.criterionId })
 
     const [eventRating, criterion] = await Promise.all([eventRatingQuery, criterionQuery])
@@ -106,7 +105,7 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
     const ctcRepo = ads.getRepository(CategoryToCriterion)
     const stcRepo = ads.getRepository(SeasonToCategory)
     const ctcs = await ctcRepo.find({ where: { criterionId: dto.criterionId } })
-    const stcs = await stcRepo.find({ where: { season: currentSeasonFilter, categoryId: In(ctcs.map((ctc) => ctc.categoryId)) } })
+    const stcs = await stcRepo.find({ where: { seasonId: eventRating.event.seasonId, categoryId: In(ctcs.map((ctc) => ctc.categoryId)) } })
 
     if (stcs.length === 0) {
       return {

@@ -3,9 +3,7 @@ import { getUserFromHeader } from '../../service/auth.service'
 import { isHigherRankDB } from '../../service/mtfsz.service'
 import Criterion from '../../typeorm/entities/Criterion'
 import EventRating from '../../typeorm/entities/EventRating'
-import Season from '../../typeorm/entities/Season'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { currentSeasonFilter } from '../../util/currentSeasonFilter'
 import { httpResFromServiceRes } from '../../util/httpRes'
 import { CategoryWithCriteria } from './types/categoryWithCriteria'
 import { EventRatingInfo } from './types/eventRatingInfo'
@@ -26,11 +24,13 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
   if (userServiceRes.isError) {
     return httpResFromServiceRes(userServiceRes)
   }
-  const ads = await getAppDataSource()
-  const ratingRepo = ads.getRepository(EventRating)
-  const seasonRepo = ads.getRepository(Season)
-  const eventRatingAndEvent = await ratingRepo.findOne({ where: { id: ratingId }, relations: { event: { stages: true } } })
+  const ratingRepo = (await getAppDataSource()).getRepository(EventRating)
+  const eventRatingAndEvent = await ratingRepo.findOne({
+    where: { id: ratingId },
+    relations: { event: { stages: true, season: { categories: { category: { criteria: { criterion: true } } } } } }
+  })
   const { event, ...eventRating } = eventRatingAndEvent
+  const { season } = event
 
   if (eventRating === null) {
     return {
@@ -42,17 +42,6 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
     return {
       status: 403,
       body: "You're not allowed to get criteria for this rating"
-    }
-  }
-
-  const season = await seasonRepo.findOne({
-    where: currentSeasonFilter,
-    relations: { categories: { category: { criteria: { criterion: true } } } }
-  })
-  if (season === null) {
-    return {
-      status: 400,
-      body: 'Jelenleg nincs értékelési szezon!'
     }
   }
 

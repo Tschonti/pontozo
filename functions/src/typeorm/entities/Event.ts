@@ -1,6 +1,7 @@
-import { Check, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn } from 'typeorm'
+import { Check, Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm'
 import Club from './Club'
 import EventRating from './EventRating'
+import Season from './Season'
 import Stage from './Stage'
 
 export enum Rank {
@@ -42,6 +43,12 @@ class Event {
   @ManyToMany(() => Club, (c) => c.events, { cascade: true })
   @JoinTable()
   organisers: Club[]
+
+  @ManyToOne(() => Season, (s) => s.events, { eager: false, onDelete: 'CASCADE' })
+  season: Season
+
+  @Column()
+  seasonId: number
 }
 
 export default Event

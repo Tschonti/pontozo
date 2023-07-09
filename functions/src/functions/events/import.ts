@@ -2,8 +2,10 @@ import { app, InvocationContext, Timer } from '@azure/functions'
 import { getRateableEvents, stageFilter } from '../../service/mtfsz.service'
 import Club from '../../typeorm/entities/Club'
 import Event from '../../typeorm/entities/Event'
+import Season from '../../typeorm/entities/Season'
 import Stage from '../../typeorm/entities/Stage'
 import { getAppDataSource } from '../../typeorm/getConfig'
+import { currentSeasonFilter } from '../../util/currentSeasonFilter'
 import { getHighestRank } from '../../util/getHighestRank'
 
 /**
@@ -17,6 +19,12 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
   const eventRepo = ads.getRepository(Event)
   const stageRepo = ads.getRepository(Stage)
   const clubRepo = ads.getRepository(Club)
+  const seasonRepo = ads.getRepository(Season)
+
+  const season = await seasonRepo.findOne({ where: currentSeasonFilter })
+  if (season === null) {
+    return
+  }
 
   const eventsToSave = events.map((e) => {
     const event = eventRepo.create({
@@ -26,6 +34,7 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
       startDate: e.datum_tol,
       endDate: e.datum_ig,
       highestRank: getHighestRank(e),
+      seasonId: season.id,
       stages: [],
       organisers: []
     })

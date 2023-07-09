@@ -12,6 +12,7 @@ import { SeasonToCategory } from './entities/SeasonToCategory'
 import Stage from './entities/Stage'
 import UserRoleAssignment from './entities/UserRoleAssignment'
 import { Init1688230862927 } from './migrations/1688230862927-init'
+import { SeasonToEvent1688909888594 } from './migrations/1688909888594-seasonToEvent'
 
 export const DBConfig: DataSourceOptions = {
   type: 'mssql',
@@ -37,6 +38,6 @@ export const DBConfig: DataSourceOptions = {
     Club
   ],
   subscribers: [],
-  migrations: [Init1688230862927],
+  migrations: [Init1688230862927, SeasonToEvent1688909888594],
   options: { encrypt: ENCRYPT }
 }

@@ -4,7 +4,6 @@ import { isHigherRankDB } from '../../service/mtfsz.service'
 import EventRating, { RatingStatus } from '../../typeorm/entities/EventRating'
 import Season from '../../typeorm/entities/Season'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { currentSeasonFilter } from '../../util/currentSeasonFilter'
 import { httpResFromServiceRes } from '../../util/httpRes'
 
 /**
@@ -27,7 +26,10 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
     const ads = await getAppDataSource()
     const seasonRepo = ads.getRepository(Season)
     const eventRatingRepo = ads.getRepository(EventRating)
-    const rating = await eventRatingRepo.findOne({ where: { id }, relations: { ratings: true, event: { stages: true } } })
+    const rating = await eventRatingRepo.findOne({
+      where: { id },
+      relations: { ratings: true, event: { stages: true, season: { categories: { category: { criteria: { criterion: true } } } } } }
+    })
 
     if (rating.status === RatingStatus.SUBMITTED) {
       return {
@@ -41,23 +43,19 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
         body: "You're not allowed to submit this rating!"
       }
     }
-    const season = await seasonRepo.findOne({
-      where: currentSeasonFilter,
-      relations: { categories: { category: { criteria: { criterion: true } } } }
-    })
-    if (season === null) {
+    if (!rating.event.rateable) {
       return {
         status: 400,
-        body: 'Jelenleg nincs értékelési szezon!'
+        body: 'This event can no longer be rated!'
       }
     }
-
+    const { season, stages } = rating.event
     let criterionCount = 0
     season.categories.forEach((stc) => {
       stc.category.criteria.forEach(({ criterion: c }) => {
         if (c.roles.includes(rating.role) && (isHigherRankDB(rating.event) || !c.nationalOnly)) {
           if (c.stageSpecific) {
-            criterionCount = criterionCount + rating.event.stages.length
+            criterionCount = criterionCount + stages.length
           } else {
             criterionCount++
           }
