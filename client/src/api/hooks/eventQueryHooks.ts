@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { APIM_HOST, APIM_KEY } from '../../util/environment'
+import { APIM_HOST } from '../../util/environment'
 import { eventFilter } from '../../util/eventFilter'
 import { apimAxios, functionAxios } from '../../util/initAxios'
 import { transformEvent } from '../../util/mtfszEventToDbEvent'
@@ -9,9 +9,9 @@ import { EventRatingWithEvent } from '../model/rating'
 
 const formatDate = (d: Date) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
 
-export const useFetchEventsLastMonth = () => {
+export const useFetchEventsLastMonthFromMtfsz = () => {
   return useQuery<DbEvent[]>(
-    ['fetchEvents'],
+    ['fetchEventsMtfsz'],
     async () => {
       const url = new URL('esemenyek', APIM_HOST)
       const today = new Date()
@@ -19,12 +19,19 @@ export const useFetchEventsLastMonth = () => {
       url.searchParams.append('datum_tol', formatDate(oneMonthAgo))
       url.searchParams.append('datum_ig', formatDate(today))
       url.searchParams.append('exclude_deleted', 'true')
-      const res = await apimAxios.get<FetchEventsResult>(url.toString(), {
-        headers: {
-          'Ocp-Apim-Subscription-Key': APIM_KEY
-        }
-      })
+      const res = await apimAxios.get<FetchEventsResult>(url.toString())
       return res.data.result.filter(eventFilter).map(transformEvent)
+    },
+    { retry: false }
+  )
+}
+
+export const useFetchEventsLastMonthFromDb = () => {
+  return useQuery<DbEvent[]>(
+    ['fetchEventsDb'],
+    async () => {
+      const res = await functionAxios.get<DbEvent[]>('events/rateable')
+      return res.data
     },
     { retry: false }
   )
@@ -34,7 +41,7 @@ export const useFetchEvent = (eventId: number) => {
   return useQuery<EventWithRating>(
     ['fetchEvent', eventId],
     async () => {
-      const res = await functionAxios.get(`events/${eventId}`)
+      const res = await functionAxios.get(`events/getOne/${eventId}`)
       return res.data
     },
     { retry: false, enabled: !isNaN(eventId) && eventId > 0 }

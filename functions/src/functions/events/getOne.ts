@@ -46,6 +46,6 @@ export const getOneEvent = async (req: HttpRequest, context: InvocationContext):
 
 app.http('events-getOne', {
   methods: ['GET'],
-  route: 'events/{eventId}',
+  route: 'events/getOne/{eventId}',
   handler: getOneEvent
 })
