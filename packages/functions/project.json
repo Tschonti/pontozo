@@ -1,0 +1,31 @@
+{
+  "name": "functions",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nxazure/func:build"
+    },
+    "start": {
+      "executor": "@nxazure/func:start",
+      "defaultConfiguration": "default",
+      "configurations": {
+        "default": {
+          "port": 3000
+        }
+      }
+    },
+    "publish": {
+      "executor": "@nxazure/func:publish",
+      "defaultConfiguration": "test",
+      "configurations": {
+        "test": {
+          "name": "pontozo-test"
+        },
+        "prod": {
+          "name": "pontozo"
+        }
+      }
+    }
+  }
+}
