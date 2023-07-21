@@ -123,5 +123,5 @@ export enum EventRank {
   REGIONAL = 'REGIONALIS',
   NATIONAL = 'ORSZAGOS',
   FEATURED = 'KIEMELT',
-  NONE = 'NEM'
+  NONE = 'NEM',
 }

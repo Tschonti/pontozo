@@ -19,15 +19,15 @@ export const SeasonCreatePage = () => {
       name: data?.name || '',
       startDate: '',
       endDate: '',
-      categories: data?.categories || []
-    }
+      categories: data?.categories || [],
+    },
   })
 
   const {
     register,
     handleSubmit,
     setValue,
-    formState: { errors }
+    formState: { errors },
   } = form
   const navigate = useNavigate()
   const createMutation = useCreateSeasonMutation()
@@ -51,7 +51,7 @@ export const SeasonCreatePage = () => {
       ...restOfData,
       startDate: new Date(restOfData.startDate),
       endDate: new Date(restOfData.endDate),
-      categoryIds: categories.map((c) => c.id)
+      categoryIds: categories.map((c) => c.id),
     }
     if (seasonId === -1) {
       createMutation.mutate(data, { onSuccess: () => navigate(PATHS.SEASONS) })
@@ -65,67 +65,67 @@ export const SeasonCreatePage = () => {
   }
   return (
     <VStack spacing={5} alignItems="flex-start">
-        <Heading>{seasonId === -1 ? 'Új szezon' : 'Szezon szerkesztése'}</Heading>
-        {!seasonEditable && <Text>TODO ide valami szöveg hogy mért nem szerkeszthető</Text>}
-        <FormControl isInvalid={!!errors.name}>
-          <FormLabel>Név</FormLabel>
-          <Input {...register('name', { required: true, disabled: !seasonEditable })} />
-          <FormErrorMessage>Kötelező megadni a szezon nevét.</FormErrorMessage>
-        </FormControl>
+      <Heading>{seasonId === -1 ? 'Új szezon' : 'Szezon szerkesztése'}</Heading>
+      {!seasonEditable && <Text>TODO ide valami szöveg hogy mért nem szerkeszthető</Text>}
+      <FormControl isInvalid={!!errors.name}>
+        <FormLabel>Név</FormLabel>
+        <Input {...register('name', { required: true, disabled: !seasonEditable })} />
+        <FormErrorMessage>Kötelező megadni a szezon nevét.</FormErrorMessage>
+      </FormControl>
 
-        <FormControl isInvalid={!!errors.startDate || !!errors.endDate}>
-          <Stack direction={['column', 'column', 'row']} spacing={5} w="100%">
-            <FormControl isInvalid={!!errors.startDate}>
-              <FormLabel>Kezdő dátum</FormLabel>
-              <Input
-                type="date"
-                {...register('startDate', {
-                  disabled: !seasonEditable,
-                  required: true,
-                  validate: (sd, formValues) => new Date(sd) < new Date(formValues?.endDate),
-                  deps: 'endDate'
-                })}
-              />
-            </FormControl>
-            <FormControl isInvalid={!!errors.endDate}>
-              <FormLabel>Befejező dátum</FormLabel>
-              <Input
-                type="date"
-                {...register('endDate', {
-                  disabled: !seasonEditable,
-                  required: true,
-                  validate: (ed, formValues) => new Date(ed) > new Date(formValues.startDate),
-                  deps: 'startDate'
-                })}
-              />
-            </FormControl>
-          </Stack>
-          <FormErrorMessage>A kezdő dátumnak előbb kell lennie, mint a befejező dátumnak!</FormErrorMessage>
-        </FormControl>
+      <FormControl isInvalid={!!errors.startDate || !!errors.endDate}>
+        <Stack direction={['column', 'column', 'row']} spacing={5} w="100%">
+          <FormControl isInvalid={!!errors.startDate}>
+            <FormLabel>Kezdő dátum</FormLabel>
+            <Input
+              type="date"
+              {...register('startDate', {
+                disabled: !seasonEditable,
+                required: true,
+                validate: (sd, formValues) => new Date(sd) < new Date(formValues?.endDate),
+                deps: 'endDate',
+              })}
+            />
+          </FormControl>
+          <FormControl isInvalid={!!errors.endDate}>
+            <FormLabel>Befejező dátum</FormLabel>
+            <Input
+              type="date"
+              {...register('endDate', {
+                disabled: !seasonEditable,
+                required: true,
+                validate: (ed, formValues) => new Date(ed) > new Date(formValues.startDate),
+                deps: 'startDate',
+              })}
+            />
+          </FormControl>
+        </Stack>
+        <FormErrorMessage>A kezdő dátumnak előbb kell lennie, mint a befejező dátumnak!</FormErrorMessage>
+      </FormControl>
 
-        <FormProvider {...form}>
-          <CategorySelector editable={seasonEditable} />
-        </FormProvider>
+      <FormProvider {...form}>
+        <CategorySelector editable={seasonEditable} />
+      </FormProvider>
 
-        <Flex width="100%" justifyContent="space-between">
-          <Button as={Link} to={PATHS.SEASONS} leftIcon={<FaArrowLeft />}>
-            Vissza
-          </Button>
-          <HStack spacing={1}>
-            {seasonId > -1 && (
-              <Button
-                colorScheme="red"
-                isDisabled={!seasonEditable}
-                onClick={() => deleteMutation.mutate(undefined, { onSuccess: () => navigate(PATHS.SEASONS) })}
-              >
-                Szezon törlése
-              </Button>
-            )}
-            <Button type="submit" isDisabled={!seasonEditable} colorScheme="brand" onClick={handleSubmit(onSubmit)}>
-              Mentés
+      <Flex width="100%" justifyContent="space-between">
+        <Button as={Link} to={PATHS.SEASONS} leftIcon={<FaArrowLeft />}>
+          Vissza
+        </Button>
+        <HStack spacing={1}>
+          {seasonId > -1 && (
+            <Button
+              colorScheme="red"
+              isDisabled={!seasonEditable}
+              onClick={() => deleteMutation.mutate(undefined, { onSuccess: () => navigate(PATHS.SEASONS) })}
+            >
+              Szezon törlése
             </Button>
-          </HStack>
-        </Flex>
-      </VStack>
+          )}
+          <Button type="submit" isDisabled={!seasonEditable} colorScheme="brand" onClick={handleSubmit(onSubmit)}>
+            Mentés
+          </Button>
+        </HStack>
+      </Flex>
+    </VStack>
   )
 }

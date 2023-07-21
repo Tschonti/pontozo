@@ -14,20 +14,20 @@ export const deleteCriterion = async (req: HttpRequest, context: InvocationConte
   if (isNaN(id)) {
     return {
       status: 400,
-      body: 'Invalid id!'
+      body: 'Invalid id!',
     }
   }
   const criterionRepo = (await getAppDataSource()).getRepository(Criterion)
   try {
     const res = await criterionRepo.delete({ id })
     return {
-      jsonBody: res
+      jsonBody: res,
     }
   } catch (error) {
     context.error(error)
     return {
       status: 500,
-      body: error
+      body: error,
     }
   }
 }
@@ -35,5 +35,5 @@ export const deleteCriterion = async (req: HttpRequest, context: InvocationConte
 app.http('criteria-delete', {
   methods: ['DELETE'],
   route: 'criteria/{id}',
-  handler: deleteCriterion
+  handler: deleteCriterion,
 })

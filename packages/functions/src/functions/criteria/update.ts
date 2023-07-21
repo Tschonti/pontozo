@@ -16,14 +16,14 @@ export const updateCriteria = async (req: HttpRequest, context: InvocationContex
   if (!req.body) {
     return {
       status: 400,
-      body: 'No body attached to POST query.'
+      body: 'No body attached to POST query.',
     }
   }
   const id = parseInt(req.params.id)
   if (isNaN(id)) {
     return {
       status: 400,
-      body: 'Invalid id!'
+      body: 'Invalid id!',
     }
   }
 
@@ -32,7 +32,7 @@ export const updateCriteria = async (req: HttpRequest, context: InvocationContex
   if (errors.length > 0) {
     return {
       status: 400,
-      jsonBody: errors
+      jsonBody: errors,
     }
   }
   try {
@@ -41,24 +41,24 @@ export const updateCriteria = async (req: HttpRequest, context: InvocationContex
     if (criterion === null) {
       return {
         status: 404,
-        body: 'Criterion not found!'
+        body: 'Criterion not found!',
       }
     }
     if (criterion.categories.some(({ category }) => category.seasons.some(({ season }) => season.startDate < new Date()))) {
       return {
         status: 400,
-        body: "This criterion can no longer be edited, because it's part of a season that has already started!"
+        body: "This criterion can no longer be edited, because it's part of a season that has already started!",
       }
     }
     const res = await criterionRepo.update({ id }, { ...dto, roles: JSON.stringify(dto.roles) })
     return {
-      jsonBody: res
+      jsonBody: res,
     }
   } catch (e) {
     context.log(e)
     return {
       status: 400,
-      body: e
+      body: e,
     }
   }
 }
@@ -66,5 +66,5 @@ export const updateCriteria = async (req: HttpRequest, context: InvocationContex
 app.http('criteria-update', {
   methods: ['PUT'],
   route: 'criteria/{id}',
-  handler: updateCriteria
+  handler: updateCriteria,
 })

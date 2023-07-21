@@ -36,7 +36,7 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
       highestRank: getHighestRank(e),
       seasonId: season.id,
       stages: [],
-      organisers: []
+      organisers: [],
     })
 
     event.stages.push(
@@ -48,7 +48,7 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
           disciplineId: s.futam.versenytav_id,
           startTime: s.idopont_tol,
           endTime: s.idopont_ig,
-          rank: s.futam.rangsorolo
+          rank: s.futam.rangsorolo,
         })
       )
     )
@@ -59,7 +59,7 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
           id: o.szervezet_id,
           code: o.kod,
           shortName: o.rovid_nev_1,
-          longName: o.nev_1
+          longName: o.nev_1,
         })
       )
     )
@@ -71,5 +71,5 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
 
 app.timer('events-import', {
   schedule: '0 1 * * *', // 1 AM every day
-  handler: importEvents
+  handler: importEvents,
 })

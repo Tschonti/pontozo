@@ -35,9 +35,9 @@ export const DBConfig: DataSourceOptions = {
     SeasonToCategory,
     Event,
     Stage,
-    Club
+    Club,
   ],
   subscribers: [],
   migrations: [Init1688230862927, SeasonToEvent1688909888594],
-  options: { encrypt: ENCRYPT }
+  options: { encrypt: ENCRYPT },
 }

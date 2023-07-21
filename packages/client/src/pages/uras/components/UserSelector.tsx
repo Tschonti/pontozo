@@ -14,7 +14,7 @@ import {
   ModalOverlay,
   Text,
   useDisclosure,
-  VStack
+  VStack,
 } from '@chakra-ui/react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useFetchUsersMutation } from '../../../api/hooks/mtfszHooks'

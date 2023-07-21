@@ -6,7 +6,7 @@ import {
   useCreateCategoryMutation,
   useDeleteCategoryMutation,
   useFetchCategory,
-  useUpdateCategoryMutation
+  useUpdateCategoryMutation,
 } from '../../api/hooks/categoryHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
@@ -22,14 +22,14 @@ export const CategoryCreatePage = () => {
     values: {
       name: data?.name || '',
       description: data?.description || '',
-      criteria: data?.criteria || []
-    }
+      criteria: data?.criteria || [],
+    },
   })
 
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = form
   const navigate = useNavigate()
   const createMutation = useCreateCategoryMutation()
@@ -49,42 +49,42 @@ export const CategoryCreatePage = () => {
   }
   return (
     <VStack spacing={5} alignItems="flex-start">
-        <Heading>{categoryId === -1 ? 'Új kategória' : 'Kategória szerkesztése'}</Heading>
-        {!categoryEditable && <Text>TODO ide valami szöveg hogy mért nem szerkeszthető</Text>}
-        <FormControl isInvalid={!!errors.name}>
-          <FormLabel>Név</FormLabel>
-          <Input {...register('name', { required: true, disabled: !categoryEditable })} />
-          <FormErrorMessage>Kötelező megadni a kategória nevét.</FormErrorMessage>
-        </FormControl>
+      <Heading>{categoryId === -1 ? 'Új kategória' : 'Kategória szerkesztése'}</Heading>
+      {!categoryEditable && <Text>TODO ide valami szöveg hogy mért nem szerkeszthető</Text>}
+      <FormControl isInvalid={!!errors.name}>
+        <FormLabel>Név</FormLabel>
+        <Input {...register('name', { required: true, disabled: !categoryEditable })} />
+        <FormErrorMessage>Kötelező megadni a kategória nevét.</FormErrorMessage>
+      </FormControl>
 
-        <FormControl isInvalid={!!errors.description}>
-          <FormLabel>Publikus leírás</FormLabel>
-          <Input {...register('description', { required: true, disabled: !categoryEditable })} />
-          <FormErrorMessage>Kötelező megadni a kategória leírását.</FormErrorMessage>
-        </FormControl>
-        <FormProvider {...form}>
-          <CriteriaSelector editable={categoryEditable} />
-        </FormProvider>
+      <FormControl isInvalid={!!errors.description}>
+        <FormLabel>Publikus leírás</FormLabel>
+        <Input {...register('description', { required: true, disabled: !categoryEditable })} />
+        <FormErrorMessage>Kötelező megadni a kategória leírását.</FormErrorMessage>
+      </FormControl>
+      <FormProvider {...form}>
+        <CriteriaSelector editable={categoryEditable} />
+      </FormProvider>
 
-        <Flex width="100%" justifyContent="space-between">
-          <Button as={Link} to={PATHS.CATEGORIES} leftIcon={<FaArrowLeft />}>
-            Vissza
-          </Button>
-          <HStack spacing={1}>
-            {categoryId > -1 && (
-              <Button
-                colorScheme="red"
-                isDisabled={!categoryEditable}
-                onClick={() => deleteMutation.mutate(undefined, { onSuccess: () => navigate(PATHS.CATEGORIES) })}
-              >
-                Kategória törlése
-              </Button>
-            )}
-            <Button type="submit" isDisabled={!categoryEditable} colorScheme="brand" onClick={handleSubmit(onSubmit)}>
-              Mentés
+      <Flex width="100%" justifyContent="space-between">
+        <Button as={Link} to={PATHS.CATEGORIES} leftIcon={<FaArrowLeft />}>
+          Vissza
+        </Button>
+        <HStack spacing={1}>
+          {categoryId > -1 && (
+            <Button
+              colorScheme="red"
+              isDisabled={!categoryEditable}
+              onClick={() => deleteMutation.mutate(undefined, { onSuccess: () => navigate(PATHS.CATEGORIES) })}
+            >
+              Kategória törlése
             </Button>
-          </HStack>
-        </Flex>
-      </VStack>
+          )}
+          <Button type="submit" isDisabled={!categoryEditable} colorScheme="brand" onClick={handleSubmit(onSubmit)}>
+            Mentés
+          </Button>
+        </HStack>
+      </Flex>
+    </VStack>
   )
 }

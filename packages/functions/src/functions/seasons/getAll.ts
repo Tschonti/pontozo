@@ -15,13 +15,13 @@ export const getSeasons = async (req: HttpRequest, context: InvocationContext): 
   try {
     const seasons = await seasonRepo.find({ relations: { categories: true } })
     return {
-      jsonBody: seasons
+      jsonBody: seasons,
     }
   } catch (error) {
     context.log(error)
     return {
       status: 500,
-      body: error
+      body: error,
     }
   }
 }
@@ -29,5 +29,5 @@ export const getSeasons = async (req: HttpRequest, context: InvocationContext): 
 app.http('seasons-getAll', {
   methods: ['GET'],
   route: 'seasons',
-  handler: getSeasons
+  handler: getSeasons,
 })

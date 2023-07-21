@@ -14,20 +14,20 @@ export const deleteCategory = async (req: HttpRequest, context: InvocationContex
   if (isNaN(id)) {
     return {
       status: 400,
-      body: 'Invalid id!'
+      body: 'Invalid id!',
     }
   }
   const categoryRepo = (await getAppDataSource()).getRepository(Category)
   try {
     const res = await categoryRepo.delete({ id })
     return {
-      jsonBody: res
+      jsonBody: res,
     }
   } catch (error) {
     context.error(error)
     return {
       status: 500,
-      body: error
+      body: error,
     }
   }
 }
@@ -35,5 +35,5 @@ export const deleteCategory = async (req: HttpRequest, context: InvocationContex
 app.http('categories-delete', {
   methods: ['DELETE'],
   route: 'categories/{id}',
-  handler: deleteCategory
+  handler: deleteCategory,
 })

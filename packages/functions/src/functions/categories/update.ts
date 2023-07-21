@@ -19,14 +19,14 @@ export const updateCategory = async (req: HttpRequest, context: InvocationContex
   if (!req.body) {
     return {
       status: 400,
-      body: 'No body attached to POST query.'
+      body: 'No body attached to POST query.',
     }
   }
   const id = parseInt(req.params.id)
   if (isNaN(id)) {
     return {
       status: 400,
-      body: 'Invalid id!'
+      body: 'Invalid id!',
     }
   }
   try {
@@ -35,25 +35,25 @@ export const updateCategory = async (req: HttpRequest, context: InvocationContex
     if (errors.length > 0) {
       return {
         status: 400,
-        jsonBody: errors
+        jsonBody: errors,
       }
     }
     const ads = await getAppDataSource()
     const criteria = await ads.getRepository(Criterion).find({ where: { id: In(dto.criterionIds) } })
     let category = await ads.manager.findOne(Category, {
       where: { id },
-      relations: { criteria: { criterion: true }, seasons: { season: true } }
+      relations: { criteria: { criterion: true }, seasons: { season: true } },
     })
     if (category === null) {
       return {
         status: 404,
-        body: 'Category not found!'
+        body: 'Category not found!',
       }
     }
     if (category.seasons.some(({ season }) => season.startDate < new Date())) {
       return {
         status: 400,
-        body: "This category can no longer be edited, because it's part of a season that has already started!"
+        body: "This category can no longer be edited, because it's part of a season that has already started!",
       }
     }
     category.name = dto.name
@@ -83,13 +83,13 @@ export const updateCategory = async (req: HttpRequest, context: InvocationContex
     category = await ads.manager.save(category)
 
     return {
-      jsonBody: category
+      jsonBody: category,
     }
   } catch (e) {
     context.log(e)
     return {
       status: 400,
-      body: e
+      body: e,
     }
   }
 }
@@ -97,5 +97,5 @@ export const updateCategory = async (req: HttpRequest, context: InvocationContex
 app.http('categories-update', {
   methods: ['PUT'],
   route: 'categories/{id}',
-  handler: updateCategory
+  handler: updateCategory,
 })

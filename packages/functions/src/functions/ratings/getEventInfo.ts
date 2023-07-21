@@ -16,7 +16,7 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
   if (isNaN(ratingId)) {
     return {
       status: 400,
-      body: 'Invalid rating ID'
+      body: 'Invalid rating ID',
     }
   }
   const userServiceRes = getUserFromHeader(req)
@@ -26,7 +26,7 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
   const ratingRepo = (await getAppDataSource()).getRepository(EventRating)
   const eventRatingAndEvent = await ratingRepo.findOne({
     where: { id: ratingId },
-    relations: { event: { stages: true, season: { categories: { category: { criteria: { criterion: true } } } } } }
+    relations: { event: { stages: true, season: { categories: { category: { criteria: { criterion: true } } } } } },
   })
   const { event, ...eventRating } = eventRatingAndEvent
   const { season } = event
@@ -34,13 +34,13 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
   if (eventRating === null) {
     return {
       status: 404,
-      body: 'Rating not found!'
+      body: 'Rating not found!',
     }
   }
   if (eventRating.userId !== userServiceRes.data.szemely_id) {
     return {
       status: 403,
-      body: "You're not allowed to get criteria for this rating"
+      body: "You're not allowed to get criteria for this rating",
     }
   }
 
@@ -55,7 +55,7 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
         .map(({ criterion }) => {
           return {
             ...criterion,
-            roles: JSON.parse(criterion.roles)
+            roles: JSON.parse(criterion.roles),
           } as Criterion
         })
         .filter((c) => c.roles.includes(eventRating.role) && (isHigherRankDB(event) || !c.nationalOnly))
@@ -71,13 +71,13 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
       if (stageCriteria.length > 0) {
         stageCategories.push({
           ...stc.category,
-          criteria: stageCriteria
+          criteria: stageCriteria,
         })
       }
       if (eventCriteria.length > 0) {
         eventCategories.push({
           ...stc.category,
-          criteria: eventCriteria
+          criteria: eventCriteria,
         })
       }
     })
@@ -88,13 +88,13 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
       eventName: event.name,
       stages: event.stages,
       eventCategories,
-      stageCategories
-    } as EventRatingInfo
+      stageCategories,
+    } as EventRatingInfo,
   }
 }
 
 app.http('ratings-getEventInfo', {
   methods: ['GET'],
   route: 'ratings/{id}/info',
-  handler: getEventInfo
+  handler: getEventInfo,
 })

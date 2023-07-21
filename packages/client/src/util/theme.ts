@@ -12,11 +12,11 @@ const theme = extendTheme({
       600: '#064322',
       700: '#042c16',
       800: '#02140a',
-      900: '#000000'
+      900: '#000000',
     },
     mtfszYellow: '#e2af04',
-    mtfszRed: '#9f111b'
-  }
+    mtfszRed: '#9f111b',
+  },
 })
 
 export default theme

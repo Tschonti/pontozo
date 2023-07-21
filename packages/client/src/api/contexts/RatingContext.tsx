@@ -40,7 +40,7 @@ export const RatingContext = createContext<RatingContextType>({
   rateCriterion: () => {},
   rateCriteria: () => {},
   nextCategory: () => {},
-  previousCategory: () => {}
+  previousCategory: () => {},
 })
 
 export const RatingProvider = ({ children }: PropsWithChildren) => {
@@ -68,7 +68,7 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
         if (stageIdx >= 0) {
           setStage(data.stages[stageIdx])
         }
-      }
+      },
     }
   )
   const submitMutation = useSubmitRatingMutation()
@@ -197,7 +197,7 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
         reset()
         toast({ title: 'Értékelés véglegesítve!', status: 'success' })
         navigate(`${PATHS.EVENTS}/${data?.eventId}`)
-      }
+      },
     })
   }
 
@@ -228,7 +228,7 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
         rateCriteria,
         rateCriterion,
         nextCategory,
-        previousCategory
+        previousCategory,
       }}
     >
       {children}

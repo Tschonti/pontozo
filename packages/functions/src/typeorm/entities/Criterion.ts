@@ -47,7 +47,7 @@ class Criterion {
   ratings: CriterionRating[]
 
   @Column({
-    type: 'nvarchar'
+    type: 'nvarchar',
   })
   roles: string
 

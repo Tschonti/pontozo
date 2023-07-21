@@ -15,7 +15,7 @@ export const getSeason = async (req: HttpRequest, context: InvocationContext): P
   if (isNaN(id)) {
     return {
       status: 400,
-      body: 'Invalid id!'
+      body: 'Invalid id!',
     }
   }
   const seasonRepo = (await getAppDataSource()).getRepository(Season)
@@ -24,17 +24,20 @@ export const getSeason = async (req: HttpRequest, context: InvocationContext): P
     if (!season) {
       return {
         status: 404,
-        body: 'Season not found!'
+        body: 'Season not found!',
       }
     }
     return {
-      jsonBody: { ...season, categories: season.categories.sort((stc1, stc2) => stc1.order - stc2.order).map((stc) => stc.category) } as SeasonWithCategories
+      jsonBody: {
+        ...season,
+        categories: season.categories.sort((stc1, stc2) => stc1.order - stc2.order).map((stc) => stc.category),
+      } as SeasonWithCategories,
     }
   } catch (error) {
     context.error(error)
     return {
       status: 500,
-      body: error
+      body: error,
     }
   }
 }
@@ -42,5 +45,5 @@ export const getSeason = async (req: HttpRequest, context: InvocationContext): P
 app.http('seasons-getOne', {
   methods: ['GET'],
   route: 'seasons/{id}',
-  handler: getSeason
+  handler: getSeason,
 })

@@ -13,7 +13,7 @@ export const useFetchCriterion = (criterionId: number) => {
     {
       retry: false,
       refetchInterval: false,
-      enabled: criterionId > 0
+      enabled: criterionId > 0,
     }
   )
 }

@@ -1,17 +1,17 @@
 import { IsEnum, ArrayUnique, IsOptional, IsInt, Min } from 'class-validator'
-import { CategoryWithCriteria } from "./categories"
-import { DbEvent, DbStage } from "./dbEvents"
+import { CategoryWithCriteria } from './categories'
+import { DbEvent, DbStage } from './dbEvents'
 
 export enum RatingStatus {
   STARTED = 'STARTED',
-  SUBMITTED = 'SUBMITTED'
+  SUBMITTED = 'SUBMITTED',
 }
 
 export enum RatingRole {
   COMPETITOR = 'COMPETITOR',
   COACH = 'COACH',
   ORGANISER = 'ORGANISER',
-  JURY = 'JURY'
+  JURY = 'JURY',
 }
 
 export type EventRating = {
@@ -43,7 +43,6 @@ export interface EventRatingInfo extends EventRating {
   eventCategories: CategoryWithCriteria[]
   stageCategories: CategoryWithCriteria[]
 }
-
 
 export class GetCriterionRatings {
   @IsInt({ each: true })

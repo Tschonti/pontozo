@@ -21,13 +21,13 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
   if (isNaN(id)) {
     return {
       status: 400,
-      body: 'Invalid eventRating id!'
+      body: 'Invalid eventRating id!',
     }
   }
   if (!req.body) {
     return {
       status: 400,
-      body: `No body attached to POST query.`
+      body: `No body attached to POST query.`,
     }
   }
   const userServiceRes = getUserFromHeader(req)
@@ -39,7 +39,7 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
   if (errors.length > 0) {
     return {
       status: 400,
-      jsonBody: errors
+      jsonBody: errors,
     }
   }
   try {
@@ -54,51 +54,51 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
     if (eventRating === null) {
       return {
         status: 404,
-        body: 'Rating not found'
+        body: 'Rating not found',
       }
     }
     if (eventRating.status === RatingStatus.SUBMITTED) {
       return {
         status: 400,
-        body: 'Rating already submitted!'
+        body: 'Rating already submitted!',
       }
     }
     if (eventRating.userId !== userServiceRes.data.szemely_id) {
       return {
         status: 403,
-        body: "You're not allowed to rate this criteria"
+        body: "You're not allowed to rate this criteria",
       }
     }
     if (criterion === null) {
       return {
         status: 404,
-        body: 'Criterion not found'
+        body: 'Criterion not found',
       }
     }
     if (!JSON.parse(criterion.roles).includes(eventRating.role)) {
       return {
         status: 403,
-        body: 'Rating this criterion with this role is not allowed.'
+        body: 'Rating this criterion with this role is not allowed.',
       }
     }
     if (dto.value >= 0) {
       if (!criterion[`text${dto.value}`]) {
         return {
           status: 400,
-          body: 'Invalid rating value!'
+          body: 'Invalid rating value!',
         }
       }
     } else if (!criterion.allowEmpty) {
       return {
         status: 400,
-        body: 'This criterion must be rated!'
+        body: 'This criterion must be rated!',
       }
     }
 
     if (criterion.stageSpecific !== !!dto.stageId) {
       return {
         status: 400,
-        body: 'Stage ID missing or not allowed!'
+        body: 'Stage ID missing or not allowed!',
       }
     }
 
@@ -110,7 +110,7 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
     if (stcs.length === 0) {
       return {
         status: 400,
-        body: 'This criterion cannot be rated this season!'
+        body: 'This criterion cannot be rated this season!',
       }
     }
 
@@ -123,13 +123,13 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
       await criterionRatingRepo.save(rating)
     }
     return {
-      status: 204
+      status: 204,
     }
   } catch (e) {
     context.log(e)
     return {
       status: 500,
-      body: e
+      body: e,
     }
   }
 }
@@ -137,5 +137,5 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
 app.http('ratings-rateOne', {
   methods: ['POST'],
   route: 'ratings/{id}',
-  handler: rateOne
+  handler: rateOne,
 })

@@ -23,7 +23,7 @@ export const isHigherRankDB = (e: DbEvent) => {
 export const stageFilter = (s: EventSection) => s.tipus === 'FUTAM' && acceptedRanks.includes(s.futam.rangsorolo)
 
 export const stageProjection: (e: EventSection) => EventSectionPreview = ({ fajlok, hivatkozasok, helyszinek, ...restOfData }) => ({
-  ...restOfData
+  ...restOfData,
 })
 
 const formatDate = (d: Date) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
@@ -33,8 +33,8 @@ export const userProjection = ({ szemely_szervezetek, versenyengedelyek, ...rest
 const mtfszAxios = axios.create({
   baseURL: APIM_HOST,
   headers: {
-    'Ocp-Apim-Subscription-Key': APIM_KEY
-  }
+    'Ocp-Apim-Subscription-Key': APIM_KEY,
+  },
 })
 
 export const getOneEvent = async (eventId: number): Promise<ServiceResponse<MtfszEvent>> => {
@@ -43,7 +43,7 @@ export const getOneEvent = async (eventId: number): Promise<ServiceResponse<Mtfs
     return {
       isError: true,
       status: 404,
-      message: 'Event not found or invalid'
+      message: 'Event not found or invalid',
     }
   }
   return {
@@ -51,7 +51,7 @@ export const getOneEvent = async (eventId: number): Promise<ServiceResponse<Mtfs
     data: {
       ...res.data.result[0],
       //pontozoOrszagos: isHigherRankMTFSZ(res.data.result[0])
-    }
+    },
   }
 }
 
@@ -82,8 +82,8 @@ export const getUser = async (accessToken: string): Promise<MtfszUser> => {
   return (
     await axios.get<MtfszUser>('https://api.mtfsz.hu/api/v1_0/user/me', {
       headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
+        Authorization: `Bearer ${accessToken}`,
+      },
     })
   ).data
 }
@@ -93,13 +93,13 @@ export const getUserById = async (userId: number): Promise<ServiceResponse<User>
     const res = await mtfszAxios.get<User>(`/szemelyek/${userId}`)
     return {
       isError: false,
-      data: res.data
+      data: res.data,
     }
   } catch {
     return {
       isError: true,
       status: 404,
-      message: 'User not found'
+      message: 'User not found',
     }
   }
 }

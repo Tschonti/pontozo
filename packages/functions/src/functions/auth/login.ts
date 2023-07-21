@@ -10,7 +10,7 @@ export const login = async (req: HttpRequest, context: InvocationContext): Promi
   if (!authorizationCode) {
     return {
       status: 401,
-      body: 'Authentication failed'
+      body: 'Authentication failed',
     }
   }
 
@@ -23,13 +23,13 @@ export const login = async (req: HttpRequest, context: InvocationContext): Promi
     return {
       status: 302,
       headers: {
-        location: `${FRONTEND_URL}/authorized?token=${jwtToken}`
-      }
+        location: `${FRONTEND_URL}/authorized?token=${jwtToken}`,
+      },
     }
   } catch (e) {
     return {
       status: 401,
-      jsonBody: e
+      jsonBody: e,
     }
   }
 }
@@ -37,5 +37,5 @@ export const login = async (req: HttpRequest, context: InvocationContext): Promi
 app.http('auth-login', {
   methods: ['GET'],
   route: 'auth/callback',
-  handler: login
+  handler: login,
 })

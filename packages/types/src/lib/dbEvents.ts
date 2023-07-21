@@ -1,4 +1,4 @@
-import { EventRating } from "./eventRatings"
+import { EventRating } from './eventRatings'
 
 export type DbEvent = {
   id: number
@@ -21,7 +21,7 @@ export interface EventWithRating {
 export enum Rank {
   REGIONAL = 'REGIONALIS',
   NATIONAL = 'ORSZAGOS',
-  FEATURED = 'KIEMELT'
+  FEATURED = 'KIEMELT',
 }
 
 export type Club = {

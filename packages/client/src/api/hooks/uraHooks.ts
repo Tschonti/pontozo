@@ -12,7 +12,7 @@ export const useFetchUra = (uraId: number) => {
   return useQuery<UserRoleAssignment>(['fetchUra', uraId], async () => (await functionAxios.get(`/uras/${uraId}`)).data, {
     retry: false,
     refetchInterval: false,
-    enabled: uraId > 0
+    enabled: uraId > 0,
   })
 }
 

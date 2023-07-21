@@ -18,14 +18,14 @@ export const updateURA = async (req: HttpRequest, context: InvocationContext): P
   if (!req.body) {
     return {
       status: 400,
-      body: 'No body attached to POST query.'
+      body: 'No body attached to POST query.',
     }
   }
   const id = parseInt(req.params.id)
   if (isNaN(id)) {
     return {
       status: 400,
-      body: 'Invalid id!'
+      body: 'Invalid id!',
     }
   }
   try {
@@ -34,7 +34,7 @@ export const updateURA = async (req: HttpRequest, context: InvocationContext): P
     if (errors.length > 0) {
       return {
         status: 400,
-        jsonBody: errors
+        jsonBody: errors,
       }
     }
 
@@ -49,7 +49,7 @@ export const updateURA = async (req: HttpRequest, context: InvocationContext): P
     ura.userDOB = serviceRes.data.szul_dat
 
     return {
-      jsonBody: await uraRepo.save(ura)
+      jsonBody: await uraRepo.save(ura),
     }
   } catch (e) {
     switch (e.constructor) {
@@ -60,17 +60,17 @@ export const updateURA = async (req: HttpRequest, context: InvocationContext): P
             jsonBody: [
               {
                 constraints: {
-                  unique: 'Ez a személy már rendelkezik ezzel a szerepkörrel!'
-                }
-              }
-            ]
+                  unique: 'Ez a személy már rendelkezik ezzel a szerepkörrel!',
+                },
+              },
+            ],
           }
         }
     }
     context.log(e)
     return {
       status: 500,
-      body: e
+      body: e,
     }
   }
 }
@@ -78,5 +78,5 @@ export const updateURA = async (req: HttpRequest, context: InvocationContext): P
 app.http('uras-update', {
   methods: ['PUT'],
   route: 'uras/{id}',
-  handler: updateURA
+  handler: updateURA,
 })

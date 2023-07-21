@@ -14,7 +14,7 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
   if (isNaN(id)) {
     return {
       status: 400,
-      body: 'Invalid eventRating id!'
+      body: 'Invalid eventRating id!',
     }
   }
   const userServiceRes = getUserFromHeader(req)
@@ -26,25 +26,25 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
     const eventRatingRepo = ads.getRepository(EventRating)
     const rating = await eventRatingRepo.findOne({
       where: { id },
-      relations: { ratings: true, event: { stages: true, season: { categories: { category: { criteria: { criterion: true } } } } } }
+      relations: { ratings: true, event: { stages: true, season: { categories: { category: { criteria: { criterion: true } } } } } },
     })
 
     if (rating.status === RatingStatus.SUBMITTED) {
       return {
         status: 400,
-        body: 'Rating already submitted'
+        body: 'Rating already submitted',
       }
     }
     if (rating.userId !== userServiceRes.data.szemely_id) {
       return {
         status: 403,
-        body: "You're not allowed to submit this rating!"
+        body: "You're not allowed to submit this rating!",
       }
     }
     if (!rating.event.rateable) {
       return {
         status: 400,
-        body: 'This event can no longer be rated!'
+        body: 'This event can no longer be rated!',
       }
     }
     const { season, stages } = rating.event
@@ -64,7 +64,7 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
     if (criterionCount !== rating.ratings.length) {
       return {
         status: 400,
-        body: "You haven't rated all the criteria yet!"
+        body: "You haven't rated all the criteria yet!",
       }
     }
 
@@ -73,13 +73,13 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
     await eventRatingRepo.save(rating)
 
     return {
-      status: 204
+      status: 204,
     }
   } catch (e) {
     context.log(e)
     return {
       status: 500,
-      body: e
+      body: e,
     }
   }
 }
@@ -87,5 +87,5 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
 app.http('ratings-submit', {
   methods: ['POST'],
   route: 'ratings/{id}/submit',
-  handler: submitOne
+  handler: submitOne,
 })

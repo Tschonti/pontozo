@@ -16,12 +16,12 @@ export const currentUser = async (req: HttpRequest, context: InvocationContext):
       .find({ where: { userId: userServiceRes.data.szemely_id } })
 
     return {
-      jsonBody: { ...userServiceRes.data, roles: roles.map((r) => r.role) } as PontozoUser
+      jsonBody: { ...userServiceRes.data, roles: roles.map((r) => r.role) } as PontozoUser,
     }
   } catch (e) {
     return {
       status: 401,
-      jsonBody: e
+      jsonBody: e,
     }
   }
 }
@@ -29,5 +29,5 @@ export const currentUser = async (req: HttpRequest, context: InvocationContext):
 app.http('auth-user', {
   methods: ['GET'],
   route: 'auth/user',
-  handler: currentUser
+  handler: currentUser,
 })

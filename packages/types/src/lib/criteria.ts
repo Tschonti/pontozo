@@ -1,5 +1,5 @@
 import { ArrayNotEmpty, ArrayUnique, IsBoolean, IsEnum, IsInt, IsNotEmpty, IsOptional } from 'class-validator'
-import { CriterionRating, } from "./criterionRatings"
+import { CriterionRating } from './criterionRatings'
 import { RatingRole } from './eventRatings'
 
 export type Criterion = {
@@ -27,7 +27,6 @@ export interface CreateCriterionForm extends Omit<Criterion, 'id' | 'roles'> {
   competitorAllowed: boolean
   juryAllowed: boolean
 }
-
 
 export class CreateCriteria {
   @IsNotEmpty()

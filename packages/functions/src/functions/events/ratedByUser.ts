@@ -18,13 +18,13 @@ export const getRatedEvents = async (req: HttpRequest, context: InvocationContex
       .find({ where: { userId: userServiceRes.data.szemely_id }, relations: { event: { organisers: true } } })
 
     return {
-      jsonBody: eventRatings
+      jsonBody: eventRatings,
     }
   } catch (e) {
     context.log(e)
     return {
       status: 500,
-      jsonBody: e
+      jsonBody: e,
     }
   }
 }
@@ -32,5 +32,5 @@ export const getRatedEvents = async (req: HttpRequest, context: InvocationContex
 app.http('events-ratedByUser', {
   methods: ['GET'],
   route: 'events/ratedByUser',
-  handler: getRatedEvents
+  handler: getRatedEvents,
 })

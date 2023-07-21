@@ -14,20 +14,20 @@ export const deleteSeason = async (req: HttpRequest, context: InvocationContext)
   if (isNaN(id)) {
     return {
       status: 400,
-      body: 'Invalid id!'
+      body: 'Invalid id!',
     }
   }
   const seasonRepo = (await getAppDataSource()).getRepository(Season)
   try {
     const res = await seasonRepo.delete({ id })
     return {
-      jsonBody: res
+      jsonBody: res,
     }
   } catch (error) {
     context.error(error)
     return {
       status: 500,
-      body: error
+      body: error,
     }
   }
 }
@@ -35,5 +35,5 @@ export const deleteSeason = async (req: HttpRequest, context: InvocationContext)
 app.http('seasons-delete', {
   methods: ['DELETE'],
   route: 'seasons/{id}',
-  handler: deleteSeason
+  handler: deleteSeason,
 })

@@ -13,7 +13,7 @@ export const useFetchCategory = (categoryId: number) => {
     {
       retry: false,
       refetchInterval: false,
-      enabled: categoryId > 0
+      enabled: categoryId > 0,
     }
   )
 }

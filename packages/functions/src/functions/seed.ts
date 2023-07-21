@@ -21,7 +21,7 @@ const terep = [
     allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
     name: 'Technikai fokozatok megfelelősége 10D pályák',
@@ -35,7 +35,7 @@ const terep = [
     allowEmpty: true,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
     name: 'Technikai fokozatok megfelelősége E-A-B-Br pályák',
@@ -49,7 +49,7 @@ const terep = [
     allowEmpty: true,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
     name: 'Technikai fokozatok megfelelősége C pályák',
@@ -63,7 +63,7 @@ const terep = [
     allowEmpty: true,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
     name: 'Technikai fokozatok megfelelősége időskorú szenior pályák',
@@ -77,8 +77,8 @@ const terep = [
     allowEmpty: true,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
-  }
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
+  },
 ]
 
 const terkep = [
@@ -94,7 +94,7 @@ const terkep = [
     allowEmpty: true,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
     name: 'Pontosság',
@@ -108,7 +108,7 @@ const terkep = [
     allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
     name: 'Nyomtatás, kűlcsín, hordozó',
@@ -122,8 +122,8 @@ const terkep = [
     allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
-  }
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
+  },
 ]
 
 const vk = [
@@ -139,7 +139,7 @@ const vk = [
     allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
     name: 'Infrastruktúra - Parkolás',
@@ -153,7 +153,7 @@ const vk = [
     allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
     name: 'Infrastruktúra - Ivóvíz, mosdás',
@@ -167,7 +167,7 @@ const vk = [
     allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
     name: 'Infrastruktúra - Térerő, internet',
@@ -181,7 +181,7 @@ const vk = [
     allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
     name: 'Aréna jelleg',
@@ -195,7 +195,7 @@ const vk = [
     allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
     name: 'Kísérő szogáltatások',
@@ -209,7 +209,7 @@ const vk = [
     allowEmpty: true,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
     name: 'Kísérő szogáltatások (Büfé, árusok)',
@@ -223,7 +223,7 @@ const vk = [
     allowEmpty: true,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
     name: 'Kísérő szogáltatások (Időtöltés, múzeum, kilátó, stb)',
@@ -237,8 +237,8 @@ const vk = [
     allowEmpty: true,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
-  }
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
+  },
 ]
 
 const rajt = [
@@ -254,7 +254,7 @@ const rajt = [
     allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
     name: 'Várakozási és melegítési lehetőség ',
@@ -268,7 +268,7 @@ const rajt = [
     allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
     name: 'Rajtoltatás áttekinthetősége, egyértelműsége',
@@ -282,7 +282,7 @@ const rajt = [
     allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
     name: 'Rajt rendszere: Repülőrajt alkalmazása, Kifutók ne látszódjanak',
@@ -296,8 +296,8 @@ const rajt = [
     allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
-  }
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
+  },
 ]
 
 const szabalyzat = [
@@ -313,7 +313,7 @@ const szabalyzat = [
     allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["ORGANISER", "JURY"]'
+    roles: '["ORGANISER", "JURY"]',
   },
   {
     name: 'Értesítő, rajtlista',
@@ -327,7 +327,7 @@ const szabalyzat = [
     allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["ORGANISER", "JURY"]'
+    roles: '["ORGANISER", "JURY"]',
   },
   {
     name: 'Versenynapi szabályeltérések',
@@ -340,7 +340,7 @@ const szabalyzat = [
     allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["ORGANISER", "JURY"]'
+    roles: '["ORGANISER", "JURY"]',
   },
   {
     name: 'Súlyos rendezői hiba',
@@ -354,8 +354,8 @@ const szabalyzat = [
     allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["ORGANISER", "JURY"]'
-  }
+    roles: '["ORGANISER", "JURY"]',
+  },
 ]
 
 const kommunikáció = [
@@ -371,7 +371,7 @@ const kommunikáció = [
     allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
     name: 'Esemény honlap léte, összeszedettsége, naprakészsége',
@@ -385,7 +385,7 @@ const kommunikáció = [
     allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
     name: 'Mtfsz és saját támogatók megjelenése',
@@ -399,8 +399,8 @@ const kommunikáció = [
     allowEmpty: false,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]'
-  }
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
+  },
 ]
 
 export const seed = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
@@ -460,7 +460,7 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
     category: terepCat,
     criterionId: t.id,
     categoryId: terepCat.id,
-    id: i + 1
+    id: i + 1,
   }))
 
   const newTerkep = await Promise.all(
@@ -477,7 +477,7 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
     category: terkepCat,
     criterionId: t.id,
     categoryId: terkepCat.id,
-    id: i + 100
+    id: i + 100,
   }))
 
   const newVk = await Promise.all(
@@ -494,7 +494,7 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
     category: vkCat,
     criterionId: t.id,
     categoryId: vkCat.id,
-    id: i + 200
+    id: i + 200,
   }))
 
   const newRajt = await Promise.all(
@@ -511,7 +511,7 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
     category: rajtCat,
     criterionId: t.id,
     categoryId: rajtCat.id,
-    id: i + 300
+    id: i + 300,
   }))
 
   const newSzab = await Promise.all(
@@ -528,7 +528,7 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
     category: szabCat,
     criterionId: t.id,
     categoryId: szabCat.id,
-    id: i + 400
+    id: i + 400,
   }))
 
   const newKomm = await Promise.all(
@@ -545,7 +545,7 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
     category: kommCat,
     criterionId: t.id,
     categoryId: kommCat.id,
-    id: i + 500
+    id: i + 500,
   }))
 
   const season = new Season()
@@ -569,7 +569,7 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
     order: i,
     id: i + 1,
     season,
-    seasonId: season.id
+    seasonId: season.id,
   }))
   await seasonRepo.save(season)
 }
@@ -577,5 +577,5 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
 app.http('seed', {
   methods: ['GET'],
   route: 'seed',
-  handler: seed
+  handler: seed,
 })

@@ -19,7 +19,7 @@ import {
   Text,
   useDisclosure,
   useToast,
-  VStack
+  VStack,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
@@ -33,7 +33,7 @@ export const CategorySelector = ({ editable }: { editable: boolean }) => {
     register,
     watch,
     setValue,
-    formState: { errors }
+    formState: { errors },
   } = useFormContext<CreateSeasonForm>()
 
   const toast = useToast()
@@ -156,7 +156,7 @@ export const CategorySelector = ({ editable }: { editable: boolean }) => {
             </InputGroup>
             <Input
               {...register('categories', {
-                validate: (c: Category[]) => c.length > 0
+                validate: (c: Category[]) => c.length > 0,
               })}
               hidden
             />

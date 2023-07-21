@@ -12,13 +12,13 @@ export const getRateableEvents = async (req: HttpRequest, context: InvocationCon
       .find({ where: { rateable: true }, relations: { organisers: true } })
 
     return {
-      jsonBody: events
+      jsonBody: events,
     }
   } catch (e) {
     context.log(e)
     return {
       status: 500,
-      jsonBody: e
+      jsonBody: e,
     }
   }
 }
@@ -26,5 +26,5 @@ export const getRateableEvents = async (req: HttpRequest, context: InvocationCon
 app.http('events-rateable', {
   methods: ['GET'],
   route: 'events/rateable',
-  handler: getRateableEvents
+  handler: getRateableEvents,
 })

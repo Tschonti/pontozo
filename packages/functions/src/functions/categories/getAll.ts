@@ -15,13 +15,13 @@ export const getCategories = async (req: HttpRequest, context: InvocationContext
   try {
     const categories = await categoryRepo.find({ relations: { criteria: true } })
     return {
-      jsonBody: categories
+      jsonBody: categories,
     }
   } catch (error) {
     context.log(error)
     return {
       status: 500,
-      body: error
+      body: error,
     }
   }
 }
@@ -29,5 +29,5 @@ export const getCategories = async (req: HttpRequest, context: InvocationContext
 app.http('categories-getAll', {
   methods: ['GET'],
   route: 'categories',
-  handler: getCategories
+  handler: getCategories,
 })

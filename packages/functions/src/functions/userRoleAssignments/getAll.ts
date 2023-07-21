@@ -16,13 +16,13 @@ export const getURAs = async (req: HttpRequest, context: InvocationContext): Pro
     const uras = await urasRepo.find()
 
     return {
-      jsonBody: uras
+      jsonBody: uras,
     }
   } catch (error) {
     context.log(error)
     return {
       status: 500,
-      body: error
+      body: error,
     }
   }
 }
@@ -30,5 +30,5 @@ export const getURAs = async (req: HttpRequest, context: InvocationContext): Pro
 app.http('uras-getAll', {
   methods: ['GET'],
   route: 'uras',
-  handler: getURAs
+  handler: getURAs,
 })

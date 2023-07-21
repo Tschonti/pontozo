@@ -1,4 +1,4 @@
-import { EventSection, MtfszEvent } from "@pontozo/types"
+import { EventSection, MtfszEvent } from '@pontozo/types'
 
 export type ServiceResponse<T> = {
   isError: boolean
@@ -164,4 +164,3 @@ export interface License {
   datum_ig: string
   is_deleted: boolean
 }
-

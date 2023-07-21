@@ -17,7 +17,7 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
   if (!req.body) {
     return {
       status: 400,
-      body: `No body attached to POST query.`
+      body: `No body attached to POST query.`,
     }
   }
 
@@ -32,7 +32,7 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
     if (errors.length > 0) {
       return {
         status: 400,
-        jsonBody: errors
+        jsonBody: errors,
       }
     }
 
@@ -42,7 +42,7 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
     ) {
       return {
         status: 403,
-        body: 'You are not allowed to rate an event with this role'
+        body: 'You are not allowed to rate an event with this role',
       }
     }
     const ads = await getAppDataSource()
@@ -53,20 +53,20 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
     if (event === null) {
       return {
         status: 400,
-        body: "Event can't be found or it can't be rated!"
+        body: "Event can't be found or it can't be rated!",
       }
     }
 
     const res = await ratingRepo.insert({ ...dto, createdAt: new Date(), userId: userServiceRes.data.szemely_id })
     return {
       status: 201,
-      jsonBody: res.raw
+      jsonBody: res.raw,
     }
   } catch (e) {
     context.log(e)
     return {
       status: 400,
-      body: e
+      body: e,
     }
   }
 }
@@ -74,5 +74,5 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
 app.http('ratings-create', {
   methods: ['POST'],
   route: 'ratings',
-  handler: createRating
+  handler: createRating,
 })

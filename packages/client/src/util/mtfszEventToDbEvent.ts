@@ -16,15 +16,15 @@ export const transformEvent = (e: MtfszEvent): DbEvent => ({
     disciplineId: p.futam.versenytav_id,
     startTime: p.idopont_tol,
     endTime: p.idopont_ig,
-    rank: p.futam.rangsorolo as Rank
+    rank: p.futam.rangsorolo as Rank,
   })),
   organisers: e.rendezok.map((c) => ({
     id: c.szervezet_id,
     code: c.kod,
     shortName: c.rovid_nev_1,
-    longName: c.nev_1
+    longName: c.nev_1,
   })),
-  rateable: true
+  rateable: true,
 })
 
 export const getHighestRank = (e: MtfszEvent): Rank => {

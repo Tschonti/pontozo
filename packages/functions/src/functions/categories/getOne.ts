@@ -15,7 +15,7 @@ export const getCategory = async (req: HttpRequest, context: InvocationContext):
   if (isNaN(id)) {
     return {
       status: 400,
-      body: 'Invalid id!'
+      body: 'Invalid id!',
     }
   }
   const categoryRepo = (await getAppDataSource()).getRepository(Category)
@@ -24,22 +24,24 @@ export const getCategory = async (req: HttpRequest, context: InvocationContext):
     if (!category) {
       return {
         status: 404,
-        body: 'Category not found!'
+        body: 'Category not found!',
       }
     }
     const { seasons, ...plainCategory } = category
     return {
       jsonBody: {
         ...plainCategory,
-        criteria: category.criteria.sort((ctc1, ctc2) => ctc1.order - ctc2.order).map((ctc) => ({...ctc.criterion, roles: JSON.parse(ctc.criterion.roles)})),
-        editable: !seasons.some(({ season }) => season.startDate < new Date())
-      } as EntityWithEditableIndicator<CategoryWithCriteria>
+        criteria: category.criteria
+          .sort((ctc1, ctc2) => ctc1.order - ctc2.order)
+          .map((ctc) => ({ ...ctc.criterion, roles: JSON.parse(ctc.criterion.roles) })),
+        editable: !seasons.some(({ season }) => season.startDate < new Date()),
+      } as EntityWithEditableIndicator<CategoryWithCriteria>,
     }
   } catch (error) {
     context.error(error)
     return {
       status: 500,
-      body: error
+      body: error,
     }
   }
 }
@@ -47,5 +49,5 @@ export const getCategory = async (req: HttpRequest, context: InvocationContext):
 app.http('categories-getOne', {
   methods: ['GET'],
   route: 'categories/{id}',
-  handler: getCategory
+  handler: getCategory,
 })

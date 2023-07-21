@@ -12,7 +12,7 @@ export const getUserFromHeader = (req: HttpRequest): ServiceResponse<PontozoUser
     return {
       isError: true,
       status: 401,
-      message: 'Unauthorized'
+      message: 'Unauthorized',
     }
   }
   const jwtToken = authHeader.replace('Bearer', '').trim()
@@ -22,13 +22,13 @@ export const getUserFromHeader = (req: HttpRequest): ServiceResponse<PontozoUser
 
     return {
       isError: false,
-      data: userFromJwt
+      data: userFromJwt,
     }
   } catch (error) {
     return {
       isError: true,
       status: 401,
-      message: `Unauthorized - invalid jwt`
+      message: `Unauthorized - invalid jwt`,
     }
   }
 }
@@ -43,12 +43,12 @@ export const getUserFromHeaderAndAssertAdmin = async (req: HttpRequest): Promise
     .findOne({ where: { userId: user.szemely_id, role: UserRole.SITE_ADMIN } })
   if (ura) {
     return {
-      isError: false
+      isError: false,
     }
   }
   return {
     isError: true,
     message: "You're not allowed to perform this action!",
-    status: 403
+    status: 403,
   }
 }

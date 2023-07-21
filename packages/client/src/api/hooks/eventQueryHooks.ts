@@ -51,6 +51,6 @@ export const useFetchEvent = (eventId: number) => {
 
 export const useFecthUserRatedEvents = () => {
   return useQuery<EventRatingWithEvent[]>(['fetchUserRatedEvents'], async () => (await functionAxios.get('events/ratedByUser')).data, {
-    retry: false
+    retry: false,
   })
 }

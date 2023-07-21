@@ -28,7 +28,7 @@ export const AuthContext = createContext<AuthContextType>({
   loggedInUserError: undefined,
   onLoginSuccess: () => {},
   onLogout: () => {},
-  refetchUser: async () => {}
+  refetchUser: async () => {},
 })
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
@@ -37,10 +37,10 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const {
     isLoading,
     data: user,
-    error
+    error,
   } = useQuery(['currentUser'], async () => (await functionAxios.get<UserDetails>('/auth/user')).data, {
     enabled: isLoggedIn,
-    retry: false
+    retry: false,
   })
 
   const onLoginSuccess = (jwt: string) => {
@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         loggedInUserError: error,
         onLoginSuccess,
         onLogout,
-        refetchUser
+        refetchUser,
       }}
     >
       {children}

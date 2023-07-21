@@ -19,7 +19,7 @@ import {
   Text,
   useDisclosure,
   useToast,
-  VStack
+  VStack,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
@@ -33,7 +33,7 @@ export const CriteriaSelector = ({ editable }: { editable: boolean }) => {
     register,
     watch,
     setValue,
-    formState: { errors }
+    formState: { errors },
   } = useFormContext<CreateCategoryForm>()
 
   const toast = useToast()
@@ -156,7 +156,7 @@ export const CriteriaSelector = ({ editable }: { editable: boolean }) => {
             </InputGroup>
             <Input
               {...register('criteria', {
-                validate: (c: Criterion[]) => c.length > 0
+                validate: (c: Criterion[]) => c.length > 0,
               })}
               hidden
             />

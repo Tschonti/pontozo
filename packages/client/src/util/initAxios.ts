@@ -4,7 +4,7 @@ import { CookieKeys } from './CookieKeys'
 import { APIM_HOST, APIM_KEY, FUNC_HOST } from './environment'
 
 export const functionAxios = axios.create({
-  baseURL: FUNC_HOST
+  baseURL: FUNC_HOST,
 })
 functionAxios.interceptors.request.use((config) => {
   const token = Cookies.get(CookieKeys.JWT_TOKEN)
@@ -18,6 +18,6 @@ functionAxios.interceptors.request.use((config) => {
 export const apimAxios = axios.create({
   baseURL: APIM_HOST,
   headers: {
-    'Ocp-Apim-Subscription-Key': APIM_KEY
-  }
+    'Ocp-Apim-Subscription-Key': APIM_KEY,
+  },
 })

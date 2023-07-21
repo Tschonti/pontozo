@@ -36,9 +36,7 @@ export const ProfilePage = () => {
       <SimpleGrid mt={3} spacing={4} columns={[1, 1, 2]}>
         {eventQuery.data
           ?.sort(({ event: e1 }, { event: e2 }) => -e1.startDate.localeCompare(e2.startDate))
-          .map((er) => (
-            <EventListItem key={er.eventId} event={er.event} status={er.status} />
-          ))}
+          .map((er) => <EventListItem key={er.eventId} event={er.event} status={er.status} />)}
       </SimpleGrid>
     </>
   )

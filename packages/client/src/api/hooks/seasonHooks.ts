@@ -10,7 +10,7 @@ export const useFetchSeason = (seasonId: number) => {
   return useQuery<SeasonWithCategories>(['fetchSeason', seasonId], async () => (await functionAxios.get(`/seasons/${seasonId}`)).data, {
     retry: false,
     refetchInterval: false,
-    enabled: seasonId > 0
+    enabled: seasonId > 0,
   })
 }
 

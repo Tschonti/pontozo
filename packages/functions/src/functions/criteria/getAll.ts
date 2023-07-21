@@ -15,13 +15,13 @@ export const getCriteria = async (req: HttpRequest, context: InvocationContext):
   try {
     const criteria = await criterionRepo.find()
     return {
-      jsonBody: criteria
+      jsonBody: criteria,
     }
   } catch (error) {
     context.log(error)
     return {
       status: 500,
-      body: error
+      body: error,
     }
   }
 }
@@ -29,5 +29,5 @@ export const getCriteria = async (req: HttpRequest, context: InvocationContext):
 app.http('criteria-getAll', {
   methods: ['GET'],
   route: 'criteria',
-  handler: getCriteria
+  handler: getCriteria,
 })

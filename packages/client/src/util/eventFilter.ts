@@ -1,4 +1,4 @@
-import { EventSection, MtfszEvent } from "@pontozo/types"
+import { EventSection, MtfszEvent } from '@pontozo/types'
 
 const acceptedGrades = ['REGIONALIS', 'ORSZAGOS', 'KIEMELT']
 

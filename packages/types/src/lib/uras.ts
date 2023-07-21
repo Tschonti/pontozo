@@ -3,7 +3,7 @@ import { IsEnum, IsInt, Min } from 'class-validator'
 export enum UserRole {
   SITE_ADMIN = 'SITE_ADMIN',
   JURY = 'JURY',
-  COACH = 'COACH'
+  COACH = 'COACH',
 }
 
 export type UserRoleAssignment = {

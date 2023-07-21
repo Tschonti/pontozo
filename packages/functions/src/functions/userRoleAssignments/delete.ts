@@ -14,20 +14,20 @@ export const deleteURA = async (req: HttpRequest, context: InvocationContext): P
   if (isNaN(id)) {
     return {
       status: 400,
-      body: 'Invalid id!'
+      body: 'Invalid id!',
     }
   }
   try {
     const uraRepo = (await getAppDataSource()).getRepository(UserRoleAssignment)
     const res = await uraRepo.delete({ id })
     return {
-      jsonBody: res
+      jsonBody: res,
     }
   } catch (error) {
     context.error(error)
     return {
       status: 500,
-      body: error
+      body: error,
     }
   }
 }
@@ -35,5 +35,5 @@ export const deleteURA = async (req: HttpRequest, context: InvocationContext): P
 app.http('uras-delete', {
   methods: ['DELETE'],
   route: 'uras/{id}',
-  handler: deleteURA
+  handler: deleteURA,
 })

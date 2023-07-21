@@ -22,14 +22,17 @@ export const CriterionRateForm = ({ criterion }: Props) => {
 
   const onChange = (newValue: string) => {
     setValue(newValue)
-    mutation.mutate({ value: +newValue, stageId: currentStage?.id, criterionId: criterion.id}, {
-      onSuccess: () => {
-        rateCriterion(criterion.id)
-      },
-      onError: (e) => {
-        toast({ title: e.message, description: e.name, status: 'error' })
+    mutation.mutate(
+      { value: +newValue, stageId: currentStage?.id, criterionId: criterion.id },
+      {
+        onSuccess: () => {
+          rateCriterion(criterion.id)
+        },
+        onError: (e) => {
+          toast({ title: e.message, description: e.name, status: 'error' })
+        },
       }
-    })
+    )
   }
 
   return (

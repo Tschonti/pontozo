@@ -19,7 +19,7 @@ export const createSeason = async (req: HttpRequest, context: InvocationContext)
   if (!req.body) {
     return {
       status: 400,
-      body: 'No body attached to POST query.'
+      body: 'No body attached to POST query.',
     }
   }
   const dto = plainToClass(CreateSeason, await req.json())
@@ -27,7 +27,7 @@ export const createSeason = async (req: HttpRequest, context: InvocationContext)
   if (errors.length > 0) {
     return {
       status: 400,
-      jsonBody: errors
+      jsonBody: errors,
     }
   }
   try {
@@ -36,13 +36,13 @@ export const createSeason = async (req: HttpRequest, context: InvocationContext)
       where: [
         { startDate: Between(dto.startDate, dto.endDate) },
         { endDate: Between(dto.startDate, dto.endDate) },
-        { startDate: LessThanOrEqual(dto.startDate), endDate: MoreThanOrEqual(dto.endDate) }
-      ]
+        { startDate: LessThanOrEqual(dto.startDate), endDate: MoreThanOrEqual(dto.endDate) },
+      ],
     })
     if (conflictingSeasons.length > 0) {
       return {
         status: 400,
-        body: 'This season conflicts with another season!'
+        body: 'This season conflicts with another season!',
       }
     }
     const categories = await ads.getRepository(Category).find({ where: { id: In(dto.categoryIds) } })
@@ -63,13 +63,13 @@ export const createSeason = async (req: HttpRequest, context: InvocationContext)
 
     return {
       jsonBody: season,
-      status: 201
+      status: 201,
     }
   } catch (e) {
     context.log(e)
     return {
       status: 500,
-      body: e
+      body: e,
     }
   }
 }
@@ -77,5 +77,5 @@ export const createSeason = async (req: HttpRequest, context: InvocationContext)
 app.http('seasons-create', {
   methods: ['POST'],
   route: 'seasons',
-  handler: createSeason
+  handler: createSeason,
 })

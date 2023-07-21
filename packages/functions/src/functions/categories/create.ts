@@ -19,7 +19,7 @@ export const createCategory = async (req: HttpRequest, context: InvocationContex
   if (!req.body) {
     return {
       status: 400,
-      body: 'No body attached to POST query.'
+      body: 'No body attached to POST query.',
     }
   }
   try {
@@ -28,7 +28,7 @@ export const createCategory = async (req: HttpRequest, context: InvocationContex
     if (errors.length > 0) {
       return {
         status: 400,
-        jsonBody: errors
+        jsonBody: errors,
       }
     }
     const ads = await getAppDataSource()
@@ -47,13 +47,13 @@ export const createCategory = async (req: HttpRequest, context: InvocationContex
 
     return {
       jsonBody: category,
-      status: 201
+      status: 201,
     }
   } catch (e) {
     context.log(e)
     return {
       status: 400,
-      body: e
+      body: e,
     }
   }
 }
@@ -61,5 +61,5 @@ export const createCategory = async (req: HttpRequest, context: InvocationContex
 app.http('categories-create', {
   methods: ['POST'],
   route: 'categories',
-  handler: createCategory
+  handler: createCategory,
 })

@@ -15,7 +15,7 @@ export const getCriterion = async (req: HttpRequest, context: InvocationContext)
   if (isNaN(id)) {
     return {
       status: 400,
-      body: 'Invalid id!'
+      body: 'Invalid id!',
     }
   }
   const criterionRepo = (await getAppDataSource()).getRepository(Criterion)
@@ -24,7 +24,7 @@ export const getCriterion = async (req: HttpRequest, context: InvocationContext)
     if (!criterion) {
       return {
         status: 404,
-        body: 'Criterion not found!'
+        body: 'Criterion not found!',
       }
     }
     const { categories, ...plainCriterion } = criterion
@@ -32,14 +32,14 @@ export const getCriterion = async (req: HttpRequest, context: InvocationContext)
       jsonBody: {
         ...plainCriterion,
         roles: JSON.parse(criterion.roles),
-        editable: !categories.some(({ category }) => category.seasons.some(({ season }) => season.startDate < new Date()))
-      } as EntityWithEditableIndicator<Criterion>
+        editable: !categories.some(({ category }) => category.seasons.some(({ season }) => season.startDate < new Date())),
+      } as EntityWithEditableIndicator<Criterion>,
     }
   } catch (error) {
     context.error(error)
     return {
       status: 500,
-      body: error
+      body: error,
     }
   }
 }
@@ -47,5 +47,5 @@ export const getCriterion = async (req: HttpRequest, context: InvocationContext)
 app.http('criteria-getOne', {
   methods: ['GET'],
   route: 'criteria/{id}',
-  handler: getCriterion
+  handler: getCriterion,
 })

@@ -15,7 +15,7 @@ export const getOneEvent = async (req: HttpRequest, context: InvocationContext):
   if (isNaN(eventId)) {
     return {
       status: 400,
-      body: 'Invalid ID'
+      body: 'Invalid ID',
     }
   }
 
@@ -32,14 +32,14 @@ export const getOneEvent = async (req: HttpRequest, context: InvocationContext):
     return {
       jsonBody: {
         event,
-        userRating
-      } as EventWithRating
+        userRating,
+      } as EventWithRating,
     }
   } catch (e) {
     context.log(e)
     return {
       status: 500,
-      jsonBody: e
+      jsonBody: e,
     }
   }
 }
@@ -47,5 +47,5 @@ export const getOneEvent = async (req: HttpRequest, context: InvocationContext):
 app.http('events-getOne', {
   methods: ['GET'],
   route: 'events/getOne/{eventId}',
-  handler: getOneEvent
+  handler: getOneEvent,
 })

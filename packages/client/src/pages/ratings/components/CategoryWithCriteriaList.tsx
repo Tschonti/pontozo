@@ -23,7 +23,7 @@ export const CategoryWithCriteriaList = ({ ratingId }: Props) => {
 
   const criteria = currentCategory?.criteria.map((c) => ({
     ...c,
-    rating: mutation.data?.find((cr) => cr.criterionId === c.id)
+    rating: mutation.data?.find((cr) => cr.criterionId === c.id),
   }))
 
   return (
@@ -36,9 +36,7 @@ export const CategoryWithCriteriaList = ({ ratingId }: Props) => {
         {currentCategory?.description}
       </Text>
       <VStack my={5} spacing={5} alignItems="flex-start">
-        {criteria?.map((criteria) => (
-          <CriterionRateForm criterion={criteria} key={criteria.id} />
-        ))}
+        {criteria?.map((criteria) => <CriterionRateForm criterion={criteria} key={criteria.id} />)}
       </VStack>
     </>
   )

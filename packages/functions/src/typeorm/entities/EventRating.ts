@@ -4,14 +4,14 @@ import Event from './Event'
 
 export enum RatingStatus {
   STARTED = 'STARTED',
-  SUBMITTED = 'SUBMITTED'
+  SUBMITTED = 'SUBMITTED',
 }
 
 export enum RatingRole {
   COMPETITOR = 'COMPETITOR',
   COACH = 'COACH',
   ORGANISER = 'ORGANISER',
-  JURY = 'JURY'
+  JURY = 'JURY',
 }
 
 @Entity()

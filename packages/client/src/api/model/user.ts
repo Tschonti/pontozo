@@ -1,4 +1,4 @@
-import { UserRole } from "@pontozo/types"
+import { UserRole } from '@pontozo/types'
 
 export interface User {
   felhasznalo_id: number

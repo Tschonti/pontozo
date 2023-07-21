@@ -43,7 +43,7 @@ export const UraCreatePage = () => {
               toast({ title: 'Személy kinevezve!', status: 'success' })
               nav(PATHS.USERS)
             },
-            onError
+            onError,
           }
         )
       } else {
@@ -54,7 +54,7 @@ export const UraCreatePage = () => {
               toast({ title: 'Kinevezés frissítve!', status: 'success' })
               nav(PATHS.USERS)
             },
-            onError
+            onError,
           }
         )
       }

@@ -1,5 +1,5 @@
 import { IsInt, IsOptional, Max, Min } from 'class-validator'
-import { MtfszStage } from "./mtfszEvents"
+import { MtfszStage } from './mtfszEvents'
 
 export type CriterionRating = {
   id: number
@@ -9,7 +9,6 @@ export type CriterionRating = {
   stage?: MtfszStage
   value: number
 }
-
 
 export class CreateCriterionRating {
   @IsInt()

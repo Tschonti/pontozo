@@ -12,7 +12,7 @@ import {
   Stack,
   Switch,
   Text,
-  VStack
+  VStack,
 } from '@chakra-ui/react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa'
@@ -21,7 +21,7 @@ import {
   useCreateCriterionMutation,
   useDeleteCriterionMutation,
   useFetchCriterion,
-  useUpdateCriterionMutation
+  useUpdateCriterionMutation,
 } from '../../api/hooks/criteriaHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
@@ -36,7 +36,7 @@ export const CriteriaCreatePage = () => {
     register,
     handleSubmit,
     watch,
-    formState: { errors }
+    formState: { errors },
   } = useForm<CreateCriterionForm>({
     values: {
       name: data?.name || '',
@@ -52,8 +52,8 @@ export const CriteriaCreatePage = () => {
       nationalOnly: !!data?.nationalOnly,
       allowEmpty: !!data?.allowEmpty,
       competitorAllowed: !!data?.roles.includes(RatingRole.COMPETITOR),
-      juryAllowed: !!data?.roles.includes(RatingRole.JURY)
-    }
+      juryAllowed: !!data?.roles.includes(RatingRole.JURY),
+    },
   })
   const navigate = useNavigate()
   const createMutation = useCreateCriterionMutation()
@@ -75,7 +75,7 @@ export const CriteriaCreatePage = () => {
       ...restOfData,
       competitorWeight: competitorAllowed ? restOfData.competitorWeight : undefined,
       organiserWeight: juryAllowed ? restOfData.organiserWeight : undefined,
-      roles
+      roles,
     }
     if (criterionId === -1) {
       createMutation.mutate(data, { onSuccess: () => navigate(PATHS.CRITERIA) })
@@ -137,7 +137,7 @@ export const CriteriaCreatePage = () => {
               {...register('competitorAllowed', {
                 disabled: !criterionEditable,
                 validate: (val, formVal) => val || formVal.juryAllowed,
-                deps: 'juryAllowed'
+                deps: 'juryAllowed',
               })}
             >
               Versenyzők és Edzők
@@ -147,7 +147,7 @@ export const CriteriaCreatePage = () => {
               {...register('juryAllowed', {
                 disabled: !criterionEditable,
                 validate: (val, formVal) => val || formVal.competitorAllowed,
-                deps: 'competitorAllowed'
+                deps: 'competitorAllowed',
               })}
             >
               Rendezők és MTFSZ Zsűrik
@@ -189,7 +189,7 @@ export const CriteriaCreatePage = () => {
                 disabled: !criterionEditable,
                 valueAsNumber: true,
                 validate: (val, formVal) => !formVal.competitorAllowed || val > 0,
-                deps: ['competitorAllowed']
+                deps: ['competitorAllowed'],
               })}
             />
             <FormErrorMessage>Kötelező megadni a szempont súlyát a szerepkörhöz.</FormErrorMessage>
@@ -204,7 +204,7 @@ export const CriteriaCreatePage = () => {
                 disabled: !criterionEditable,
                 valueAsNumber: true,
                 validate: (val, formVal) => !formVal.juryAllowed || val > 0,
-                deps: ['juryAllowed']
+                deps: ['juryAllowed'],
               })}
             />
             <FormErrorMessage>Kötelező megadni a szempont súlyát a szerepkörhöz.</FormErrorMessage>

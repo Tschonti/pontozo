@@ -11,7 +11,7 @@ import {
   ModalOverlay,
   Select,
   Text,
-  useDisclosure
+  useDisclosure,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useAuthContext } from '../../../api/contexts/useAuthContext'
@@ -31,7 +31,7 @@ export const StartRatingModal = ({ event }: { event: DbEvent }) => {
       startRating.mutate(
         { eventId: event.id, role },
         {
-          onSuccess: (res) => startRatingWithContext(res[0].id)
+          onSuccess: (res) => startRatingWithContext(res[0].id),
         }
       )
     }

@@ -2,6 +2,7 @@
   "root": true,
   "ignorePatterns": ["**/*"],
   "plugins": ["@nx"],
+  "extends": ["prettier", "plugin:prettier/recommended"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],

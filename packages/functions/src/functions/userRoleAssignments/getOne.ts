@@ -14,7 +14,7 @@ export const getURA = async (req: HttpRequest, context: InvocationContext): Prom
   if (isNaN(id)) {
     return {
       status: 400,
-      body: 'Invalid id!'
+      body: 'Invalid id!',
     }
   }
   const uraRepo = (await getAppDataSource()).getRepository(UserRoleAssignment)
@@ -23,17 +23,17 @@ export const getURA = async (req: HttpRequest, context: InvocationContext): Prom
     if (!ura) {
       return {
         status: 404,
-        body: 'User role assignment not found!'
+        body: 'User role assignment not found!',
       }
     }
     return {
-      jsonBody: ura
+      jsonBody: ura,
     }
   } catch (error) {
     context.error(error)
     return {
       status: 500,
-      body: error
+      body: error,
     }
   }
 }
@@ -41,5 +41,5 @@ export const getURA = async (req: HttpRequest, context: InvocationContext): Prom
 app.http('uras-getOne', {
   methods: ['GET'],
   route: 'uras/{id}',
-  handler: getURA
+  handler: getURA,
 })

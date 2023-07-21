@@ -18,7 +18,7 @@ export const createCriteria = async (req: HttpRequest, context: InvocationContex
   if (!req.body) {
     return {
       status: 400,
-      body: 'No body attached to POST query.'
+      body: 'No body attached to POST query.',
     }
   }
   try {
@@ -27,7 +27,7 @@ export const createCriteria = async (req: HttpRequest, context: InvocationContex
     if (errors.length > 0) {
       return {
         status: 400,
-        jsonBody: errors
+        jsonBody: errors,
       }
     }
 
@@ -37,7 +37,7 @@ export const createCriteria = async (req: HttpRequest, context: InvocationContex
     ) {
       return {
         status: 400,
-        body: 'Weight has to be specified for the roles!'
+        body: 'Weight has to be specified for the roles!',
       }
     }
 
@@ -45,13 +45,13 @@ export const createCriteria = async (req: HttpRequest, context: InvocationContex
     const res = await criterionRepo.insert({ ...dto, roles: JSON.stringify(dto.roles) })
     return {
       jsonBody: res,
-      status: 201
+      status: 201,
     }
   } catch (e) {
     context.log(e)
     return {
       status: 400,
-      body: e
+      body: e,
     }
   }
 }
@@ -59,5 +59,5 @@ export const createCriteria = async (req: HttpRequest, context: InvocationContex
 app.http('criteria-create', {
   methods: ['POST'],
   route: 'criteria',
-  handler: createCriteria
+  handler: createCriteria,
 })

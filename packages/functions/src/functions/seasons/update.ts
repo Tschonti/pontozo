@@ -19,14 +19,14 @@ export const updateSeason = async (req: HttpRequest, context: InvocationContext)
   if (!req.body) {
     return {
       status: 400,
-      body: 'No body attached to POST query.'
+      body: 'No body attached to POST query.',
     }
   }
   const id = parseInt(req.params.id)
   if (isNaN(id)) {
     return {
       status: 400,
-      body: 'Invalid id!'
+      body: 'Invalid id!',
     }
   }
   try {
@@ -35,7 +35,7 @@ export const updateSeason = async (req: HttpRequest, context: InvocationContext)
     if (errors.length > 0) {
       return {
         status: 400,
-        jsonBody: errors
+        jsonBody: errors,
       }
     }
     const ads = await getAppDataSource()
@@ -44,13 +44,13 @@ export const updateSeason = async (req: HttpRequest, context: InvocationContext)
     if (season === null) {
       return {
         status: 404,
-        body: 'Season not found!'
+        body: 'Season not found!',
       }
     }
     if (season.startDate < new Date()) {
       return {
         status: 400,
-        body: 'This season can no longer be edited because it has already started!'
+        body: 'This season can no longer be edited because it has already started!',
       }
     }
     season.name = dto.name
@@ -83,13 +83,13 @@ export const updateSeason = async (req: HttpRequest, context: InvocationContext)
     season = await ads.manager.save(season)
 
     return {
-      jsonBody: season
+      jsonBody: season,
     }
   } catch (e) {
     context.log(e)
     return {
       status: 400,
-      body: e
+      body: e,
     }
   }
 }
@@ -97,5 +97,5 @@ export const updateSeason = async (req: HttpRequest, context: InvocationContext)
 app.http('seasons-update', {
   methods: ['PUT'],
   route: 'seasons/{id}',
-  handler: updateSeason
+  handler: updateSeason,
 })

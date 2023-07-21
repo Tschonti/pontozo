@@ -13,8 +13,8 @@ export const IsBiggerThan = (property: string, validationOptions?: ValidationOpt
           const [relatedPropertyName] = args.constraints
           const relatedValue = (args.object as any)[relatedPropertyName]
           return typeof value === 'number' && typeof relatedValue === 'number' && value > relatedValue
-        }
-      }
+        },
+      },
     })
   }
 }
@@ -38,8 +38,8 @@ export const IsLaterThan = (property: string, validationOptions?: ValidationOpti
             Date.parse(relatedValue) &&
             Date.parse(value) > Date.parse(relatedValue)
           )
-        }
-      }
+        },
+      },
     })
   }
 }

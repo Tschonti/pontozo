@@ -14,17 +14,17 @@ export const translateRole: RoleDict = {
   [RatingRole.COMPETITOR]: 'Versenyző',
   [RatingRole.COACH]: 'Edző',
   [RatingRole.ORGANISER]: 'Rendező',
-  [RatingRole.JURY]: 'MTFSZ Zsűri'
+  [RatingRole.JURY]: 'MTFSZ Zsűri',
 }
 
 export const translateStatus: StatusDict = {
   [RatingStatus.STARTED]: 'ELKEZDETT',
-  [RatingStatus.SUBMITTED]: 'VÉGLEGESÍTETT'
+  [RatingStatus.SUBMITTED]: 'VÉGLEGESÍTETT',
 }
 
 export const statusColor: StatusDict = {
   [RatingStatus.STARTED]: 'orange',
-  [RatingStatus.SUBMITTED]: 'brand'
+  [RatingStatus.SUBMITTED]: 'brand',
 }
 
 type UserRoleDictionary = {
@@ -34,13 +34,13 @@ type UserRoleDictionary = {
 export const translateUR: UserRoleDictionary = {
   [UserRole.COACH]: 'Edző',
   [UserRole.SITE_ADMIN]: 'Admin',
-  [UserRole.JURY]: 'MTFSZ Zsűri'
+  [UserRole.JURY]: 'MTFSZ Zsűri',
 }
 
 export const urColor: UserRoleDictionary = {
   [UserRole.COACH]: 'brand',
   [UserRole.SITE_ADMIN]: 'purple',
-  [UserRole.JURY]: 'orange'
+  [UserRole.JURY]: 'orange',
 }
 
 export const getHighestRank = (ranks: EventRank[]) => {
@@ -63,12 +63,12 @@ export const translateRank: RankDict = {
   [EventRank.REGIONAL]: 'REGIONÁLIS',
   [EventRank.NATIONAL]: 'ORSZÁGOS',
   [EventRank.FEATURED]: 'KIEMELT',
-  [EventRank.NONE]: 'NEM RANGSOROLÓ'
+  [EventRank.NONE]: 'NEM RANGSOROLÓ',
 }
 
 export const rankColor: RankDict = {
   [EventRank.REGIONAL]: 'brand',
   [EventRank.NATIONAL]: 'orange',
   [EventRank.FEATURED]: 'red',
-  [EventRank.NONE]: 'gray'
+  [EventRank.NONE]: 'gray',
 }

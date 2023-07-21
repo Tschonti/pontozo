@@ -19,13 +19,13 @@ export const getCriterionRatings = async (req: HttpRequest, context: InvocationC
   if (isNaN(ratingId)) {
     return {
       status: 400,
-      body: 'Invalid ID'
+      body: 'Invalid ID',
     }
   }
   if (!req.body) {
     return {
       status: 400,
-      body: `No body attached to POST query.`
+      body: `No body attached to POST query.`,
     }
   }
 
@@ -39,7 +39,7 @@ export const getCriterionRatings = async (req: HttpRequest, context: InvocationC
   if (errors.length > 0) {
     return {
       status: 400,
-      jsonBody: errors
+      jsonBody: errors,
     }
   }
 
@@ -51,25 +51,25 @@ export const getCriterionRatings = async (req: HttpRequest, context: InvocationC
   if (eventRating === null) {
     return {
       status: 404,
-      body: 'Rating not found!'
+      body: 'Rating not found!',
     }
   }
   if (eventRating.userId !== userServiceRes.data.szemely_id) {
     return {
       status: 403,
-      body: "You're not allowed to get criteria for this rating"
+      body: "You're not allowed to get criteria for this rating",
     }
   }
   const stageId = dto.stageId || null
   const ratings = await criterionRatingRepo.find({ where: { criterionId: In(dto.criterionIds), eventRatingId: eventRating.id, stageId } })
 
   return {
-    jsonBody: ratings
+    jsonBody: ratings,
   }
 }
 
 app.http('ratings-getCriterionRatings', {
   methods: ['POST'],
   route: 'ratings/{id}/criteria',
-  handler: getCriterionRatings
+  handler: getCriterionRatings,
 })

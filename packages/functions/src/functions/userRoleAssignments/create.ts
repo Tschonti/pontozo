@@ -18,7 +18,7 @@ export const createURA = async (req: HttpRequest, context: InvocationContext): P
   if (!req.body) {
     return {
       status: 400,
-      body: 'No body attached to POST query.'
+      body: 'No body attached to POST query.',
     }
   }
 
@@ -27,7 +27,7 @@ export const createURA = async (req: HttpRequest, context: InvocationContext): P
   if (errors.length > 0) {
     return {
       status: 400,
-      jsonBody: errors
+      jsonBody: errors,
     }
   }
 
@@ -40,10 +40,10 @@ export const createURA = async (req: HttpRequest, context: InvocationContext): P
     const res = await uraRepo.insert({
       ...dto,
       userFullName: `${userQueryRes.data.vezeteknev} ${userQueryRes.data.keresztnev}`,
-      userDOB: userQueryRes.data.szul_dat
+      userDOB: userQueryRes.data.szul_dat,
     })
     return {
-      jsonBody: res.raw
+      jsonBody: res.raw,
     }
   } catch (e) {
     switch (e.constructor) {
@@ -54,17 +54,17 @@ export const createURA = async (req: HttpRequest, context: InvocationContext): P
             jsonBody: [
               {
                 constraints: {
-                  unique: 'Ez a személy már rendelkezik ezzel a szerepkörrel!'
-                }
-              }
-            ]
+                  unique: 'Ez a személy már rendelkezik ezzel a szerepkörrel!',
+                },
+              },
+            ],
           }
         }
     }
     context.log(e)
     return {
       status: 500,
-      body: e
+      body: e,
     }
   }
 }
@@ -72,5 +72,5 @@ export const createURA = async (req: HttpRequest, context: InvocationContext): P
 app.http('uras-create', {
   methods: ['POST'],
   route: 'uras',
-  handler: createURA
+  handler: createURA,
 })

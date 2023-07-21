@@ -3,5 +3,5 @@ import { ServiceResponse } from '../service/types'
 
 export const httpResFromServiceRes = (serRes: ServiceResponse<unknown>): HttpResponseInit => ({
   status: serRes.status,
-  body: serRes.message
+  body: serRes.message,
 })

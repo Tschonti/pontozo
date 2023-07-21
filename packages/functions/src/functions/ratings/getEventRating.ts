@@ -13,7 +13,7 @@ export const getEventRating = async (req: HttpRequest, context: InvocationContex
   if (isNaN(eventId)) {
     return {
       status: 400,
-      body: 'Invalid ID'
+      body: 'Invalid ID',
     }
   }
 
@@ -25,15 +25,15 @@ export const getEventRating = async (req: HttpRequest, context: InvocationContex
   const ratingRepo = (await getAppDataSource()).getRepository(EventRating)
   const eventRating = await ratingRepo.findOne({
     where: { eventId, userId: userServiceRes.data.szemely_id },
-    relations: { event: { organisers: true, stages: true } }
+    relations: { event: { organisers: true, stages: true } },
   })
   return {
-    jsonBody: eventRating
+    jsonBody: eventRating,
   }
 }
 
 app.http('ratings-getEventRating', {
   methods: ['GET'],
   route: 'ratings/event/{eventId}',
-  handler: getEventRating
+  handler: getEventRating,
 })
