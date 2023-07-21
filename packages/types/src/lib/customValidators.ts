@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator'
 
 export const IsBiggerThan = (property: string, validationOptions?: ValidationOptions) => {
-  return function (object: Object, propertyName: string) {
+  return function (object: any, propertyName: string) {
     registerDecorator({
       name: 'isBiggerThan',
       target: object.constructor,
@@ -20,7 +21,7 @@ export const IsBiggerThan = (property: string, validationOptions?: ValidationOpt
 }
 
 export const IsLaterThan = (property: string, validationOptions?: ValidationOptions) => {
-  return function (object: Object, propertyName: string) {
+  return function (object: any, propertyName: string) {
     registerDecorator({
       name: 'isBiggerThan',
       target: object.constructor,

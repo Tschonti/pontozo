@@ -10,7 +10,7 @@ import { StageListItem } from './components/StageListItem'
 
 export const EventDetailsPage = () => {
   const { eventId } = useParams()
-  const { data: eventWithRating, isLoading, error } = useFetchEvent(+eventId!!)
+  const { data: eventWithRating, isLoading, error } = useFetchEvent(+eventId!)
   const { isLoggedIn } = useAuthContext()
   const toast = useToast()
 
@@ -42,7 +42,11 @@ export const EventDetailsPage = () => {
       <Heading size="md" my={3}>
         Futamok
       </Heading>
-      {event.stages?.sort((s1, s2) => parseInt(s1.startTime) - parseInt(s2.startTime)).map((s) => <StageListItem stage={s} key={s.id} />)}
+      {event.stages
+        ?.sort((s1, s2) => parseInt(s1.startTime) - parseInt(s2.startTime))
+        .map((s) => (
+          <StageListItem stage={s} key={s.id} />
+        ))}
       <Button leftIcon={<FaArrowLeft />} as={Link} to={PATHS.INDEX}>
         Vissza
       </Button>

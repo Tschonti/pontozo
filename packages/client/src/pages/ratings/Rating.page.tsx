@@ -23,7 +23,7 @@ export const RatingPage = () => {
       ) : (
         <Heading size="sm">A teljes versenyre vonatkozó szempontok szerint</Heading>
       )}
-      <CategoryWithCriteriaList ratingId={+ratingId!!} />
+      <CategoryWithCriteriaList ratingId={+ratingId!} />
       <HStack mt={3} justify="space-between" w="100%">
         <Button leftIcon={<FaArrowLeft />} onClick={() => previousCategory()}>
           {hasPrev ? 'Előző' : 'Vissza a versenyhez'}

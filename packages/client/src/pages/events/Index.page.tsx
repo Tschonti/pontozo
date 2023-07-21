@@ -20,7 +20,9 @@ export const IndexPage = () => {
 
   return (
     <SimpleGrid spacing={4} columns={[1, 1, 2]}>
-      {eventData?.map((e) => <EventListItem key={e.id} event={e} />)}
+      {eventData?.map((e) => (
+        <EventListItem key={e.id} event={e} />
+      ))}
     </SimpleGrid>
   )
 }

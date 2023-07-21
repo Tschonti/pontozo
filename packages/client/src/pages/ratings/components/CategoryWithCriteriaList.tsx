@@ -9,7 +9,7 @@ type Props = {
 }
 
 export const CategoryWithCriteriaList = ({ ratingId }: Props) => {
-  const mutation = useFetchRatingsMutation(+ratingId!!)
+  const mutation = useFetchRatingsMutation(+ratingId!)
   const { eventRatingInfo, currentCategory, currentStage, categoryIdx, rateCriteria } = useRatingContext()
 
   useEffect(() => {
@@ -36,7 +36,9 @@ export const CategoryWithCriteriaList = ({ ratingId }: Props) => {
         {currentCategory?.description}
       </Text>
       <VStack my={5} spacing={5} alignItems="flex-start">
-        {criteria?.map((criteria) => <CriterionRateForm criterion={criteria} key={criteria.id} />)}
+        {criteria?.map((criteria) => (
+          <CriterionRateForm criterion={criteria} key={criteria.id} />
+        ))}
       </VStack>
     </>
   )

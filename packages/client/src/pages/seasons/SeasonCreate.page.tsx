@@ -44,7 +44,7 @@ export const SeasonCreatePage = () => {
       setValue('startDate', startStr)
       setValue('endDate', endStr)
     }
-  }, [data, isLoading])
+  }, [data, isLoading, seasonId, setValue])
 
   const onSubmit: SubmitHandler<CreateSeasonForm> = ({ categories, ...restOfData }) => {
     const data: CreateSeason = {

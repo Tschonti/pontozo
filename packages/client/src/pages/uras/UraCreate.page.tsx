@@ -27,7 +27,7 @@ export const UraCreatePage = () => {
       setUser(rest)
       setRole(role)
     }
-  }, [data, isLoading])
+  }, [data, isLoading, uraId])
 
   const onError = (e: AxiosError<PontozoError[]>) => {
     Object.values(e.response?.data?.[0].constraints || {}).forEach((err) => toast({ title: err, status: 'error' }))

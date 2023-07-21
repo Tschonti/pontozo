@@ -18,7 +18,6 @@ import {
   ModalOverlay,
   Text,
   useDisclosure,
-  useToast,
   VStack,
 } from '@chakra-ui/react'
 import { useState } from 'react'
@@ -36,7 +35,6 @@ export const CriteriaSelector = ({ editable }: { editable: boolean }) => {
     formState: { errors },
   } = useFormContext<CreateCategoryForm>()
 
-  const toast = useToast()
   const { isLoading, data: criteria, error } = useFetchCriteria()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
