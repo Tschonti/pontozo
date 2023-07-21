@@ -6,8 +6,8 @@ import CriterionRating from '../../typeorm/entities/CriterionRating'
 import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
-import { myvalidate } from '../../util/validation'
-import { GetCriterionRatings } from './types/getCriterionRatings.dto'
+import { validateWithWhitelist } from '../../util/validation'
+import { GetCriterionRatings } from '@pontozo/types'
 
 /**
  * Called when the user switches pages during the rating of an event to get their previous ratings on the current criteria.
@@ -35,7 +35,7 @@ export const getCriterionRatings = async (req: HttpRequest, context: InvocationC
   }
 
   const dto = plainToClass(GetCriterionRatings, await req.json())
-  const errors = await myvalidate(dto)
+  const errors = await validateWithWhitelist(dto)
   if (errors.length > 0) {
     return {
       status: 400,

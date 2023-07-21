@@ -2,8 +2,7 @@ import { FormControl, FormHelperText, FormLabel, Radio, RadioGroup, Stack, useTo
 import { useEffect, useState } from 'react'
 import { useRatingContext } from '../../../api/contexts/useRatingContext'
 import { useRateCriteriaMutation } from '../../../api/hooks/criteriaHooks'
-import { CriterionDetails } from '../../../api/model/criterion'
-import { RatingStatus } from '../../../api/model/rating'
+import { CriterionDetails, RatingStatus } from '@pontozo/types'
 
 type Props = {
   criterion: CriterionDetails
@@ -11,7 +10,7 @@ type Props = {
 
 export const CriterionRateForm = ({ criterion }: Props) => {
   const { ratingId, currentStage, eventRatingInfo, validate, rateCriterion } = useRatingContext()
-  const mutation = useRateCriteriaMutation({ eventRatingId: ratingId, criterionId: criterion.id, stageId: currentStage?.id })
+  const mutation = useRateCriteriaMutation(ratingId)
   const [value, setValue] = useState<string | undefined>(criterion.rating?.value?.toString())
   const toast = useToast()
 
@@ -23,7 +22,7 @@ export const CriterionRateForm = ({ criterion }: Props) => {
 
   const onChange = (newValue: string) => {
     setValue(newValue)
-    mutation.mutate(+newValue, {
+    mutation.mutate({ value: +newValue, stageId: currentStage?.id, criterionId: criterion.id}, {
       onSuccess: () => {
         rateCriterion(criterion.id)
       },

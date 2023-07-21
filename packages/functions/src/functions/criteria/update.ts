@@ -4,8 +4,8 @@ import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Criterion from '../../typeorm/entities/Criterion'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
-import { myvalidate } from '../../util/validation'
-import { CreateCriteriaDTO } from './types/createCriteria.dto'
+import { validateWithWhitelist } from '../../util/validation'
+import { CreateCriteria } from '@pontozo/types'
 
 export const updateCriteria = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
@@ -27,8 +27,8 @@ export const updateCriteria = async (req: HttpRequest, context: InvocationContex
     }
   }
 
-  const dto = plainToClass(CreateCriteriaDTO, await req.json())
-  const errors = await myvalidate(dto)
+  const dto = plainToClass(CreateCriteria, await req.json())
+  const errors = await validateWithWhitelist(dto)
   if (errors.length > 0) {
     return {
       status: 400,

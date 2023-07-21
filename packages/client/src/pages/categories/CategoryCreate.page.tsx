@@ -8,10 +8,10 @@ import {
   useFetchCategory,
   useUpdateCategoryMutation
 } from '../../api/hooks/categoryHooks'
-import { CreateCategoryForm } from '../../api/model/category'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 import { CriteriaSelector } from './components/CriteriaSelector'
+import { CreateCategoryForm } from '@pontozo/types'
 
 export const CategoryCreatePage = () => {
   const categoryId = parseInt(useParams<{ categoryId: string }>().categoryId ?? '-1')
@@ -48,8 +48,7 @@ export const CategoryCreatePage = () => {
     return <LoadingSpinner />
   }
   return (
-    <>
-      <VStack spacing={5} alignItems="flex-start">
+    <VStack spacing={5} alignItems="flex-start">
         <Heading>{categoryId === -1 ? 'Új kategória' : 'Kategória szerkesztése'}</Heading>
         {!categoryEditable && <Text>TODO ide valami szöveg hogy mért nem szerkeszthető</Text>}
         <FormControl isInvalid={!!errors.name}>
@@ -87,6 +86,5 @@ export const CategoryCreatePage = () => {
           </HStack>
         </Flex>
       </VStack>
-    </>
   )
 }

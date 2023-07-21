@@ -3,9 +3,7 @@ import { APIM_HOST } from '../../util/environment'
 import { eventFilter } from '../../util/eventFilter'
 import { apimAxios, functionAxios } from '../../util/initAxios'
 import { transformEvent } from '../../util/mtfszEventToDbEvent'
-import { DbEvent, EventWithRating } from '../model/dbEvent'
-import { FetchEventsResult } from '../model/mtfszEvent'
-import { EventRatingWithEvent } from '../model/rating'
+import { DbEvent, EventRatingWithEvent, EventWithRating, FetchEventsResult } from '@pontozo/types'
 
 const formatDate = (d: Date) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
 

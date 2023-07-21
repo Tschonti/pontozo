@@ -1,3 +1,7 @@
+export type FetchEventsResult = {
+  result: MtfszEvent[]
+}
+
 export interface MtfszEvent {
   esemeny_id: number
   tipus: string
@@ -17,7 +21,7 @@ export interface MtfszEvent {
   programok: EventSection[]
   rendezok: Organiser[]
   helyszinek: Location[]
-  intervallumok: any[]
+  //intervallumok: any[]
   naptarak: Calendar[]
   hivatkozasok: Link[]
   fajlok: EventFile[]

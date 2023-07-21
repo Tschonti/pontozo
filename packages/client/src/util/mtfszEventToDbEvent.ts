@@ -1,9 +1,9 @@
-import { MtfszEvent } from '@pontozo/types'
-import { DbEvent, Rank } from '../api/model/dbEvent'
+import { DbEvent, MtfszEvent, Rank } from '@pontozo/types'
 import { stageFilter } from './eventFilter'
 
 export const transformEvent = (e: MtfszEvent): DbEvent => ({
   id: e.esemeny_id,
+  seasonId: -1,
   name: e.nev_1,
   type: e.tipus,
   startDate: e.datum_tol,

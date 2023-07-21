@@ -3,6 +3,7 @@ import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Season from '../../typeorm/entities/Season'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
+import { SeasonWithCategories } from '@pontozo/types'
 
 export const getSeason = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
@@ -27,7 +28,7 @@ export const getSeason = async (req: HttpRequest, context: InvocationContext): P
       }
     }
     return {
-      jsonBody: { ...season, categories: season.categories.sort((stc1, stc2) => stc1.order - stc2.order).map((stc) => stc.category) }
+      jsonBody: { ...season, categories: season.categories.sort((stc1, stc2) => stc1.order - stc2.order).map((stc) => stc.category) } as SeasonWithCategories
     }
   } catch (error) {
     context.error(error)

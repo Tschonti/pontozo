@@ -1,6 +1,6 @@
 import { Badge } from '@chakra-ui/react'
-import { DbEvent, DbStage, Rank } from '../../../api/model/dbEvent'
 import { rankColor, translateRank } from '../../../util/enumHelpers'
+import { DbEvent, DbStage, Rank } from '@pontozo/types'
 type Props = {
   event?: DbEvent
   stage?: DbStage

@@ -17,9 +17,7 @@ import { useState } from 'react'
 import { useAuthContext } from '../../../api/contexts/useAuthContext'
 import { useRatingContext } from '../../../api/contexts/useRatingContext'
 import { useStartRatingMutation } from '../../../api/hooks/ratingHooks'
-import { DbEvent } from '../../../api/model/dbEvent'
-import { RatingRole } from '../../../api/model/rating'
-import { UserRole } from '../../../api/model/user'
+import { DbEvent, RatingRole, UserRole } from '@pontozo/types'
 
 export const StartRatingModal = ({ event }: { event: DbEvent }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()

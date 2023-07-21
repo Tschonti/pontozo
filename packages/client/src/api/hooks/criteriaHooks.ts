@@ -1,17 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { EntityWithEditableIndicator } from '../../util/EntityWithEditableIndicator.dto'
 import { functionAxios } from '../../util/initAxios'
-import { CreateCriterion, Criterion } from '../model/criterion'
-
-export type CreateResponse = {
-  id: number
-}
-
-type CreateCriterionRatingMutation = {
-  eventRatingId: number
-  criterionId: number
-  stageId?: number
-}
+import { Criterion, CreateCriteria, CreateResponse, EntityWithEditableIndicator, CreateCriterionRating } from '@pontozo/types'
 
 export const useFetchCriteria = () => {
   return useQuery<Criterion[]>(['fetchCriteria'], async () => (await functionAxios.get(`/criteria`)).data, { retry: false })
@@ -29,18 +18,18 @@ export const useFetchCriterion = (criterionId: number) => {
   )
 }
 
-export const useRateCriteriaMutation = ({ eventRatingId, criterionId, stageId }: CreateCriterionRatingMutation) => {
-  return useMutation<unknown, Error, number>(
-    async (value) => (await functionAxios.post(`/ratings/${eventRatingId}`, { value, criterionId, stageId })).data
+export const useRateCriteriaMutation = (eventRatingId: number) => {
+  return useMutation<Record<string, never>, Error, CreateCriterionRating>(
+    async (ratingData) => (await functionAxios.post(`/ratings/${eventRatingId}`, ratingData)).data
   )
 }
 
 export const useCreateCriterionMutation = () => {
-  return useMutation<CreateResponse[], Error, CreateCriterion>(async (formData) => (await functionAxios.post(`/criteria`, formData)).data)
+  return useMutation<CreateResponse[], Error, CreateCriteria>(async (formData) => (await functionAxios.post(`/criteria`, formData)).data)
 }
 
 export const useUpdateCriterionMutation = (criterionId: number) => {
-  return useMutation<CreateResponse[], Error, CreateCriterion>(
+  return useMutation<CreateResponse[], Error, CreateCriteria>(
     async (formData) => (await functionAxios.put(`/criteria/${criterionId}`, formData)).data
   )
 }

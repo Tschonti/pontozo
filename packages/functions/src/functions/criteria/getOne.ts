@@ -2,8 +2,8 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/fu
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Criterion from '../../typeorm/entities/Criterion'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { EntityWithEditableIndicator } from '../../util/EntityWithEditableIndicator.dto'
 import { httpResFromServiceRes } from '../../util/httpRes'
+import { EntityWithEditableIndicator } from '@pontozo/types'
 
 export const getCriterion = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const adminCheck = await getUserFromHeaderAndAssertAdmin(req)

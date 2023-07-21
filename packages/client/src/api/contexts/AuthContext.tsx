@@ -6,7 +6,8 @@ import { CookieKeys } from '../../util/CookieKeys'
 import { functionAxios } from '../../util/initAxios'
 import { PATHS } from '../../util/paths'
 import { queryClient } from '../../util/queryClient'
-import { UserDetails, UserRole } from '../model/user'
+import { UserDetails } from '../model/user'
+import { UserRole } from '@pontozo/types'
 
 export type AuthContextType = {
   isLoggedIn: boolean

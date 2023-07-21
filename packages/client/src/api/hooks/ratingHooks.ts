@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { FUNC_HOST } from '../../util/environment'
 import { functionAxios } from '../../util/initAxios'
-import { CriterionRating, EventRatingInfo, GetCriterionRatings, GetEvenRating, StartRatingDto } from '../model/rating'
+import { CriterionRating, EventRatingInfo, GetCriterionRatings, GetEventRating, CreateEventRating } from '@pontozo/types'
 
 export const useStartRatingMutation = () => {
-  return useMutation<RatingStartedResponse[], Error, StartRatingDto>(
+  return useMutation<RatingStartedResponse[], Error, CreateEventRating>(
     async (data) => (await functionAxios.post(`${FUNC_HOST}/ratings`, data)).data
   )
 }
@@ -28,7 +28,7 @@ export const useFetchEventInfoMutation = () => {
 }
 
 export const useFetchEventRatingQuery = (eventId: number) => {
-  return useQuery<GetEvenRating>(['fetchEventRating', eventId], async () => (await functionAxios.get(`ratings/event/${eventId}`)).data)
+  return useQuery<GetEventRating>(['fetchEventRating', eventId], async () => (await functionAxios.get(`ratings/event/${eventId}`)).data)
 }
 
 export type RatingStartedResponse = {

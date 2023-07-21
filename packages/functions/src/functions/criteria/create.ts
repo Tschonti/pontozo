@@ -5,8 +5,9 @@ import Criterion from '../../typeorm/entities/Criterion'
 import { RatingRole } from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
-import { myvalidate } from '../../util/validation'
-import { CreateCriteriaDTO } from './types/createCriteria.dto'
+import { validateWithWhitelist } from '../../util/validation'
+import { CreateCriteria } from '@pontozo/types'
+// import { CreateCriteriaDTO } from './types/createCriteria.dto'
 
 export const createCriteria = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
@@ -21,8 +22,8 @@ export const createCriteria = async (req: HttpRequest, context: InvocationContex
     }
   }
   try {
-    const dto = plainToClass(CreateCriteriaDTO, await req.json())
-    const errors = await myvalidate(dto)
+    const dto = plainToClass(CreateCriteria, await req.json())
+    const errors = await validateWithWhitelist(dto)
     if (errors.length > 0) {
       return {
         status: 400,
@@ -43,7 +44,8 @@ export const createCriteria = async (req: HttpRequest, context: InvocationContex
     const criterionRepo = (await getAppDataSource()).getRepository(Criterion)
     const res = await criterionRepo.insert({ ...dto, roles: JSON.stringify(dto.roles) })
     return {
-      jsonBody: res
+      jsonBody: res,
+      status: 201
     }
   } catch (e) {
     context.log(e)

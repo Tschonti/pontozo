@@ -7,8 +7,8 @@ import Season from '../../typeorm/entities/Season'
 import { SeasonToCategory } from '../../typeorm/entities/SeasonToCategory'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
-import { myvalidate } from '../../util/validation'
-import { CreateSeasonDTO } from './types/CreateSeason.dto'
+import { validateWithWhitelist } from '../../util/validation'
+import { CreateSeason } from '@pontozo/types'
 
 export const createSeason = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
@@ -22,8 +22,8 @@ export const createSeason = async (req: HttpRequest, context: InvocationContext)
       body: 'No body attached to POST query.'
     }
   }
-  const dto = plainToClass(CreateSeasonDTO, await req.json())
-  const errors = await myvalidate(dto)
+  const dto = plainToClass(CreateSeason, await req.json())
+  const errors = await validateWithWhitelist(dto)
   if (errors.length > 0) {
     return {
       status: 400,

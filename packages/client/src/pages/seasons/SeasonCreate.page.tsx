@@ -4,10 +4,10 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useCreateSeasonMutation, useDeleteSeasonMutation, useFetchSeason, useUpdateSeasonMutation } from '../../api/hooks/seasonHooks'
-import { CreateSeason, CreateSeasonForm } from '../../api/model/season'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 import { CategorySelector } from './components/CategorySelector'
+import { CreateSeasonForm, CreateSeason } from '@pontozo/types'
 
 export const SeasonCreatePage = () => {
   const seasonId = parseInt(useParams<{ seasonId: string }>().seasonId ?? '-1')
@@ -49,6 +49,8 @@ export const SeasonCreatePage = () => {
   const onSubmit: SubmitHandler<CreateSeasonForm> = ({ categories, ...restOfData }) => {
     const data: CreateSeason = {
       ...restOfData,
+      startDate: new Date(restOfData.startDate),
+      endDate: new Date(restOfData.endDate),
       categoryIds: categories.map((c) => c.id)
     }
     if (seasonId === -1) {
@@ -62,8 +64,7 @@ export const SeasonCreatePage = () => {
     return <LoadingSpinner />
   }
   return (
-    <>
-      <VStack spacing={5} alignItems="flex-start">
+    <VStack spacing={5} alignItems="flex-start">
         <Heading>{seasonId === -1 ? 'Új szezon' : 'Szezon szerkesztése'}</Heading>
         {!seasonEditable && <Text>TODO ide valami szöveg hogy mért nem szerkeszthető</Text>}
         <FormControl isInvalid={!!errors.name}>
@@ -126,6 +127,5 @@ export const SeasonCreatePage = () => {
           </HStack>
         </Flex>
       </VStack>
-    </>
   )
 }

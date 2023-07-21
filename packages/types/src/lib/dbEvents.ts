@@ -1,4 +1,4 @@
-import { EventRating } from './rating'
+import { EventRating } from "./eventRatings"
 
 export type DbEvent = {
   id: number
@@ -8,25 +8,20 @@ export type DbEvent = {
   endDate?: string
   rateable: boolean
   highestRank: Rank
+  seasonId: number
   organisers: Club[]
   stages?: DbStage[]
+}
+
+export interface EventWithRating {
+  event: DbEvent
+  userRating?: EventRating
 }
 
 export enum Rank {
   REGIONAL = 'REGIONALIS',
   NATIONAL = 'ORSZAGOS',
   FEATURED = 'KIEMELT'
-}
-
-export type DbStage = {
-  id: number
-  event?: Event
-  eventId: number
-  startTime: string
-  endTime?: string
-  name: string
-  disciplineId: number
-  rank: Rank
 }
 
 export type Club = {
@@ -36,7 +31,12 @@ export type Club = {
   longName: string
 }
 
-export interface EventWithRating {
-  event: DbEvent
-  userRating?: EventRating
+export type DbStage = {
+  id: number
+  eventId: number
+  startTime: string
+  endTime?: string
+  name: string
+  disciplineId: number
+  rank: string
 }

@@ -6,8 +6,8 @@ import EventRating, { RatingRole } from '../../typeorm/entities/EventRating'
 import { UserRole } from '../../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
-import { myvalidate } from '../../util/validation'
-import { CreateEventRatingDto } from './types/createEventRating.dto'
+import { validateWithWhitelist } from '../../util/validation'
+import { CreateEventRating } from '@pontozo/types'
 
 /**
  * Called when a user starts rating an event to initialize the EventRating entity.
@@ -27,8 +27,8 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
   }
 
   try {
-    const dto = plainToClass(CreateEventRatingDto, await req.json())
-    const errors = await myvalidate(dto)
+    const dto = plainToClass(CreateEventRating, await req.json())
+    const errors = await validateWithWhitelist(dto)
     if (errors.length > 0) {
       return {
         status: 400,

@@ -3,6 +3,7 @@ import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Category from '../../typeorm/entities/Category'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
+import { CategoryWithCriteria, EntityWithEditableIndicator } from '@pontozo/types'
 
 export const getCategory = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
@@ -30,9 +31,9 @@ export const getCategory = async (req: HttpRequest, context: InvocationContext):
     return {
       jsonBody: {
         ...plainCategory,
-        criteria: category.criteria.sort((ctc1, ctc2) => ctc1.order - ctc2.order).map((ctc) => ctc.criterion),
+        criteria: category.criteria.sort((ctc1, ctc2) => ctc1.order - ctc2.order).map((ctc) => ({...ctc.criterion, roles: JSON.parse(ctc.criterion.roles)})),
         editable: !seasons.some(({ season }) => season.startDate < new Date())
-      }
+      } as EntityWithEditableIndicator<CategoryWithCriteria>
     }
   } catch (error) {
     context.error(error)

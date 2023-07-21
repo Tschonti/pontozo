@@ -1,18 +1,13 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { EntityWithEditableIndicator } from '../../util/EntityWithEditableIndicator.dto'
 import { functionAxios } from '../../util/initAxios'
-import { Category, CategoryDetails, CreateCategory } from '../model/category'
-
-export type CreateResponse = {
-  id: number
-}
+import { Category, CategoryWithCriteria, CreateCategory, CreateResponse, EntityWithEditableIndicator } from '@pontozo/types'
 
 export const useFetchCategories = () => {
   return useQuery<Category[]>(['fetchCategories'], async () => (await functionAxios.get(`/categories`)).data, { retry: false })
 }
 
 export const useFetchCategory = (categoryId: number) => {
-  return useQuery<EntityWithEditableIndicator<CategoryDetails>>(
+  return useQuery<EntityWithEditableIndicator<CategoryWithCriteria>>(
     ['fetchCategory', categoryId],
     async () => (await functionAxios.get(`/categories/${categoryId}`)).data,
     {

@@ -1,3 +1,5 @@
+import { UserRole } from "@pontozo/types"
+
 export interface User {
   felhasznalo_id: number
   szemely_id: number
@@ -21,21 +23,3 @@ export interface UserPreview {
   userFullName: string
   userDOB: string
 }
-
-export enum UserRole {
-  SITE_ADMIN = 'SITE_ADMIN',
-  JURY = 'JURY',
-  COACH = 'COACH'
-}
-
-export interface UserRoleAssignment extends UserPreview {
-  id: number
-  role: UserRole
-}
-
-export interface CreateUra {
-  userId: number
-  role: UserRole
-}
-
-export interface UpdateUra extends Omit<CreateUra, 'userId'> {}

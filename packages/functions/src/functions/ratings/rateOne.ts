@@ -9,8 +9,8 @@ import EventRating, { RatingStatus } from '../../typeorm/entities/EventRating'
 import { SeasonToCategory } from '../../typeorm/entities/SeasonToCategory'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
-import { myvalidate } from '../../util/validation'
-import { CreateRatingDto } from './types/createRating.dto'
+import { validateWithWhitelist } from '../../util/validation'
+import { CreateCriterionRating } from '@pontozo/types'
 
 /**
  * Called when the user changes the rating of a criteria during the rating of an event.
@@ -34,8 +34,8 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
   if (userServiceRes.isError) {
     return httpResFromServiceRes(userServiceRes)
   }
-  const dto = plainToClass(CreateRatingDto, await req.json())
-  const errors = await myvalidate(dto)
+  const dto = plainToClass(CreateCriterionRating, await req.json())
+  const errors = await validateWithWhitelist(dto)
   if (errors.length > 0) {
     return {
       status: 400,

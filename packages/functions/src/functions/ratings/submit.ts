@@ -2,7 +2,6 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/fu
 import { getUserFromHeader } from '../../service/auth.service'
 import { isHigherRankDB } from '../../service/mtfsz.service'
 import EventRating, { RatingStatus } from '../../typeorm/entities/EventRating'
-import Season from '../../typeorm/entities/Season'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
 
@@ -24,7 +23,6 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
   }
   try {
     const ads = await getAppDataSource()
-    const seasonRepo = ads.getRepository(Season)
     const eventRatingRepo = ads.getRepository(EventRating)
     const rating = await eventRatingRepo.findOne({
       where: { id },

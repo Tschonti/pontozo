@@ -14,19 +14,19 @@ class Criterion {
   description: string
 
   @Column({ nullable: true })
-  text0: string
+  text0?: string
 
   @Column({ nullable: true })
-  text1: string
+  text1?: string
 
   @Column({ nullable: true })
-  text2: string
+  text2?: string
 
   @Column({ nullable: true })
-  text3: string
+  text3?: string
 
   @Column({ nullable: true })
-  editorsNote: string
+  editorsNote?: string
 
   @Column()
   nationalOnly: boolean

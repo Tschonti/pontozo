@@ -25,9 +25,8 @@ import { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { FaCaretDown, FaCaretUp, FaMinus, FaSearch, FaTimes } from 'react-icons/fa'
 import { useFetchCriteria } from '../../../api/hooks/criteriaHooks'
-import { CreateCategoryForm } from '../../../api/model/category'
-import { Criterion } from '../../../api/model/criterion'
 import { LoadingSpinner } from '../../../components/commons/LoadingSpinner'
+import { CreateCategoryForm, Criterion } from '@pontozo/types'
 
 export const CriteriaSelector = ({ editable }: { editable: boolean }) => {
   const {

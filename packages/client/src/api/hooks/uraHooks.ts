@@ -2,8 +2,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { functionAxios } from '../../util/initAxios'
 import { PontozoError } from '../model/error'
-import { CreateUra, UpdateUra, UserRoleAssignment } from '../model/user'
-import { CreateResponse } from './categoryHooks'
+import { CreateResponse, CreateURA, UpdateURA, UserRoleAssignment } from '@pontozo/types'
 
 export const useFetchUras = () => {
   return useQuery<UserRoleAssignment[]>(['fetchUras'], async () => (await functionAxios.get(`/uras`)).data, { retry: false })
@@ -18,13 +17,13 @@ export const useFetchUra = (uraId: number) => {
 }
 
 export const useCreateUraMutation = () => {
-  return useMutation<CreateResponse[], AxiosError<PontozoError[]>, CreateUra>(
+  return useMutation<CreateResponse[], AxiosError<PontozoError[]>, CreateURA>(
     async (formData) => (await functionAxios.post(`/uras`, formData)).data
   )
 }
 
 export const useUpdateUraMutation = (uraId: number) => {
-  return useMutation<CreateResponse[], AxiosError<PontozoError[]>, UpdateUra>(
+  return useMutation<CreateResponse[], AxiosError<PontozoError[]>, UpdateURA>(
     async (formData) => (await functionAxios.put(`/uras/${uraId}`, formData)).data
   )
 }

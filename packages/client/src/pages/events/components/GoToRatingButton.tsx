@@ -1,9 +1,8 @@
 import { Button } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
-import { EventWithRating } from '../../../api/model/dbEvent'
-import { RatingStatus } from '../../../api/model/rating'
 import { PATHS } from '../../../util/paths'
 import { StartRatingModal } from './StartRatingModal'
+import { EventWithRating, RatingStatus } from '@pontozo/types'
 
 export const GoToRatingButton = ({ eventWithRating }: { eventWithRating: EventWithRating }) => {
   if (eventWithRating.userRating) {

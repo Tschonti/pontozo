@@ -6,8 +6,8 @@ import { getUserById } from '../../service/mtfsz.service'
 import UserRoleAssignment from '../../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
-import { myvalidate } from '../../util/validation'
-import { CreateURADTO } from './types/CreateURA.dto'
+import { validateWithWhitelist } from '../../util/validation'
+import { CreateURA } from '@pontozo/types'
 
 export const createURA = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
@@ -22,8 +22,8 @@ export const createURA = async (req: HttpRequest, context: InvocationContext): P
     }
   }
 
-  const dto = plainToClass(CreateURADTO, await req.json())
-  const errors = await myvalidate(dto)
+  const dto = plainToClass(CreateURA, await req.json())
+  const errors = await validateWithWhitelist(dto)
   if (errors.length > 0) {
     return {
       status: 400,

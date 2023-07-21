@@ -7,8 +7,8 @@ import { CategoryToCriterion } from '../../typeorm/entities/CategoryToCriterion'
 import Criterion from '../../typeorm/entities/Criterion'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
-import { myvalidate } from '../../util/validation'
-import { CreateCategoryDTO } from './types/CreateCategory.dto'
+import { validateWithWhitelist } from '../../util/validation'
+import { CreateCategory } from '@pontozo/types'
 
 export const updateCategory = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
@@ -30,8 +30,8 @@ export const updateCategory = async (req: HttpRequest, context: InvocationContex
     }
   }
   try {
-    const dto = plainToClass(CreateCategoryDTO, await req.json())
-    const errors = await myvalidate(dto)
+    const dto = plainToClass(CreateCategory, await req.json())
+    const errors = await validateWithWhitelist(dto)
     if (errors.length > 0) {
       return {
         status: 400,

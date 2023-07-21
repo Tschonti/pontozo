@@ -1,5 +1,4 @@
-import { MtfszEvent } from '@pontozo/types'
-import { Rank } from '../typeorm/entities/Event'
+import { MtfszEvent, Rank } from '@pontozo/types'
 
 export const getHighestRank = (e: MtfszEvent): Rank => {
   let highest = Rank.REGIONAL
