@@ -2,7 +2,9 @@
   "name": "@pontozo/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "build": "cd packages/client && vite build"
+  },
   "private": true,
   "dependencies": {
     "@azure/functions": "^4.0.0-alpha.11",
