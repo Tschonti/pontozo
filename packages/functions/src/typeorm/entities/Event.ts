@@ -3,7 +3,12 @@ import Club from './Club'
 import EventRating from './EventRating'
 import Season from './Season'
 import Stage from './Stage'
-import { Rank } from '@pontozo/types'
+
+enum Rank {
+  REGIONAL = 'REGIONALIS',
+  NATIONAL = 'ORSZAGOS',
+  FEATURED = 'KIEMELT',
+}
 
 @Entity()
 class Event {

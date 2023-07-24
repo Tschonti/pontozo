@@ -3,7 +3,7 @@ import { getUserFromHeader } from '../../service/auth.service'
 import UserRoleAssignment from '../../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
-import { PontozoUser } from './types/PontozoUser'
+import { DbUser } from '@pontozo/types'
 
 export const currentUser = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const userServiceRes = getUserFromHeader(req)
@@ -16,7 +16,7 @@ export const currentUser = async (req: HttpRequest, context: InvocationContext):
       .find({ where: { userId: userServiceRes.data.szemely_id } })
 
     return {
-      jsonBody: { ...userServiceRes.data, roles: roles.map((r) => r.role) } as PontozoUser,
+      jsonBody: { ...userServiceRes.data, roles: roles.map((r) => r.role) } as DbUser,
     }
   } catch (e) {
     return {

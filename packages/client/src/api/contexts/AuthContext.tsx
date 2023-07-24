@@ -3,15 +3,14 @@ import Cookies from 'js-cookie'
 import { createContext, PropsWithChildren, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CookieKeys } from '../../util/CookieKeys'
-import { functionAxios } from '../../util/initAxios'
+import { functionAxios } from '../../util/axiosConfig'
 import { PATHS } from '../../util/paths'
 import { queryClient } from '../../util/queryClient'
-import { UserDetails } from '../model/user'
-import { UserRole } from '@pontozo/types'
+import { DbUser, UserRole } from '@pontozo/types'
 
 export type AuthContextType = {
   isLoggedIn: boolean
-  loggedInUser: UserDetails | undefined
+  loggedInUser: DbUser | undefined
   isAdmin: boolean
   loggedInUserLoading: boolean
   loggedInUserError: unknown
@@ -38,7 +37,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     isLoading,
     data: user,
     error,
-  } = useQuery(['currentUser'], async () => (await functionAxios.get<UserDetails>('/auth/user')).data, {
+  } = useQuery(['currentUser'], async () => (await functionAxios.get<DbUser>('/auth/user')).data, {
     enabled: isLoggedIn,
     retry: false,
   })

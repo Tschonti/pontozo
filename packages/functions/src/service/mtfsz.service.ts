@@ -1,10 +1,8 @@
 import axios, { AxiosResponse } from 'axios'
-import { MtfszUser } from '../functions/auth/types/MtfszUser'
-import { Token } from '../functions/auth/types/Token'
 import DbEvent from '../typeorm/entities/Event'
 import { APIM_HOST, APIM_KEY, CLIENT_ID, CLIENT_SECRET, FUNCTION_HOST } from '../util/env'
 import { EventSectionPreview, MtfszResponse, ServiceResponse, User } from './types'
-import { EventSection, MtfszEvent } from '@pontozo/types'
+import { EventSection, MtfszEvent, MtfszUser, MtfszToken } from '@pontozo/types'
 
 const acceptedRanks = ['REGIONALIS', 'ORSZAGOS', 'KIEMELT']
 const higherRanks = ['ORSZAGOS', 'KIEMELT']
@@ -67,14 +65,14 @@ export const getRateableEvents = async (): Promise<MtfszEvent[]> => {
   return res.data.result.filter(eventFilter)
 }
 
-export const getToken = async (authCode: string): Promise<Token> => {
+export const getToken = async (authCode: string): Promise<MtfszToken> => {
   const fd = new FormData()
   fd.append('grant_type', 'authorization_code')
   fd.append('code', authCode)
   fd.append('redirect_uri', `${FUNCTION_HOST}/auth/callback`)
   fd.append('client_id', CLIENT_ID)
   fd.append('client_secret', CLIENT_SECRET)
-  const response = await axios.post<unknown, AxiosResponse<Token>>('https://api.mtfsz.hu/oauth/v2/token', fd)
+  const response = await axios.post<unknown, AxiosResponse<MtfszToken>>('https://api.mtfsz.hu/oauth/v2/token', fd)
   return response.data
 }
 

@@ -3,10 +3,11 @@ import { getUserFromHeaderAndAssertAdmin } from '../service/auth.service'
 import Category from '../typeorm/entities/Category'
 import Criterion from '../typeorm/entities/Criterion'
 import Season from '../typeorm/entities/Season'
-import UserRoleAssignment, { UserRole } from '../typeorm/entities/UserRoleAssignment'
+import UserRoleAssignment from '../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../typeorm/getConfig'
 import { ADMINS } from '../util/env'
 import { httpResFromServiceRes } from '../util/httpRes'
+import { UserRole } from '@pontozo/types'
 
 const terep = [
   {

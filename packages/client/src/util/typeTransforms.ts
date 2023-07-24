@@ -1,5 +1,11 @@
-import { DbEvent, MtfszEvent, Rank } from '@pontozo/types'
+import { MtfszUser, UserPreview, DbEvent, MtfszEvent, Rank } from '@pontozo/types'
 import { stageFilter } from './eventFilter'
+
+export const transformUser = (u: MtfszUser): UserPreview => ({
+  userDOB: u.szul_dat,
+  userFullName: u.vezeteknev + ' ' + u.keresztnev,
+  userId: u.szemely_id,
+})
 
 export const transformEvent = (e: MtfszEvent): DbEvent => ({
   id: e.esemeny_id,

@@ -1,7 +1,3 @@
-export type FetchEventsResult = {
-  result: MtfszEvent[]
-}
-
 export interface MtfszEvent {
   esemeny_id: number
   tipus: string

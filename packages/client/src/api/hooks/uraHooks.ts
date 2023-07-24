@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
-import { functionAxios } from '../../util/initAxios'
+import { functionAxios } from '../../util/axiosConfig'
 import { PontozoError } from '../model/error'
 import { CreateResponse, CreateURA, UpdateURA, UserRoleAssignment } from '@pontozo/types'
 

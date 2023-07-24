@@ -5,12 +5,12 @@ import { getUserFromHeader } from '../../service/auth.service'
 import { CategoryToCriterion } from '../../typeorm/entities/CategoryToCriterion'
 import Criterion from '../../typeorm/entities/Criterion'
 import CriterionRating from '../../typeorm/entities/CriterionRating'
-import EventRating, { RatingStatus } from '../../typeorm/entities/EventRating'
+import EventRating from '../../typeorm/entities/EventRating'
 import { SeasonToCategory } from '../../typeorm/entities/SeasonToCategory'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
 import { validateWithWhitelist } from '../../util/validation'
-import { CreateCriterionRating } from '@pontozo/types'
+import { CreateCriterionRating, RatingStatus } from '@pontozo/types'
 
 /**
  * Called when the user changes the rating of a criteria during the rating of an event.

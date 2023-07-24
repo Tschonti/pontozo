@@ -1,16 +1,11 @@
 import { useMutation } from '@tanstack/react-query'
 import { UserSelectorForm } from '../../pages/uras/types/UserSelectorForm'
 import { APIM_HOST } from '../../util/environment'
-import { apimAxios } from '../../util/initAxios'
-import { User } from '../model/user'
-
-type MtfszResponse = {
-  result: User[]
-  page_size: number
-}
+import { apimAxios } from '../../util/axiosConfig'
+import { MtfszFetchResult, MtfszUser } from '@pontozo/types'
 
 export const useFetchUsersMutation = () => {
-  return useMutation<User[], Error, UserSelectorForm>(async (data: UserSelectorForm) => {
+  return useMutation<MtfszUser[], Error, UserSelectorForm>(async (data: UserSelectorForm) => {
     if (data.userId) {
       try {
         const res = await apimAxios.get(`/szemelyek/${data.userId}`)
@@ -29,6 +24,6 @@ export const useFetchUsersMutation = () => {
     if (data.yob) {
       url.searchParams.append('szul_ev', data.yob.toString())
     }
-    return (await apimAxios.get<MtfszResponse>(url.toString())).data.result
+    return (await apimAxios.get<MtfszFetchResult<MtfszUser>>(url.toString())).data.result
   })
 }

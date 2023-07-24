@@ -2,12 +2,12 @@ import { Check, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } f
 import CriterionRating from './CriterionRating'
 import Event from './Event'
 
-export enum RatingStatus {
+enum RatingStatus {
   STARTED = 'STARTED',
   SUBMITTED = 'SUBMITTED',
 }
 
-export enum RatingRole {
+enum RatingRole {
   COMPETITOR = 'COMPETITOR',
   COACH = 'COACH',
   ORGANISER = 'ORGANISER',

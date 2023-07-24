@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { functionAxios } from '../../util/initAxios'
+import { functionAxios } from '../../util/axiosConfig'
 import { CreateResponse, CreateSeason, Season, SeasonWithCategories } from '@pontozo/types'
 
 export const useFetchSeasons = () => {

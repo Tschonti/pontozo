@@ -1,6 +1,6 @@
 import { Card, CardHeader, Heading } from '@chakra-ui/react'
-import { DbStage } from '../../../api/model/dbEvent'
 import { EventRankBadge } from './EventRankBadge'
+import { DbStage } from '@pontozo/types'
 
 export const StageListItem = ({ stage }: { stage: DbStage }) => {
   return (

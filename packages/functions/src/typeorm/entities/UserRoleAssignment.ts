@@ -1,6 +1,6 @@
 import { Check, Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm'
 
-export enum UserRole {
+enum UserRole {
   SITE_ADMIN = 'SITE_ADMIN',
   JURY = 'JURY',
   COACH = 'COACH',

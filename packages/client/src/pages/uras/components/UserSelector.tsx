@@ -18,10 +18,10 @@ import {
 } from '@chakra-ui/react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useFetchUsersMutation } from '../../../api/hooks/mtfszHooks'
-import { UserPreview } from '../../../api/model/user'
 import { LoadingSpinner } from '../../../components/commons/LoadingSpinner'
-import { transformUser } from '../../../util/transformUser'
 import { UserSelectorForm } from '../types/UserSelectorForm'
+import { UserPreview } from '@pontozo/types'
+import { transformUser } from 'src/util/typeTransforms'
 
 type Props = {
   setUser: (u: UserPreview) => void

@@ -2,12 +2,11 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/fu
 import { plainToClass } from 'class-transformer'
 import { getUserFromHeader } from '../../service/auth.service'
 import Event from '../../typeorm/entities/Event'
-import EventRating, { RatingRole } from '../../typeorm/entities/EventRating'
-import { UserRole } from '../../typeorm/entities/UserRoleAssignment'
+import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
 import { validateWithWhitelist } from '../../util/validation'
-import { CreateEventRating } from '@pontozo/types'
+import { CreateEventRating, RatingRole, UserRole } from '@pontozo/types'
 
 /**
  * Called when a user starts rating an event to initialize the EventRating entity.

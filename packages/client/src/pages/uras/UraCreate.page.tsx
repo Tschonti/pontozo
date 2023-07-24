@@ -5,10 +5,9 @@ import { FaArrowLeft } from 'react-icons/fa'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useCreateUraMutation, useDeleteUraMutation, useFetchUra, useUpdateUraMutation } from '../../api/hooks/uraHooks'
 import { PontozoError } from '../../api/model/error'
-import { UserPreview } from '../../api/model/user'
 import { PATHS } from '../../util/paths'
 import { UserSelector } from './components/UserSelector'
-import { UserRole } from '@pontozo/types'
+import { UserPreview, UserRole } from '@pontozo/types'
 
 export const UraCreatePage = () => {
   const uraId = parseInt(useParams<{ uraId: string }>().uraId ?? '-1')

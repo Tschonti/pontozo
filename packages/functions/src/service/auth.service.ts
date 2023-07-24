@@ -1,12 +1,12 @@
 import { HttpRequest } from '@azure/functions'
 import * as jwt from 'jsonwebtoken'
-import { PontozoUser } from '../functions/auth/types/PontozoUser'
-import UserRoleAssignment, { UserRole } from '../typeorm/entities/UserRoleAssignment'
+import UserRoleAssignment from '../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../typeorm/getConfig'
 import { JWT_SECRET } from '../util/env'
 import { ServiceResponse } from './types'
+import { DbUser, UserRole } from '@pontozo/types'
 
-export const getUserFromHeader = (req: HttpRequest): ServiceResponse<PontozoUser> => {
+export const getUserFromHeader = (req: HttpRequest): ServiceResponse<DbUser> => {
   const authHeader = req.headers.get('Authorization')
   if (!authHeader) {
     return {
@@ -18,7 +18,7 @@ export const getUserFromHeader = (req: HttpRequest): ServiceResponse<PontozoUser
   const jwtToken = authHeader.replace('Bearer', '').trim()
 
   try {
-    const userFromJwt = jwt.verify(jwtToken, JWT_SECRET) as PontozoUser
+    const userFromJwt = jwt.verify(jwtToken, JWT_SECRET) as DbUser
 
     return {
       isError: false,

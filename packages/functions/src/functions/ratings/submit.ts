@@ -1,9 +1,10 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { getUserFromHeader } from '../../service/auth.service'
 import { isHigherRankDB } from '../../service/mtfsz.service'
-import EventRating, { RatingStatus } from '../../typeorm/entities/EventRating'
+import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
+import { RatingStatus } from '@pontozo/types'
 
 /**
  * Called when the users submits their rating of an event.

@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 import { APIM_HOST } from '../../util/environment'
 import { eventFilter } from '../../util/eventFilter'
-import { apimAxios, functionAxios } from '../../util/initAxios'
-import { transformEvent } from '../../util/mtfszEventToDbEvent'
-import { DbEvent, EventRatingWithEvent, EventWithRating, FetchEventsResult } from '@pontozo/types'
+import { apimAxios, functionAxios } from '../../util/axiosConfig'
+import { DbEvent, EventRatingWithEvent, EventWithRating, MtfszEvent, MtfszFetchResult } from '@pontozo/types'
+import { transformEvent } from 'src/util/typeTransforms'
 
 const formatDate = (d: Date) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
 
@@ -17,7 +17,7 @@ export const useFetchEventsLastMonthFromMtfsz = () => {
       url.searchParams.append('datum_tol', formatDate(oneMonthAgo))
       url.searchParams.append('datum_ig', formatDate(today))
       url.searchParams.append('exclude_deleted', 'true')
-      const res = await apimAxios.get<FetchEventsResult>(url.toString())
+      const res = await apimAxios.get<MtfszFetchResult<MtfszEvent>>(url.toString())
       return res.data.result
         .filter(eventFilter)
         .map(transformEvent)

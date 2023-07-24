@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { functionAxios } from '../../util/initAxios'
+import { functionAxios } from '../../util/axiosConfig'
 import { Criterion, CreateCriteria, CreateResponse, EntityWithEditableIndicator, CreateCriterionRating } from '@pontozo/types'
 
 export const useFetchCriteria = () => {
