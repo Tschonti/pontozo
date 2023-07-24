@@ -1,0 +1,8 @@
+{
+  "name": "@pontozo/client",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "vite build",
+    "preview": "vite preview"
+  }
+}
