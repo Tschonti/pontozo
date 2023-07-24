@@ -3,8 +3,7 @@ import * as jwt from 'jsonwebtoken'
 import UserRoleAssignment from '../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../typeorm/getConfig'
 import { JWT_SECRET } from '../util/env'
-import { ServiceResponse } from './types'
-import { DbUser, UserRole } from '@pontozo/types'
+import { DbUser, ServiceResponse, UserRole } from '@pontozo/types'
 
 export const getUserFromHeader = (req: HttpRequest): ServiceResponse<DbUser> => {
   const authHeader = req.headers.get('Authorization')

@@ -1,8 +1,16 @@
 import axios, { AxiosResponse } from 'axios'
 import DbEvent from '../typeorm/entities/Event'
 import { APIM_HOST, APIM_KEY, CLIENT_ID, CLIENT_SECRET, FUNCTION_HOST } from '../util/env'
-import { EventSectionPreview, MtfszResponse, ServiceResponse, User } from './types'
-import { EventSection, MtfszEvent, MtfszUser, MtfszToken } from '@pontozo/types'
+import {
+  EventSection,
+  MtfszEvent,
+  MtfszUser,
+  MtfszToken,
+  EventSectionPreview,
+  MtfszFetchResult,
+  RawMtfszUser,
+  ServiceResponse,
+} from '@pontozo/types'
 
 const acceptedRanks = ['REGIONALIS', 'ORSZAGOS', 'KIEMELT']
 const higherRanks = ['ORSZAGOS', 'KIEMELT']
@@ -26,7 +34,7 @@ export const stageProjection: (e: EventSection) => EventSectionPreview = ({ fajl
 
 const formatDate = (d: Date) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
 
-export const userProjection = ({ szemely_szervezetek, versenyengedelyek, ...restOfUser }: User) => ({ ...restOfUser })
+export const userProjection = ({ szemely_szervezetek, versenyengedelyek, ...restOfUser }: RawMtfszUser) => ({ ...restOfUser })
 
 const mtfszAxios = axios.create({
   baseURL: APIM_HOST,
@@ -36,7 +44,7 @@ const mtfszAxios = axios.create({
 })
 
 export const getOneEvent = async (eventId: number): Promise<ServiceResponse<MtfszEvent>> => {
-  const res = await mtfszAxios.get<MtfszResponse>(`/esemenyek?esemeny_id=${eventId}`)
+  const res = await mtfszAxios.get<MtfszFetchResult<MtfszEvent>>(`/esemenyek?esemeny_id=${eventId}`)
   if (res.data.result.length === 0 || !eventFilter(res.data.result[0])) {
     return {
       isError: true,
@@ -60,7 +68,7 @@ export const getRateableEvents = async (): Promise<MtfszEvent[]> => {
   url.searchParams.append('datum_tol', formatDate(twoWeeksAgo))
   url.searchParams.append('datum_ig', formatDate(today))
   url.searchParams.append('exclude_deleted', 'true')
-  const res = await mtfszAxios.get<MtfszResponse>(url.toString())
+  const res = await mtfszAxios.get<MtfszFetchResult<MtfszEvent>>(url.toString())
 
   return res.data.result.filter(eventFilter)
 }
@@ -86,9 +94,9 @@ export const getUser = async (accessToken: string): Promise<MtfszUser> => {
   ).data
 }
 
-export const getUserById = async (userId: number): Promise<ServiceResponse<User>> => {
+export const getUserById = async (userId: number): Promise<ServiceResponse<RawMtfszUser>> => {
   try {
-    const res = await mtfszAxios.get<User>(`/szemelyek/${userId}`)
+    const res = await mtfszAxios.get<RawMtfszUser>(`/szemelyek/${userId}`)
     return {
       isError: false,
       data: res.data,
