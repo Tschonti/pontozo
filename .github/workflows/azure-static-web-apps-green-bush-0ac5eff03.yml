@@ -15,10 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     env:
-      REACT_APP_FUNC_HOST: https://pontozo-test.azurewebsites.net
-      REACT_APP_APIM_HOST: https://pontozo-apim.azure-api.net
-      REACT_APP_APIM_KEY: ${{ secrets.APIM_KEY }}
-      REACT_APP_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+      VITE_FUNC_HOST: https://pontozo-test.azurewebsites.net
+      VITE_APIM_HOST: https://pontozo-apim.azure-api.net
+      VITE_APIM_KEY: ${{ secrets.APIM_KEY }}
+      VITE_CLIENT_ID: ${{ secrets.CLIENT_ID }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -29,12 +29,12 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_GREEN_BUSH_0AC5EFF03 }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
-          action: "upload"
+          action: 'upload'
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "/client" # App source code path
-          api_location: "" # Api source code path - optional
-          output_location: "build" # Built app content directory - optional
+          app_location: '/packages//client' # App source code path
+          api_location: '' # Api source code path - optional
+          output_location: 'build' # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
@@ -47,4 +47,4 @@ jobs:
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_GREEN_BUSH_0AC5EFF03 }}
-          action: "close"
+          action: 'close'
