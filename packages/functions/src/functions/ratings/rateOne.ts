@@ -10,7 +10,7 @@ import { SeasonToCategory } from '../../typeorm/entities/SeasonToCategory'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
 import { validateWithWhitelist } from '../../util/validation'
-import { CreateCriterionRating, RatingStatus } from '@pontozo/types'
+import { CreateCriterionRating, RatingStatus } from '@pontozo/common'
 
 /**
  * Called when the user changes the rating of a criteria during the rating of an event.

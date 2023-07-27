@@ -7,7 +7,7 @@ import { useCreateUraMutation, useDeleteUraMutation, useFetchUra, useUpdateUraMu
 import { PontozoError } from '../../api/model/error'
 import { PATHS } from '../../util/paths'
 import { UserSelector } from './components/UserSelector'
-import { UserPreview, UserRole } from '@pontozo/types'
+import { UserPreview, UserRole } from '@pontozo/common'
 
 export const UraCreatePage = () => {
   const uraId = parseInt(useParams<{ uraId: string }>().uraId ?? '-1')

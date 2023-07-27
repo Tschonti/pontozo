@@ -1,4 +1,4 @@
-import { MtfszUser, UserPreview, DbEvent, MtfszEvent, Rank, getHighestRank, stageFilter } from '@pontozo/types'
+import { MtfszUser, UserPreview, DbEvent, MtfszEvent, Rank, getHighestRank, stageFilter } from '@pontozo/common'
 
 export const transformUser = (u: MtfszUser): UserPreview => ({
   userDOB: u.szul_dat,

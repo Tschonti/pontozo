@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 import { APIM_HOST, APIM_KEY, CLIENT_ID, CLIENT_SECRET, FUNCTION_HOST } from '../util/env'
-import { MtfszUser, MtfszToken, RawMtfszUser, ServiceResponse } from '@pontozo/types'
+import { MtfszUser, MtfszToken, RawMtfszUser, ServiceResponse } from '@pontozo/common'
 
 export const userProjection = ({ szemely_szervezetek, versenyengedelyek, ...restOfUser }: RawMtfszUser) => ({ ...restOfUser })
 

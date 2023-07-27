@@ -8,7 +8,7 @@ import Criterion from '../../typeorm/entities/Criterion'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
 import { validateWithWhitelist } from '../../util/validation'
-import { CreateCategory } from '@pontozo/types'
+import { CreateCategory } from '@pontozo/common'
 
 export const updateCategory = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const adminCheck = await getUserFromHeaderAndAssertAdmin(req)

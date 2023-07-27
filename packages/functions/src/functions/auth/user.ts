@@ -3,7 +3,7 @@ import { getUserFromHeader } from '../../service/auth.service'
 import UserRoleAssignment from '../../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
-import { DbUser } from '@pontozo/types'
+import { DbUser } from '@pontozo/common'
 
 export const currentUser = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const userServiceRes = getUserFromHeader(req)

@@ -5,7 +5,7 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { functionAxios } from '../../util/axiosConfig'
 import { PATHS } from '../../util/paths'
 import { useSubmitRatingMutation } from '../hooks/ratingHooks'
-import { CategoryWithCriteria, DbStage, EventRatingInfo } from '@pontozo/types'
+import { CategoryWithCriteria, DbStage, EventRatingInfo } from '@pontozo/common'
 
 export type RatingContextType = {
   eventRatingInfo: EventRatingInfo | undefined

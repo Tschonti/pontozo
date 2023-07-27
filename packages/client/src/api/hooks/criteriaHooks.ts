@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { functionAxios } from '../../util/axiosConfig'
-import { Criterion, CreateCriteria, CreateResponse, EntityWithEditableIndicator, CreateCriterionRating } from '@pontozo/types'
+import { Criterion, CreateCriteria, CreateResponse, EntityWithEditableIndicator, CreateCriterionRating } from '@pontozo/common'
 
 export const useFetchCriteria = () => {
   return useQuery<Criterion[]>(['fetchCriteria'], async () => (await functionAxios.get(`/criteria`)).data, { retry: false })

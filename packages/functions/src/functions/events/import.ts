@@ -5,7 +5,7 @@ import Season from '../../typeorm/entities/Season'
 import Stage from '../../typeorm/entities/Stage'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { currentSeasonFilter } from '../../util/currentSeasonFilter'
-import { getHighestRank, getRateableEvents, stageFilter } from '@pontozo/types'
+import { getHighestRank, getRateableEvents, stageFilter } from '@pontozo/common'
 import { APIM_HOST, APIM_KEY } from '../../util/env'
 
 /**

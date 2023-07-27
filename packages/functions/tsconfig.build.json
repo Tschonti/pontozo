@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "dist",
     "paths": {
-      "@pontozo/types": ["../../packages/types/src/index.ts"]
+      "@pontozo/common": ["../../packages/common/src/index.ts"]
     },
     "resolveJsonModule": true
   }

@@ -1,24 +1,24 @@
 {
-  "name": "types",
+  "name": "common",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/types/src",
+  "sourceRoot": "packages/common/src",
   "projectType": "library",
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/packages/types",
-        "main": "packages/types/src/index.ts",
-        "tsConfig": "packages/types/tsconfig.lib.json",
-        "assets": ["packages/types/*.md"]
+        "outputPath": "dist/packages/common",
+        "main": "packages/common/src/index.ts",
+        "tsConfig": "packages/common/tsconfig.lib.json",
+        "assets": ["packages/common/*.md"]
       }
     },
     "lint": {
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["packages/types/**/*.ts"]
+        "lintFilePatterns": ["packages/common/**/*.ts"]
       }
     }
   },

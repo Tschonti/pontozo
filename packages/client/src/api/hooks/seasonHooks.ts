@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { functionAxios } from '../../util/axiosConfig'
-import { CreateResponse, CreateSeason, Season, SeasonWithCategories } from '@pontozo/types'
+import { CreateResponse, CreateSeason, Season, SeasonWithCategories } from '@pontozo/common'
 
 export const useFetchSeasons = () => {
   return useQuery<Season[]>(['fetchSeasons'], async () => (await functionAxios.get(`/seasons`)).data, { retry: false })

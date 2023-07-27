@@ -6,7 +6,7 @@ import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
 import { validateWithWhitelist } from '../../util/validation'
-import { CreateEventRating, RatingRole, UserRole } from '@pontozo/types'
+import { CreateEventRating, RatingRole, UserRole } from '@pontozo/common'
 
 /**
  * Called when a user starts rating an event to initialize the EventRating entity.

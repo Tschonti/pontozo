@@ -7,7 +7,7 @@ import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
 import { validateWithWhitelist } from '../../util/validation'
-import { GetCriterionRatings } from '@pontozo/types'
+import { GetCriterionRatings } from '@pontozo/common'
 
 /**
  * Called when the user switches pages during the rating of an event to get their previous ratings on the current criteria.

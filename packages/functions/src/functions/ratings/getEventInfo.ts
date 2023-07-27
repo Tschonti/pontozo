@@ -4,7 +4,7 @@ import Criterion from '../../typeorm/entities/Criterion'
 import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
-import { CategoryWithCriteria, EventRatingInfo, isHigherRank } from '@pontozo/types'
+import { CategoryWithCriteria, EventRatingInfo, isHigherRank } from '@pontozo/common'
 
 /**
  * Called after the users starts the rating of an event to get all the rating categories and criteria.

@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { FUNC_HOST } from '../../util/environment'
 import { functionAxios } from '../../util/axiosConfig'
-import { CriterionRating, EventRatingInfo, GetCriterionRatings, GetEventRating, CreateEventRating } from '@pontozo/types'
+import { CriterionRating, EventRatingInfo, GetCriterionRatings, GetEventRating, CreateEventRating } from '@pontozo/common'
 
 export const useStartRatingMutation = () => {
   return useMutation<RatingStartedResponse[], Error, CreateEventRating>(

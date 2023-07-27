@@ -25,7 +25,7 @@ import {
 } from '../../api/hooks/criteriaHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
-import { CreateCriterionForm, CreateCriteria, RatingRole } from '@pontozo/types'
+import { CreateCriterionForm, CreateCriteria, RatingRole } from '@pontozo/common'
 
 export const CriteriaCreatePage = () => {
   const criterionId = parseInt(useParams<{ criterionId: string }>().criterionId ?? '-1')

@@ -1,4 +1,4 @@
-import { EventRank, RatingRole, RatingStatus, UserRole } from '@pontozo/types'
+import { EventRank, RatingRole, RatingStatus, UserRole } from '@pontozo/common'
 
 export const ratingRolesArray = [RatingRole.COMPETITOR, RatingRole.COACH, RatingRole.ORGANISER, RatingRole.JURY]
 

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { APIM_HOST, APIM_KEY } from '../../util/environment'
 import { functionAxios } from '../../util/axiosConfig'
-import { DbEvent, EventRatingWithEvent, EventWithRating, getRateableEvents } from '@pontozo/types'
+import { DbEvent, EventRatingWithEvent, EventWithRating, getRateableEvents } from '@pontozo/common'
 import { transformEvent } from 'src/util/typeTransforms'
 
 export const useFetchEventsLastMonthFromMtfsz = () => {

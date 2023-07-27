@@ -5,7 +5,7 @@ import Criterion from '../../typeorm/entities/Criterion'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
 import { validateWithWhitelist } from '../../util/validation'
-import { CreateCriteria, RatingRole } from '@pontozo/types'
+import { CreateCriteria, RatingRole } from '@pontozo/common'
 // import { CreateCriteriaDTO } from './types/createCriteria.dto'
 
 export const createCriteria = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {

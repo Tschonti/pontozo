@@ -1,5 +1,5 @@
 {
-  "name": "@pontozo/types",
+  "name": "@pontozo/common",
   "version": "0.0.1",
   "type": "commonjs",
   "dependencies": {

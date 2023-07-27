@@ -3,7 +3,7 @@ import { getUserFromHeader } from '../../service/auth.service'
 import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
-import { isHigherRank, RatingStatus } from '@pontozo/types'
+import { isHigherRank, RatingStatus } from '@pontozo/common'
 
 /**
  * Called when the users submits their rating of an event.

@@ -4,7 +4,7 @@ import Event from '../../typeorm/entities/Event'
 import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
-import { EventWithRating } from '@pontozo/types'
+import { EventWithRating } from '@pontozo/common'
 
 /**
  * Called when the user visits an event page to get the event data and the user's rating.

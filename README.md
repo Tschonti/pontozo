@@ -10,6 +10,6 @@ The backend of the application, which is an Azure Funtion App written in TypeScr
 
 The React frontend of the application.
 
-## Types
+## Common
 
-Common types of the two main packages. Can't be transpiled on its own.
+Common types and util functions of the two main packages.

@@ -11,7 +11,7 @@ import {
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 import { CriteriaSelector } from './components/CriteriaSelector'
-import { CreateCategoryForm } from '@pontozo/types'
+import { CreateCategoryForm } from '@pontozo/common'
 
 export const CategoryCreatePage = () => {
   const categoryId = parseInt(useParams<{ categoryId: string }>().categoryId ?? '-1')

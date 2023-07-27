@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToMany, PrimaryColumn } from 'typeorm'
 import Event from './Event'
-import { Club as IClub } from '@pontozo/types'
+import { Club as IClub } from '@pontozo/common'
 
 @Entity()
 class Club implements IClub {

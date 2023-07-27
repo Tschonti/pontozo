@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "resolveJsonModule": true,
     "paths": {
-      "@pontozo/types": ["packages/types/src/index.ts"]
+      "@pontozo/common": ["packages/common/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -2,7 +2,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeo
 import Criterion from './Criterion'
 import EventRating from './EventRating'
 import Stage from './Stage'
-import { CriterionRating as ICriterionRating } from '@pontozo/types'
+import { CriterionRating as ICriterionRating } from '@pontozo/common'
 
 @Entity()
 @Unique(['criterionId', 'eventRatingId', 'stageId'])

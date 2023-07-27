@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm'
 import CriterionRating from './CriterionRating'
 import Event from './Event'
-import { DbStage } from '@pontozo/types'
+import { DbStage } from '@pontozo/common'
 
 @Entity()
 class Stage implements DbStage {

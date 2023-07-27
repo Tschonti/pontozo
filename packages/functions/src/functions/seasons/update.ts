@@ -8,7 +8,7 @@ import { SeasonToCategory } from '../../typeorm/entities/SeasonToCategory'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
 import { validateWithWhitelist } from '../../util/validation'
-import { CreateSeason } from '@pontozo/types'
+import { CreateSeason } from '@pontozo/common'
 
 export const updateSeason = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const adminCheck = await getUserFromHeaderAndAssertAdmin(req)

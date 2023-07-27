@@ -20,7 +20,7 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { useFetchUsersMutation } from '../../../api/hooks/mtfszHooks'
 import { LoadingSpinner } from '../../../components/commons/LoadingSpinner'
 import { UserSelectorForm } from '../types/UserSelectorForm'
-import { UserPreview } from '@pontozo/types'
+import { UserPreview } from '@pontozo/common'
 import { transformUser } from 'src/util/typeTransforms'
 
 type Props = {

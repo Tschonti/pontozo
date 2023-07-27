@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { functionAxios } from '../../util/axiosConfig'
 import { PontozoError } from '../model/error'
-import { CreateResponse, CreateURA, UpdateURA, UserRoleAssignment } from '@pontozo/types'
+import { CreateResponse, CreateURA, UpdateURA, UserRoleAssignment } from '@pontozo/common'
 
 export const useFetchUras = () => {
   return useQuery<UserRoleAssignment[]>(['fetchUras'], async () => (await functionAxios.get(`/uras`)).data, { retry: false })

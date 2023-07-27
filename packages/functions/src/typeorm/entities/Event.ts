@@ -3,7 +3,7 @@ import Club from './Club'
 import EventRating from './EventRating'
 import Season from './Season'
 import Stage from './Stage'
-import { DbEvent } from '@pontozo/types'
+import { DbEvent } from '@pontozo/common'
 
 enum Rank {
   REGIONAL = 'REGIONALIS',

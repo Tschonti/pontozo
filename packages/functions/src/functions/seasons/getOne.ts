@@ -3,7 +3,7 @@ import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Season from '../../typeorm/entities/Season'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
-import { SeasonWithCategories } from '@pontozo/types'
+import { SeasonWithCategories } from '@pontozo/common'
 
 export const getSeason = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const adminCheck = await getUserFromHeaderAndAssertAdmin(req)

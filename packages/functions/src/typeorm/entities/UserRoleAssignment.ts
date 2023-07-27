@@ -1,5 +1,5 @@
 import { Check, Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm'
-import { UserRoleAssignment as IUserRoleAssignment } from '@pontozo/types'
+import { UserRoleAssignment as IUserRoleAssignment } from '@pontozo/common'
 
 enum UserRole {
   SITE_ADMIN = 'SITE_ADMIN',

@@ -25,7 +25,7 @@ import { useFormContext } from 'react-hook-form'
 import { FaCaretDown, FaCaretUp, FaMinus, FaSearch, FaTimes } from 'react-icons/fa'
 import { useFetchCategories } from '../../../api/hooks/categoryHooks'
 import { LoadingSpinner } from '../../../components/commons/LoadingSpinner'
-import { CreateSeasonForm, Category } from '@pontozo/types'
+import { CreateSeasonForm, Category } from '@pontozo/common'
 
 export const CategorySelector = ({ editable }: { editable: boolean }) => {
   const {

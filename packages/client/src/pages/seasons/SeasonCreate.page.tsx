@@ -7,7 +7,7 @@ import { useCreateSeasonMutation, useDeleteSeasonMutation, useFetchSeason, useUp
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 import { CategorySelector } from './components/CategorySelector'
-import { CreateSeasonForm, CreateSeason } from '@pontozo/types'
+import { CreateSeasonForm, CreateSeason } from '@pontozo/common'
 
 export const SeasonCreatePage = () => {
   const seasonId = parseInt(useParams<{ seasonId: string }>().seasonId ?? '-1')

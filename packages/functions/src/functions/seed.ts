@@ -7,7 +7,7 @@ import UserRoleAssignment from '../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../typeorm/getConfig'
 import { ADMINS } from '../util/env'
 import { httpResFromServiceRes } from '../util/httpRes'
-import { UserRole } from '@pontozo/types'
+import { UserRole } from '@pontozo/common'
 
 const terep = [
   {

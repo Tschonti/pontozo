@@ -3,7 +3,7 @@ import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Category from '../../typeorm/entities/Category'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
-import { CategoryWithCriteria, EntityWithEditableIndicator } from '@pontozo/types'
+import { CategoryWithCriteria, EntityWithEditableIndicator } from '@pontozo/common'
 
 export const getCategory = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const adminCheck = await getUserFromHeaderAndAssertAdmin(req)

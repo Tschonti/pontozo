@@ -2,7 +2,7 @@ import { FormControl, FormHelperText, FormLabel, Radio, RadioGroup, Stack, useTo
 import { useEffect, useState } from 'react'
 import { useRatingContext } from '../../../api/contexts/useRatingContext'
 import { useRateCriteriaMutation } from '../../../api/hooks/criteriaHooks'
-import { CriterionDetails, RatingStatus } from '@pontozo/types'
+import { CriterionDetails, RatingStatus } from '@pontozo/common'
 
 type Props = {
   criterion: CriterionDetails

@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import Event from './Event'
 import { SeasonToCategory } from './SeasonToCategory'
-import { Season as ISeason } from '@pontozo/types'
+import { Season as ISeason } from '@pontozo/common'
 
 @Entity()
 class Season implements ISeason {

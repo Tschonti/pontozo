@@ -7,7 +7,7 @@ import UserRoleAssignment from '../../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
 import { validateWithWhitelist } from '../../util/validation'
-import { CreateURA } from '@pontozo/types'
+import { CreateURA } from '@pontozo/common'
 
 export const createURA = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
