@@ -14,7 +14,7 @@ export enum RatingRole {
   JURY = 'JURY',
 }
 
-export type EventRating = {
+export interface EventRating {
   id: number
   eventId: number
   userId: number

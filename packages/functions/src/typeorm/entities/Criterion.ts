@@ -1,9 +1,10 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { CategoryToCriterion } from './CategoryToCriterion'
 import CriterionRating from './CriterionRating'
+import { Criterion as ICriterion } from '@pontozo/types'
 
 @Entity()
-class Criterion {
+class Criterion implements Omit<ICriterion, 'roles'> {
   @PrimaryGeneratedColumn()
   id: number
 

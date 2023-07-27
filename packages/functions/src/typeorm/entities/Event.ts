@@ -3,6 +3,7 @@ import Club from './Club'
 import EventRating from './EventRating'
 import Season from './Season'
 import Stage from './Stage'
+import { DbEvent } from '@pontozo/types'
 
 enum Rank {
   REGIONAL = 'REGIONALIS',
@@ -11,7 +12,7 @@ enum Rank {
 }
 
 @Entity()
-class Event {
+class Event implements DbEvent {
   @PrimaryColumn()
   id: number
 

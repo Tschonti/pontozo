@@ -2,7 +2,7 @@ import { ArrayNotEmpty, ArrayUnique, IsBoolean, IsEnum, IsInt, IsNotEmpty, IsOpt
 import { CriterionRating } from './criterionRatings'
 import { RatingRole } from './eventRatings'
 
-export type Criterion = {
+export interface Criterion {
   id: number
   name: string
   description: string

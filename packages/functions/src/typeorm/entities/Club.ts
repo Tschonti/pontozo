@@ -1,8 +1,9 @@
 import { Column, Entity, ManyToMany, PrimaryColumn } from 'typeorm'
 import Event from './Event'
+import { Club as IClub } from '@pontozo/types'
 
 @Entity()
-class Club {
+class Club implements IClub {
   @PrimaryColumn()
   id: number
 

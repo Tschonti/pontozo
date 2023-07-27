@@ -1,7 +1,7 @@
 import { ArrayUnique, IsInt, IsNotEmpty, IsString, Min } from 'class-validator'
 import { Criterion } from './criteria'
 
-export type Category = {
+export interface Category {
   id: number
   name: string
   description: string

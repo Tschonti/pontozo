@@ -1,6 +1,6 @@
 import { EventRating } from './eventRatings'
 
-export type DbEvent = {
+export interface DbEvent {
   id: number
   name: string
   type: string
@@ -24,14 +24,14 @@ export enum Rank {
   FEATURED = 'KIEMELT',
 }
 
-export type Club = {
+export interface Club {
   id: number
   code: string
   shortName: string
   longName: string
 }
 
-export type DbStage = {
+export interface DbStage {
   id: number
   eventId: number
   startTime: string

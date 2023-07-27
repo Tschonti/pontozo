@@ -1,12 +1,12 @@
 import { IsInt, IsOptional, Max, Min } from 'class-validator'
-import { MtfszStage } from './mtfszEvents'
+import { DbStage } from './dbEvents'
 
-export type CriterionRating = {
+export interface CriterionRating {
   id: number
   criterionId: number
   eventRatingId: number
   stageId?: number
-  stage?: MtfszStage
+  stage?: DbStage
   value: number
 }
 

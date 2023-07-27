@@ -1,4 +1,5 @@
 import { Check, Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm'
+import { UserRoleAssignment as IUserRoleAssignment } from '@pontozo/types'
 
 enum UserRole {
   SITE_ADMIN = 'SITE_ADMIN',
@@ -8,7 +9,7 @@ enum UserRole {
 
 @Entity()
 @Unique(['userId', 'role'])
-class UserRoleAssignment {
+class UserRoleAssignment implements IUserRoleAssignment {
   @PrimaryGeneratedColumn()
   id: number
 

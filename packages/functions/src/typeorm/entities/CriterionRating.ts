@@ -2,10 +2,11 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeo
 import Criterion from './Criterion'
 import EventRating from './EventRating'
 import Stage from './Stage'
+import { CriterionRating as ICriterionRating } from '@pontozo/types'
 
 @Entity()
 @Unique(['criterionId', 'eventRatingId', 'stageId'])
-class CriterionRating {
+class CriterionRating implements ICriterionRating {
   @PrimaryGeneratedColumn()
   id: number
 

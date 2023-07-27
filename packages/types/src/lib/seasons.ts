@@ -2,7 +2,7 @@ import { ArrayUnique, IsDateString, IsInt, IsNotEmpty, Min } from 'class-validat
 import { IsLaterThan } from './customValidators'
 import { Category } from './categories'
 
-export type Season = {
+export interface Season {
   id: number
   name: string
   startDate: Date

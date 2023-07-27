@@ -6,7 +6,7 @@ export enum UserRole {
   COACH = 'COACH',
 }
 
-export type UserRoleAssignment = {
+export interface UserRoleAssignment {
   id: number
   userId: number
   role: UserRole

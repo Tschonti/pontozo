@@ -1,6 +1,7 @@
 import { Check, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import CriterionRating from './CriterionRating'
 import Event from './Event'
+import { EventRating as IEventRating } from '@pontozo/types'
 
 enum RatingStatus {
   STARTED = 'STARTED',
@@ -15,7 +16,7 @@ enum RatingRole {
 }
 
 @Entity()
-class EventRating {
+class EventRating implements IEventRating {
   @PrimaryGeneratedColumn()
   id: number
 

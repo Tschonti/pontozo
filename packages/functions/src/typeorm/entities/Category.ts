@@ -1,9 +1,10 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { CategoryToCriterion } from './CategoryToCriterion'
 import { SeasonToCategory } from './SeasonToCategory'
+import { Category as ICategory } from '@pontozo/types'
 
 @Entity()
-class Category {
+class Category implements ICategory {
   @PrimaryGeneratedColumn()
   id: number
 
