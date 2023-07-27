@@ -1,30 +1,15 @@
-export * from './lib/mtfszEvents'
-export * from './lib/criteria'
-export * from './lib/categories'
-export * from './lib/criterionRatings'
-export * from './lib/dbEvents'
-export * from './lib/criterionRatings'
-export * from './lib/eventRatings'
-export * from './lib/seasons'
-export * from './lib/uras'
-export * from './lib/users'
+export * from './lib/types/mtfszEvents'
+export * from './lib/types/criteria'
+export * from './lib/types/categories'
+export * from './lib/types/criterionRatings'
+export * from './lib/types/dbEvents'
+export * from './lib/types/criterionRatings'
+export * from './lib/types/eventRatings'
+export * from './lib/types/seasons'
+export * from './lib/types/uras'
+export * from './lib/types/users'
+export * from './lib/types/util'
 
-export type CreateResponse = {
-  id: number
-}
-
-export type EntityWithEditableIndicator<T> = T & {
-  editable: boolean
-}
-
-export type MtfszFetchResult<T> = {
-  result: T[]
-  page_size: number
-}
-
-export type ServiceResponse<T> = {
-  isError: boolean
-  data?: T
-  status?: number
-  message?: string
-}
+export * from './lib/util/getRateableEvents'
+export * from './lib/util/ranks'
+export * from './lib/util/filters'

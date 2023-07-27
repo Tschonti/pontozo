@@ -1,5 +1,4 @@
-import { MtfszUser, UserPreview, DbEvent, MtfszEvent, Rank } from '@pontozo/types'
-import { stageFilter } from './eventFilter'
+import { MtfszUser, UserPreview, DbEvent, MtfszEvent, Rank, getHighestRank, stageFilter } from '@pontozo/types'
 
 export const transformUser = (u: MtfszUser): UserPreview => ({
   userDOB: u.szul_dat,
@@ -32,17 +31,3 @@ export const transformEvent = (e: MtfszEvent): DbEvent => ({
   })),
   rateable: true,
 })
-
-export const getHighestRank = (e: MtfszEvent): Rank => {
-  let highest = Rank.REGIONAL
-  e.programok.forEach((p) => {
-    if (p.tipus === 'FUTAM') {
-      if (p.futam.rangsorolo === 'ORSZAGOS' && highest !== Rank.FEATURED) {
-        highest = Rank.NATIONAL
-      } else if (p.futam.rangsorolo === 'KIEMELT') {
-        highest = Rank.FEATURED
-      }
-    }
-  })
-  return highest
-}

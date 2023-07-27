@@ -1,11 +1,10 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { getUserFromHeader } from '../../service/auth.service'
-import { isHigherRankDB } from '../../service/mtfsz.service'
 import Criterion from '../../typeorm/entities/Criterion'
 import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
-import { CategoryWithCriteria, EventRatingInfo } from '@pontozo/types'
+import { CategoryWithCriteria, EventRatingInfo, isHigherRank } from '@pontozo/types'
 
 /**
  * Called after the users starts the rating of an event to get all the rating categories and criteria.
@@ -58,7 +57,7 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
             roles: JSON.parse(criterion.roles),
           } as Criterion
         })
-        .filter((c) => c.roles.includes(eventRating.role) && (isHigherRankDB(event) || !c.nationalOnly))
+        .filter((c) => c.roles.includes(eventRating.role) && (isHigherRank(event) || !c.nationalOnly))
       const eventCriteria = []
       const stageCriteria = []
       filteredCriteria.forEach((c) => {

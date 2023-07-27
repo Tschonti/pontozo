@@ -1,27 +1,15 @@
 import { useQuery } from '@tanstack/react-query'
-import { APIM_HOST } from '../../util/environment'
-import { eventFilter } from '../../util/eventFilter'
-import { apimAxios, functionAxios } from '../../util/axiosConfig'
-import { DbEvent, EventRatingWithEvent, EventWithRating, MtfszEvent, MtfszFetchResult } from '@pontozo/types'
+import { APIM_HOST, APIM_KEY } from '../../util/environment'
+import { functionAxios } from '../../util/axiosConfig'
+import { DbEvent, EventRatingWithEvent, EventWithRating, getRateableEvents } from '@pontozo/types'
 import { transformEvent } from 'src/util/typeTransforms'
-
-const formatDate = (d: Date) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
 
 export const useFetchEventsLastMonthFromMtfsz = () => {
   return useQuery<DbEvent[]>(
     ['fetchEventsMtfsz'],
     async () => {
-      const url = new URL('esemenyek', APIM_HOST)
-      const today = new Date()
-      const oneMonthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000)
-      url.searchParams.append('datum_tol', formatDate(oneMonthAgo))
-      url.searchParams.append('datum_ig', formatDate(today))
-      url.searchParams.append('exclude_deleted', 'true')
-      const res = await apimAxios.get<MtfszFetchResult<MtfszEvent>>(url.toString())
-      return res.data.result
-        .filter(eventFilter)
-        .map(transformEvent)
-        .sort((e1, e2) => -e1.startDate.localeCompare(e2.startDate))
+      const events = await getRateableEvents(APIM_KEY, APIM_HOST)
+      return events.map(transformEvent).sort((e1, e2) => -e1.startDate.localeCompare(e2.startDate))
     },
     { retry: false }
   )

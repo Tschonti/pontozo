@@ -1,18 +1,18 @@
 import { app, InvocationContext, Timer } from '@azure/functions'
-import { getRateableEvents, stageFilter } from '../../service/mtfsz.service'
 import Club from '../../typeorm/entities/Club'
 import Event from '../../typeorm/entities/Event'
 import Season from '../../typeorm/entities/Season'
 import Stage from '../../typeorm/entities/Stage'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { currentSeasonFilter } from '../../util/currentSeasonFilter'
-import { getHighestRank } from '../../util/getHighestRank'
+import { getHighestRank, getRateableEvents, stageFilter } from '@pontozo/types'
+import { APIM_HOST, APIM_KEY } from '../../util/env'
 
 /**
  * Called every night automatically to import events from MTFSZ DB.
  */
 export const importEvents = async (myTimer: Timer, context: InvocationContext): Promise<void> => {
-  const pevents = getRateableEvents()
+  const pevents = getRateableEvents(APIM_KEY, APIM_HOST)
   const pads = getAppDataSource()
   const [events, ads] = await Promise.all([pevents, pads])
 

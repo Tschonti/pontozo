@@ -34,9 +34,9 @@ export const IsLaterThan = (property: string, validationOptions?: ValidationOpti
           const relatedValue = (args.object as any)[relatedPropertyName]
           return (
             typeof value === 'string' &&
-            Date.parse(value) &&
+            !isNaN(Date.parse(value)) &&
             typeof relatedValue === 'string' &&
-            Date.parse(relatedValue) &&
+            !isNaN(Date.parse(relatedValue)) &&
             Date.parse(value) > Date.parse(relatedValue)
           )
         },

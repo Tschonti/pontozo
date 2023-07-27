@@ -1,5 +1,5 @@
 import { ArrayUnique, IsDateString, IsInt, IsNotEmpty, Min } from 'class-validator'
-import { IsLaterThan } from './customValidators'
+import { IsLaterThan } from '../util/customValidators'
 import { Category } from './categories'
 
 export interface Season {

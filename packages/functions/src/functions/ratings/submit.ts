@@ -1,10 +1,9 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { getUserFromHeader } from '../../service/auth.service'
-import { isHigherRankDB } from '../../service/mtfsz.service'
 import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { httpResFromServiceRes } from '../../util/httpRes'
-import { RatingStatus } from '@pontozo/types'
+import { isHigherRank, RatingStatus } from '@pontozo/types'
 
 /**
  * Called when the users submits their rating of an event.
@@ -52,7 +51,7 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
     let criterionCount = 0
     season.categories.forEach((stc) => {
       stc.category.criteria.forEach(({ criterion: c }) => {
-        if (c.roles.includes(rating.role) && (isHigherRankDB(rating.event) || !c.nationalOnly)) {
+        if (c.roles.includes(rating.role) && (isHigherRank(rating.event) || !c.nationalOnly)) {
           if (c.stageSpecific) {
             criterionCount = criterionCount + stages.length
           } else {
