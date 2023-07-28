@@ -3,12 +3,6 @@ import axios from 'axios'
 import { MtfszFetchResult } from '../types/util'
 import { eventFilter } from './filters'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// export const stageProjection: (e: EventSection) => EventSectionPreview = ({ fajlok, hivatkozasok, helyszinek, ...restOfData }) => ({
-//   ...restOfData,
-// })
-// TODO CLEAR
-
 const formatDate = (d: Date) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
 
 export const getRateableEvents = async (apiKey: string, apiManagementHost: string): Promise<MtfszEvent[]> => {
