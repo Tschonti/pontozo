@@ -1,7 +1,7 @@
+import { Category as ICategory } from '@pontozo/common'
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { CategoryToCriterion } from './CategoryToCriterion'
 import { SeasonToCategory } from './SeasonToCategory'
-import { Category as ICategory } from '@pontozo/common'
 
 @Entity()
 class Category implements ICategory {

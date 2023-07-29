@@ -1,20 +1,19 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import * as jwt from 'jsonwebtoken'
+import { PontozoException } from '../../../../common/src'
 import { getToken, getUser } from '../../service/mtfsz.service'
 import UserRoleAssignment from '../../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { FRONTEND_URL, JWT_SECRET } from '../../util/env'
+import { handleException } from '../../util/handleException'
 
 export const login = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-  const authorizationCode = req.query.get('code')
-  if (!authorizationCode) {
-    return {
-      status: 401,
-      body: 'Authentication failed',
-    }
-  }
-
   try {
+    const authorizationCode = req.query.get('code')
+    if (!authorizationCode) {
+      throw new PontozoException('Nem sikerült az autentikáció!', 401)
+    }
+
     const oauthToken = await getToken(authorizationCode)
     const user = await getUser(oauthToken.access_token)
 
@@ -26,11 +25,8 @@ export const login = async (req: HttpRequest, context: InvocationContext): Promi
         location: `${FRONTEND_URL}/authorized?token=${jwtToken}`,
       },
     }
-  } catch (e) {
-    return {
-      status: 401,
-      jsonBody: e,
-    }
+  } catch (error) {
+    handleException(context, error)
   }
 }
 

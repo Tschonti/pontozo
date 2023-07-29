@@ -14,6 +14,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
+import { CreateCriteria, CreateCriterionForm, RatingRole } from '@pontozo/common'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -25,7 +26,6 @@ import {
 } from '../../api/hooks/criteriaHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
-import { CreateCriterionForm, CreateCriteria, RatingRole } from '@pontozo/common'
 
 export const CriteriaCreatePage = () => {
   const criterionId = parseInt(useParams<{ criterionId: string }>().criterionId ?? '-1')

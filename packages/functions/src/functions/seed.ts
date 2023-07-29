@@ -1,4 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { UserRole } from '@pontozo/common'
 import { getUserFromHeaderAndAssertAdmin } from '../service/auth.service'
 import Category from '../typeorm/entities/Category'
 import Criterion from '../typeorm/entities/Criterion'
@@ -6,8 +7,7 @@ import Season from '../typeorm/entities/Season'
 import UserRoleAssignment from '../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../typeorm/getConfig'
 import { ADMINS } from '../util/env'
-import { httpResFromServiceRes } from '../util/httpRes'
-import { UserRole } from '@pontozo/common'
+import { handleException } from '../util/handleException'
 
 const terep = [
   {
@@ -405,174 +405,179 @@ const kommunikáció = [
 ]
 
 export const seed = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-  const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
-  if (adminCheck.isError) {
-    return httpResFromServiceRes(adminCheck)
-  }
+  try {
+    await getUserFromHeaderAndAssertAdmin(req)
 
-  const ads = await getAppDataSource()
-  const seasonRepo = ads.getRepository(Season)
-  const categoryRepo = ads.getRepository(Category)
-  const criterionRepo = ads.getRepository(Criterion)
-  const userRepo = ads.getRepository(UserRoleAssignment)
+    const ads = await getAppDataSource()
+    const seasonRepo = ads.getRepository(Season)
+    const categoryRepo = ads.getRepository(Category)
+    const criterionRepo = ads.getRepository(Criterion)
+    const userRepo = ads.getRepository(UserRoleAssignment)
 
-  const criteria = (await criterionRepo.find({ select: { id: true } })).map((c) => c.id)
-  const categories = (await categoryRepo.find({ select: { id: true } })).map((c) => c.id)
-  const seasons = (await seasonRepo.find({ select: { id: true } })).map((s) => s.id)
-  const uras = (await userRepo.find({ select: { id: true } })).map((u) => u.id)
+    const criteria = (await criterionRepo.find({ select: { id: true } })).map((c) => c.id)
+    const categories = (await categoryRepo.find({ select: { id: true } })).map((c) => c.id)
+    const seasons = (await seasonRepo.find({ select: { id: true } })).map((s) => s.id)
+    const uras = (await userRepo.find({ select: { id: true } })).map((u) => u.id)
 
-  if (criteria.length > 0) {
-    await criterionRepo.delete(criteria)
-  }
-  if (categories.length > 0) {
-    await categoryRepo.delete(categories)
-  }
-  if (seasons.length > 0) {
-    await seasonRepo.delete(seasons)
-  }
-  if (uras.length > 0) {
-    await userRepo.delete(uras)
-  }
+    if (criteria.length > 0) {
+      await criterionRepo.delete(criteria)
+    }
+    if (categories.length > 0) {
+      await categoryRepo.delete(categories)
+    }
+    if (seasons.length > 0) {
+      await seasonRepo.delete(seasons)
+    }
+    if (uras.length > 0) {
+      await userRepo.delete(uras)
+    }
 
-  if (ADMINS.length > 0) {
-    await userRepo.save(
-      ADMINS.map((a) => {
-        const ura = new UserRoleAssignment()
-        ura.userId = a.userId
-        ura.userDOB = a.dob
-        ura.userFullName = a.name
-        ura.role = UserRole.SITE_ADMIN
-        return ura
+    if (ADMINS.length > 0) {
+      await userRepo.save(
+        ADMINS.map((a) => {
+          const ura = new UserRoleAssignment()
+          ura.userId = a.userId
+          ura.userDOB = a.dob
+          ura.userFullName = a.name
+          ura.role = UserRole.SITE_ADMIN
+          return ura
+        })
+      )
+    }
+
+    const newTerep = await Promise.all(
+      terep.map(async (t) => {
+        return await criterionRepo.save(t)
       })
     )
+    const terepCat = new Category()
+    terepCat.name = 'Terepválasztás, Pályakitűzés'
+    terepCat.description = 'test'
+    terepCat.criteria = newTerep.map((t, i) => ({
+      criterion: t,
+      order: i,
+      category: terepCat,
+      criterionId: t.id,
+      categoryId: terepCat.id,
+      id: i + 1,
+    }))
+
+    const newTerkep = await Promise.all(
+      terkep.map(async (t) => {
+        return await criterionRepo.save(t)
+      })
+    )
+    const terkepCat = new Category()
+    terkepCat.name = 'Terkép minőség'
+    terkepCat.description = 'test'
+    terkepCat.criteria = newTerkep.map((t, i) => ({
+      criterion: t,
+      order: i,
+      category: terkepCat,
+      criterionId: t.id,
+      categoryId: terkepCat.id,
+      id: i + 100,
+    }))
+
+    const newVk = await Promise.all(
+      vk.map(async (t) => {
+        return await criterionRepo.save(t)
+      })
+    )
+    const vkCat = new Category()
+    vkCat.name = 'Versenyközpont, célterület'
+    vkCat.description = 'test'
+    vkCat.criteria = newVk.map((t, i) => ({
+      criterion: t,
+      order: i,
+      category: vkCat,
+      criterionId: t.id,
+      categoryId: vkCat.id,
+      id: i + 200,
+    }))
+
+    const newRajt = await Promise.all(
+      rajt.map(async (t) => {
+        return await criterionRepo.save(t)
+      })
+    )
+    const rajtCat = new Category()
+    rajtCat.name = 'Rajt'
+    rajtCat.description = 'test'
+    rajtCat.criteria = newRajt.map((t, i) => ({
+      criterion: t,
+      order: i,
+      category: rajtCat,
+      criterionId: t.id,
+      categoryId: rajtCat.id,
+      id: i + 300,
+    }))
+
+    const newSzab = await Promise.all(
+      szabalyzat.map(async (t) => {
+        return await criterionRepo.save(t)
+      })
+    )
+    const szabCat = new Category()
+    szabCat.name = 'Versenyszabályzat és Bajnoki Rendszer megfelelés'
+    szabCat.description = 'test'
+    szabCat.criteria = newSzab.map((t, i) => ({
+      criterion: t,
+      order: i,
+      category: szabCat,
+      criterionId: t.id,
+      categoryId: szabCat.id,
+      id: i + 400,
+    }))
+
+    const newKomm = await Promise.all(
+      kommunikáció.map(async (t) => {
+        return await criterionRepo.save(t)
+      })
+    )
+    const kommCat = new Category()
+    kommCat.name = 'Kommunikáció'
+    kommCat.description = 'test'
+    kommCat.criteria = newKomm.map((t, i) => ({
+      criterion: t,
+      order: i,
+      category: kommCat,
+      criterionId: t.id,
+      categoryId: kommCat.id,
+      id: i + 500,
+    }))
+
+    const season = new Season()
+    season.name = new Date().getFullYear().toString()
+    const sd = new Date()
+    sd.setMonth(0, 1)
+    const ed = new Date()
+    ed.setMonth(11, 31)
+    season.startDate = sd
+    season.endDate = ed
+
+    const newCategories = await Promise.all(
+      [terepCat, terkepCat, vkCat, rajtCat, szabCat, kommCat].map(async (c, i) => {
+        return await categoryRepo.save(c)
+      })
+    )
+
+    season.categories = newCategories.map((c, i) => ({
+      category: c,
+      categoryId: c.id,
+      order: i,
+      id: i + 1,
+      season,
+      seasonId: season.id,
+    }))
+    await seasonRepo.save(season)
+
+    return {
+      status: 204,
+    }
+  } catch (error) {
+    handleException(context, error)
   }
-
-  const newTerep = await Promise.all(
-    terep.map(async (t) => {
-      return await criterionRepo.save(t)
-    })
-  )
-  const terepCat = new Category()
-  terepCat.name = 'Terepválasztás, Pályakitűzés'
-  terepCat.description = 'test'
-  terepCat.criteria = newTerep.map((t, i) => ({
-    criterion: t,
-    order: i,
-    category: terepCat,
-    criterionId: t.id,
-    categoryId: terepCat.id,
-    id: i + 1,
-  }))
-
-  const newTerkep = await Promise.all(
-    terkep.map(async (t) => {
-      return await criterionRepo.save(t)
-    })
-  )
-  const terkepCat = new Category()
-  terkepCat.name = 'Terkép minőség'
-  terkepCat.description = 'test'
-  terkepCat.criteria = newTerkep.map((t, i) => ({
-    criterion: t,
-    order: i,
-    category: terkepCat,
-    criterionId: t.id,
-    categoryId: terkepCat.id,
-    id: i + 100,
-  }))
-
-  const newVk = await Promise.all(
-    vk.map(async (t) => {
-      return await criterionRepo.save(t)
-    })
-  )
-  const vkCat = new Category()
-  vkCat.name = 'Versenyközpont, célterület'
-  vkCat.description = 'test'
-  vkCat.criteria = newVk.map((t, i) => ({
-    criterion: t,
-    order: i,
-    category: vkCat,
-    criterionId: t.id,
-    categoryId: vkCat.id,
-    id: i + 200,
-  }))
-
-  const newRajt = await Promise.all(
-    rajt.map(async (t) => {
-      return await criterionRepo.save(t)
-    })
-  )
-  const rajtCat = new Category()
-  rajtCat.name = 'Rajt'
-  rajtCat.description = 'test'
-  rajtCat.criteria = newRajt.map((t, i) => ({
-    criterion: t,
-    order: i,
-    category: rajtCat,
-    criterionId: t.id,
-    categoryId: rajtCat.id,
-    id: i + 300,
-  }))
-
-  const newSzab = await Promise.all(
-    szabalyzat.map(async (t) => {
-      return await criterionRepo.save(t)
-    })
-  )
-  const szabCat = new Category()
-  szabCat.name = 'Versenyszabályzat és Bajnoki Rendszer megfelelés'
-  szabCat.description = 'test'
-  szabCat.criteria = newSzab.map((t, i) => ({
-    criterion: t,
-    order: i,
-    category: szabCat,
-    criterionId: t.id,
-    categoryId: szabCat.id,
-    id: i + 400,
-  }))
-
-  const newKomm = await Promise.all(
-    kommunikáció.map(async (t) => {
-      return await criterionRepo.save(t)
-    })
-  )
-  const kommCat = new Category()
-  kommCat.name = 'Kommunikáció'
-  kommCat.description = 'test'
-  kommCat.criteria = newKomm.map((t, i) => ({
-    criterion: t,
-    order: i,
-    category: kommCat,
-    criterionId: t.id,
-    categoryId: kommCat.id,
-    id: i + 500,
-  }))
-
-  const season = new Season()
-  season.name = new Date().getFullYear().toString()
-  const sd = new Date()
-  sd.setMonth(0, 1)
-  const ed = new Date()
-  ed.setMonth(11, 31)
-  season.startDate = sd
-  season.endDate = ed
-
-  const newCategories = await Promise.all(
-    [terepCat, terkepCat, vkCat, rajtCat, szabCat, kommCat].map(async (c, i) => {
-      return await categoryRepo.save(c)
-    })
-  )
-
-  season.categories = newCategories.map((c, i) => ({
-    category: c,
-    categoryId: c.id,
-    order: i,
-    id: i + 1,
-    season,
-    seasonId: season.id,
-  }))
-  await seasonRepo.save(season)
 }
 
 app.http('seed', {

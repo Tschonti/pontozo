@@ -1,28 +1,19 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { DbUser } from '@pontozo/common'
 import { getUserFromHeader } from '../../service/auth.service'
 import UserRoleAssignment from '../../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResFromServiceRes } from '../../util/httpRes'
-import { DbUser } from '@pontozo/common'
+import { handleException } from '../../util/handleException'
 
 export const currentUser = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-  const userServiceRes = getUserFromHeader(req)
-  if (userServiceRes.isError) {
-    return httpResFromServiceRes(userServiceRes)
-  }
   try {
-    const roles = await (await getAppDataSource())
-      .getRepository(UserRoleAssignment)
-      .find({ where: { userId: userServiceRes.data.szemely_id } })
-
+    const user = getUserFromHeader(req)
+    const roles = await (await getAppDataSource()).getRepository(UserRoleAssignment).find({ where: { userId: user.szemely_id } })
     return {
-      jsonBody: { ...userServiceRes.data, roles: roles.map((r) => r.role) } as DbUser,
+      jsonBody: { ...user, roles: roles.map((r) => r.role) } as DbUser,
     }
-  } catch (e) {
-    return {
-      status: 401,
-      jsonBody: e,
-    }
+  } catch (error) {
+    handleException(context, error)
   }
 }
 

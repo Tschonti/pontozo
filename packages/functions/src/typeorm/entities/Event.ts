@@ -1,9 +1,9 @@
+import { DbEvent } from '@pontozo/common'
 import { Check, Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm'
 import Club from './Club'
 import EventRating from './EventRating'
 import Season from './Season'
 import Stage from './Stage'
-import { DbEvent } from '@pontozo/common'
 
 enum Rank {
   REGIONAL = 'REGIONALIS',

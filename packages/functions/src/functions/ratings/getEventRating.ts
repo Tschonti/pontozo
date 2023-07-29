@@ -1,34 +1,31 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { PontozoException } from '../../../../common/src'
 import { getUserFromHeader } from '../../service/auth.service'
 import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResFromServiceRes } from '../../util/httpRes'
+import { handleException } from '../../util/handleException'
 
 /**
  * Called when a user visits an events page to get their rating of that event and also the event data.
  */
 export const getEventRating = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-  const eventId = parseInt(req.params.eventId)
-
-  if (isNaN(eventId)) {
-    return {
-      status: 400,
-      body: 'Invalid ID',
+  try {
+    const eventId = parseInt(req.params.eventId)
+    if (isNaN(eventId)) {
+      throw new PontozoException('Érvénytelen azonosító!', 400)
     }
-  }
 
-  const userServiceRes = getUserFromHeader(req)
-  if (userServiceRes.isError) {
-    return httpResFromServiceRes(userServiceRes)
-  }
-
-  const ratingRepo = (await getAppDataSource()).getRepository(EventRating)
-  const eventRating = await ratingRepo.findOne({
-    where: { eventId, userId: userServiceRes.data.szemely_id },
-    relations: { event: { organisers: true, stages: true } },
-  })
-  return {
-    jsonBody: eventRating,
+    const user = getUserFromHeader(req)
+    const ratingRepo = (await getAppDataSource()).getRepository(EventRating)
+    const eventRating = await ratingRepo.findOne({
+      where: { eventId, userId: user.szemely_id },
+      relations: { event: { organisers: true, stages: true } },
+    })
+    return {
+      jsonBody: eventRating,
+    }
+  } catch (error) {
+    handleException(context, error)
   }
 }
 

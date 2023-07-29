@@ -1,6 +1,7 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import Event from '../../typeorm/entities/Event'
 import { getAppDataSource } from '../../typeorm/getConfig'
+import { handleException } from '../../util/handleException'
 
 /**
  * Called when the user visits the frontpage. Returns all the events that can be rated.
@@ -14,12 +15,8 @@ export const getRateableEvents = async (req: HttpRequest, context: InvocationCon
     return {
       jsonBody: events,
     }
-  } catch (e) {
-    context.log(e)
-    return {
-      status: 500,
-      jsonBody: e,
-    }
+  } catch (error) {
+    handleException(context, error)
   }
 }
 

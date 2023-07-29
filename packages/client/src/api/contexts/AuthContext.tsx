@@ -1,12 +1,12 @@
+import { DbUser, UserRole } from '@pontozo/common'
 import { useQuery } from '@tanstack/react-query'
 import Cookies from 'js-cookie'
 import { createContext, PropsWithChildren, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CookieKeys } from '../../util/CookieKeys'
 import { functionAxios } from '../../util/axiosConfig'
+import { CookieKeys } from '../../util/CookieKeys'
 import { PATHS } from '../../util/paths'
 import { queryClient } from '../../util/queryClient'
-import { DbUser, UserRole } from '@pontozo/common'
 
 export type AuthContextType = {
   isLoggedIn: boolean

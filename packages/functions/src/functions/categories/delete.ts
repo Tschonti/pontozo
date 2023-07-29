@@ -2,33 +2,20 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/fu
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Category from '../../typeorm/entities/Category'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResFromServiceRes } from '../../util/httpRes'
+import { handleException } from '../../util/handleException'
+import { validateId } from '../../util/validation'
 
 export const deleteCategory = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-  const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
-  if (adminCheck.isError) {
-    return httpResFromServiceRes(adminCheck)
-  }
-
-  const id = parseInt(req.params.id)
-  if (isNaN(id)) {
-    return {
-      status: 400,
-      body: 'Invalid id!',
-    }
-  }
-  const categoryRepo = (await getAppDataSource()).getRepository(Category)
   try {
+    await getUserFromHeaderAndAssertAdmin(req)
+    const id = validateId(req)
+    const categoryRepo = (await getAppDataSource()).getRepository(Category)
     const res = await categoryRepo.delete({ id })
     return {
       jsonBody: res,
     }
   } catch (error) {
-    context.error(error)
-    return {
-      status: 500,
-      body: error,
-    }
+    handleException(context, error)
   }
 }
 

@@ -1,31 +1,19 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { CategoryWithCriteria, EntityWithEditableIndicator, PontozoException } from '@pontozo/common'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Category from '../../typeorm/entities/Category'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResFromServiceRes } from '../../util/httpRes'
-import { CategoryWithCriteria, EntityWithEditableIndicator } from '@pontozo/common'
+import { handleException } from '../../util/handleException'
+import { validateId } from '../../util/validation'
 
 export const getCategory = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-  const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
-  if (adminCheck.isError) {
-    return httpResFromServiceRes(adminCheck)
-  }
-
-  const id = parseInt(req.params.id)
-  if (isNaN(id)) {
-    return {
-      status: 400,
-      body: 'Invalid id!',
-    }
-  }
-  const categoryRepo = (await getAppDataSource()).getRepository(Category)
   try {
+    await getUserFromHeaderAndAssertAdmin(req)
+    const id = validateId(req)
+    const categoryRepo = (await getAppDataSource()).getRepository(Category)
     const category = await categoryRepo.findOne({ where: { id }, relations: { criteria: { criterion: true }, seasons: { season: true } } })
     if (!category) {
-      return {
-        status: 404,
-        body: 'Category not found!',
-      }
+      throw new PontozoException('A kategória nem taláálható!', 404)
     }
     const { seasons, ...plainCategory } = category
     return {
@@ -38,11 +26,7 @@ export const getCategory = async (req: HttpRequest, context: InvocationContext):
       } as EntityWithEditableIndicator<CategoryWithCriteria>,
     }
   } catch (error) {
-    context.error(error)
-    return {
-      status: 500,
-      body: error,
-    }
+    handleException(context, error)
   }
 }
 

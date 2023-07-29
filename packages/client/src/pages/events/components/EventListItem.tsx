@@ -1,9 +1,9 @@
 import { Badge, Card, CardBody, CardHeader, Heading, HStack, Text } from '@chakra-ui/react'
+import { DbEvent, RatingStatus } from '@pontozo/common'
 import { Link } from 'react-router-dom'
 import { statusColor, translateStatus } from '../../../util/enumHelpers'
 import { PATHS } from '../../../util/paths'
 import { EventRankBadge } from './EventRankBadge'
-import { DbEvent, RatingStatus } from '@pontozo/common'
 
 type Props = {
   event: DbEvent

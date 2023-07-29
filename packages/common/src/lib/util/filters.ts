@@ -1,4 +1,4 @@
-import { MtfszEvent, EventSection } from '../types/mtfszEvents'
+import { EventSection, MtfszEvent } from '../types/mtfszEvents'
 import { acceptedRanks } from './ranks'
 
 export const eventFilter = (e: MtfszEvent) => e.tipus === 'VERSENY' && e.programok.some(stageFilter)

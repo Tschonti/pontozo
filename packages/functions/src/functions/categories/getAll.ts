@@ -3,26 +3,19 @@ import { HttpResponseInit } from '@azure/functions/types/http'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Category from '../../typeorm/entities/Category'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResFromServiceRes } from '../../util/httpRes'
+import { handleException } from '../../util/handleException'
 
 export const getCategories = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-  const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
-  if (adminCheck.isError) {
-    return httpResFromServiceRes(adminCheck)
-  }
-
-  const categoryRepo = (await getAppDataSource()).getRepository(Category)
   try {
+    await getUserFromHeaderAndAssertAdmin(req)
+
+    const categoryRepo = (await getAppDataSource()).getRepository(Category)
     const categories = await categoryRepo.find({ relations: { criteria: true } })
     return {
       jsonBody: categories,
     }
   } catch (error) {
-    context.log(error)
-    return {
-      status: 500,
-      body: error,
-    }
+    handleException(context, error)
   }
 }
 

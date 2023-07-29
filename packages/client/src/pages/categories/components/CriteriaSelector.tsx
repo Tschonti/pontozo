@@ -20,12 +20,12 @@ import {
   useDisclosure,
   VStack,
 } from '@chakra-ui/react'
+import { CreateCategoryForm, Criterion } from '@pontozo/common'
 import { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { FaCaretDown, FaCaretUp, FaMinus, FaSearch, FaTimes } from 'react-icons/fa'
 import { useFetchCriteria } from '../../../api/hooks/criteriaHooks'
 import { LoadingSpinner } from '../../../components/commons/LoadingSpinner'
-import { CreateCategoryForm, Criterion } from '@pontozo/common'
 
 export const CriteriaSelector = ({ editable }: { editable: boolean }) => {
   const {

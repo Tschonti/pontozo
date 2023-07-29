@@ -1,8 +1,8 @@
+import { CriterionRating as ICriterionRating } from '@pontozo/common'
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm'
 import Criterion from './Criterion'
 import EventRating from './EventRating'
 import Stage from './Stage'
-import { CriterionRating as ICriterionRating } from '@pontozo/common'
 
 @Entity()
 @Unique(['criterionId', 'eventRatingId', 'stageId'])

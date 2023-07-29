@@ -1,27 +1,19 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { isHigherRank, PontozoException, RatingStatus } from '@pontozo/common'
 import { getUserFromHeader } from '../../service/auth.service'
 import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResFromServiceRes } from '../../util/httpRes'
-import { isHigherRank, RatingStatus } from '@pontozo/common'
+import { handleException } from '../../util/handleException'
+import { validateId } from '../../util/validation'
 
 /**
  * Called when the users submits their rating of an event.
  * Checks that all criteria has been rated.
  */
 export const submitOne = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-  const id = parseInt(req.params.id)
-  if (isNaN(id)) {
-    return {
-      status: 400,
-      body: 'Invalid eventRating id!',
-    }
-  }
-  const userServiceRes = getUserFromHeader(req)
-  if (userServiceRes.isError) {
-    return httpResFromServiceRes(userServiceRes)
-  }
   try {
+    const id = validateId(req)
+    const user = getUserFromHeader(req)
     const ads = await getAppDataSource()
     const eventRatingRepo = ads.getRepository(EventRating)
     const rating = await eventRatingRepo.findOne({
@@ -30,22 +22,13 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
     })
 
     if (rating.status === RatingStatus.SUBMITTED) {
-      return {
-        status: 400,
-        body: 'Rating already submitted',
-      }
+      throw new PontozoException('Az értékelés már véglegesítve lett!', 400)
     }
-    if (rating.userId !== userServiceRes.data.szemely_id) {
-      return {
-        status: 403,
-        body: "You're not allowed to submit this rating!",
-      }
+    if (rating.userId !== user.szemely_id) {
+      throw new PontozoException('Te nem véglegesítheted ezt az értékelést!', 403)
     }
     if (!rating.event.rateable) {
-      return {
-        status: 400,
-        body: 'This event can no longer be rated!',
-      }
+      throw new PontozoException('Ezt a versenyt már nem lehet értékelni!', 400)
     }
     const { season, stages } = rating.event
     let criterionCount = 0
@@ -62,10 +45,7 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
     })
 
     if (criterionCount !== rating.ratings.length) {
-      return {
-        status: 400,
-        body: "You haven't rated all the criteria yet!",
-      }
+      throw new PontozoException('Nem értékelted le a versenyt az összes szempont szerint!', 400)
     }
 
     rating.status = RatingStatus.SUBMITTED
@@ -75,12 +55,8 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
     return {
       status: 204,
     }
-  } catch (e) {
-    context.log(e)
-    return {
-      status: 500,
-      body: e,
-    }
+  } catch (error) {
+    handleException(context, error)
   }
 }
 

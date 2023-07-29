@@ -1,4 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { CreateSeason, PontozoException } from '@pontozo/common'
 import { plainToClass } from 'class-transformer'
 import { Between, In, LessThanOrEqual, MoreThanOrEqual } from 'typeorm'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
@@ -6,31 +7,16 @@ import Category from '../../typeorm/entities/Category'
 import Season from '../../typeorm/entities/Season'
 import { SeasonToCategory } from '../../typeorm/entities/SeasonToCategory'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResFromServiceRes } from '../../util/httpRes'
-import { validateWithWhitelist } from '../../util/validation'
-import { CreateSeason } from '@pontozo/common'
+import { handleException } from '../../util/handleException'
+import { validateBody, validateWithWhitelist } from '../../util/validation'
 
 export const createSeason = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-  const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
-  if (adminCheck.isError) {
-    return httpResFromServiceRes(adminCheck)
-  }
-
-  if (!req.body) {
-    return {
-      status: 400,
-      body: 'No body attached to POST query.',
-    }
-  }
-  const dto = plainToClass(CreateSeason, await req.json())
-  const errors = await validateWithWhitelist(dto)
-  if (errors.length > 0) {
-    return {
-      status: 400,
-      jsonBody: errors,
-    }
-  }
   try {
+    await getUserFromHeaderAndAssertAdmin(req)
+    validateBody(req)
+    const dto = plainToClass(CreateSeason, await req.json())
+    await validateWithWhitelist(dto)
+
     const ads = await getAppDataSource()
     const conflictingSeasons = await ads.getRepository(Season).find({
       where: [
@@ -40,10 +26,7 @@ export const createSeason = async (req: HttpRequest, context: InvocationContext)
       ],
     })
     if (conflictingSeasons.length > 0) {
-      return {
-        status: 400,
-        body: 'This season conflicts with another season!',
-      }
+      throw new PontozoException('A szezon ütközik egy másikal!', 400)
     }
     const categories = await ads.getRepository(Category).find({ where: { id: In(dto.categoryIds) } })
     let season = new Season()
@@ -65,12 +48,8 @@ export const createSeason = async (req: HttpRequest, context: InvocationContext)
       jsonBody: season,
       status: 201,
     }
-  } catch (e) {
-    context.log(e)
-    return {
-      status: 500,
-      body: e,
-    }
+  } catch (error) {
+    handleException(context, error)
   }
 }
 

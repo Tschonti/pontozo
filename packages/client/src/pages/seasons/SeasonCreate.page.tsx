@@ -1,4 +1,5 @@
 import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, HStack, Input, Stack, Text, VStack } from '@chakra-ui/react'
+import { CreateSeason, CreateSeasonForm } from '@pontozo/common'
 import { useEffect } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa'
@@ -7,7 +8,6 @@ import { useCreateSeasonMutation, useDeleteSeasonMutation, useFetchSeason, useUp
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 import { CategorySelector } from './components/CategorySelector'
-import { CreateSeasonForm, CreateSeason } from '@pontozo/common'
 
 export const SeasonCreatePage = () => {
   const seasonId = parseInt(useParams<{ seasonId: string }>().seasonId ?? '-1')

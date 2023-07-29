@@ -1,65 +1,34 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { CreateCriteria, PontozoException } from '@pontozo/common'
 import { plainToClass } from 'class-transformer'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Criterion from '../../typeorm/entities/Criterion'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResFromServiceRes } from '../../util/httpRes'
-import { validateWithWhitelist } from '../../util/validation'
-import { CreateCriteria } from '@pontozo/common'
+import { handleException } from '../../util/handleException'
+import { validateBody, validateId, validateWithWhitelist } from '../../util/validation'
 
 export const updateCriteria = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-  const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
-  if (adminCheck.isError) {
-    return httpResFromServiceRes(adminCheck)
-  }
-
-  if (!req.body) {
-    return {
-      status: 400,
-      body: 'No body attached to POST query.',
-    }
-  }
-  const id = parseInt(req.params.id)
-  if (isNaN(id)) {
-    return {
-      status: 400,
-      body: 'Invalid id!',
-    }
-  }
-
-  const dto = plainToClass(CreateCriteria, await req.json())
-  const errors = await validateWithWhitelist(dto)
-  if (errors.length > 0) {
-    return {
-      status: 400,
-      jsonBody: errors,
-    }
-  }
   try {
+    await getUserFromHeaderAndAssertAdmin(req)
+    validateBody(req)
+    const id = validateId(req)
+    const dto = plainToClass(CreateCriteria, await req.json())
+    await validateWithWhitelist(dto)
+
     const criterionRepo = (await getAppDataSource()).getRepository(Criterion)
     const criterion = await criterionRepo.findOne({ where: { id }, relations: { categories: { category: { seasons: { season: true } } } } })
     if (criterion === null) {
-      return {
-        status: 404,
-        body: 'Criterion not found!',
-      }
+      throw new PontozoException('A szempont nem található!', 404)
     }
     if (criterion.categories.some(({ category }) => category.seasons.some(({ season }) => season.startDate < new Date()))) {
-      return {
-        status: 400,
-        body: "This criterion can no longer be edited, because it's part of a season that has already started!",
-      }
+      throw new PontozoException('Ezt a szempontot már nem lehet szerkeszteni, mert része egy olyan szezonnak, ami már elkezdődött!', 400)
     }
     const res = await criterionRepo.update({ id }, { ...dto, roles: JSON.stringify(dto.roles) })
     return {
       jsonBody: res,
     }
-  } catch (e) {
-    context.log(e)
-    return {
-      status: 400,
-      body: e,
-    }
+  } catch (error) {
+    handleException(context, error)
   }
 }
 

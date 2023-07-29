@@ -3,15 +3,12 @@ import { HttpResponseInit } from '@azure/functions/types/http'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import UserRoleAssignment from '../../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResFromServiceRes } from '../../util/httpRes'
+import { handleException } from '../../util/handleException'
 
 export const getURAs = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-  const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
-  if (adminCheck.isError) {
-    return httpResFromServiceRes(adminCheck)
-  }
-
   try {
+    await getUserFromHeaderAndAssertAdmin(req)
+
     const urasRepo = (await getAppDataSource()).getRepository(UserRoleAssignment)
     const uras = await urasRepo.find()
 
@@ -19,11 +16,7 @@ export const getURAs = async (req: HttpRequest, context: InvocationContext): Pro
       jsonBody: uras,
     }
   } catch (error) {
-    context.log(error)
-    return {
-      status: 500,
-      body: error,
-    }
+    handleException(context, error)
   }
 }
 

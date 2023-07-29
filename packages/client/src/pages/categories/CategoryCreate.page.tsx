@@ -1,4 +1,5 @@
 import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, HStack, Input, Text, VStack } from '@chakra-ui/react'
+import { CreateCategoryForm } from '@pontozo/common'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -11,7 +12,6 @@ import {
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 import { CriteriaSelector } from './components/CriteriaSelector'
-import { CreateCategoryForm } from '@pontozo/common'
 
 export const CategoryCreatePage = () => {
   const categoryId = parseInt(useParams<{ categoryId: string }>().categoryId ?? '-1')

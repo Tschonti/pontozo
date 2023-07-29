@@ -1,8 +1,8 @@
+import { MtfszFetchResult, MtfszUser } from '@pontozo/common'
 import { useMutation } from '@tanstack/react-query'
 import { UserSelectorForm } from '../../pages/uras/types/UserSelectorForm'
-import { APIM_HOST } from '../../util/environment'
 import { apimAxios } from '../../util/axiosConfig'
-import { MtfszFetchResult, MtfszUser } from '@pontozo/common'
+import { APIM_HOST } from '../../util/environment'
 
 export const useFetchUsersMutation = () => {
   return useMutation<MtfszUser[], Error, UserSelectorForm>(async (data: UserSelectorForm) => {

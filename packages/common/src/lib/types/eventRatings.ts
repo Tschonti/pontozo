@@ -1,4 +1,4 @@
-import { IsEnum, ArrayUnique, IsOptional, IsInt, Min } from 'class-validator'
+import { ArrayUnique, IsEnum, IsInt, IsOptional, Min } from 'class-validator'
 import { CategoryWithCriteria } from './categories'
 import { DbEvent, DbStage } from './dbEvents'
 

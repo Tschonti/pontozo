@@ -1,31 +1,19 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { PontozoException, SeasonWithCategories } from '@pontozo/common'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Season from '../../typeorm/entities/Season'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResFromServiceRes } from '../../util/httpRes'
-import { SeasonWithCategories } from '@pontozo/common'
+import { handleException } from '../../util/handleException'
+import { validateId } from '../../util/validation'
 
 export const getSeason = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-  const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
-  if (adminCheck.isError) {
-    return httpResFromServiceRes(adminCheck)
-  }
-
-  const id = parseInt(req.params.id)
-  if (isNaN(id)) {
-    return {
-      status: 400,
-      body: 'Invalid id!',
-    }
-  }
-  const seasonRepo = (await getAppDataSource()).getRepository(Season)
   try {
+    await getUserFromHeaderAndAssertAdmin(req)
+    const id = validateId(req)
+    const seasonRepo = (await getAppDataSource()).getRepository(Season)
     const season = await seasonRepo.findOne({ where: { id }, relations: { categories: { category: true } } })
     if (!season) {
-      return {
-        status: 404,
-        body: 'Season not found!',
-      }
+      throw new PontozoException('A szezon nem található!', 404)
     }
     return {
       jsonBody: {
@@ -34,11 +22,7 @@ export const getSeason = async (req: HttpRequest, context: InvocationContext): P
       } as SeasonWithCategories,
     }
   } catch (error) {
-    context.error(error)
-    return {
-      status: 500,
-      body: error,
-    }
+    handleException(context, error)
   }
 }
 

@@ -16,12 +16,12 @@ import {
   useDisclosure,
   VStack,
 } from '@chakra-ui/react'
+import { UserPreview } from '@pontozo/common'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { transformUser } from 'src/util/typeTransforms'
 import { useFetchUsersMutation } from '../../../api/hooks/mtfszHooks'
 import { LoadingSpinner } from '../../../components/commons/LoadingSpinner'
 import { UserSelectorForm } from '../types/UserSelectorForm'
-import { UserPreview } from '@pontozo/common'
-import { transformUser } from 'src/util/typeTransforms'
 
 type Props = {
   setUser: (u: UserPreview) => void

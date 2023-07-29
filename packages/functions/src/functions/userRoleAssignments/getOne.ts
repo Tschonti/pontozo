@@ -1,40 +1,26 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { PontozoException } from '../../../../common/src'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import UserRoleAssignment from '../../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResFromServiceRes } from '../../util/httpRes'
+import { handleException } from '../../util/handleException'
+import { validateId } from '../../util/validation'
 
 export const getURA = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-  const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
-  if (adminCheck.isError) {
-    return httpResFromServiceRes(adminCheck)
-  }
-
-  const id = parseInt(req.params.id)
-  if (isNaN(id)) {
-    return {
-      status: 400,
-      body: 'Invalid id!',
-    }
-  }
-  const uraRepo = (await getAppDataSource()).getRepository(UserRoleAssignment)
   try {
+    await getUserFromHeaderAndAssertAdmin(req)
+
+    const id = validateId(req)
+    const uraRepo = (await getAppDataSource()).getRepository(UserRoleAssignment)
     const ura = await uraRepo.findOneBy({ id })
     if (!ura) {
-      return {
-        status: 404,
-        body: 'User role assignment not found!',
-      }
+      throw new PontozoException('Szerepkör kinevezés nem található!', 404)
     }
     return {
       jsonBody: ura,
     }
   } catch (error) {
-    context.error(error)
-    return {
-      status: 500,
-      body: error,
-    }
+    handleException(context, error)
   }
 }
 

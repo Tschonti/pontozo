@@ -1,4 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { CreateCriterionRating, PontozoException, RatingStatus } from '@pontozo/common'
 import { plainToClass } from 'class-transformer'
 import { In } from 'typeorm'
 import { getUserFromHeader } from '../../service/auth.service'
@@ -8,41 +9,20 @@ import CriterionRating from '../../typeorm/entities/CriterionRating'
 import EventRating from '../../typeorm/entities/EventRating'
 import { SeasonToCategory } from '../../typeorm/entities/SeasonToCategory'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResFromServiceRes } from '../../util/httpRes'
-import { validateWithWhitelist } from '../../util/validation'
-import { CreateCriterionRating, RatingStatus } from '@pontozo/common'
+import { handleException } from '../../util/handleException'
+import { validateBody, validateId, validateWithWhitelist } from '../../util/validation'
 
 /**
  * Called when the user changes the rating of a criteria during the rating of an event.
  * HTTP body should be CreateRatingDto
  */
 export const rateOne = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-  const id = parseInt(req.params.id)
-  if (isNaN(id)) {
-    return {
-      status: 400,
-      body: 'Invalid eventRating id!',
-    }
-  }
-  if (!req.body) {
-    return {
-      status: 400,
-      body: `No body attached to POST query.`,
-    }
-  }
-  const userServiceRes = getUserFromHeader(req)
-  if (userServiceRes.isError) {
-    return httpResFromServiceRes(userServiceRes)
-  }
-  const dto = plainToClass(CreateCriterionRating, await req.json())
-  const errors = await validateWithWhitelist(dto)
-  if (errors.length > 0) {
-    return {
-      status: 400,
-      jsonBody: errors,
-    }
-  }
   try {
+    const id = validateId(req)
+    validateBody(req)
+    const user = getUserFromHeader(req)
+    const dto = plainToClass(CreateCriterionRating, await req.json())
+    await validateWithWhitelist(dto)
     const ads = await getAppDataSource()
     const eventRatingRepo = ads.getRepository(EventRating)
     const criterionRepo = ads.getRepository(Criterion)
@@ -52,54 +32,30 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
 
     const [eventRating, criterion] = await Promise.all([eventRatingQuery, criterionQuery])
     if (eventRating === null) {
-      return {
-        status: 404,
-        body: 'Rating not found',
-      }
+      throw new PontozoException('Az értékelés nem található!', 404)
     }
     if (eventRating.status === RatingStatus.SUBMITTED) {
-      return {
-        status: 400,
-        body: 'Rating already submitted!',
-      }
+      throw new PontozoException('Az értékelés már végelesítve lett!', 400)
     }
-    if (eventRating.userId !== userServiceRes.data.szemely_id) {
-      return {
-        status: 403,
-        body: "You're not allowed to rate this criteria",
-      }
+    if (eventRating.userId !== user.szemely_id) {
+      throw new PontozoException('Nincs jogosultságod értékelni ezt a szempontot!', 403)
     }
     if (criterion === null) {
-      return {
-        status: 404,
-        body: 'Criterion not found',
-      }
+      throw new PontozoException('Szempont nem található!', 404)
     }
     if (!JSON.parse(criterion.roles).includes(eventRating.role)) {
-      return {
-        status: 403,
-        body: 'Rating this criterion with this role is not allowed.',
-      }
+      throw new PontozoException('Ezen szempont értékelése nem engedett a te szerepköröddel!', 403)
     }
-    if (dto.value >= 0) {
+    if (dto.value >= 0 || dto.value < -1) {
       if (!criterion[`text${dto.value}`]) {
-        return {
-          status: 400,
-          body: 'Invalid rating value!',
-        }
+        throw new PontozoException('Érvénytelen értékelés!', 400)
       }
     } else if (!criterion.allowEmpty) {
-      return {
-        status: 400,
-        body: 'This criterion must be rated!',
-      }
+      throw new PontozoException('Ezt a szempontot kötelező értékelni!', 400)
     }
 
     if (criterion.stageSpecific !== !!dto.stageId) {
-      return {
-        status: 400,
-        body: 'Stage ID missing or not allowed!',
-      }
+      throw new PontozoException('A futam azonosítója hiányzik, vagy nem megengedett!', 400)
     }
 
     const ctcRepo = ads.getRepository(CategoryToCriterion)
@@ -108,10 +64,7 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
     const stcs = await stcRepo.find({ where: { seasonId: eventRating.event.seasonId, categoryId: In(ctcs.map((ctc) => ctc.categoryId)) } })
 
     if (stcs.length === 0) {
-      return {
-        status: 400,
-        body: 'This criterion cannot be rated this season!',
-      }
+      throw new PontozoException('Ezt a szempontot nem lehet értékelni a jelenlegi szezonban!', 400)
     }
 
     const criterionRatingRepo = ads.getRepository(CriterionRating)
@@ -125,12 +78,8 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
     return {
       status: 204,
     }
-  } catch (e) {
-    context.log(e)
-    return {
-      status: 500,
-      body: e,
-    }
+  } catch (error) {
+    handleException(context, error)
   }
 }
 

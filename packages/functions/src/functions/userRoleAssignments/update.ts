@@ -1,52 +1,28 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { PontozoException, UpdateURA } from '@pontozo/common'
 import { plainToClass } from 'class-transformer'
 import { QueryFailedError } from 'typeorm'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import { getUserById } from '../../service/mtfsz.service'
 import UserRoleAssignment from '../../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResFromServiceRes } from '../../util/httpRes'
-import { validateWithWhitelist } from '../../util/validation'
-import { UpdateURA } from '@pontozo/common'
+import { validateBody, validateId, validateWithWhitelist } from '../../util/validation'
 
 export const updateURA = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-  const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
-  if (adminCheck.isError) {
-    return httpResFromServiceRes(adminCheck)
-  }
-
-  if (!req.body) {
-    return {
-      status: 400,
-      body: 'No body attached to POST query.',
-    }
-  }
-  const id = parseInt(req.params.id)
-  if (isNaN(id)) {
-    return {
-      status: 400,
-      body: 'Invalid id!',
-    }
-  }
   try {
+    await getUserFromHeaderAndAssertAdmin(req)
+    validateBody(req)
+    const id = validateId(req)
     const dto = plainToClass(UpdateURA, await req.json())
-    const errors = await validateWithWhitelist(dto)
-    if (errors.length > 0) {
-      return {
-        status: 400,
-        jsonBody: errors,
-      }
-    }
+    await validateWithWhitelist(dto)
 
     const uraRepo = (await getAppDataSource()).getRepository(UserRoleAssignment)
     const ura = await uraRepo.findOne({ where: { id } })
-    const serviceRes = await getUserById(ura.userId)
-    if (serviceRes.isError) {
-      return httpResFromServiceRes(serviceRes)
-    }
+    const user = await getUserById(ura.userId)
+
     ura.role = dto.role
-    ura.userFullName = `${serviceRes.data.vezeteknev} ${serviceRes.data.keresztnev}`
-    ura.userDOB = serviceRes.data.szul_dat
+    ura.userFullName = `${user.vezeteknev} ${user.keresztnev}`
+    ura.userDOB = user.szul_dat
 
     return {
       jsonBody: await uraRepo.save(ura),
@@ -57,20 +33,28 @@ export const updateURA = async (req: HttpRequest, context: InvocationContext): P
         if ((e as QueryFailedError).message.startsWith('Error: Violation of UNIQUE KEY constraint')) {
           return {
             status: 400,
-            jsonBody: [
-              {
-                constraints: {
-                  unique: 'Ez a személy már rendelkezik ezzel a szerepkörrel!',
-                },
-              },
-            ],
+            jsonBody: {
+              statusCode: 400,
+              message: 'Ez a személy már rendelkezik ezzel a szerepkörrel!',
+            },
           }
         }
+        break
+      case PontozoException: {
+        const error = e as PontozoException
+        return {
+          status: error.status,
+          jsonBody: error.getError(),
+        }
+      }
     }
     context.log(e)
     return {
       status: 500,
-      body: e,
+      jsonBody: {
+        statusCode: 500,
+        message: 'Ismeretlen hiba!',
+      },
     }
   }
 }

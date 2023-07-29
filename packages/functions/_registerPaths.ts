@@ -1,6 +1,6 @@
 import { register } from 'tsconfig-paths'
-import * as tsConfig from '../../tsconfig.base.json'
 import { CompilerOptions } from 'typescript'
+import * as tsConfig from '../../tsconfig.base.json'
 
 const compilerOptions = tsConfig.compilerOptions as unknown as CompilerOptions // This is to avoid any problems with the typing system
 

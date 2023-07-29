@@ -2,33 +2,21 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/fu
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Season from '../../typeorm/entities/Season'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResFromServiceRes } from '../../util/httpRes'
+import { handleException } from '../../util/handleException'
+import { validateId } from '../../util/validation'
 
 export const deleteSeason = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-  const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
-  if (adminCheck.isError) {
-    return httpResFromServiceRes(adminCheck)
-  }
-
-  const id = parseInt(req.params.id)
-  if (isNaN(id)) {
-    return {
-      status: 400,
-      body: 'Invalid id!',
-    }
-  }
-  const seasonRepo = (await getAppDataSource()).getRepository(Season)
   try {
+    await getUserFromHeaderAndAssertAdmin(req)
+
+    const id = validateId(req)
+    const seasonRepo = (await getAppDataSource()).getRepository(Season)
     const res = await seasonRepo.delete({ id })
     return {
       jsonBody: res,
     }
   } catch (error) {
-    context.error(error)
-    return {
-      status: 500,
-      body: error,
-    }
+    handleException(context, error)
   }
 }
 

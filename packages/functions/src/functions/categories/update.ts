@@ -1,4 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { CreateCategory, PontozoException } from '@pontozo/common'
 import { plainToClass } from 'class-transformer'
 import { In } from 'typeorm'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
@@ -6,38 +7,17 @@ import Category from '../../typeorm/entities/Category'
 import { CategoryToCriterion } from '../../typeorm/entities/CategoryToCriterion'
 import Criterion from '../../typeorm/entities/Criterion'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResFromServiceRes } from '../../util/httpRes'
-import { validateWithWhitelist } from '../../util/validation'
-import { CreateCategory } from '@pontozo/common'
+import { handleException } from '../../util/handleException'
+import { validateBody, validateId, validateWithWhitelist } from '../../util/validation'
 
 export const updateCategory = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-  const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
-  if (adminCheck.isError) {
-    return httpResFromServiceRes(adminCheck)
-  }
-
-  if (!req.body) {
-    return {
-      status: 400,
-      body: 'No body attached to POST query.',
-    }
-  }
-  const id = parseInt(req.params.id)
-  if (isNaN(id)) {
-    return {
-      status: 400,
-      body: 'Invalid id!',
-    }
-  }
   try {
+    await getUserFromHeaderAndAssertAdmin(req)
+    validateBody(req)
+    const id = validateId(req)
     const dto = plainToClass(CreateCategory, await req.json())
-    const errors = await validateWithWhitelist(dto)
-    if (errors.length > 0) {
-      return {
-        status: 400,
-        jsonBody: errors,
-      }
-    }
+    await validateWithWhitelist(dto)
+
     const ads = await getAppDataSource()
     const criteria = await ads.getRepository(Criterion).find({ where: { id: In(dto.criterionIds) } })
     let category = await ads.manager.findOne(Category, {
@@ -45,16 +25,10 @@ export const updateCategory = async (req: HttpRequest, context: InvocationContex
       relations: { criteria: { criterion: true }, seasons: { season: true } },
     })
     if (category === null) {
-      return {
-        status: 404,
-        body: 'Category not found!',
-      }
+      throw new PontozoException('A kategória nem található!', 404)
     }
     if (category.seasons.some(({ season }) => season.startDate < new Date())) {
-      return {
-        status: 400,
-        body: "This category can no longer be edited, because it's part of a season that has already started!",
-      }
+      throw new PontozoException('Ez a kategória már nem szerkeszthető, mert egy olyan szezon része, ami már elkezdődött!', 400)
     }
     category.name = dto.name
     category.description = dto.description
@@ -85,12 +59,8 @@ export const updateCategory = async (req: HttpRequest, context: InvocationContex
     return {
       jsonBody: category,
     }
-  } catch (e) {
-    context.log(e)
-    return {
-      status: 400,
-      body: e,
-    }
+  } catch (error) {
+    handleException(context, error)
   }
 }
 

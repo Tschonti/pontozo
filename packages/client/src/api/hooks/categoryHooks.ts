@@ -1,6 +1,6 @@
+import { Category, CategoryWithCriteria, CreateCategory, CreateResponse, EntityWithEditableIndicator } from '@pontozo/common'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { functionAxios } from '../../util/axiosConfig'
-import { Category, CategoryWithCriteria, CreateCategory, CreateResponse, EntityWithEditableIndicator } from '@pontozo/common'
 
 export const useFetchCategories = () => {
   return useQuery<Category[]>(['fetchCategories'], async () => (await functionAxios.get(`/categories`)).data, { retry: false })

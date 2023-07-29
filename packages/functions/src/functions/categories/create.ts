@@ -1,4 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { CreateCategory } from '@pontozo/common'
 import { plainToClass } from 'class-transformer'
 import { In } from 'typeorm'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
@@ -6,31 +7,17 @@ import Category from '../../typeorm/entities/Category'
 import { CategoryToCriterion } from '../../typeorm/entities/CategoryToCriterion'
 import Criterion from '../../typeorm/entities/Criterion'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { httpResFromServiceRes } from '../../util/httpRes'
-import { validateWithWhitelist } from '../../util/validation'
-import { CreateCategory } from '@pontozo/common'
+import { validateBody, validateWithWhitelist } from '../../util/validation'
+
+import { handleException } from '../../util/handleException'
 
 export const createCategory = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-  const adminCheck = await getUserFromHeaderAndAssertAdmin(req)
-  if (adminCheck.isError) {
-    return httpResFromServiceRes(adminCheck)
-  }
-
-  if (!req.body) {
-    return {
-      status: 400,
-      body: 'No body attached to POST query.',
-    }
-  }
   try {
+    await getUserFromHeaderAndAssertAdmin(req)
+    validateBody(req)
     const dto = plainToClass(CreateCategory, await req.json())
-    const errors = await validateWithWhitelist(dto)
-    if (errors.length > 0) {
-      return {
-        status: 400,
-        jsonBody: errors,
-      }
-    }
+    await validateWithWhitelist(dto)
+
     const ads = await getAppDataSource()
     const criteria = await ads.getRepository(Criterion).find({ where: { id: In(dto.criterionIds) } })
     let category = new Category()
@@ -50,11 +37,7 @@ export const createCategory = async (req: HttpRequest, context: InvocationContex
       status: 201,
     }
   } catch (e) {
-    context.log(e)
-    return {
-      status: 400,
-      body: e,
-    }
+    handleException(context, e)
   }
 }
 

@@ -1,6 +1,6 @@
+import { MtfszToken, MtfszUser, PontozoException, RawMtfszUser } from '@pontozo/common'
 import axios, { AxiosResponse } from 'axios'
 import { APIM_HOST, APIM_KEY, CLIENT_ID, CLIENT_SECRET, FUNCTION_HOST } from '../util/env'
-import { MtfszUser, MtfszToken, RawMtfszUser, ServiceResponse } from '@pontozo/common'
 
 export const userProjection = ({ szemely_szervezetek, versenyengedelyek, ...restOfUser }: RawMtfszUser) => ({ ...restOfUser })
 
@@ -32,18 +32,11 @@ export const getUser = async (accessToken: string): Promise<MtfszUser> => {
   ).data
 }
 
-export const getUserById = async (userId: number): Promise<ServiceResponse<RawMtfszUser>> => {
+export const getUserById = async (userId: number): Promise<RawMtfszUser> => {
   try {
     const res = await mtfszAxios.get<RawMtfszUser>(`/szemelyek/${userId}`)
-    return {
-      isError: false,
-      data: res.data,
-    }
+    return res.data
   } catch {
-    return {
-      isError: true,
-      status: 404,
-      message: 'User not found',
-    }
+    throw new PontozoException('A felhasználó nem található!', 404)
   }
 }

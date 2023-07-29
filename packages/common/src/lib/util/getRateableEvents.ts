@@ -1,5 +1,5 @@
-import { MtfszEvent } from '../types/mtfszEvents'
 import axios from 'axios'
+import { MtfszEvent } from '../types/mtfszEvents'
 import { MtfszFetchResult } from '../types/util'
 import { eventFilter } from './filters'
 

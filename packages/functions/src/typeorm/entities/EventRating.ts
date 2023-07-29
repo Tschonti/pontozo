@@ -1,7 +1,7 @@
+import { EventRating as IEventRating } from '@pontozo/common'
 import { Check, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import CriterionRating from './CriterionRating'
 import Event from './Event'
-import { EventRating as IEventRating } from '@pontozo/common'
 
 enum RatingStatus {
   STARTED = 'STARTED',
