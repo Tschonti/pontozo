@@ -39,7 +39,7 @@ export const getCriterionRatings = async (req: HttpRequest, context: InvocationC
       jsonBody: ratings,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

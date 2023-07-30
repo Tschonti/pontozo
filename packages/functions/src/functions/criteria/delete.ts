@@ -15,7 +15,7 @@ export const deleteCriterion = async (req: HttpRequest, context: InvocationConte
       jsonBody: res,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

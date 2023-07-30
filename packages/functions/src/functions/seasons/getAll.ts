@@ -15,7 +15,7 @@ export const getSeasons = async (req: HttpRequest, context: InvocationContext): 
       jsonBody: seasons,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

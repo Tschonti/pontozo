@@ -56,7 +56,7 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
       status: 204,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

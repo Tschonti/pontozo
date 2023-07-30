@@ -26,7 +26,7 @@ export const getCategory = async (req: HttpRequest, context: InvocationContext):
       } as EntityWithEditableIndicator<CategoryWithCriteria>,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

@@ -28,7 +28,7 @@ export const createCriteria = async (req: HttpRequest, context: InvocationContex
       status: 201,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

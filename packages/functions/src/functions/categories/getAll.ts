@@ -15,7 +15,7 @@ export const getCategories = async (req: HttpRequest, context: InvocationContext
       jsonBody: categories,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

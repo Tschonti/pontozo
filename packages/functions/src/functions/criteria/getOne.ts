@@ -24,7 +24,7 @@ export const getCriterion = async (req: HttpRequest, context: InvocationContext)
       } as EntityWithEditableIndicator<Criterion>,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

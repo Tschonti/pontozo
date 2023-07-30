@@ -28,7 +28,7 @@ export const getOneEvent = async (req: HttpRequest, context: InvocationContext):
       } as EventWithRating,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

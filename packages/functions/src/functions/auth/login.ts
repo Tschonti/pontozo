@@ -26,7 +26,7 @@ export const login = async (req: HttpRequest, context: InvocationContext): Promi
       },
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

@@ -16,7 +16,7 @@ export const getRateableEvents = async (req: HttpRequest, context: InvocationCon
       jsonBody: events,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

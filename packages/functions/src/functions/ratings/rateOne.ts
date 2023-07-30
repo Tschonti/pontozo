@@ -79,7 +79,7 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
       status: 204,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

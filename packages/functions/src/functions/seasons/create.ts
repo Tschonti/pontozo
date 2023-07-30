@@ -49,7 +49,7 @@ export const createSeason = async (req: HttpRequest, context: InvocationContext)
       status: 201,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

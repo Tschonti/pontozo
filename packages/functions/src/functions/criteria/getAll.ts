@@ -14,7 +14,7 @@ export const getCriteria = async (req: HttpRequest, context: InvocationContext):
       jsonBody: criteria,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

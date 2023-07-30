@@ -16,7 +16,7 @@ export const getURAs = async (req: HttpRequest, context: InvocationContext): Pro
       jsonBody: uras,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

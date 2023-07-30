@@ -576,7 +576,7 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
       status: 204,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

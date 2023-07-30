@@ -80,7 +80,7 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
       } as EventRatingInfo,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

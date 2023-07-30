@@ -60,7 +60,7 @@ export const updateCategory = async (req: HttpRequest, context: InvocationContex
       jsonBody: category,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

@@ -36,8 +36,8 @@ export const createCategory = async (req: HttpRequest, context: InvocationContex
       jsonBody: category,
       status: 201,
     }
-  } catch (e) {
-    handleException(context, e)
+  } catch (error) {
+    return handleException(context, error)
   }
 }
 

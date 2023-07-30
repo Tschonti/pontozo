@@ -25,7 +25,7 @@ export const getEventRating = async (req: HttpRequest, context: InvocationContex
       jsonBody: eventRating,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

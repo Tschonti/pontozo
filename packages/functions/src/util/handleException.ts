@@ -1,8 +1,8 @@
-import { InvocationContext } from '@azure/functions'
+import { HttpResponseInit, InvocationContext } from '@azure/functions'
 import { PontozoError, PontozoException } from '@pontozo/common'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const handleException = (context: InvocationContext, error: any) => {
+export const handleException = (context: InvocationContext, error: any): HttpResponseInit => {
   if (error instanceof PontozoException) {
     return {
       status: error.status,

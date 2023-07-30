@@ -16,7 +16,7 @@ export const deleteURA = async (req: HttpRequest, context: InvocationContext): P
       jsonBody: res,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

@@ -13,7 +13,7 @@ export const currentUser = async (req: HttpRequest, context: InvocationContext):
       jsonBody: { ...user, roles: roles.map((r) => r.role) } as DbUser,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

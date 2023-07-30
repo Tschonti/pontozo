@@ -16,7 +16,7 @@ export const deleteSeason = async (req: HttpRequest, context: InvocationContext)
       jsonBody: res,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

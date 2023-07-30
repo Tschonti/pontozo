@@ -40,7 +40,7 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
       jsonBody: res.raw,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

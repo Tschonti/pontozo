@@ -10,7 +10,7 @@ export const ping = async (req: HttpRequest, context: InvocationContext): Promis
       body: 'Ready',
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

@@ -28,7 +28,7 @@ export const updateCriteria = async (req: HttpRequest, context: InvocationContex
       jsonBody: res,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

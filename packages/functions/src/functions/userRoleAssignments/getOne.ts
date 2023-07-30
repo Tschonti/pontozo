@@ -20,7 +20,7 @@ export const getURA = async (req: HttpRequest, context: InvocationContext): Prom
       jsonBody: ura,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

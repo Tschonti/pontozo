@@ -59,7 +59,7 @@ export const updateSeason = async (req: HttpRequest, context: InvocationContext)
       jsonBody: season,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 

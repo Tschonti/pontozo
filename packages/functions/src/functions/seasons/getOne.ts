@@ -22,7 +22,7 @@ export const getSeason = async (req: HttpRequest, context: InvocationContext): P
       } as SeasonWithCategories,
     }
   } catch (error) {
-    handleException(context, error)
+    return handleException(context, error)
   }
 }
 
