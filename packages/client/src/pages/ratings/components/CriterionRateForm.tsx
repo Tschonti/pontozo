@@ -1,6 +1,7 @@
 import { FormControl, FormHelperText, FormLabel, Radio, RadioGroup, Stack, useToast } from '@chakra-ui/react'
 import { CriterionDetails, RatingStatus } from '@pontozo/common'
 import { useEffect, useState } from 'react'
+import { onError } from 'src/util/onError'
 import { useRatingContext } from '../../../api/contexts/useRatingContext'
 import { useRateCriteriaMutation } from '../../../api/hooks/criteriaHooks'
 
@@ -28,9 +29,7 @@ export const CriterionRateForm = ({ criterion }: Props) => {
         onSuccess: () => {
           rateCriterion(criterion.id)
         },
-        onError: (e) => {
-          toast({ title: e.message, description: e.name, status: 'error' })
-        },
+        onError: (e) => onError(e, toast),
       }
     )
   }

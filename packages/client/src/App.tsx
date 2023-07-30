@@ -6,6 +6,7 @@ import { CategoryCreatePage } from './pages/categories/CategoryCreate.page'
 import { CategoryListPage } from './pages/categories/CategoryList.page'
 import { CriteriaCreatePage } from './pages/criteria/CriteriaCreate.page'
 import { CriteriaListPage } from './pages/criteria/CriteriaList.page'
+import { ErrorPage } from './pages/error/error.page'
 import { EventDetailsPage } from './pages/events/EventDetails.page'
 import { IndexPage } from './pages/events/Index.page'
 import { ProfilePage } from './pages/profile/Profile.page'
@@ -22,6 +23,7 @@ export const App = () => {
       <Routes>
         <Route path={PATHS.INDEX}>
           <Route index element={<IndexPage />} />
+          <Route path={PATHS.ERROR} element={<ErrorPage />} />
           <Route path={PATHS.ADMIN} element={<AdminIndex />} />
           <Route path={PATHS.AUTHORIZED} element={<AuthorizedPage />} />
           <Route path={PATHS.PROFILE} element={<ProfilePage />} />

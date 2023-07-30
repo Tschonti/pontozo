@@ -15,6 +15,18 @@ functionAxios.interceptors.request.use((config) => {
   return config
 })
 
+functionAxios.interceptors.response.use(
+  (response) => {
+    return response
+  },
+  (error) => {
+    if (error?.response?.data) {
+      return Promise.reject(error.response.data)
+    }
+    return Promise.reject(error)
+  }
+)
+
 export const apimAxios = axios.create({
   baseURL: APIM_HOST,
   headers: {

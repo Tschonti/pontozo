@@ -1,5 +1,6 @@
 import { Box, Button, Flex, Heading, Text, VStack } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
+import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { useFetchCategories } from '../../api/hooks/categoryHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
@@ -10,8 +11,7 @@ export const CategoryListPage = () => {
     return <LoadingSpinner />
   }
   if (error) {
-    console.error(error)
-    return null
+    return <NavigateWithError error={error} to={PATHS.INDEX} />
   }
   return (
     <>

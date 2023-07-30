@@ -26,7 +26,7 @@ export const createSeason = async (req: HttpRequest, context: InvocationContext)
       ],
     })
     if (conflictingSeasons.length > 0) {
-      throw new PontozoException('A szezon ütközik egy másikal!', 400)
+      throw new PontozoException('A szezon ütközik egy másikkal!', 400)
     }
     const categories = await ads.getRepository(Category).find({ where: { id: In(dto.categoryIds) } })
     let season = new Season()

@@ -3,6 +3,7 @@ import { CreateCategoryForm } from '@pontozo/common'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import {
   useCreateCategoryMutation,
   useDeleteCategoryMutation,
@@ -15,7 +16,7 @@ import { CriteriaSelector } from './components/CriteriaSelector'
 
 export const CategoryCreatePage = () => {
   const categoryId = parseInt(useParams<{ categoryId: string }>().categoryId ?? '-1')
-  const { data, isLoading, isFetching } = useFetchCategory(categoryId)
+  const { data, isLoading, isFetching, error } = useFetchCategory(categoryId)
   const categoryEditable = data?.editable ?? true
 
   const form = useForm<CreateCategoryForm>({
@@ -46,6 +47,9 @@ export const CategoryCreatePage = () => {
 
   if (isLoading && isFetching) {
     return <LoadingSpinner />
+  }
+  if (error) {
+    return <NavigateWithError error={error} to={PATHS.INDEX} />
   }
   return (
     <VStack spacing={5} alignItems="flex-start">

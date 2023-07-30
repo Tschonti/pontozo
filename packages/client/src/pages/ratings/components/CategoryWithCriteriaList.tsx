@@ -19,7 +19,7 @@ export const CategoryWithCriteriaList = ({ ratingId }: Props) => {
         { onSuccess: (data) => rateCriteria(data.map((r) => r.criterionId)) }
       )
     }
-  }, [eventRatingInfo, currentCategory, currentStage])
+  }, [eventRatingInfo, currentCategory, currentStage, mutation, rateCriteria])
 
   const criteria = currentCategory?.criteria.map((c) => ({
     ...c,

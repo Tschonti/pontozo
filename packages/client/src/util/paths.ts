@@ -10,4 +10,5 @@ export enum PATHS {
   AUTHORIZED = '/authorized',
   PROFILE = '/profile',
   ADMIN = '/admin',
+  ERROR = '/error',
 }

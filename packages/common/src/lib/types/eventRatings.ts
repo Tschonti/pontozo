@@ -59,3 +59,8 @@ export class GetCriterionRatings {
 export interface GetEventRating {
   rating: EventRating | null
 }
+
+export type RatingStartedResponse = {
+  id: number
+  status: string
+}

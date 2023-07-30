@@ -1,6 +1,7 @@
 import { Button, Heading, Stack, Text, useToast, VStack } from '@chakra-ui/react'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, Navigate, useParams } from 'react-router-dom'
+import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { useAuthContext } from '../../api/contexts/useAuthContext'
 import { useFetchEvent } from '../../api/hooks/eventQueryHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
@@ -22,8 +23,7 @@ export const EventDetailsPage = () => {
     return <LoadingSpinner />
   }
   if (error || !eventWithRating) {
-    console.error(error)
-    return null
+    return <NavigateWithError error={error} to={PATHS.INDEX} />
   }
   const { event } = eventWithRating
   return (

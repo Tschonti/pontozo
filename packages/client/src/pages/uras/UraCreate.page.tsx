@@ -1,17 +1,17 @@
 import { Button, Flex, FormLabel, Heading, HStack, Select, useToast, VStack } from '@chakra-ui/react'
 import { UserPreview, UserRole } from '@pontozo/common'
-import { AxiosError } from 'axios'
 import { useEffect, useState } from 'react'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { NavigateWithError } from 'src/components/commons/NavigateWithError'
+import { onError } from 'src/util/onError'
 import { useCreateUraMutation, useDeleteUraMutation, useFetchUra, useUpdateUraMutation } from '../../api/hooks/uraHooks'
-import { PontozoError } from '../../api/model/error'
 import { PATHS } from '../../util/paths'
 import { UserSelector } from './components/UserSelector'
 
 export const UraCreatePage = () => {
   const uraId = parseInt(useParams<{ uraId: string }>().uraId ?? '-1')
-  const { data, isLoading } = useFetchUra(uraId)
+  const { data, isLoading, error } = useFetchUra(uraId)
   const [user, setUser] = useState<UserPreview>()
   const [role, setRole] = useState<UserRole>()
   const createMutation = useCreateUraMutation()
@@ -26,10 +26,10 @@ export const UraCreatePage = () => {
       setUser(rest)
       setRole(role)
     }
-  }, [data, isLoading, uraId])
+  }, [data, isLoading, uraId, error])
 
-  const onError = (e: AxiosError<PontozoError[]>) => {
-    Object.values(e.response?.data?.[0].constraints || {}).forEach((err) => toast({ title: err, status: 'error' }))
+  if (error) {
+    return <NavigateWithError error={error} to={PATHS.USERS} />
   }
 
   const onSubmit = () => {
@@ -42,7 +42,7 @@ export const UraCreatePage = () => {
               toast({ title: 'Személy kinevezve!', status: 'success' })
               nav(PATHS.USERS)
             },
-            onError,
+            onError: (e) => onError(e, toast),
           }
         )
       } else {
@@ -53,11 +53,15 @@ export const UraCreatePage = () => {
               toast({ title: 'Kinevezés frissítve!', status: 'success' })
               nav(PATHS.USERS)
             },
-            onError,
+            onError: (e) => onError(e, toast),
           }
         )
       }
     }
+  }
+
+  const onDelete = () => {
+    deleteMutation.mutate(undefined, { onSuccess: () => nav(PATHS.USERS), onError: (e) => onError(e, toast) })
   }
 
   return (
@@ -87,7 +91,7 @@ export const UraCreatePage = () => {
             Mentés
           </Button>
           {uraId > -1 && (
-            <Button colorScheme="red" onClick={() => deleteMutation.mutate(undefined, { onSuccess: () => nav(PATHS.USERS) })}>
+            <Button colorScheme="red" onClick={onDelete}>
               Törlés
             </Button>
           )}

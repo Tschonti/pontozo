@@ -1,9 +1,24 @@
-import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, HStack, Input, Stack, Text, VStack } from '@chakra-ui/react'
+import {
+  Button,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Heading,
+  HStack,
+  Input,
+  Stack,
+  Text,
+  useToast,
+  VStack,
+} from '@chakra-ui/react'
 import { CreateSeason, CreateSeasonForm } from '@pontozo/common'
 import { useEffect } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { NavigateWithError } from 'src/components/commons/NavigateWithError'
+import { onError } from 'src/util/onError'
 import { useCreateSeasonMutation, useDeleteSeasonMutation, useFetchSeason, useUpdateSeasonMutation } from '../../api/hooks/seasonHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
@@ -11,8 +26,9 @@ import { CategorySelector } from './components/CategorySelector'
 
 export const SeasonCreatePage = () => {
   const seasonId = parseInt(useParams<{ seasonId: string }>().seasonId ?? '-1')
-  const { data, isLoading, isFetching } = useFetchSeason(seasonId)
+  const { data, isLoading, isFetching, error } = useFetchSeason(seasonId)
   const seasonEditable = new Date(data?.startDate ?? new Date(Date.now() + 1000)) > new Date()
+  const toast = useToast()
 
   const form = useForm<CreateSeasonForm>({
     values: {
@@ -46,6 +62,14 @@ export const SeasonCreatePage = () => {
     }
   }, [data, isLoading, seasonId, setValue])
 
+  if (isLoading && isFetching) {
+    return <LoadingSpinner />
+  }
+
+  if (error) {
+    return <NavigateWithError error={error} to={PATHS.SEASONS} />
+  }
+
   const onSubmit: SubmitHandler<CreateSeasonForm> = ({ categories, ...restOfData }) => {
     const data: CreateSeason = {
       ...restOfData,
@@ -54,15 +78,12 @@ export const SeasonCreatePage = () => {
       categoryIds: categories.map((c) => c.id),
     }
     if (seasonId === -1) {
-      createMutation.mutate(data, { onSuccess: () => navigate(PATHS.SEASONS) })
+      createMutation.mutate(data, { onSuccess: () => navigate(PATHS.SEASONS), onError: (e) => onError(e, toast) })
     } else {
-      updateMutation.mutate(data, { onSuccess: () => navigate(PATHS.SEASONS) })
+      updateMutation.mutate(data, { onSuccess: () => navigate(PATHS.SEASONS), onError: (e) => onError(e, toast) })
     }
   }
 
-  if (isLoading && isFetching) {
-    return <LoadingSpinner />
-  }
   return (
     <VStack spacing={5} alignItems="flex-start">
       <Heading>{seasonId === -1 ? 'Új szezon' : 'Szezon szerkesztése'}</Heading>
@@ -116,7 +137,9 @@ export const SeasonCreatePage = () => {
             <Button
               colorScheme="red"
               isDisabled={!seasonEditable}
-              onClick={() => deleteMutation.mutate(undefined, { onSuccess: () => navigate(PATHS.SEASONS) })}
+              onClick={() =>
+                deleteMutation.mutate(undefined, { onSuccess: () => navigate(PATHS.SEASONS), onError: (e) => onError(e, toast) })
+              }
             >
               Szezon törlése
             </Button>

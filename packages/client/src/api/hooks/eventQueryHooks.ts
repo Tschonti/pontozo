@@ -1,4 +1,4 @@
-import { DbEvent, EventRatingWithEvent, EventWithRating, getRateableEvents } from '@pontozo/common'
+import { DbEvent, EventRatingWithEvent, EventWithRating, getRateableEvents, PontozoError } from '@pontozo/common'
 import { useQuery } from '@tanstack/react-query'
 import { transformEvent } from 'src/util/typeTransforms'
 import { functionAxios } from '../../util/axiosConfig'
@@ -16,7 +16,7 @@ export const useFetchEventsLastMonthFromMtfsz = () => {
 }
 
 export const useFetchEventsLastMonthFromDb = () => {
-  return useQuery<DbEvent[]>(
+  return useQuery<DbEvent[], PontozoError>(
     ['fetchEventsDb'],
     async () => {
       const res = await functionAxios.get<DbEvent[]>('events/rateable')
@@ -27,7 +27,7 @@ export const useFetchEventsLastMonthFromDb = () => {
 }
 
 export const useFetchEvent = (eventId: number) => {
-  return useQuery<EventWithRating>(
+  return useQuery<EventWithRating, PontozoError>(
     ['fetchEvent', eventId],
     async () => {
       const res = await functionAxios.get(`events/getOne/${eventId}`)
@@ -38,7 +38,11 @@ export const useFetchEvent = (eventId: number) => {
 }
 
 export const useFecthUserRatedEvents = () => {
-  return useQuery<EventRatingWithEvent[]>(['fetchUserRatedEvents'], async () => (await functionAxios.get('events/ratedByUser')).data, {
-    retry: false,
-  })
+  return useQuery<EventRatingWithEvent[], PontozoError>(
+    ['fetchUserRatedEvents'],
+    async () => (await functionAxios.get('events/ratedByUser')).data,
+    {
+      retry: false,
+    }
+  )
 }

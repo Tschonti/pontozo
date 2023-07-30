@@ -18,6 +18,7 @@ import { CreateCriteria, CreateCriterionForm, RatingRole } from '@pontozo/common
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import {
   useCreateCriterionMutation,
   useDeleteCriterionMutation,
@@ -29,7 +30,7 @@ import { PATHS } from '../../util/paths'
 
 export const CriteriaCreatePage = () => {
   const criterionId = parseInt(useParams<{ criterionId: string }>().criterionId ?? '-1')
-  const { data, isLoading, isFetching } = useFetchCriterion(criterionId)
+  const { data, isLoading, isFetching, error } = useFetchCriterion(criterionId)
   const criterionEditable = data?.editable ?? true
 
   const {
@@ -60,6 +61,13 @@ export const CriteriaCreatePage = () => {
   const updateMutation = useUpdateCriterionMutation(criterionId)
   const deleteMutation = useDeleteCriterionMutation(criterionId)
 
+  if (isLoading && isFetching) {
+    return <LoadingSpinner />
+  }
+  if (error) {
+    return <NavigateWithError error={error} to={PATHS.CRITERIA} />
+  }
+
   const onSubmit: SubmitHandler<CreateCriterionForm> = ({ competitorAllowed, juryAllowed, ...restOfData }) => {
     const roles: RatingRole[] = []
     if (competitorAllowed) {
@@ -84,9 +92,6 @@ export const CriteriaCreatePage = () => {
     }
   }
 
-  if (isLoading && isFetching) {
-    return <LoadingSpinner />
-  }
   return (
     <VStack spacing={5} alignItems="flex-start">
       <Heading>{criterionId === -1 ? 'Új szempont' : 'Szempont szerkesztése'}</Heading>

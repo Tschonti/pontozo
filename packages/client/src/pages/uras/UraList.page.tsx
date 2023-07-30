@@ -1,5 +1,6 @@
 import { Badge, Box, Button, Flex, Heading, HStack, Text, VStack } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
+import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { useFetchUras } from '../../api/hooks/uraHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { translateUR, urColor } from '../../util/enumHelpers'
@@ -11,8 +12,7 @@ export const UraListPage = () => {
     return <LoadingSpinner />
   }
   if (error) {
-    console.error(error)
-    return null
+    return <NavigateWithError error={error} to={PATHS.INDEX} />
   }
   return (
     <>

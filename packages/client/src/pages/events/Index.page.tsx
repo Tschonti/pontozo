@@ -1,4 +1,6 @@
 import { SimpleGrid } from '@chakra-ui/react'
+import { NavigateWithError } from 'src/components/commons/NavigateWithError'
+import { PATHS } from 'src/util/paths'
 import { useFetchEventsLastMonthFromDb, useFetchEventsLastMonthFromMtfsz } from '../../api/hooks/eventQueryHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { EventListItem } from './components/EventListItem'
@@ -11,10 +13,9 @@ export const IndexPage = () => {
     return <LoadingSpinner />
   }
 
-  if (mtfszError && dbError) {
+  if (dbError && mtfszError) {
     console.error(mtfszError)
-    console.error(dbError)
-    return null
+    return <NavigateWithError to={PATHS.ERROR} error={dbError} />
   }
   const eventData = eventsFromDb || eventsFromMtfsz
 

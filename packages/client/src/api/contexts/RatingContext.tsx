@@ -3,6 +3,7 @@ import { CategoryWithCriteria, DbStage, EventRatingInfo } from '@pontozo/common'
 import { useQuery } from '@tanstack/react-query'
 import { createContext, PropsWithChildren, useEffect, useState } from 'react'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { onError } from 'src/util/onError'
 import { functionAxios } from '../../util/axiosConfig'
 import { PATHS } from '../../util/paths'
 import { useSubmitRatingMutation } from '../hooks/ratingHooks'
@@ -198,6 +199,7 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
         toast({ title: 'Értékelés véglegesítve!', status: 'success' })
         navigate(`${PATHS.EVENTS}/${data?.eventId}`)
       },
+      onError: (e) => onError(e, toast),
     })
   }
 

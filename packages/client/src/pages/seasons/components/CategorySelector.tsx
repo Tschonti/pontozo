@@ -35,7 +35,7 @@ export const CategorySelector = ({ editable }: { editable: boolean }) => {
     formState: { errors },
   } = useFormContext<CreateSeasonForm>()
 
-  const { isLoading, data: category, error } = useFetchCategories()
+  const { isLoading, data: categories } = useFetchCategories()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [search, setSearch] = useState('')
@@ -64,7 +64,7 @@ export const CategorySelector = ({ editable }: { editable: boolean }) => {
     return <LoadingSpinner />
   }
 
-  const filteredCategoryList = category
+  const filteredCategoryList = categories
     ?.filter((c1) => !watch('categories').some((c2) => c1.id === c2.id))
     .filter((c) => c.name.toLowerCase().includes(search.toLowerCase()))
 
@@ -72,7 +72,16 @@ export const CategorySelector = ({ editable }: { editable: boolean }) => {
     <>
       <FormControl isInvalid={!!errors.categories}>
         <FormLabel>Szezon kategóriái</FormLabel>
-        <VStack w="100%" alignItems="flex-start" borderRadius={6} borderWidth={1} mb={2} p={2}>
+        <VStack
+          w="100%"
+          alignItems="flex-start"
+          borderRadius={6}
+          borderWidth={1}
+          mb={2}
+          p={2}
+          onClick={watch('categories').length === 0 ? onOpen : undefined}
+          cursor={watch('categories').length === 0 ? 'pointer' : undefined}
+        >
           {watch('categories').map((c, idx) => (
             <Box w="100%" borderRadius={6} borderWidth={1} key={c.id}>
               <HStack flexGrow={1} p={2}>

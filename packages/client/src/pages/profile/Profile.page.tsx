@@ -18,7 +18,7 @@ export const ProfilePage = () => {
       toast({ title: 'Nem vagy bejelentkezve!', status: 'error' })
       nav(PATHS.INDEX)
     }
-  }, [isLoggedIn])
+  }, [isLoggedIn, toast, nav])
 
   return (
     <>

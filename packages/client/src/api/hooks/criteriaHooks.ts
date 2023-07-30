@@ -1,13 +1,20 @@
-import { CreateCriteria, CreateCriterionRating, CreateResponse, Criterion, EntityWithEditableIndicator } from '@pontozo/common'
+import {
+  CreateCriteria,
+  CreateCriterionRating,
+  CreateResponse,
+  Criterion,
+  EntityWithEditableIndicator,
+  PontozoError,
+} from '@pontozo/common'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { functionAxios } from '../../util/axiosConfig'
 
 export const useFetchCriteria = () => {
-  return useQuery<Criterion[]>(['fetchCriteria'], async () => (await functionAxios.get(`/criteria`)).data, { retry: false })
+  return useQuery<Criterion[], PontozoError>(['fetchCriteria'], async () => (await functionAxios.get(`/criteria`)).data, { retry: false })
 }
 
 export const useFetchCriterion = (criterionId: number) => {
-  return useQuery<EntityWithEditableIndicator<Criterion>>(
+  return useQuery<EntityWithEditableIndicator<Criterion>, PontozoError>(
     ['fetchCriterion', criterionId],
     async () => (await functionAxios.get(`/criteria/${criterionId}`)).data,
     {
@@ -19,17 +26,19 @@ export const useFetchCriterion = (criterionId: number) => {
 }
 
 export const useRateCriteriaMutation = (eventRatingId: number) => {
-  return useMutation<Record<string, never>, Error, CreateCriterionRating>(
+  return useMutation<Record<string, never>, PontozoError, CreateCriterionRating>(
     async (ratingData) => (await functionAxios.post(`/ratings/${eventRatingId}`, ratingData)).data
   )
 }
 
 export const useCreateCriterionMutation = () => {
-  return useMutation<CreateResponse[], Error, CreateCriteria>(async (formData) => (await functionAxios.post(`/criteria`, formData)).data)
+  return useMutation<CreateResponse[], PontozoError, CreateCriteria>(
+    async (formData) => (await functionAxios.post(`/criteria`, formData)).data
+  )
 }
 
 export const useUpdateCriterionMutation = (criterionId: number) => {
-  return useMutation<CreateResponse[], Error, CreateCriteria>(
+  return useMutation<CreateResponse[], PontozoError, CreateCriteria>(
     async (formData) => (await functionAxios.put(`/criteria/${criterionId}`, formData)).data
   )
 }
