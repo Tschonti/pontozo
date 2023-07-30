@@ -19,7 +19,8 @@ export const CategoryWithCriteriaList = ({ ratingId }: Props) => {
         { onSuccess: (data) => rateCriteria(data.map((r) => r.criterionId)) }
       )
     }
-  }, [eventRatingInfo, currentCategory, currentStage, mutation, rateCriteria])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [eventRatingInfo, currentCategory, currentStage])
 
   const criteria = currentCategory?.criteria.map((c) => ({
     ...c,

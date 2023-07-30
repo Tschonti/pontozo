@@ -53,9 +53,14 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
   const [stageIdx, setStageIdx] = useState(-1)
   const [validate, setValidate] = useState(false)
   const [categoryIdx, setCategoryIdx] = useState(0)
-  const [ratedCriteria, setRatedCriteria] = useState<number[]>([])
+  const [ratedCriteria, setRatedCriteria] = useState<string[]>([])
   const navigate = useNavigate()
   const toast = useToast()
+
+  const generateCriterionId = (cId: number) => {
+    return `${stage ? stage.id : 0}-${cId}`
+  }
+
   const { data, isLoading } = useQuery(
     ['ratingInfo', ratingId],
     async () => (await functionAxios.get<EventRatingInfo>(`/ratings/${ratingId}/info`)).data,
@@ -97,16 +102,16 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
   }
 
   const rateCriterion = (criterionId: number) => {
-    if (!ratedCriteria.includes(criterionId)) {
-      setRatedCriteria([...ratedCriteria, criterionId])
+    if (!ratedCriteria.includes(generateCriterionId(criterionId))) {
+      setRatedCriteria([...ratedCriteria, generateCriterionId(criterionId)])
     }
   }
 
   const rateCriteria = (criterionIds: number[]) => {
     const newArray = [...ratedCriteria]
     criterionIds.forEach((cId) => {
-      if (!ratedCriteria.includes(cId)) {
-        newArray.push(cId)
+      if (!ratedCriteria.includes(generateCriterionId(cId))) {
+        newArray.push(generateCriterionId(cId))
       }
     })
     setRatedCriteria(newArray)
@@ -116,7 +121,7 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
     if (!data) {
       return
     }
-    if (category?.criteria.some((c) => !ratedCriteria.includes(c.id))) {
+    if (category?.criteria.some((c) => !ratedCriteria.includes(generateCriterionId(c.id)))) {
       setValidate(true)
       toast({ title: 'Minden szempont kitöltése kötelező!', status: 'warning' })
       return
@@ -137,7 +142,6 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
           setStageIdx(stageIdx + 1)
         } else {
           submitRating()
-          reset()
         }
       }
     } else {
