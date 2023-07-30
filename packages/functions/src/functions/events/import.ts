@@ -74,6 +74,6 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
 }
 
 app.timer('events-import', {
-  schedule: '0 1 * * *', // 1 AM every day
+  schedule: '0 0 1 * * *', // 1 AM every day
   handler: importEvents,
 })
