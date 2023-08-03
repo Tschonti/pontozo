@@ -6,7 +6,7 @@ import Season from '../../typeorm/entities/Season'
 import Stage from '../../typeorm/entities/Stage'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { currentSeasonFilter } from '../../util/currentSeasonFilter'
-import { APIM_HOST, APIM_KEY } from '../../util/env'
+import { APIM_HOST, APIM_KEY, ENV } from '../../util/env'
 
 /**
  * Called every night automatically to import events from MTFSZ DB.
@@ -76,4 +76,5 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
 app.timer('events-import', {
   schedule: '0 0 1 * * *', // 1 AM every day
   handler: importEvents,
+  runOnStartup: !(ENV === 'production'),
 })

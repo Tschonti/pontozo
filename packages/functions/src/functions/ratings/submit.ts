@@ -18,7 +18,7 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
     const eventRatingRepo = ads.getRepository(EventRating)
     const rating = await eventRatingRepo.findOne({
       where: { id },
-      relations: { ratings: true, event: { stages: true, season: { categories: { category: { criteria: { criterion: true } } } } } },
+      relations: { ratings: true, event: { stages: true, season: { criterionCount: true } } },
     })
 
     if (rating.status === RatingStatus.SUBMITTED) {
@@ -31,18 +31,11 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
       throw new PontozoException('Ezt a versenyt már nem lehet értékelni!', 400)
     }
     const { season, stages } = rating.event
-    let criterionCount = 0
-    season.categories.forEach((stc) => {
-      stc.category.criteria.forEach(({ criterion: c }) => {
-        if (c.roles.includes(rating.role) && (isHigherRank(rating.event) || !c.nationalOnly)) {
-          if (c.stageSpecific) {
-            criterionCount = criterionCount + stages.length
-          } else {
-            criterionCount++
-          }
-        }
-      })
-    })
+    const scc = season.criterionCount.find((cc) => cc.role === rating.role)
+    let criterionCount = scc.eventSpecificAnyRank + stages.length * scc.stageSpecificAnyRank
+    if (isHigherRank(rating.event)) {
+      criterionCount += scc.eventSpecificHigherRank + stages.length * scc.stageSpecificHigherRank
+    }
 
     if (criterionCount !== rating.ratings.length) {
       throw new PontozoException('Nem értékelted le a versenyt az összes szempont szerint!', 400)

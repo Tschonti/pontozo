@@ -551,8 +551,10 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
     season.name = new Date().getFullYear().toString()
     const sd = new Date()
     sd.setMonth(0, 1)
+    sd.setHours(0, 0, 0, 0)
     const ed = new Date()
     ed.setMonth(11, 31)
+    ed.setHours(23, 59, 59)
     season.startDate = sd
     season.endDate = ed
 

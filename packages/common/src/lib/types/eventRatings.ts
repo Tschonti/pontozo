@@ -14,6 +14,8 @@ export enum RatingRole {
   JURY = 'JURY',
 }
 
+export const ratingRoleArray = [RatingRole.COMPETITOR, RatingRole.COACH, RatingRole.JURY, RatingRole.ORGANISER]
+
 export interface EventRating {
   id: number
   eventId: number

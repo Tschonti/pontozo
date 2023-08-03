@@ -1,6 +1,7 @@
 import { Season as ISeason } from '@pontozo/common'
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import Event from './Event'
+import SeasonCriterionCount from './SeasonCriterionCount'
 import { SeasonToCategory } from './SeasonToCategory'
 
 @Entity()
@@ -22,6 +23,9 @@ class Season implements ISeason {
 
   @OneToMany(() => Event, (e) => e.season)
   events: Event[]
+
+  @OneToMany(() => SeasonCriterionCount, (scc) => scc.season)
+  criterionCount: SeasonCriterionCount[]
 }
 
 export default Season
