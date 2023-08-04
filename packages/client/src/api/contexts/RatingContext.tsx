@@ -21,6 +21,7 @@ export type RatingContextType = {
   validate: boolean
   startRating: (ratingId: number) => void
   rateCriterion: (criterionId: number) => void
+  removeCriterionRating: (criterionId: number) => void
   rateCriteria: (criterionId: number[]) => void
   nextCategory: () => void
   previousCategory: () => void
@@ -39,6 +40,7 @@ export const RatingContext = createContext<RatingContextType>({
   validate: false,
   startRating: () => {},
   rateCriterion: () => {},
+  removeCriterionRating: () => {},
   rateCriteria: () => {},
   nextCategory: () => {},
   previousCategory: () => {},
@@ -104,6 +106,12 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
   const rateCriterion = (criterionId: number) => {
     if (!ratedCriteria.includes(generateCriterionId(criterionId))) {
       setRatedCriteria([...ratedCriteria, generateCriterionId(criterionId)])
+    }
+  }
+
+  const removeCriterionRating = (criterionId: number) => {
+    if (ratedCriteria.includes(generateCriterionId(criterionId))) {
+      setRatedCriteria(ratedCriteria.filter((c) => c === generateCriterionId(criterionId)))
     }
   }
 
@@ -232,6 +240,7 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
         validate,
         startRating,
         rateCriteria,
+        removeCriterionRating,
         rateCriterion,
         nextCategory,
         previousCategory,
