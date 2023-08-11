@@ -12,9 +12,7 @@ import SeasonCriterionCount from './entities/SeasonCriterionCount'
 import { SeasonToCategory } from './entities/SeasonToCategory'
 import Stage from './entities/Stage'
 import UserRoleAssignment from './entities/UserRoleAssignment'
-import { Init1688230862927 } from './migrations/1688230862927-init'
-import { SeasonToEvent1688909888594 } from './migrations/1688909888594-seasonToEvent'
-import { SeasonCriterionCount1691089489871 } from './migrations/1691089489871-seasonCriterionCount'
+import { Init1691784848264 } from './migrations/1691784848264-init'
 
 export const DBConfig: DataSourceOptions = {
   type: 'mssql',
@@ -41,6 +39,6 @@ export const DBConfig: DataSourceOptions = {
     SeasonCriterionCount,
   ],
   subscribers: [],
-  migrations: [Init1688230862927, SeasonToEvent1688909888594, SeasonCriterionCount1691089489871],
+  migrations: [Init1691784848264],
   options: { encrypt: ENCRYPT },
 }
