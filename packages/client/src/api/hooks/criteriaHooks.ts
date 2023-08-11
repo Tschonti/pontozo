@@ -2,7 +2,7 @@ import {
   CreateCriteria,
   CreateCriterionRating,
   CreateResponse,
-  Criterion,
+  CriterionWithSeason,
   EntityWithEditableIndicator,
   PontozoError,
 } from '@pontozo/common'
@@ -10,11 +10,13 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { functionAxios } from '../../util/axiosConfig'
 
 export const useFetchCriteria = () => {
-  return useQuery<Criterion[], PontozoError>(['fetchCriteria'], async () => (await functionAxios.get(`/criteria`)).data, { retry: false })
+  return useQuery<CriterionWithSeason[], PontozoError>(['fetchCriteria'], async () => (await functionAxios.get(`/criteria`)).data, {
+    retry: false,
+  })
 }
 
 export const useFetchCriterion = (criterionId: number) => {
-  return useQuery<EntityWithEditableIndicator<Criterion>, PontozoError>(
+  return useQuery<EntityWithEditableIndicator<CriterionWithSeason>, PontozoError>(
     ['fetchCriterion', criterionId],
     async () => (await functionAxios.get(`/criteria/${criterionId}`)).data,
     {
@@ -45,4 +47,8 @@ export const useUpdateCriterionMutation = (criterionId: number) => {
 
 export const useDeleteCriterionMutation = (criterionId: number) => {
   return useMutation<CreateResponse[], Error>(async () => (await functionAxios.delete(`/criteria/${criterionId}`)).data)
+}
+
+export const useDuplicateCriterionMutation = (criterionId: number) => {
+  return useMutation<CreateResponse[], Error>(async () => (await functionAxios.post(`/criteria/${criterionId}/duplicate`)).data)
 }

@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, Text, VStack } from '@chakra-ui/react'
+import { Badge, Box, Button, Flex, Heading, HStack, Text, VStack } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { useFetchCriteria } from '../../api/hooks/criteriaHooks'
@@ -24,7 +24,16 @@ export const CriteriaListPage = () => {
       <VStack spacing={3} alignItems="flex-start">
         {data?.map((c) => (
           <Box w="100%" as={Link} to={`${PATHS.CRITERIA}/${c.id}/edit`} borderRadius={6} borderWidth={1} p={2} key={c.id}>
-            <Heading size="sm">{c.name}</Heading>
+            <HStack justify="space-between">
+              <Heading size="sm">{c.name}</Heading>
+              <HStack>
+                {c.seasons.map((s) => (
+                  <Badge variant="solid" colorScheme="brand" key={s.id}>
+                    {s.name}
+                  </Badge>
+                ))}
+              </HStack>
+            </HStack>
             <Text>{c.description}</Text>
           </Box>
         ))}

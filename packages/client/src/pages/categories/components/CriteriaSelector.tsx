@@ -1,9 +1,11 @@
 import {
+  Badge,
   Box,
   Button,
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Heading,
   HStack,
   IconButton,
   Input,
@@ -35,7 +37,7 @@ export const CriteriaSelector = ({ editable }: { editable: boolean }) => {
     formState: { errors },
   } = useFormContext<CreateCategoryForm>()
 
-  const { isLoading, data: criteria, error } = useFetchCriteria()
+  const { isLoading, data: criteria } = useFetchCriteria()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [search, setSearch] = useState('')
@@ -124,7 +126,7 @@ export const CriteriaSelector = ({ editable }: { editable: boolean }) => {
           Szempont hozzáadása
         </Button>
       </FormControl>
-      <Modal scrollBehavior="inside" isOpen={isOpen} onClose={onClose}>
+      <Modal size="lg" scrollBehavior="inside" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Szempont hozzáadása</ModalHeader>
@@ -163,7 +165,8 @@ export const CriteriaSelector = ({ editable }: { editable: boolean }) => {
                 <Text fontStyle="italic">Nincs találat</Text>
               ) : (
                 filteredCriterionList.map((c) => (
-                  <Box
+                  <VStack
+                    alignItems="flex-start"
                     borderRadius={6}
                     borderWidth={1}
                     p={2}
@@ -175,8 +178,18 @@ export const CriteriaSelector = ({ editable }: { editable: boolean }) => {
                       onClose()
                     }}
                   >
-                    <Text width="100%">{c.name}</Text>
-                  </Box>
+                    <Heading size="xs" width="100%">
+                      {c.name}
+                    </Heading>
+                    <HStack>
+                      {c.seasons.map((s) => (
+                        <Badge variant="solid" colorScheme="brand" key={s.id}>
+                          {s.name}
+                        </Badge>
+                      ))}
+                    </HStack>
+                    <Text>{c.editorsNote}</Text>
+                  </VStack>
                 ))
               )}
             </VStack>

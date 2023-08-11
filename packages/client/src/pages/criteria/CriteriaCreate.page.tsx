@@ -1,4 +1,5 @@
 import {
+  Badge,
   Button,
   Checkbox,
   Flex,
@@ -12,6 +13,7 @@ import {
   Stack,
   Switch,
   Text,
+  useToast,
   VStack,
 } from '@chakra-ui/react'
 import { CreateCriteria, CreateCriterionForm, RatingRole } from '@pontozo/common'
@@ -22,6 +24,7 @@ import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import {
   useCreateCriterionMutation,
   useDeleteCriterionMutation,
+  useDuplicateCriterionMutation,
   useFetchCriterion,
   useUpdateCriterionMutation,
 } from '../../api/hooks/criteriaHooks'
@@ -57,9 +60,11 @@ export const CriteriaCreatePage = () => {
     },
   })
   const navigate = useNavigate()
+  const toast = useToast()
   const createMutation = useCreateCriterionMutation()
   const updateMutation = useUpdateCriterionMutation(criterionId)
   const deleteMutation = useDeleteCriterionMutation(criterionId)
+  const duplicateMutation = useDuplicateCriterionMutation(criterionId)
 
   if (isLoading && isFetching) {
     return <LoadingSpinner />
@@ -92,9 +97,28 @@ export const CriteriaCreatePage = () => {
     }
   }
 
+  const onDuplicateClick = () => {
+    duplicateMutation.mutate(undefined, {
+      onSuccess: (res) => {
+        navigate(`${PATHS.CRITERIA}/${res[0].id}/edit`)
+        toast({ title: 'Szempont duplikálva!', description: 'Most már az újonnan létrejött szempontot szerkeszted!', status: 'success' })
+      },
+    })
+  }
+
   return (
     <VStack spacing={5} alignItems="flex-start">
-      <Heading>{criterionId === -1 ? 'Új szempont' : 'Szempont szerkesztése'}</Heading>
+      <HStack w="100%" justify="space-between">
+        <Heading>{criterionId === -1 ? 'Új szempont' : 'Szempont szerkesztése'}</Heading>
+        <HStack>
+          {data?.seasons.map((s) => (
+            <Badge fontSize="xl" variant="solid" colorScheme="brand" key={s.id}>
+              {s.name}
+            </Badge>
+          ))}
+        </HStack>
+      </HStack>
+
       {!criterionEditable && <Text>TODO ide valami szöveg hogy mért nem szerkeszthető</Text>}
       <FormControl isInvalid={!!errors.name}>
         <FormLabel>Név</FormLabel>
@@ -222,6 +246,11 @@ export const CriteriaCreatePage = () => {
           Vissza
         </Button>
         <HStack spacing={1}>
+          {criterionId > -1 && (
+            <Button colorScheme="brand" onClick={onDuplicateClick}>
+              Duplikálás
+            </Button>
+          )}
           {criterionId > -1 && (
             <Button
               colorScheme="red"
