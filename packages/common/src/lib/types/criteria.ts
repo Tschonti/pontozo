@@ -1,6 +1,7 @@
 import { ArrayNotEmpty, ArrayUnique, IsBoolean, IsEnum, IsInt, IsNotEmpty, IsOptional } from 'class-validator'
 import { CriterionRating } from './criterionRatings'
 import { RatingRole } from './eventRatings'
+import { Season } from './seasons'
 
 export interface Criterion {
   id: number
@@ -17,6 +18,10 @@ export interface Criterion {
   competitorWeight: number
   organiserWeight: number
   roles: RatingRole[]
+}
+
+export interface CriterionWithSeason extends Criterion {
+  seasons: Season[]
 }
 
 export interface CriterionDetails extends Criterion {

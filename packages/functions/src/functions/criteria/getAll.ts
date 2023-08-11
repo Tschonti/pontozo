@@ -9,9 +9,15 @@ export const getCriteria = async (req: HttpRequest, context: InvocationContext):
   try {
     await getUserFromHeaderAndAssertAdmin(req)
     const criterionRepo = (await getAppDataSource()).getRepository(Criterion)
-    const criteria = await criterionRepo.find()
+    const criteria = await criterionRepo.find({ relations: { categories: { category: { seasons: { season: true } } } } })
     return {
-      jsonBody: criteria,
+      jsonBody: criteria.map(({ categories, ...c }) => {
+        const seasons = categories.map((ctc) => ctc.category.seasons.map((stc) => stc.season)).flat()
+        return {
+          ...c,
+          seasons: [...new Set(seasons)],
+        }
+      }),
     }
   } catch (error) {
     return handleException(context, error)
