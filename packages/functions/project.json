@@ -17,11 +17,8 @@
     },
     "publish": {
       "executor": "@nxazure/func:publish",
-      "defaultConfiguration": "test",
+      "defaultConfiguration": "prod",
       "configurations": {
-        "test": {
-          "name": "pontozo-test"
-        },
         "prod": {
           "name": "pontozo"
         }
