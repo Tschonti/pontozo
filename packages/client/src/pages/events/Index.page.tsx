@@ -1,4 +1,4 @@
-import { SimpleGrid } from '@chakra-ui/react'
+import { Alert, AlertIcon, AlertTitle, SimpleGrid, Text } from '@chakra-ui/react'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { PATHS } from 'src/util/paths'
 import { useFetchEventsLastMonthFromDb, useFetchEventsLastMonthFromMtfsz } from '../../api/hooks/eventQueryHooks'
@@ -20,10 +20,22 @@ export const IndexPage = () => {
   const eventData = eventsFromDb || eventsFromMtfsz
 
   return (
-    <SimpleGrid spacing={4} columns={[1, 1, 2]}>
-      {eventData?.map((e) => (
-        <EventListItem key={e.id} event={e} />
-      ))}
-    </SimpleGrid>
+    <>
+      <Alert status="warning" my={2}>
+        <AlertIcon />
+        <AlertTitle>Az oldal még fejlesztés alatt áll!</AlertTitle>
+      </Alert>
+      {(eventData?.length || 0) > 0 ? (
+        <SimpleGrid spacing={4} columns={[1, 1, 2]}>
+          {eventData?.map((e) => (
+            <EventListItem key={e.id} event={e} />
+          ))}
+        </SimpleGrid>
+      ) : (
+        <Text textAlign="center" fontStyle="italic">
+          Jelenleg nincs egy értékelhető verseny se.
+        </Text>
+      )}
+    </>
   )
 }

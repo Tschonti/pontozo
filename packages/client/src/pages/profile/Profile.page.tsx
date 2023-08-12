@@ -1,4 +1,4 @@
-import { Button, Heading, HStack, SimpleGrid, useToast } from '@chakra-ui/react'
+import { Button, Heading, HStack, SimpleGrid, Text, useToast } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../../api/contexts/useAuthContext'
@@ -33,13 +33,19 @@ export const ProfilePage = () => {
         Értékelt versenyeid
       </Heading>
       {eventQuery.isLoading && <LoadingSpinner />}
-      <SimpleGrid mt={3} spacing={4} columns={[1, 1, 2]}>
-        {eventQuery.data
-          ?.sort(({ event: e1 }, { event: e2 }) => -e1.startDate.localeCompare(e2.startDate))
-          .map((er) => (
-            <EventListItem key={er.eventId} event={er.event} status={er.status} />
-          ))}
-      </SimpleGrid>
+      {(eventQuery.data?.length || 0) > 0 ? (
+        <SimpleGrid mt={3} spacing={4} columns={[1, 1, 2]}>
+          {eventQuery.data
+            ?.sort(({ event: e1 }, { event: e2 }) => -e1.startDate.localeCompare(e2.startDate))
+            .map((er) => (
+              <EventListItem key={er.eventId} event={er.event} status={er.status} />
+            ))}
+        </SimpleGrid>
+      ) : (
+        <Text textAlign="center" fontStyle="italic">
+          Még nem értékeltél egy versenyt se.
+        </Text>
+      )}
     </>
   )
 }
