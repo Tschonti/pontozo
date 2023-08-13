@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { createContext, PropsWithChildren, useEffect, useState } from 'react'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { onError } from 'src/util/onError'
+import { scrollToPB } from 'src/util/scrollToPB'
 import { functionAxios } from '../../util/axiosConfig'
 import { PATHS } from '../../util/paths'
 import { useSubmitRatingMutation } from '../hooks/ratingHooks'
@@ -134,7 +135,7 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
       toast({ title: 'Minden szempont kitöltése kötelező!', status: 'warning' })
       return
     }
-    window.scrollTo(0, 0)
+    scrollToPB()
     setValidate(false)
     if (stage) {
       if (categoryIdx < data.stageCategories.length - 1) {
@@ -168,7 +169,7 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
   }
 
   const previousCategory = () => {
-    window.scrollTo(0, 0)
+    scrollToPB()
     if (!data) {
       return
     }

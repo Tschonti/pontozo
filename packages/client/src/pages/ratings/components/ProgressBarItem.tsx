@@ -20,7 +20,17 @@ export const ProgressBarItem = ({ itemStageIdx, name }: Props) => {
       <Text py={2} fontWeight={currentStage ? 'bold' : undefined}>
         {name} {currentStage && `(${categoryIdx + 1}/${categoryArray?.length || 1})`}
       </Text>
-      <Progress w="100%" value={percent * 100} size="sm" colorScheme="brand" />
+      <Progress
+        sx={{
+          '& > div:first-of-type': {
+            transitionProperty: 'width',
+          },
+        }}
+        w="100%"
+        value={percent * 100}
+        size="xs"
+        colorScheme="brand"
+      />
     </VStack>
   )
 }

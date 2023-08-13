@@ -8,7 +8,7 @@ export const GoToRatingButton = ({ eventWithRating }: { eventWithRating: EventWi
   if (eventWithRating.userRating) {
     return (
       <Button as={Link} to={`${PATHS.RATINGS}/${eventWithRating.userRating.id}?categoryIdx=0`} colorScheme="brand">
-        {eventWithRating.userRating.status === RatingStatus.SUBMITTED ? 'Értékelésed megtekintése' : 'Értékelésed szerkesztése'}
+        {eventWithRating.userRating.status === RatingStatus.SUBMITTED ? 'Értékelésed megtekintése' : 'Értékelés folytatása'}
       </Button>
     )
   }

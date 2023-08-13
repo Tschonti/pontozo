@@ -74,6 +74,8 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
       jsonBody: {
         ...eventRating,
         eventName: event.name,
+        startDate: event.startDate,
+        endDate: event.endDate,
         stages: event.stages,
         eventCategories,
         stageCategories,

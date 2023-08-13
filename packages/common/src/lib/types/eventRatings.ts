@@ -41,6 +41,8 @@ export class CreateEventRating {
 
 export interface EventRatingInfo extends EventRating {
   eventName: string
+  startDate: string
+  endDate?: string
   stages: DbStage[]
   eventCategories: CategoryWithCriteria[]
   stageCategories: CategoryWithCriteria[]
