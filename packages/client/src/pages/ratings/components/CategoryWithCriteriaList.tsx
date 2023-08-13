@@ -10,7 +10,7 @@ type Props = {
 
 export const CategoryWithCriteriaList = ({ ratingId }: Props) => {
   const mutation = useFetchRatingsMutation(+ratingId!)
-  const { eventRatingInfo, currentCategory, currentStage, categoryIdx, rateCriteria } = useRatingContext()
+  const { eventRatingInfo, currentCategory, currentStage, rateCriteria } = useRatingContext()
 
   useEffect(() => {
     if (eventRatingInfo) {
@@ -29,10 +29,7 @@ export const CategoryWithCriteriaList = ({ ratingId }: Props) => {
 
   return (
     <>
-      <Heading size="md">
-        Kategória: {currentCategory?.name} ({categoryIdx + 1}/
-        {currentStage ? eventRatingInfo?.stageCategories.length : eventRatingInfo?.eventCategories.length})
-      </Heading>
+      <Heading size="md">Kategória: {currentCategory?.name}</Heading>
       <Text mt={2} mb={5}>
         {currentCategory?.description}
       </Text>

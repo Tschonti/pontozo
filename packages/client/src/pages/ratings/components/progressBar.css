@@ -1,0 +1,8 @@
+.sticky {
+  position: fixed;
+  top: 0;
+}
+
+.belowSticky {
+  padding-top: 48px;
+}

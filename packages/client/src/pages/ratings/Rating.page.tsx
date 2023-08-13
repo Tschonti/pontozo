@@ -1,9 +1,11 @@
 import { Button, Heading, HStack } from '@chakra-ui/react'
+import { createPortal } from 'react-dom'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import { useParams } from 'react-router-dom'
 import { useRatingContext } from '../../api/contexts/useRatingContext'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { CategoryWithCriteriaList } from './components/CategoryWithCriteriaList'
+import { RatingProgressBar } from './components/RatingProgressBar'
 
 export const RatingPage = () => {
   const { ratingId } = useParams()
@@ -15,14 +17,9 @@ export const RatingPage = () => {
 
   return (
     <>
-      <Heading mb={2}>{currentStage ? currentStage.name || `${stageIdx + 1}. futam` : eventRatingInfo?.eventName} értékelése</Heading>
-      {currentStage ? (
-        <Heading size="sm">
-          A futamra vonatkozó szempontok szerint (futam {stageIdx + 1}/{eventRatingInfo?.stages.length})
-        </Heading>
-      ) : (
-        <Heading size="sm">A teljes versenyre vonatkozó szempontok szerint</Heading>
-      )}
+      {createPortal(<RatingProgressBar />, document.getElementById('ratingPB')!)}
+      <Heading mb={2}>{eventRatingInfo?.eventName} értékelése</Heading>
+      {currentStage && <Heading size="md">Futam: {currentStage.name || `${stageIdx + 1}. futam`}</Heading>}
       <CategoryWithCriteriaList ratingId={+ratingId!} />
       <HStack mt={3} justify="space-between" w="100%">
         <Button leftIcon={<FaArrowLeft />} onClick={() => previousCategory()}>

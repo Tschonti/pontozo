@@ -11,7 +11,8 @@ export const PLayout = ({ children }: PropsWithChildren) => {
       <ScrollToTop />
       <Flex direction="column" minHeight="100vh" backgroundImage="url(/img/hatter.png)">
         <Navbar />
-        <Box flex={1} pb={15}>
+        <div id="ratingPB" />
+        <Box id="content" flex={1} pb={15}>
           <PContainer>{children}</PContainer>
         </Box>
         <Footer />
