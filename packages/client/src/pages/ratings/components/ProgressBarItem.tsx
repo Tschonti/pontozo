@@ -16,9 +16,9 @@ export const ProgressBarItem = ({ itemStageIdx, name }: Props) => {
     percent = (categoryIdx + 1) / (categoryArray?.length || 1)
   }
   return (
-    <VStack w="100%" spacing={0} borderRightWidth={3} borderRightColor="white">
-      <Text py={2} fontWeight={currentStage ? 'bold' : undefined}>
-        {name} {currentStage && `(${categoryIdx + 1}/${categoryArray?.length || 1})`}
+    <VStack display="flex" justify="flex-end" w="100%" spacing={0} borderRightWidth={3} borderRightColor="white">
+      <Text textAlign="center" py={2} fontWeight={currentStage ? 'bold' : undefined}>
+        {name}
       </Text>
       <Progress
         sx={{

@@ -1,6 +1,7 @@
 import { Badge, Card, CardBody, CardHeader, Heading, HStack, Text } from '@chakra-ui/react'
 import { DbEvent, RatingStatus } from '@pontozo/common'
 import { Link } from 'react-router-dom'
+import { formatDateRange } from 'src/util/formatDateRange'
 import { statusColor, translateStatus } from '../../../util/enumHelpers'
 import { PATHS } from '../../../util/paths'
 import { EventRankBadge } from './EventRankBadge'
@@ -16,8 +17,7 @@ export const EventListItem = ({ event, status }: Props) => {
       <CardHeader>
         <Heading size="md">{event.name}</Heading>
         <Heading mt={1} size="sm">
-          {event.startDate}
-          {event.endDate && ` - ${event.endDate}`}
+          {formatDateRange(event.startDate, event.endDate)}
         </Heading>
       </CardHeader>
 

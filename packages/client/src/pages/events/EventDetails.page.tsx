@@ -2,6 +2,7 @@ import { Button, Heading, Stack, Text, useToast, VStack } from '@chakra-ui/react
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
+import { formatDateRange } from 'src/util/formatDateRange'
 import { useAuthContext } from '../../api/contexts/useAuthContext'
 import { useFetchEvent } from '../../api/hooks/eventQueryHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
@@ -32,10 +33,7 @@ export const EventDetailsPage = () => {
         <Heading>{event.name}</Heading>
         <GoToRatingButton eventWithRating={eventWithRating} />
       </Stack>
-      <Heading size="md">
-        {event.startDate}
-        {event.endDate && ` - ${event.endDate}`}
-      </Heading>
+      <Heading size="md">{formatDateRange(event.startDate, event.endDate)}</Heading>
       <Text>
         <b>Rendező{event.organisers.length > 1 && 'k'}:</b> {event.organisers.map((o) => o.shortName).join(', ')}
       </Text>

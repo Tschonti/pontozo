@@ -1,15 +1,17 @@
-import { Box, Button, Grid, Heading, HStack, VStack } from '@chakra-ui/react'
+import { Box, Button, Grid, Heading, HStack, Stack, useMediaQuery } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import { useRatingContext } from 'src/api/contexts/useRatingContext'
 import { PContainer } from 'src/components/commons/PContainer'
+import { formatDateRange } from 'src/util/formatDateRange'
 import { PATHS } from 'src/util/paths'
 import './progressBar.css'
 import { ProgressBarItem } from './ProgressBarItem'
 
-export const RatingProgressBar = () => {
+export const DesktopRatingProgressBar = () => {
   const { eventRatingInfo, nextCategory, previousCategory, hasNext, hasPrev } = useRatingContext()
+  const [isLargeScreen] = useMediaQuery('(min-width: 1200px)')
 
   const [sticky, setSticky] = useState(false)
   useEffect(() => {
@@ -35,16 +37,17 @@ export const RatingProgressBar = () => {
     <Box w="100%" className={sticky ? 'sticky' : undefined} zIndex={10}>
       <Box bgColor={sticky ? 'brand.500' : 'white'} color={sticky ? 'white' : undefined}>
         <PContainer>
-          <HStack w="100%" justify="space-between">
+          <Stack
+            direction={{ base: 'column', lg: 'row' }}
+            alignItems={{ base: 'flex-start', lg: 'center' }}
+            w="100%"
+            justify="space-between"
+          >
             <Heading title="Vissza a versenyhez" as={Link} to={`${PATHS.EVENTS}/${eventRatingInfo.eventId}`} size={sticky ? 'md' : 'lg'}>
               {eventRatingInfo.eventName} értékelése
             </Heading>
-            <VStack alignItems="flex-end">
-              <Heading size="sm">
-                {eventRatingInfo.startDate} {eventRatingInfo.endDate && `- ${eventRatingInfo.endDate}`}
-              </Heading>
-            </VStack>
-          </HStack>
+            <Heading size="sm">{formatDateRange(eventRatingInfo.startDate, eventRatingInfo.endDate)}</Heading>
+          </Stack>
         </PContainer>
       </Box>
 
@@ -62,14 +65,16 @@ export const RatingProgressBar = () => {
           <ProgressBarItem key={s.id} itemStageIdx={idx} name={s.name} />
         ))}
       </Grid>
-      <HStack pos="absolute" px={2} pt={2} w="100%" justify="space-between">
-        <Button color="brand.500" leftIcon={<FaChevronLeft />} onClick={() => previousCategory()} variant="ghost">
-          {hasPrev ? 'Előző' : 'Vissza'}
-        </Button>
-        <Button color="brand.500" rightIcon={<FaChevronRight />} onClick={() => nextCategory()} variant="ghost">
-          {hasNext ? 'Következő' : 'Véglegesítés'}
-        </Button>
-      </HStack>
+      {isLargeScreen && (
+        <HStack pos="absolute" px={2} pt={2} w="100%" justify="space-between">
+          <Button color="brand.500" leftIcon={<FaChevronLeft />} onClick={() => previousCategory()} variant="ghost">
+            {hasPrev ? 'Előző' : 'Vissza'}
+          </Button>
+          <Button color="brand.500" rightIcon={<FaChevronRight />} onClick={() => nextCategory()} variant="ghost">
+            {hasNext ? 'Következő' : 'Véglegesítés'}
+          </Button>
+        </HStack>
+      )}
     </Box>
   )
 }
