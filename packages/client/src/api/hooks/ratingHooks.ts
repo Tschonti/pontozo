@@ -4,6 +4,7 @@ import {
   EventRatingInfo,
   GetCriterionRatings,
   GetEventRating,
+  PageTurn,
   PontozoError,
   RatingStartedResponse,
 } from '@pontozo/common'
@@ -20,6 +21,12 @@ export const useStartRatingMutation = () => {
 export const useSubmitRatingMutation = () => {
   return useMutation<unknown, PontozoError, number>(
     async (ratingId: number) => (await functionAxios.post(`${FUNC_HOST}/ratings/${ratingId}/submit`)).data
+  )
+}
+
+export const useTurnPageMutation = () => {
+  return useMutation<unknown, PontozoError, PageTurn & { ratingId: number }>(
+    async ({ ratingId, ...data }) => (await functionAxios.post(`${FUNC_HOST}/ratings/${ratingId}/turn`, data)).data
   )
 }
 

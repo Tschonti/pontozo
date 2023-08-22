@@ -22,6 +22,8 @@ export interface EventRating {
   userId: number
   status: RatingStatus
   role: RatingRole
+  currentCategoryIdx: number
+  currentStageIdx: number
   createdAt: Date
   submittedAt?: Date
 }
@@ -58,6 +60,16 @@ export class GetCriterionRatings {
   @IsInt()
   @Min(1)
   stageId?: number
+}
+
+export class PageTurn {
+  @IsInt()
+  @Min(0)
+  categoryIdx: number
+
+  @IsInt()
+  @Min(-1)
+  stageIdx: number
 }
 
 export interface GetEventRating {

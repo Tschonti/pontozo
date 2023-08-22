@@ -23,6 +23,7 @@ export const MobileRatingProgressBar = () => {
     window.addEventListener('scroll', onScroll)
     return () => {
       window.removeEventListener('scroll', onScroll)
+      document.getElementById('content')?.classList.remove('belowSticky')
     }
   }, [])
 

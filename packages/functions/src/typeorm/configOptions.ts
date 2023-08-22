@@ -13,6 +13,7 @@ import { SeasonToCategory } from './entities/SeasonToCategory'
 import Stage from './entities/Stage'
 import UserRoleAssignment from './entities/UserRoleAssignment'
 import { Init1691784848264 } from './migrations/1691784848264-init'
+import { RatingState1692730361523 } from './migrations/1692730361523-ratingState'
 
 export const DBConfig: DataSourceOptions = {
   type: 'mssql',
@@ -39,6 +40,6 @@ export const DBConfig: DataSourceOptions = {
     SeasonCriterionCount,
   ],
   subscribers: [],
-  migrations: [Init1691784848264],
+  migrations: [Init1691784848264, RatingState1692730361523],
   options: { encrypt: ENCRYPT },
 }

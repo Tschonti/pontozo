@@ -40,6 +40,12 @@ class EventRating implements IEventRating {
   @Check("role in('COMPETITOR', 'COACH', 'ORGANISER', 'JURY')")
   role: RatingRole
 
+  @Column({ default: 0 })
+  currentCategoryIdx: number
+
+  @Column({ default: -1 })
+  currentStageIdx: number
+
   @Column({ type: 'datetime' })
   createdAt: Date
 

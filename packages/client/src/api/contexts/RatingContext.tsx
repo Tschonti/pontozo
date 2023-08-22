@@ -7,7 +7,7 @@ import { onError } from 'src/util/onError'
 import { scrollToPB } from 'src/util/scrollToPB'
 import { functionAxios } from '../../util/axiosConfig'
 import { PATHS } from '../../util/paths'
-import { useSubmitRatingMutation } from '../hooks/ratingHooks'
+import { useSubmitRatingMutation, useTurnPageMutation } from '../hooks/ratingHooks'
 
 export type RatingContextType = {
   eventRatingInfo: EventRatingInfo | undefined
@@ -81,6 +81,7 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
     }
   )
   const submitMutation = useSubmitRatingMutation()
+  const turnPageMutation = useTurnPageMutation()
 
   useEffect(() => {
     const splitPath = pathname.split('/')
@@ -137,18 +138,22 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
     }
     scrollToPB()
     setValidate(false)
+    let newCategory = category
+    let newCategoryIdx = categoryIdx
+    let newStage = stage
+    let newStageIdx = stageIdx
     if (stage) {
       if (categoryIdx < data.stageCategories.length - 1) {
         navigate(`${PATHS.RATINGS}/${ratingId}?stageIdx=${stageIdx}&categoryIdx=${categoryIdx + 1}`)
-        setCategory(data.stageCategories[categoryIdx + 1])
-        setCategoryIdx(categoryIdx + 1)
+        newCategory = data.stageCategories[categoryIdx + 1]
+        newCategoryIdx = categoryIdx + 1
       } else {
         if (stageIdx < data.stages.length - 1) {
           navigate(`${PATHS.RATINGS}/${ratingId}?stageIdx=${stageIdx + 1}&categoryIdx=${0}`)
-          setCategoryIdx(0)
-          setCategory(data.stageCategories[0])
-          setStage(data.stages[stageIdx + 1])
-          setStageIdx(stageIdx + 1)
+          newCategoryIdx = 0
+          newCategory = data.stageCategories[0]
+          newStage = data.stages[stageIdx + 1]
+          newStageIdx = stageIdx + 1
         } else {
           submitRating()
         }
@@ -156,16 +161,21 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
     } else {
       if (categoryIdx < data.eventCategories.length - 1) {
         navigate(`${PATHS.RATINGS}/${ratingId}?categoryIdx=${categoryIdx + 1}`)
-        setCategory(data.eventCategories[categoryIdx + 1])
-        setCategoryIdx(categoryIdx + 1)
+        newCategory = data.eventCategories[categoryIdx + 1]
+        newCategoryIdx = categoryIdx + 1
       } else {
         navigate(`${PATHS.RATINGS}/${ratingId}?stageIdx=0&categoryIdx=0`)
-        setCategoryIdx(0)
-        setCategory(data.stageCategories[0])
-        setStage(data.stages[0])
-        setStageIdx(0)
+        newCategoryIdx = 0
+        newCategory = data.stageCategories[0]
+        newStage = data.stages[0]
+        newStageIdx = 0
       }
     }
+    turnPageMutation.mutate({ ratingId, categoryIdx: newCategoryIdx, stageIdx: newStageIdx })
+    setCategoryIdx(newCategoryIdx)
+    setCategory(newCategory)
+    setStageIdx(newStageIdx)
+    setStage(newStage)
   }
 
   const previousCategory = () => {
@@ -173,36 +183,47 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
     if (!data) {
       return
     }
+
+    let newCategory = category
+    let newCategoryIdx = categoryIdx
+    let newStage = stage
+    let newStageIdx = stageIdx
     if (stage) {
       if (categoryIdx > 0) {
         navigate(`${PATHS.RATINGS}/${ratingId}?stageId=${stageIdx}&categoryIdx=${categoryIdx - 1}`)
-        setCategory(data.stageCategories[categoryIdx - 1])
-        setCategoryIdx(categoryIdx - 1)
+        newCategory = data.stageCategories[categoryIdx - 1]
+        newCategoryIdx = categoryIdx - 1
       } else {
         if (stageIdx > 0) {
           navigate(`${PATHS.RATINGS}/${ratingId}?stageIdx=${stageIdx - 1}&categoryIdx=${data.stageCategories.length - 1}`)
-          setCategory(data.stageCategories[data.stageCategories.length - 1])
-          setCategoryIdx(data.stageCategories.length - 1)
-          setStage(data.stages[stageIdx - 1])
-          setStageIdx(stageIdx - 1)
+          newCategory = data.stageCategories[data.stageCategories.length - 1]
+          newCategoryIdx = data.stageCategories.length - 1
+          newStage = data.stages[stageIdx - 1]
+          newStageIdx = stageIdx - 1
         } else {
           navigate(`${PATHS.RATINGS}/${ratingId}?categoryIdx=${data.eventCategories.length - 1}`)
-          setCategory(data.eventCategories[data.eventCategories.length - 1])
-          setCategoryIdx(data.eventCategories.length - 1)
-          setStage(undefined)
-          setStageIdx(-1)
+          newCategory = data.eventCategories[data.eventCategories.length - 1]
+          newCategoryIdx = data.eventCategories.length - 1
+          newStage = undefined
+          newStageIdx = -1
         }
       }
     } else {
       if (categoryIdx > 0) {
         navigate(`${PATHS.RATINGS}/${ratingId}?categoryIdx=${categoryIdx - 1}`)
-        setCategory(data.eventCategories[categoryIdx - 1])
-        setCategoryIdx(categoryIdx - 1)
+        newCategory = data.eventCategories[categoryIdx - 1]
+        newCategoryIdx = categoryIdx - 1
       } else {
         navigate(`${PATHS.EVENTS}/${data.eventId}`)
         reset()
       }
     }
+
+    turnPageMutation.mutate({ ratingId, categoryIdx: newCategoryIdx, stageIdx: newStageIdx })
+    setCategoryIdx(newCategoryIdx)
+    setCategory(newCategory)
+    setStageIdx(newStageIdx)
+    setStage(newStage)
   }
 
   const submitRating = () => {
