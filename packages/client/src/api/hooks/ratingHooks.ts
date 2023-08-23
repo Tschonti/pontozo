@@ -48,3 +48,11 @@ export const useFetchEventRatingQuery = (eventId: number) => {
     async () => (await functionAxios.get(`ratings/event/${eventId}`)).data
   )
 }
+
+export const useFetchRatingInfo = (onSuccess: (data: EventRatingInfo) => void, ratingId: number) => {
+  return useQuery(['ratingInfo', ratingId], async () => (await functionAxios.get<EventRatingInfo>(`/ratings/${ratingId}/info`)).data, {
+    enabled: ratingId > 0,
+    retry: false,
+    onSuccess,
+  })
+}
