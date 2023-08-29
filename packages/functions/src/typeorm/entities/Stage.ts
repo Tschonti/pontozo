@@ -1,7 +1,8 @@
 import { DbStage } from '@pontozo/common'
-import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm'
+import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm'
 import CriterionRating from './CriterionRating'
 import Event from './Event'
+import EventRating from './EventRating'
 
 @Entity()
 class Stage implements DbStage {
@@ -31,6 +32,9 @@ class Stage implements DbStage {
 
   @OneToMany(() => CriterionRating, (cr) => cr.stage, { eager: false, nullable: true, onDelete: 'CASCADE' })
   ratings: CriterionRating[]
+
+  @ManyToMany(() => EventRating, (er) => er.stages)
+  eventRatings: EventRating[]
 }
 
 export default Stage

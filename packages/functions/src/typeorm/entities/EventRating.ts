@@ -1,7 +1,8 @@
 import { EventRating as IEventRating } from '@pontozo/common'
-import { Check, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { Check, Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import CriterionRating from './CriterionRating'
 import Event from './Event'
+import Stage from './Stage'
 
 enum RatingStatus {
   STARTED = 'STARTED',
@@ -45,6 +46,10 @@ class EventRating implements IEventRating {
 
   @Column({ default: -1 })
   currentStageIdx: number
+
+  @ManyToMany(() => Stage, (s) => s.eventRatings)
+  @JoinTable()
+  stages: Stage[]
 
   @Column({ type: 'datetime' })
   createdAt: Date

@@ -1,4 +1,4 @@
-import { ArrayUnique, IsEnum, IsInt, IsOptional, Min } from 'class-validator'
+import { ArrayNotEmpty, ArrayUnique, IsEnum, IsInt, IsOptional, Min } from 'class-validator'
 import { CategoryWithCriteria } from './categories'
 import { DbEvent, DbStage } from './dbEvents'
 
@@ -39,6 +39,12 @@ export class CreateEventRating {
 
   @IsEnum(RatingRole)
   role: RatingRole
+
+  @IsInt({ each: true })
+  @Min(1, { each: true })
+  @ArrayUnique()
+  @ArrayNotEmpty()
+  stageIdsToRate: number[]
 }
 
 export interface EventRatingInfo extends EventRating {

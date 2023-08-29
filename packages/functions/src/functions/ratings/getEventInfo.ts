@@ -20,7 +20,7 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
     const ratingRepo = (await getAppDataSource()).getRepository(EventRating)
     const eventRatingAndEvent = await ratingRepo.findOne({
       where: { id: ratingId },
-      relations: { event: { stages: true, season: { categories: { category: { criteria: { criterion: true } } } } } },
+      relations: { event: { season: { categories: { category: { criteria: { criterion: true } } } } }, stages: true },
     })
     const { event, ...eventRating } = eventRatingAndEvent
     const { season } = event
@@ -76,7 +76,6 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
         eventName: event.name,
         startDate: event.startDate,
         endDate: event.endDate,
-        stages: event.stages,
         eventCategories,
         stageCategories,
       } as EventRatingInfo,

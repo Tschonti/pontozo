@@ -29,15 +29,25 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
     const eventRepo = ads.getRepository(Event)
     const ratingRepo = ads.getRepository(EventRating)
 
-    const event = await eventRepo.findOne({ where: { id: dto.eventId, rateable: true } })
+    const event = await eventRepo.findOne({ where: { id: dto.eventId, rateable: true }, relations: { stages: true } })
     if (event === null) {
       throw new PontozoException('A verseny nem található vagy nem értékelhető!', 404)
     }
+    const validStages = event.stages.filter((s) => dto.stageIdsToRate.includes(s.id))
+    if (validStages.length === 0) {
+      throw new PontozoException('Érvénytelen futamok!', 400)
+    }
+    const eventRating = new EventRating()
+    eventRating.eventId = dto.eventId
+    eventRating.userId = user.szemely_id
+    eventRating.role = dto.role
+    eventRating.createdAt = new Date()
+    eventRating.stages = validStages
 
-    const res = await ratingRepo.insert({ ...dto, createdAt: new Date(), userId: user.szemely_id })
+    const res = await ratingRepo.save(eventRating)
     return {
       status: 201,
-      jsonBody: res.raw,
+      jsonBody: res,
     }
   } catch (error) {
     return handleException(context, error)

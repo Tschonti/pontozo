@@ -18,7 +18,7 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
     const eventRatingRepo = ads.getRepository(EventRating)
     const rating = await eventRatingRepo.findOne({
       where: { id },
-      relations: { ratings: true, event: { stages: true, season: { criterionCount: true } } },
+      relations: { ratings: true, event: { season: { criterionCount: true } }, stages: true },
     })
 
     if (rating.status === RatingStatus.SUBMITTED) {
@@ -30,11 +30,11 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
     if (!rating.event.rateable) {
       throw new PontozoException('Ezt a versenyt már nem lehet értékelni!', 400)
     }
-    const { season, stages } = rating.event
+    const { season } = rating.event
     const scc = season.criterionCount.find((cc) => cc.role === rating.role)
-    let criterionCount = scc.eventSpecificAnyRank + stages.length * scc.stageSpecificAnyRank
+    let criterionCount = scc.eventSpecificAnyRank + rating.stages.length * scc.stageSpecificAnyRank
     if (isHigherRank(rating.event)) {
-      criterionCount += scc.eventSpecificHigherRank + stages.length * scc.stageSpecificHigherRank
+      criterionCount += scc.eventSpecificHigherRank + rating.stages.length * scc.stageSpecificHigherRank
     }
 
     if (criterionCount !== rating.ratings.length) {
