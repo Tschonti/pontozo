@@ -2,9 +2,14 @@ import { Button } from '@chakra-ui/react'
 import { EventWithRating, RatingStatus } from '@pontozo/common'
 import { Link } from 'react-router-dom'
 import { PATHS } from '../../../util/paths'
-import { StartRatingModal } from './StartRatingModal'
 
-export const GoToRatingButton = ({ eventWithRating }: { eventWithRating: EventWithRating }) => {
+type Props = {
+  eventWithRating: EventWithRating
+  onStartClick: () => void
+  disabled: boolean
+}
+
+export const GoToRatingButton = ({ eventWithRating, onStartClick, disabled }: Props) => {
   if (eventWithRating.userRating) {
     let url = `${PATHS.RATINGS}/${eventWithRating.userRating.id}?categoryIdx=`
     if (eventWithRating.userRating.status === RatingStatus.STARTED) {
@@ -21,5 +26,9 @@ export const GoToRatingButton = ({ eventWithRating }: { eventWithRating: EventWi
       </Button>
     )
   }
-  return <StartRatingModal event={eventWithRating.event} />
+  return (
+    <Button colorScheme="brand" onClick={onStartClick} isDisabled={disabled}>
+      Értékelésed kezdése
+    </Button>
+  )
 }

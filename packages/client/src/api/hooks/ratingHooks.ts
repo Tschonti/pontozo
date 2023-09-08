@@ -1,19 +1,19 @@
 import {
   CreateEventRating,
   CriterionRating,
+  EventRating,
   EventRatingInfo,
   GetCriterionRatings,
   GetEventRating,
   PageTurn,
   PontozoError,
-  RatingStartedResponse,
 } from '@pontozo/common'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { functionAxios } from '../../util/axiosConfig'
 import { FUNC_HOST } from '../../util/environment'
 
 export const useStartRatingMutation = () => {
-  return useMutation<RatingStartedResponse[], PontozoError, CreateEventRating>(
+  return useMutation<EventRating, PontozoError, CreateEventRating>(
     async (data) => (await functionAxios.post(`${FUNC_HOST}/ratings`, data)).data
   )
 }
