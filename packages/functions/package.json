@@ -11,7 +11,7 @@
     "test": "echo \"No tests yet...\"",
     "typeorm": "typeorm-ts-node-esm",
     "mig:gen": "typeorm-ts-node-esm migration:generate",
-    "mig:run": "typeorm-ts-node-esm migration:run -d ./src/typeorm/config.ts"
+    "mig:run": "typeorm-ts-node-esm migration:run -d ./src/typeorm/migrationConfig.ts"
   },
   "dependencies": {
     "@azure/functions": "^4.0.0-alpha.11",

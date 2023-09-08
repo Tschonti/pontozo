@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm'
 
-export class Init1691784848264 implements MigrationInterface {
-  name = 'Init1691784848264'
+export class Init1694205775872 implements MigrationInterface {
+  name = 'Init1694205775872'
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -23,7 +23,7 @@ export class Init1691784848264 implements MigrationInterface {
       `CREATE TABLE "event" ("id" int NOT NULL, "name" nvarchar(255) NOT NULL, "type" nvarchar(255) NOT NULL, "startDate" nvarchar(255) NOT NULL, "endDate" nvarchar(255), "rateable" bit NOT NULL CONSTRAINT "DF_60718ea2c6e6abd42b982dd321a" DEFAULT 1, "highestRank" nvarchar(255) NOT NULL, "seasonId" int NOT NULL, CONSTRAINT "CHK_3bb291fa6d94999112e1705565" CHECK (highestRank in('REGIONALIS', 'ORSZAGOS', 'KIEMELT')), CONSTRAINT "PK_30c2f3bbaf6d34a55f8ae6e4614" PRIMARY KEY ("id"))`
     )
     await queryRunner.query(
-      `CREATE TABLE "event_rating" ("id" int NOT NULL IDENTITY(1,1), "eventId" int NOT NULL, "userId" int NOT NULL, "status" nvarchar(255) NOT NULL CONSTRAINT "DF_f8c358114813616d08d85c27b7f" DEFAULT 'STARTED', "role" nvarchar(255) NOT NULL, "createdAt" datetime NOT NULL, "submittedAt" datetime, CONSTRAINT "CHK_82d624f7a5000afa547fb1074a" CHECK (status in('STARTED', 'SUBMITTED')), CONSTRAINT "CHK_82e433ea50ec8088216a5e3a6f" CHECK (role in('COMPETITOR', 'COACH', 'ORGANISER', 'JURY')), CONSTRAINT "PK_cb8d706ff4a71549a49fde75a20" PRIMARY KEY ("id"))`
+      `CREATE TABLE "event_rating" ("id" int NOT NULL IDENTITY(1,1), "eventId" int NOT NULL, "userId" int NOT NULL, "status" nvarchar(255) NOT NULL CONSTRAINT "DF_f8c358114813616d08d85c27b7f" DEFAULT 'STARTED', "role" nvarchar(255) NOT NULL, "currentCategoryIdx" int NOT NULL CONSTRAINT "DF_795e2015ee5edbb2133086fbd4e" DEFAULT 0, "currentStageIdx" int NOT NULL CONSTRAINT "DF_d9ae5315623fb1f7876128c29e8" DEFAULT -1, "createdAt" datetime NOT NULL, "submittedAt" datetime, CONSTRAINT "CHK_82d624f7a5000afa547fb1074a" CHECK (status in('STARTED', 'SUBMITTED')), CONSTRAINT "CHK_82e433ea50ec8088216a5e3a6f" CHECK (role in('COMPETITOR', 'COACH', 'ORGANISER', 'JURY')), CONSTRAINT "PK_cb8d706ff4a71549a49fde75a20" PRIMARY KEY ("id"))`
     )
     await queryRunner.query(
       `CREATE TABLE "criterion_rating" ("id" int NOT NULL IDENTITY(1,1), "criterionId" int NOT NULL, "eventRatingId" int NOT NULL, "stageId" int, "value" int NOT NULL, CONSTRAINT "UQ_84ead6adbba5bb3768a3d8a2ec3" UNIQUE ("criterionId", "eventRatingId", "stageId"), CONSTRAINT "PK_a2f8174ca7ee0cefa32b4f7ccf9" PRIMARY KEY ("id"))`
@@ -45,6 +45,11 @@ export class Init1691784848264 implements MigrationInterface {
     )
     await queryRunner.query(`CREATE INDEX "IDX_af397ed122aee1fcb102f9bd0f" ON "event_organisers_club" ("eventId") `)
     await queryRunner.query(`CREATE INDEX "IDX_27861717dbffadcb3c9f98ae05" ON "event_organisers_club" ("clubId") `)
+    await queryRunner.query(
+      `CREATE TABLE "event_rating_stages_stage" ("eventRatingId" int NOT NULL, "stageId" int NOT NULL, CONSTRAINT "PK_71c788880263ffbb2a583921608" PRIMARY KEY ("eventRatingId", "stageId"))`
+    )
+    await queryRunner.query(`CREATE INDEX "IDX_3807102cdfd0b84a20ed81a334" ON "event_rating_stages_stage" ("eventRatingId") `)
+    await queryRunner.query(`CREATE INDEX "IDX_1842a0b95587d9d93c1e522638" ON "event_rating_stages_stage" ("stageId") `)
     await queryRunner.query(
       `ALTER TABLE "season_criterion_count" ADD CONSTRAINT "FK_123fd1216c5d8badbd03851b5ec" FOREIGN KEY ("seasonId") REFERENCES "season"("id") ON DELETE CASCADE ON UPDATE NO ACTION`
     )
@@ -84,9 +89,17 @@ export class Init1691784848264 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE "event_organisers_club" ADD CONSTRAINT "FK_27861717dbffadcb3c9f98ae057" FOREIGN KEY ("clubId") REFERENCES "club"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`
     )
+    await queryRunner.query(
+      `ALTER TABLE "event_rating_stages_stage" ADD CONSTRAINT "FK_3807102cdfd0b84a20ed81a3342" FOREIGN KEY ("eventRatingId") REFERENCES "event_rating"("id") ON DELETE CASCADE ON UPDATE CASCADE`
+    )
+    await queryRunner.query(
+      `ALTER TABLE "event_rating_stages_stage" ADD CONSTRAINT "FK_1842a0b95587d9d93c1e5226386" FOREIGN KEY ("stageId") REFERENCES "stage"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`
+    )
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`ALTER TABLE "event_rating_stages_stage" DROP CONSTRAINT "FK_1842a0b95587d9d93c1e5226386"`)
+    await queryRunner.query(`ALTER TABLE "event_rating_stages_stage" DROP CONSTRAINT "FK_3807102cdfd0b84a20ed81a3342"`)
     await queryRunner.query(`ALTER TABLE "event_organisers_club" DROP CONSTRAINT "FK_27861717dbffadcb3c9f98ae057"`)
     await queryRunner.query(`ALTER TABLE "event_organisers_club" DROP CONSTRAINT "FK_af397ed122aee1fcb102f9bd0f0"`)
     await queryRunner.query(`ALTER TABLE "category_to_criterion" DROP CONSTRAINT "FK_7338302c214c67f996dfcb9cc23"`)
@@ -100,6 +113,9 @@ export class Init1691784848264 implements MigrationInterface {
     await queryRunner.query(`ALTER TABLE "season_to_category" DROP CONSTRAINT "FK_2d1cbdefa3f619b2c996947004c"`)
     await queryRunner.query(`ALTER TABLE "season_to_category" DROP CONSTRAINT "FK_6d938dcdc6eb86c2c9be1f13554"`)
     await queryRunner.query(`ALTER TABLE "season_criterion_count" DROP CONSTRAINT "FK_123fd1216c5d8badbd03851b5ec"`)
+    await queryRunner.query(`DROP INDEX "IDX_1842a0b95587d9d93c1e522638" ON "event_rating_stages_stage"`)
+    await queryRunner.query(`DROP INDEX "IDX_3807102cdfd0b84a20ed81a334" ON "event_rating_stages_stage"`)
+    await queryRunner.query(`DROP TABLE "event_rating_stages_stage"`)
     await queryRunner.query(`DROP INDEX "IDX_27861717dbffadcb3c9f98ae05" ON "event_organisers_club"`)
     await queryRunner.query(`DROP INDEX "IDX_af397ed122aee1fcb102f9bd0f" ON "event_organisers_club"`)
     await queryRunner.query(`DROP TABLE "event_organisers_club"`)

@@ -1,4 +1,4 @@
-import { DataSourceOptions } from 'typeorm'
+import { SqlServerConnectionOptions } from 'typeorm/driver/sqlserver/SqlServerConnectionOptions'
 import { DB_NAME, DB_PWD, DB_SERVER, DB_USER, ENCRYPT, ENV } from '../util/env'
 import Category from './entities/Category'
 import { CategoryToCriterion } from './entities/CategoryToCriterion'
@@ -12,11 +12,9 @@ import SeasonCriterionCount from './entities/SeasonCriterionCount'
 import { SeasonToCategory } from './entities/SeasonToCategory'
 import Stage from './entities/Stage'
 import UserRoleAssignment from './entities/UserRoleAssignment'
-import { Init1691784848264 } from './migrations/1691784848264-init'
-import { RatingState1692730361523 } from './migrations/1692730361523-ratingState'
-import { StagesToEventRating1693334031847 } from './migrations/1693334031847-stages_to_eventRating'
+import { Init1694205775872 } from './migrations/1694205775872-init'
 
-export const DBConfig: DataSourceOptions = {
+export const DBConfig: SqlServerConnectionOptions = {
   type: 'mssql',
   host: DB_SERVER,
   port: 1433,
@@ -41,6 +39,6 @@ export const DBConfig: DataSourceOptions = {
     SeasonCriterionCount,
   ],
   subscribers: [],
-  migrations: [Init1691784848264, RatingState1692730361523, StagesToEventRating1693334031847],
+  migrations: [Init1694205775872],
   options: { encrypt: ENCRYPT },
 }
