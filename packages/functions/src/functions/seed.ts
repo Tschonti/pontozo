@@ -5,7 +5,7 @@ import Category from '../typeorm/entities/Category'
 import Criterion from '../typeorm/entities/Criterion'
 import Season from '../typeorm/entities/Season'
 import UserRoleAssignment from '../typeorm/entities/UserRoleAssignment'
-import { getAppDataSource } from '../typeorm/getConfig'
+import { getAdminDataSource } from '../typeorm/getConfig'
 import { ADMINS } from '../util/env'
 import { handleException } from '../util/handleException'
 
@@ -408,7 +408,7 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
   try {
     await getUserFromHeaderAndAssertAdmin(req)
 
-    const ads = await getAppDataSource()
+    const ads = await getAdminDataSource()
     const seasonRepo = ads.getRepository(Season)
     const categoryRepo = ads.getRepository(Category)
     const criterionRepo = ads.getRepository(Criterion)

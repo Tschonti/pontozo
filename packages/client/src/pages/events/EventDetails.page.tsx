@@ -1,4 +1,5 @@
-import { Button, FormLabel, Heading, HStack, Select, Text, useCheckboxGroup, useToast, VStack } from '@chakra-ui/react'
+import { Button, FormLabel, Heading, HStack, Text, useToast, VStack } from '@chakra-ui/react'
+import { EventRank, RatingRole, ratingRoleArray } from '@pontozo/common'
 import { useEffect, useState } from 'react'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, Navigate, useParams } from 'react-router-dom'
@@ -7,24 +8,36 @@ import { useStartRatingMutation } from 'src/api/hooks/ratingHooks'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { formatDateRange } from 'src/util/formatDateRange'
 import { onError } from 'src/util/onError'
-import { RatingRole, UserRole } from '../../../../common/src'
 import { useAuthContext } from '../../api/contexts/useAuthContext'
 import { useFetchEvent } from '../../api/hooks/eventQueryHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 import { GoToRatingButton } from './components/GoToRatingButton'
+import { RoleListItem } from './components/RoleListItem'
 import { StageListItem } from './components/StageListItem'
 
 export const EventDetailsPage = () => {
   const { eventId } = useParams()
-  const { data: eventWithRating, isLoading, error } = useFetchEvent(+eventId!)
-  const { isLoggedIn, loggedInUser } = useAuthContext()
+  const { data: eventWithRating, isLoading, error, isFetchedAfterMount } = useFetchEvent(+eventId!)
+  const { isLoggedIn } = useAuthContext()
   const toast = useToast()
   const [role, setRole] = useState<RatingRole | undefined>()
-  const [stageIds, setStageIds] = useState<number[]>([1])
+  const [stageIds, setStageIds] = useState<number[]>([])
   const startRating = useStartRatingMutation()
   const { startRating: startRatingWithContext } = useRatingContext()
-  const { value, getCheckboxProps } = useCheckboxGroup()
+  const [ratingStarted, setRatingStarted] = useState(false)
+
+  useEffect(() => {
+    if (isFetchedAfterMount && eventWithRating) {
+      if (eventWithRating.userRating) {
+        setStageIds(eventWithRating.userRating.stages.map((s) => s.id))
+        setRatingStarted(true)
+        setRole(eventWithRating.userRating.role)
+      } else {
+        setStageIds(eventWithRating.event.stages?.filter((s) => s.rank !== EventRank.NONE).map((s) => s.id) ?? [])
+      }
+    }
+  }, [isFetchedAfterMount, eventWithRating])
 
   const onStartClick = () => {
     if (role) {
@@ -37,9 +50,14 @@ export const EventDetailsPage = () => {
       )
     }
   }
-  useEffect(() => {
-    console.log(value)
-  }, [value])
+
+  const onItemChecked = (checked: boolean, stageId: number) => {
+    if (checked && !stageIds.includes(stageId)) {
+      setStageIds([...stageIds, stageId])
+    } else {
+      setStageIds(stageIds.filter((sId) => sId !== stageId))
+    }
+  }
 
   if (!isLoggedIn) {
     toast({ title: 'Jelentkezz be az oldal megtekintéséhez!', status: 'warning' })
@@ -69,19 +87,22 @@ export const EventDetailsPage = () => {
         ehető haságot.
       </Text>
       <FormLabel mt={5}>Szerepköröd:</FormLabel>
-      <Select placeholder="Válassz szerepkört!" value={role} onChange={(e) => setRole(e.target.value as RatingRole)}>
-        <option value={RatingRole.COMPETITOR}>Versenyző</option>
-        {loggedInUser?.roles.includes(UserRole.COACH) && <option value={RatingRole.COACH}>Edző</option>}
-        <option value={RatingRole.ORGANISER}>Rendező</option>
-        {loggedInUser?.roles.includes(UserRole.JURY) && <option value={RatingRole.JURY}>MTFSZ Zsűri</option>}
-      </Select>
+      {ratingRoleArray.map((r) => (
+        <RoleListItem key={r} role={r} onSelected={() => setRole(r)} selected={role === r} disabled={ratingStarted} />
+      ))}
       <Heading size="md" my={3}>
         Futamok
       </Heading>
       {event.stages
         ?.sort((s1, s2) => parseInt(s1.startTime) - parseInt(s2.startTime))
         .map((s) => (
-          <StageListItem stage={s} key={s.id} {...getCheckboxProps({ value: s.id })} />
+          <StageListItem
+            stage={s}
+            key={s.id}
+            disabled={ratingStarted}
+            onChecked={(c) => onItemChecked(c, s.id)}
+            checked={stageIds.includes(s.id)}
+          />
         ))}
       <HStack w="100%" justify="space-between">
         <Button leftIcon={<FaArrowLeft />} as={Link} to={PATHS.INDEX}>

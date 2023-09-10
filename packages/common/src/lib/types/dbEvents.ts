@@ -15,7 +15,9 @@ export interface DbEvent {
 
 export interface EventWithRating {
   event: DbEvent
-  userRating?: EventRating
+  userRating?: EventRating & {
+    stages: DbStage[]
+  }
 }
 
 export enum Rank {
