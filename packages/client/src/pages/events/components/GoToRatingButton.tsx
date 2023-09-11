@@ -28,7 +28,7 @@ export const GoToRatingButton = ({ eventWithRating, onStartClick, disabled }: Pr
   }
   return (
     <Button colorScheme="brand" onClick={onStartClick} isDisabled={disabled}>
-      Értékelésed kezdése
+      Értékelés kezdése
     </Button>
   )
 }

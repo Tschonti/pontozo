@@ -1,6 +1,7 @@
-import { Box, Card, CardHeader, HStack, Radio } from '@chakra-ui/react'
+import { Box, Card, CardHeader, Heading, HStack, Radio, Text } from '@chakra-ui/react'
 import { RatingRole } from '@pontozo/common'
 import { useAuthContext } from 'src/api/contexts/useAuthContext'
+import { getRoleDescription, translateRole } from 'src/util/enumHelpers'
 
 type Props = {
   role: RatingRole
@@ -11,10 +12,10 @@ type Props = {
 
 export const RoleListItem = ({ role, disabled = false, selected, onSelected }: Props) => {
   const { loggedInUser } = useAuthContext()
-  const reallyDisabled =
-    disabled ||
+  const forbidden =
     (role === RatingRole.COACH && !loggedInUser?.roles.map((r) => r.toString()).includes(RatingRole.COACH)) ||
     (role === RatingRole.JURY && !loggedInUser?.roles.map((r) => r.toString()).includes(RatingRole.JURY))
+  const reallyDisabled = disabled || forbidden
 
   const onSelect = () => {
     if (!reallyDisabled) {
@@ -36,7 +37,13 @@ export const RoleListItem = ({ role, disabled = false, selected, onSelected }: P
       <CardHeader>
         <HStack w="100%" alignItems="center">
           <Radio size="lg" colorScheme="brand" isDisabled={reallyDisabled} isChecked={selected} pointerEvents="none" />
-          <Box>{role}</Box>
+          <Box>
+            <Heading size="sm">
+              {translateRole[role]}
+              {forbidden && ' - Nincs jogosultságod hozzá'}
+            </Heading>
+            <Text>{getRoleDescription[role]}</Text>
+          </Box>
         </HStack>
       </CardHeader>
     </Card>

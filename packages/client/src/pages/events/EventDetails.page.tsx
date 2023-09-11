@@ -1,4 +1,4 @@
-import { Button, FormLabel, Heading, HStack, Text, useToast, VStack } from '@chakra-ui/react'
+import { Button, Heading, HStack, Text, useToast, VStack } from '@chakra-ui/react'
 import { EventRank, RatingRole, ratingRoleArray } from '@pontozo/common'
 import { useEffect, useState } from 'react'
 import { FaArrowLeft } from 'react-icons/fa'
@@ -21,17 +21,15 @@ export const EventDetailsPage = () => {
   const { data: eventWithRating, isLoading, error, isFetchedAfterMount } = useFetchEvent(+eventId!)
   const { isLoggedIn } = useAuthContext()
   const toast = useToast()
-  const [role, setRole] = useState<RatingRole | undefined>()
+  const [role, setRole] = useState(RatingRole.COMPETITOR)
   const [stageIds, setStageIds] = useState<number[]>([])
   const startRating = useStartRatingMutation()
   const { startRating: startRatingWithContext } = useRatingContext()
-  const [ratingStarted, setRatingStarted] = useState(false)
 
   useEffect(() => {
     if (isFetchedAfterMount && eventWithRating) {
       if (eventWithRating.userRating) {
         setStageIds(eventWithRating.userRating.stages.map((s) => s.id))
-        setRatingStarted(true)
         setRole(eventWithRating.userRating.role)
       } else {
         setStageIds(eventWithRating.event.stages?.filter((s) => s.rank !== EventRank.NONE).map((s) => s.id) ?? [])
@@ -77,29 +75,27 @@ export const EventDetailsPage = () => {
       <Text>
         <b>Rendező{event.organisers.length > 1 && 'k'}:</b> {event.organisers.map((o) => o.shortName).join(', ')}
       </Text>
-      <Text fontWeight="bold">Tudnivalók az értékelésről</Text>
-      <Text textAlign="justify">
-        Lórum ipse fűző szecskát tózik: a gubátos csillagos fagyans, iget bráni ez. Edre pedig azért egyetnek pátorban, hogy a letleni
-        murgácsban kedő parás a becse spána és fenyére érdekében cinthetsen. Ponokba nőzködnek annak a meddő ható óvadélynak az elmelései,
-        aki éppen a vazásról áttelepülve zuharozódta meg vétlen szapjas és virágyatos avánai fekényét. Bargadka szutya pálgálta
-        tekevezékeire nemcsak nyögésről ebeckedt mong, hanem a taló taságoktól is. Csolás empőzs packávonálai újra meg újra ségetsék a
-        fogást arra, hogy a haság és az olások elmenek amustól. A fetles ezer empőzs kasolta, hogy a szegséges ülöntés dikás karázsálnia az
-        ehető haságot.
+      <Heading size="md" mt={3}>
+        Szerepkör
+      </Heading>
+      <Text>
+        Válaszd ki, melyik szerepkörbe tartozol. Rajthozállást és rendezői tevékenységet csak az értékelés lezárulása után érétkeljük ki,
+        aki nem megfelelő szerepkört választott, annak értékelését átsoroljuk vagy töröljük.
       </Text>
-      <FormLabel mt={5}>Szerepköröd:</FormLabel>
       {ratingRoleArray.map((r) => (
-        <RoleListItem key={r} role={r} onSelected={() => setRole(r)} selected={role === r} disabled={ratingStarted} />
+        <RoleListItem key={r} role={r} onSelected={() => setRole(r)} selected={role === r} disabled={!!eventWithRating.userRating} />
       ))}
-      <Heading size="md" my={3}>
+      <Heading size="md" mt={3}>
         Futamok
       </Heading>
+      <Text>Válaszd ki, mely futamokon álltál rajthoz.</Text>
       {event.stages
         ?.sort((s1, s2) => parseInt(s1.startTime) - parseInt(s2.startTime))
         .map((s) => (
           <StageListItem
             stage={s}
             key={s.id}
-            disabled={ratingStarted}
+            disabled={!!eventWithRating.userRating}
             onChecked={(c) => onItemChecked(c, s.id)}
             checked={stageIds.includes(s.id)}
           />
