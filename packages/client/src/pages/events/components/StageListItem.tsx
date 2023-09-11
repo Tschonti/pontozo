@@ -1,5 +1,6 @@
-import { Box, Card, CardHeader, Checkbox, Heading, HStack } from '@chakra-ui/react'
+import { Card, CardHeader, Checkbox, Heading, HStack, Stack, VStack } from '@chakra-ui/react'
 import { DbStage, EventRank } from '@pontozo/common'
+import { DisciplineBadge } from './DisciplineBadge'
 import { EventRankBadge } from './EventRankBadge'
 
 type Props = {
@@ -11,6 +12,7 @@ type Props = {
 
 export const StageListItem = ({ stage, checked, onChecked, disabled = false }: Props) => {
   const reallyDisabled = disabled || stage.rank === EventRank.NONE
+  const startDate = new Date(parseInt(stage.startTime) * 1000)
 
   const onCheck = () => {
     if (!reallyDisabled) {
@@ -32,12 +34,19 @@ export const StageListItem = ({ stage, checked, onChecked, disabled = false }: P
     >
       <CardHeader>
         <HStack w="100%" alignItems="center">
-          <Checkbox size="lg" colorScheme="brand" isDisabled={reallyDisabled} isChecked={checked} pointerEvents="none" />
-          <Box>
-            <Heading size="md">{stage.name}</Heading>
-            <Heading size="sm">{new Date(parseInt(stage.startTime) * 1000).toLocaleString('hu-HU')}</Heading>
-            <EventRankBadge stage={stage} />
-          </Box>
+          <Checkbox mr={1} size="lg" colorScheme="brand" isDisabled={reallyDisabled} isChecked={checked} pointerEvents="none" />
+          <Stack direction={{ base: 'column', sm: 'row' }} w="100%" justify="space-between">
+            <VStack alignItems="flex-start">
+              <Heading size="md">{stage.name}</Heading>
+              <Heading size="sm">
+                {startDate.toLocaleDateString('hu-HU')} {startDate.toLocaleTimeString('hu-HU', { timeStyle: 'short' })}
+              </Heading>
+            </VStack>
+            <Stack direction={{ base: 'row', sm: 'column' }} alignItems="flex-end">
+              <EventRankBadge stage={stage} />
+              <DisciplineBadge disciplineId={stage.disciplineId} />
+            </Stack>
+          </Stack>
         </HStack>
       </CardHeader>
     </Card>
