@@ -53,7 +53,6 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
     } else if (!criterion.allowEmpty) {
       throw new PontozoException('Ezt a szempontot kötelező értékelni!', 400)
     }
-
     if (criterion.stageSpecific !== !!dto.stageId) {
       throw new PontozoException('A futam azonosítója hiányzik, vagy nem megengedett!', 400)
     }
