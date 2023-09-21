@@ -1,11 +1,12 @@
-import { Box, Center, Spinner } from '@chakra-ui/react'
+import { Box, Heading, Spinner, VStack } from '@chakra-ui/react'
 
 export const LoadingSpinner = () => {
   return (
-    <Box w="100%" my={5}>
-      <Center>
-        <Spinner size="xl" color="green" thickness="4px" emptyColor="gray.200" />
-      </Center>
+    <Box position="absolute" top="50%" left="50%" transform="translate(-50%, -50%)">
+      <VStack>
+        <Spinner size="xl" color="green" thickness="5px" emptyColor="gray.200" />
+        <Heading size="md">Betöltés...</Heading>
+      </VStack>
     </Box>
   )
 }
