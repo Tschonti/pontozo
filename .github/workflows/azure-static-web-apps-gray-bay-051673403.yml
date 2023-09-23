@@ -19,6 +19,7 @@ jobs:
       VITE_APIM_HOST: https://pontozoapim.azure-api.net
       VITE_APIM_KEY: ${{ secrets.APIM_KEY }}
       VITE_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+      VITE_APP_INSIGHTS_CONN_STR: ${{ secrets.APP_INSIGHTS_CONN_STR}}
     steps:
       - uses: actions/checkout@v3
         with:
