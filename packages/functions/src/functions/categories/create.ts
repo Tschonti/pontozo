@@ -13,7 +13,7 @@ import { handleException } from '../../util/handleException'
 
 export const createCategory = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
-    await getUserFromHeaderAndAssertAdmin(req)
+    const user = await getUserFromHeaderAndAssertAdmin(req, context)
     validateBody(req)
     const dto = plainToClass(CreateCategory, await req.json())
     await validateWithWhitelist(dto)
@@ -32,12 +32,13 @@ export const createCategory = async (req: HttpRequest, context: InvocationContex
     category.criteria = ctcs
     category = await ads.manager.save(category)
 
+    context.log(`User #${user.szemely_id} created category #${category.id}`)
     return {
       jsonBody: category,
       status: 201,
     }
   } catch (error) {
-    return handleException(context, error)
+    return handleException(req, context, error)
   }
 }
 

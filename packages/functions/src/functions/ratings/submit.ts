@@ -45,11 +45,12 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
     rating.submittedAt = new Date()
     await eventRatingRepo.save(rating)
 
+    context.log(`User #${user.szemely_id} submitted Rating #${rating.id} for Event #${rating.eventId}`)
     return {
       status: 204,
     }
   } catch (error) {
-    return handleException(context, error)
+    return handleException(req, context, error)
   }
 }
 

@@ -1,4 +1,4 @@
-import { Button, Heading, HStack, Text, useToast, VStack } from '@chakra-ui/react'
+import { Button, Heading, HStack, Stack, Text, useToast, VStack } from '@chakra-ui/react'
 import { EventRank, RatingRole, ratingRoleArray } from '@pontozo/common'
 import { useEffect, useState } from 'react'
 import { FaArrowLeft } from 'react-icons/fa'
@@ -88,7 +88,10 @@ export const EventDetailsPage = () => {
       <Heading size="md" mt={3}>
         Futamok
       </Heading>
-      <Text>Válaszd ki, mely futamokon álltál rajthoz.</Text>
+      <Stack w="100%" direction={['column', 'column', 'row']} justify="space-between">
+        <Text>Válaszd ki, mely futamokon álltál rajthoz.</Text>
+        {stageIds.length === 0 && <Text color="red">Legalább egy futamot válassz ki!</Text>}
+      </Stack>
       {event.stages
         ?.sort((s1, s2) => parseInt(s1.startTime) - parseInt(s2.startTime))
         .map((s) => (

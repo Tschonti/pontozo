@@ -8,7 +8,7 @@ import { validateId } from '../../util/validation'
 
 export const getCategory = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
-    await getUserFromHeaderAndAssertAdmin(req)
+    await getUserFromHeaderAndAssertAdmin(req, context)
     const id = validateId(req)
     const categoryRepo = (await getAppDataSource()).getRepository(Category)
     const category = await categoryRepo.findOne({ where: { id }, relations: { criteria: { criterion: true }, seasons: { season: true } } })
@@ -26,7 +26,7 @@ export const getCategory = async (req: HttpRequest, context: InvocationContext):
       } as EntityWithEditableIndicator<CategoryWithCriteria>,
     }
   } catch (error) {
-    return handleException(context, error)
+    return handleException(req, context, error)
   }
 }
 

@@ -8,7 +8,7 @@ import { validateId } from '../../util/validation'
 
 export const getSeason = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
-    await getUserFromHeaderAndAssertAdmin(req)
+    await getUserFromHeaderAndAssertAdmin(req, context)
     const id = validateId(req)
     const seasonRepo = (await getAppDataSource()).getRepository(Season)
     const season = await seasonRepo.findOne({ where: { id }, relations: { categories: { category: true } } })
@@ -22,7 +22,7 @@ export const getSeason = async (req: HttpRequest, context: InvocationContext): P
       } as SeasonWithCategories,
     }
   } catch (error) {
-    return handleException(context, error)
+    return handleException(req, context, error)
   }
 }
 

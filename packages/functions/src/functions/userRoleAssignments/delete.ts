@@ -7,16 +7,18 @@ import { validateId } from '../../util/validation'
 
 export const deleteURA = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
-    await getUserFromHeaderAndAssertAdmin(req)
+    const user = await getUserFromHeaderAndAssertAdmin(req, context)
 
     const id = validateId(req)
     const uraRepo = (await getAppDataSource()).getRepository(UserRoleAssignment)
     const res = await uraRepo.delete({ id })
+
+    context.log(`User #${user.szemely_id} created URA #${id}`)
     return {
       jsonBody: res,
     }
   } catch (error) {
-    return handleException(context, error)
+    return handleException(req, context, error)
   }
 }
 

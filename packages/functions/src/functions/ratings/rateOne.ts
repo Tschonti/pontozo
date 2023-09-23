@@ -74,11 +74,15 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
       rating.value = dto.value
       await criterionRatingRepo.save(rating)
     }
+
+    context.log(
+      `User #${user.szemely_id} saved CriterionRating #${rating.id} for Event #${eventRating.eventId}, Criterion #${criterion.id}`
+    )
     return {
       status: 204,
     }
   } catch (error) {
-    return handleException(context, error)
+    return handleException(req, context, error)
   }
 }
 

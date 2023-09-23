@@ -7,7 +7,7 @@ import { handleException } from '../../util/handleException'
 
 export const getCategories = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
-    await getUserFromHeaderAndAssertAdmin(req)
+    await getUserFromHeaderAndAssertAdmin(req, context)
 
     const categoryRepo = (await getAppDataSource()).getRepository(Category)
     const categories = await categoryRepo.find({ relations: { criteria: true } })
@@ -15,7 +15,7 @@ export const getCategories = async (req: HttpRequest, context: InvocationContext
       jsonBody: categories,
     }
   } catch (error) {
-    return handleException(context, error)
+    return handleException(req, context, error)
   }
 }
 

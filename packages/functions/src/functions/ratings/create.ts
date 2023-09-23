@@ -45,12 +45,14 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
     eventRating.stages = validStages
 
     const res = await ratingRepo.save(eventRating)
+
+    context.log(`User #${user.szemely_id} started rating Event #${dto.eventId}, new eventRatingId: ${res.id}`)
     return {
       status: 201,
       jsonBody: res,
     }
   } catch (error) {
-    return handleException(context, error)
+    return handleException(req, context, error)
   }
 }
 

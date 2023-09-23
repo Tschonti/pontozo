@@ -8,7 +8,7 @@ import { validateId } from '../../util/validation'
 
 export const duplicateCriterion = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
-    await getUserFromHeaderAndAssertAdmin(req)
+    const user = await getUserFromHeaderAndAssertAdmin(req, context)
     const id = validateId(req)
     const criterionRepo = (await getAppDataSource()).getRepository(Criterion)
     const criterion = await criterionRepo.findOne({ where: { id } })
@@ -17,12 +17,14 @@ export const duplicateCriterion = async (req: HttpRequest, context: InvocationCo
     }
     const { id: criterionId, ...rest } = criterion
     const insertRes = await criterionRepo.insert({ ...rest })
+
+    context.log(`User #${user.szemely_id} duplicated criterion #${id}, new criterionId: ${insertRes.identifiers[0].id}`)
     return {
       jsonBody: insertRes.identifiers as CreateResponse[],
       status: 201,
     }
   } catch (error) {
-    return handleException(context, error)
+    return handleException(req, context, error)
   }
 }
 

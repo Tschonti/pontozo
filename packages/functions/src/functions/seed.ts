@@ -406,7 +406,7 @@ const kommunikáció = [
 
 export const seed = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
-    await getUserFromHeaderAndAssertAdmin(req)
+    const user = await getUserFromHeaderAndAssertAdmin(req, context)
 
     const ads = await getAdminDataSource()
     const seasonRepo = ads.getRepository(Season)
@@ -573,12 +573,12 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
       seasonId: season.id,
     }))
     await seasonRepo.save(season)
-
+    context.log(`User #${user.szemely_id} seeded the database`)
     return {
       status: 204,
     }
   } catch (error) {
-    return handleException(context, error)
+    return handleException(req, context, error)
   }
 }
 

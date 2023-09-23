@@ -12,7 +12,7 @@ import { validateBody, validateId, validateWithWhitelist } from '../../util/vali
 
 export const updateCategory = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
-    await getUserFromHeaderAndAssertAdmin(req)
+    const user = await getUserFromHeaderAndAssertAdmin(req, context)
     validateBody(req)
     const id = validateId(req)
     const dto = plainToClass(CreateCategory, await req.json())
@@ -56,11 +56,12 @@ export const updateCategory = async (req: HttpRequest, context: InvocationContex
     category.criteria = newCtcs
     category = await ads.manager.save(category)
 
+    context.log(`User #${user.szemely_id} updated category #${category.id}`)
     return {
       jsonBody: category,
     }
   } catch (error) {
-    return handleException(context, error)
+    return handleException(req, context, error)
   }
 }
 

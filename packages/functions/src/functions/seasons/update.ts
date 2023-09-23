@@ -12,7 +12,7 @@ import { validateBody, validateId, validateWithWhitelist } from '../../util/vali
 
 export const updateSeason = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
-    await getUserFromHeaderAndAssertAdmin(req)
+    const user = await getUserFromHeaderAndAssertAdmin(req, context)
     validateBody(req)
     const id = validateId(req)
     const dto = plainToClass(CreateSeason, await req.json())
@@ -55,11 +55,12 @@ export const updateSeason = async (req: HttpRequest, context: InvocationContext)
     season.categories = newStcs
     season = await ads.manager.save(season)
 
+    context.log(`User #${user.szemely_id} updated season #${season.id}`)
     return {
       jsonBody: season,
     }
   } catch (error) {
-    return handleException(context, error)
+    return handleException(req, context, error)
   }
 }
 

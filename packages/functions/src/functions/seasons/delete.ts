@@ -7,16 +7,18 @@ import { validateId } from '../../util/validation'
 
 export const deleteSeason = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
-    await getUserFromHeaderAndAssertAdmin(req)
+    const user = await getUserFromHeaderAndAssertAdmin(req, context)
 
     const id = validateId(req)
     const seasonRepo = (await getAppDataSource()).getRepository(Season)
     const res = await seasonRepo.delete({ id })
+
+    context.log(`User #${user.szemely_id} created season #${id}`)
     return {
       jsonBody: res,
     }
   } catch (error) {
-    return handleException(context, error)
+    return handleException(req, context, error)
   }
 }
 

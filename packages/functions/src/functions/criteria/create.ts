@@ -9,7 +9,7 @@ import { validateBody, validateWithWhitelist } from '../../util/validation'
 
 export const createCriteria = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
-    await getUserFromHeaderAndAssertAdmin(req)
+    const user = await getUserFromHeaderAndAssertAdmin(req, context)
     validateBody(req)
     const dto = plainToClass(CreateCriteria, await req.json())
     await validateWithWhitelist(dto)
@@ -23,12 +23,14 @@ export const createCriteria = async (req: HttpRequest, context: InvocationContex
 
     const criterionRepo = (await getAppDataSource()).getRepository(Criterion)
     const res = await criterionRepo.insert({ ...dto, roles: JSON.stringify(dto.roles) })
+
+    context.log(`User #${user.szemely_id} created criterion #${res.identifiers[0].id}`)
     return {
       jsonBody: res,
       status: 201,
     }
   } catch (error) {
-    return handleException(context, error)
+    return handleException(req, context, error)
   }
 }
 

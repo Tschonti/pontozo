@@ -19,6 +19,7 @@ export const login = async (req: HttpRequest, context: InvocationContext): Promi
 
     const roles = await (await getAppDataSource()).getRepository(UserRoleAssignment).find({ where: { userId: user.szemely_id } })
     const jwtToken = jwt.sign({ ...user, roles: roles.map((r) => r.role) }, JWT_SECRET, { expiresIn: '2 days' })
+    context.log(`User #${user.szemely_id} signed in`)
     return {
       status: 302,
       headers: {
@@ -26,7 +27,7 @@ export const login = async (req: HttpRequest, context: InvocationContext): Promi
       },
     }
   } catch (error) {
-    return handleException(context, error)
+    return handleException(req, context, error)
   }
 }
 

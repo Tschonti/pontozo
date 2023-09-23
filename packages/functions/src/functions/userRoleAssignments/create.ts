@@ -10,7 +10,7 @@ import { validateBody, validateWithWhitelist } from '../../util/validation'
 
 export const createURA = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
-    await getUserFromHeaderAndAssertAdmin(req)
+    const requesterUser = await getUserFromHeaderAndAssertAdmin(req, context)
     validateBody(req)
     const dto = plainToClass(CreateURA, await req.json())
     await validateWithWhitelist(dto)
@@ -22,6 +22,8 @@ export const createURA = async (req: HttpRequest, context: InvocationContext): P
       userFullName: `${user.vezeteknev} ${user.keresztnev}`,
       userDOB: user.szul_dat,
     })
+
+    context.log(`User #${requesterUser.szemely_id} created URA #${res.identifiers[0].id}`)
     return {
       jsonBody: res.raw,
     }

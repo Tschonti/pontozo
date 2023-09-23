@@ -22,6 +22,9 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
       where: { id: ratingId },
       relations: { event: { season: { categories: { category: { criteria: { criterion: true } } } } }, stages: true },
     })
+    if (eventRatingAndEvent === null) {
+      throw new PontozoException('A verseny nem található vagy nem értékelhető!', 404)
+    }
     const { event, ...eventRating } = eventRatingAndEvent
     const { season } = event
 
@@ -81,7 +84,7 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
       } as EventRatingInfo,
     }
   } catch (error) {
-    return handleException(context, error)
+    return handleException(req, context, error)
   }
 }
 

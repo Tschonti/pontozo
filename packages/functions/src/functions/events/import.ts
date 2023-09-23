@@ -70,6 +70,7 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
     })
 
     await eventRepo.save(eventsToSave)
+    context.log(`${eventsToSave.length} events created or updated`)
   } catch (error) {
     context.log(error)
   }

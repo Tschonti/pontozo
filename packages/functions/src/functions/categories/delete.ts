@@ -7,15 +7,19 @@ import { validateId } from '../../util/validation'
 
 export const deleteCategory = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
-    await getUserFromHeaderAndAssertAdmin(req)
+    const user = await getUserFromHeaderAndAssertAdmin(req, context)
     const id = validateId(req)
     const categoryRepo = (await getAppDataSource()).getRepository(Category)
     const res = await categoryRepo.delete({ id })
+
+    if (res.affected > 0) {
+      context.log(`User #${user.szemely_id} deleted category #${id}`)
+    }
     return {
       jsonBody: res,
     }
   } catch (error) {
-    return handleException(context, error)
+    return handleException(req, context, error)
   }
 }
 

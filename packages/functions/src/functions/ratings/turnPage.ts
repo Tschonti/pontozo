@@ -38,7 +38,7 @@ export const turnPage = async (req: HttpRequest, context: InvocationContext): Pr
       status: 204,
     }
   } catch (error) {
-    return handleException(context, error)
+    return handleException(req, context, error)
   }
 }
 

@@ -9,7 +9,7 @@ import { validateBody, validateId, validateWithWhitelist } from '../../util/vali
 
 export const updateCriteria = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
-    await getUserFromHeaderAndAssertAdmin(req)
+    const user = await getUserFromHeaderAndAssertAdmin(req, context)
     validateBody(req)
     const id = validateId(req)
     const dto = plainToClass(CreateCriteria, await req.json())
@@ -24,11 +24,13 @@ export const updateCriteria = async (req: HttpRequest, context: InvocationContex
       throw new PontozoException('Ezt a szempontot már nem lehet szerkeszteni, mert része egy olyan szezonnak, ami már elkezdődött!', 400)
     }
     const res = await criterionRepo.update({ id }, { ...dto, roles: JSON.stringify(dto.roles) })
+
+    context.log(`User #${user.szemely_id} updated criterion #${id}`)
     return {
       jsonBody: res,
     }
   } catch (error) {
-    return handleException(context, error)
+    return handleException(req, context, error)
   }
 }
 

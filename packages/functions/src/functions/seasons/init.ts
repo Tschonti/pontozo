@@ -46,6 +46,7 @@ export const initSeason = async (myTimer: Timer, context: InvocationContext): Pr
           return scc
         })
       )
+      context.log(`Criterion count refreshed for Season #${season.id}`)
     }
   } catch (error) {
     context.log(error)

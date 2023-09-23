@@ -10,7 +10,7 @@ import { validateBody, validateId, validateWithWhitelist } from '../../util/vali
 
 export const updateURA = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
-    await getUserFromHeaderAndAssertAdmin(req)
+    const requesterUser = await getUserFromHeaderAndAssertAdmin(req, context)
     validateBody(req)
     const id = validateId(req)
     const dto = plainToClass(UpdateURA, await req.json())
@@ -24,6 +24,7 @@ export const updateURA = async (req: HttpRequest, context: InvocationContext): P
     ura.userFullName = `${user.vezeteknev} ${user.keresztnev}`
     ura.userDOB = user.szul_dat
 
+    context.log(`User #${requesterUser.szemely_id} created URA #${ura.id}`)
     return {
       jsonBody: await uraRepo.save(ura),
     }

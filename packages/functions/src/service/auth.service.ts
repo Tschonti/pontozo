@@ -1,4 +1,4 @@
-import { HttpRequest } from '@azure/functions'
+import { HttpRequest, InvocationContext } from '@azure/functions'
 import { DbUser, PontozoException, UserRole } from '@pontozo/common'
 import * as jwt from 'jsonwebtoken'
 import UserRoleAssignment from '../typeorm/entities/UserRoleAssignment'
@@ -19,12 +19,14 @@ export const getUserFromHeader = (req: HttpRequest): DbUser => {
   }
 }
 
-export const getUserFromHeaderAndAssertAdmin = async (req: HttpRequest): Promise<void> => {
+export const getUserFromHeaderAndAssertAdmin = async (req: HttpRequest, context: InvocationContext): Promise<DbUser> => {
   const user = getUserFromHeader(req)
+  context.log(`User #${user.szemely_id} attempting to access entity reserved for admins`)
   const ura = await (await getAppDataSource())
     .getRepository(UserRoleAssignment)
     .findOne({ where: { userId: user.szemely_id, role: UserRole.SITE_ADMIN } })
   if (!ura) {
     throw new PontozoException('Nem vagy jogosult ennek a műveletnek a végrehajtásához!', 403)
   }
+  return user
 }

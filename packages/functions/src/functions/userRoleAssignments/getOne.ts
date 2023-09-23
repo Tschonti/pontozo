@@ -8,7 +8,7 @@ import { validateId } from '../../util/validation'
 
 export const getURA = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
-    await getUserFromHeaderAndAssertAdmin(req)
+    await getUserFromHeaderAndAssertAdmin(req, context)
 
     const id = validateId(req)
     const uraRepo = (await getAppDataSource()).getRepository(UserRoleAssignment)
@@ -20,7 +20,7 @@ export const getURA = async (req: HttpRequest, context: InvocationContext): Prom
       jsonBody: ura,
     }
   } catch (error) {
-    return handleException(context, error)
+    return handleException(req, context, error)
   }
 }
 

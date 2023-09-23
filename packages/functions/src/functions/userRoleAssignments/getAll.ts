@@ -7,7 +7,7 @@ import { handleException } from '../../util/handleException'
 
 export const getURAs = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
-    await getUserFromHeaderAndAssertAdmin(req)
+    await getUserFromHeaderAndAssertAdmin(req, context)
 
     const urasRepo = (await getAppDataSource()).getRepository(UserRoleAssignment)
     const uras = await urasRepo.find()
@@ -16,7 +16,7 @@ export const getURAs = async (req: HttpRequest, context: InvocationContext): Pro
       jsonBody: uras,
     }
   } catch (error) {
-    return handleException(context, error)
+    return handleException(req, context, error)
   }
 }
 
