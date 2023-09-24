@@ -1,8 +1,10 @@
 import { Heading, Text } from '@chakra-ui/react'
+import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 
 export const AdminIndex = () => {
   return (
     <>
+      <HelmetTitle title="Pontoz-O Admin" />
       <Heading>Admin oldal tudnivalók</Heading>
       <Text>
         Lórum ipse fűző szecskát tózik: a gubátos csillagos fagyans, iget bráni ez. Edre pedig azért egyetnek pátorban, hogy a letleni

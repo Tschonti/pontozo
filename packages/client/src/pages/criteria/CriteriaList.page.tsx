@@ -1,5 +1,6 @@
 import { Badge, Box, Button, Flex, Heading, HStack, Text, VStack } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
+import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { useFetchCriteria } from '../../api/hooks/criteriaHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
@@ -15,6 +16,7 @@ export const CriteriaListPage = () => {
   }
   return (
     <>
+      <HelmetTitle title="Pontoz-O Admin | Szempontok" />
       <Flex w="100%" justifyContent="space-between" mb={3}>
         <Heading>Szempontok</Heading>
         <Button colorScheme="brand" as={Link} to={`${PATHS.CRITERIA}/new`}>

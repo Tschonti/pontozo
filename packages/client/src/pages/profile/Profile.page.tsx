@@ -1,6 +1,7 @@
 import { Button, Heading, HStack, SimpleGrid, Text, useToast } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { useAuthContext } from '../../api/contexts/useAuthContext'
 import { useFecthUserRatedEvents } from '../../api/hooks/eventQueryHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
@@ -22,6 +23,7 @@ export const ProfilePage = () => {
 
   return (
     <>
+      <HelmetTitle title="Pontoz-O | Profil" />
       <HStack w="100%" justify="space-between">
         <Heading>{loggedInUser?.nev}</Heading>
         <Button onClick={() => onLogout()} colorScheme="brand">

@@ -17,6 +17,7 @@ import { useEffect } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { onError } from 'src/util/onError'
 import { useCreateSeasonMutation, useDeleteSeasonMutation, useFetchSeason, useUpdateSeasonMutation } from '../../api/hooks/seasonHooks'
@@ -86,6 +87,7 @@ export const SeasonCreatePage = () => {
 
   return (
     <VStack spacing={5} alignItems="flex-start">
+      <HelmetTitle title="Pontoz-O Admin | Szezon szerkesztése" />
       <Heading>{seasonId === -1 ? 'Új szezon' : 'Szezon szerkesztése'}</Heading>
       {!seasonEditable && <Text>TODO ide valami szöveg hogy mért nem szerkeszthető</Text>}
       <FormControl isInvalid={!!errors.name}>

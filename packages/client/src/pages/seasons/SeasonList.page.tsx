@@ -1,5 +1,6 @@
 import { Box, Button, Flex, Heading, Text, VStack } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
+import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { useFetchSeasons } from '../../api/hooks/seasonHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
@@ -15,6 +16,7 @@ export const SeasonListPage = () => {
   }
   return (
     <>
+      <HelmetTitle title="Pontoz-O Admin | Szezonok" />
       <Flex w="100%" justifyContent="space-between" mb={3}>
         <Heading>Szezonok</Heading>
         <Button colorScheme="brand" as={Link} to={`${PATHS.SEASONS}/new`}>

@@ -5,6 +5,7 @@ import { FaArrowLeft } from 'react-icons/fa'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { useRatingContext } from 'src/api/contexts/useRatingContext'
 import { useStartRatingMutation } from 'src/api/hooks/ratingHooks'
+import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { formatDateRange } from 'src/util/formatDateRange'
 import { onError } from 'src/util/onError'
@@ -70,6 +71,7 @@ export const EventDetailsPage = () => {
   const { event } = eventWithRating
   return (
     <VStack alignItems="flex-start" spacing={3}>
+      <HelmetTitle title={`Pontoz-O | ${event.name}`} />
       <Heading>{event.name}</Heading>
       <Heading size="md">{formatDateRange(event.startDate, event.endDate)}</Heading>
       <Text>

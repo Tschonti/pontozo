@@ -1,5 +1,6 @@
 import { Badge, Box, Button, Flex, Heading, HStack, Text, VStack } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
+import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { useFetchUras } from '../../api/hooks/uraHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
@@ -16,6 +17,7 @@ export const UraListPage = () => {
   }
   return (
     <>
+      <HelmetTitle title="Pontoz-O Admin | Kiemelt Felhasználók" />
       <Flex w="100%" justifyContent="space-between" mb={3}>
         <Heading>Kiemelt felhasználók</Heading>
         <Button colorScheme="brand" as={Link} to={`${PATHS.USERS}/new`}>

@@ -20,6 +20,7 @@ import { CreateCriteria, CreateCriterionForm, RatingRole } from '@pontozo/common
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import {
   useCreateCriterionMutation,
@@ -108,6 +109,7 @@ export const CriteriaCreatePage = () => {
 
   return (
     <VStack spacing={5} alignItems="flex-start">
+      <HelmetTitle title="Pontoz-O Admin | Szempont szerkesztése" />
       <HStack w="100%" justify="space-between">
         <Heading>{criterionId === -1 ? 'Új szempont' : 'Szempont szerkesztése'}</Heading>
         <HStack>

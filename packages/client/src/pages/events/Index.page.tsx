@@ -1,4 +1,5 @@
 import { Alert, AlertIcon, AlertTitle, SimpleGrid, Text } from '@chakra-ui/react'
+import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { PATHS } from 'src/util/paths'
 import { useFetchEventsLastMonthFromDb, useFetchEventsLastMonthFromMtfsz } from '../../api/hooks/eventQueryHooks'
@@ -21,6 +22,7 @@ export const IndexPage = () => {
 
   return (
     <>
+      <HelmetTitle title="Pontoz-O" />
       <Alert status="warning" my={2}>
         <AlertIcon />
         <AlertTitle>Az oldal még fejlesztés alatt áll!</AlertTitle>

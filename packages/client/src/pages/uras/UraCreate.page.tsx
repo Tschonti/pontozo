@@ -3,6 +3,7 @@ import { UserPreview, UserRole } from '@pontozo/common'
 import { useEffect, useState } from 'react'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { onError } from 'src/util/onError'
 import { useCreateUraMutation, useDeleteUraMutation, useFetchUra, useUpdateUraMutation } from '../../api/hooks/uraHooks'
@@ -66,6 +67,7 @@ export const UraCreatePage = () => {
 
   return (
     <VStack alignItems="flex-start" spacing={3}>
+      <HelmetTitle title="Pontoz-O Admin | Személy kinevezése" />
       <Heading>Személy kinevezése</Heading>
       <UserSelector setUser={setUser} user={user} edit={uraId > -1} />
 

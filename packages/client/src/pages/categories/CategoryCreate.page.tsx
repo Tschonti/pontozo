@@ -3,6 +3,7 @@ import { CreateCategoryForm } from '@pontozo/common'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import {
   useCreateCategoryMutation,
@@ -53,6 +54,7 @@ export const CategoryCreatePage = () => {
   }
   return (
     <VStack spacing={5} alignItems="flex-start">
+      <HelmetTitle title="Pontoz-O Admin | Kategória szerkesztése" />
       <Heading>{categoryId === -1 ? 'Új kategória' : 'Kategória szerkesztése'}</Heading>
       {!categoryEditable && <Text>TODO ide valami szöveg hogy mért nem szerkeszthető</Text>}
       <FormControl isInvalid={!!errors.name}>

@@ -1,5 +1,6 @@
 import { Box, Button, Flex, Heading, Text, VStack } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
+import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { useFetchCategories } from '../../api/hooks/categoryHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
@@ -15,6 +16,7 @@ export const CategoryListPage = () => {
   }
   return (
     <>
+      <HelmetTitle title="Pontoz-O Admin | Kategóriák" />
       <Flex w="100%" justifyContent="space-between" mb={3}>
         <Heading>Kategóriák</Heading>
         <Button colorScheme="brand" as={Link} to={`${PATHS.CATEGORIES}/new`}>
