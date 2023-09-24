@@ -1,7 +1,7 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { CreateCriterionRating, PontozoException, RatingStatus } from '@pontozo/common'
 import { plainToClass } from 'class-transformer'
-import { In } from 'typeorm'
+import { In, InsertResult } from 'typeorm'
 import { getUserFromHeader } from '../../service/auth.service'
 import { CategoryToCriterion } from '../../typeorm/entities/CategoryToCriterion'
 import Criterion from '../../typeorm/entities/Criterion'
@@ -68,15 +68,23 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
 
     const criterionRatingRepo = ads.getRepository(CriterionRating)
     const rating = await criterionRatingRepo.findOneBy({ criterion: { id: dto.criterionId }, eventRating: { id }, stageId: dto.stageId })
+    let result: InsertResult
     if (rating === null) {
-      await criterionRatingRepo.insert({ criterion: { id: dto.criterionId }, value: dto.value, eventRating: { id }, stageId: dto.stageId })
+      result = await criterionRatingRepo.insert({
+        criterion: { id: dto.criterionId },
+        value: dto.value,
+        eventRating: { id },
+        stageId: dto.stageId,
+      })
     } else {
       rating.value = dto.value
       await criterionRatingRepo.save(rating)
     }
 
     context.log(
-      `User #${user.szemely_id} saved CriterionRating #${rating.id} for Event #${eventRating.eventId}, Criterion #${criterion.id}`
+      `User #${user.szemely_id} saved CriterionRating #${result ? result.identifiers[0].id : rating.id} for Event #${
+        eventRating.eventId
+      }, Criterion #${criterion.id}`
     )
     return {
       status: 204,
