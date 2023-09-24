@@ -5,7 +5,7 @@ import { PATHS } from 'src/util/paths'
 
 export const ErrorPage = () => {
   return (
-    <VStack alignItems="flex-start">
+    <VStack w="100%" alignItems="center" my={2}>
       <HelmetTitle title="Pontoz-O | Hiba" />
       <Heading>Ismeretlen hiba</Heading>
       <Text>{'Kérlek próbáld újra, és ha a hiba nem hárul el, jelezd a fejlesztőnek a feketesamu{kukac}gmail{pont}hu címen!'}</Text>

@@ -11,7 +11,7 @@ import { MobileRatingProgressBar } from './components/MobileRatingProgressBar'
 
 export const RatingPage = () => {
   const { ratingId } = useParams()
-  const { infoLoading, nextCategory, previousCategory, hasNext, hasPrev, eventRatingInfo } = useRatingContext()
+  const { infoLoading, nextCategory, previousCategory, hasNext, hasPrev, eventRatingInfo, currentStage } = useRatingContext()
   const [isDesktop] = useMediaQuery('(min-width: 800px)')
 
   if (infoLoading) {
@@ -20,7 +20,7 @@ export const RatingPage = () => {
 
   return (
     <>
-      <HelmetTitle title={`Pontoz-O | ${eventRatingInfo?.eventName} érétékelése`} />
+      <HelmetTitle title={`Pontoz-O | ${eventRatingInfo?.eventName}, ${currentStage?.name ?? 'teljes verseny'} érétékelése`} />
       {createPortal(isDesktop ? <DesktopRatingProgressBar /> : <MobileRatingProgressBar />, document.getElementById('ratingPB')!)}
       <CategoryWithCriteriaList ratingId={+ratingId!} />
       <HStack mt={3} justify="space-between" w="100%">
