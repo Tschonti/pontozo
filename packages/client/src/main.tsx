@@ -1,5 +1,5 @@
 import { ChakraProvider } from '@chakra-ui/react'
-import { ReactPlugin } from '@microsoft/applicationinsights-react-js'
+import { AppInsightsErrorBoundary, ReactPlugin } from '@microsoft/applicationinsights-react-js'
 import { ApplicationInsights } from '@microsoft/applicationinsights-web'
 import { QueryClientProvider } from '@tanstack/react-query'
 import React from 'react'
@@ -8,6 +8,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { AuthProvider } from './api/contexts/AuthContext'
 import { RatingProvider } from './api/contexts/RatingProvider'
 import { App } from './App'
+import { ErrorPage } from './pages/error/error.page'
 import { APP_INSIGHTS_CONN_STR } from './util/environment'
 import { queryClient } from './util/queryClient'
 import theme from './util/theme'
@@ -28,11 +29,13 @@ root.render(
     <ChakraProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <AuthProvider>
-            <RatingProvider>
-              <App />
-            </RatingProvider>
-          </AuthProvider>
+          <AppInsightsErrorBoundary onError={() => <ErrorPage />} appInsights={reactPlugin}>
+            <AuthProvider>
+              <RatingProvider>
+                <App />
+              </RatingProvider>
+            </AuthProvider>
+          </AppInsightsErrorBoundary>
         </BrowserRouter>
       </QueryClientProvider>
     </ChakraProvider>
