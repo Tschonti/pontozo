@@ -22,6 +22,7 @@ export interface EventRating {
   userId: number
   status: RatingStatus
   role: RatingRole
+  raterAge: number
   currentCategoryIdx: number
   currentStageIdx: number
   createdAt: Date

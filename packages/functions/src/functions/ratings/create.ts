@@ -37,12 +37,16 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
     if (validStages.length === 0) {
       throw new PontozoException('Érvénytelen futamok!', 400)
     }
+    const currentYear = new Date().getFullYear()
+    const raterYOB = parseInt(user.szul_dat.split('-')[0])
+
     const eventRating = new EventRating()
     eventRating.eventId = dto.eventId
     eventRating.userId = user.szemely_id
     eventRating.role = dto.role
     eventRating.createdAt = new Date()
     eventRating.stages = validStages
+    eventRating.raterAge = isNaN(raterYOB) ? 0 : currentYear - raterYOB
 
     const res = await ratingRepo.save(eventRating)
 

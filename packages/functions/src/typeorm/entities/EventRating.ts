@@ -41,6 +41,9 @@ class EventRating implements IEventRating {
   @Check("role in('COMPETITOR', 'COACH', 'ORGANISER', 'JURY')")
   role: RatingRole
 
+  @Column()
+  raterAge: number
+
   @Column({ default: 0 })
   currentCategoryIdx: number
 
