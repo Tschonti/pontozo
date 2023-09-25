@@ -4,5 +4,6 @@
 }
 
 .belowSticky {
-  padding-top: 104px;
+  margin-top: 104px;
+  margin-bottom: 50px;
 }
