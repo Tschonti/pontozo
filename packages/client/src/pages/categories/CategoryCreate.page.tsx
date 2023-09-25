@@ -3,6 +3,7 @@ import { CreateCategoryForm } from '@pontozo/common'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { ConfirmDialogButton } from 'src/components/commons/ConfirmDialogButton'
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import {
@@ -78,13 +79,13 @@ export const CategoryCreatePage = () => {
         </Button>
         <HStack spacing={1}>
           {categoryId > -1 && (
-            <Button
-              colorScheme="red"
-              isDisabled={!categoryEditable}
-              onClick={() => deleteMutation.mutate(undefined, { onSuccess: () => navigate(PATHS.CATEGORIES) })}
-            >
-              Kategória törlése
-            </Button>
+            <ConfirmDialogButton
+              confirmAction={() => deleteMutation.mutate(undefined, { onSuccess: () => navigate(PATHS.CATEGORIES) })}
+              initiatorButtonText="Törlés"
+              bodyText={`Biztosan a törlöd a(z) ${data?.name} kategóriát? Ezt az akciót nem lehet visszavonni!`}
+              headerText="Biztosan törlöd a kategóriát?"
+              initiatorButtonDisabled={!categoryEditable}
+            />
           )}
           <Button type="submit" isDisabled={!categoryEditable} colorScheme="brand" onClick={handleSubmit(onSubmit)}>
             Mentés

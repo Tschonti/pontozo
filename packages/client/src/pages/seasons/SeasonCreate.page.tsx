@@ -17,6 +17,7 @@ import { useEffect } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { ConfirmDialogButton } from 'src/components/commons/ConfirmDialogButton'
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { onError } from 'src/util/onError'
@@ -136,15 +137,15 @@ export const SeasonCreatePage = () => {
         </Button>
         <HStack spacing={1}>
           {seasonId > -1 && (
-            <Button
-              colorScheme="red"
-              isDisabled={!seasonEditable}
-              onClick={() =>
+            <ConfirmDialogButton
+              confirmAction={() =>
                 deleteMutation.mutate(undefined, { onSuccess: () => navigate(PATHS.SEASONS), onError: (e) => onError(e, toast) })
               }
-            >
-              Szezon törlése
-            </Button>
+              initiatorButtonText="Törlés"
+              bodyText={`Biztosan a törlöd a(z) ${data?.name} szezont? Ezt az akciót nem lehet visszavonni!`}
+              headerText="Biztosan törlöd a szezont?"
+              initiatorButtonDisabled={!seasonEditable}
+            />
           )}
           <Button type="submit" isDisabled={!seasonEditable} colorScheme="brand" onClick={handleSubmit(onSubmit)}>
             Mentés

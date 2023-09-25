@@ -20,6 +20,7 @@ import { CreateCriteria, CreateCriterionForm, RatingRole } from '@pontozo/common
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { ConfirmDialogButton } from 'src/components/commons/ConfirmDialogButton'
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import {
@@ -254,13 +255,13 @@ export const CriteriaCreatePage = () => {
             </Button>
           )}
           {criterionId > -1 && (
-            <Button
-              colorScheme="red"
-              isDisabled={!criterionEditable}
-              onClick={() => deleteMutation.mutate(undefined, { onSuccess: () => navigate(PATHS.CRITERIA) })}
-            >
-              Szempont törlése
-            </Button>
+            <ConfirmDialogButton
+              confirmAction={() => deleteMutation.mutate(undefined, { onSuccess: () => navigate(PATHS.CRITERIA) })}
+              initiatorButtonText="Törlés"
+              bodyText={`Biztosan a törlöd a(z) ${data?.name} szempontot? Ezt az akciót nem lehet visszavonni!`}
+              headerText="Biztosan törlöd a szempontot?"
+              initiatorButtonDisabled={!criterionEditable}
+            />
           )}
           <Button type="submit" isDisabled={!criterionEditable} colorScheme="brand" onClick={handleSubmit(onSubmit)}>
             Mentés

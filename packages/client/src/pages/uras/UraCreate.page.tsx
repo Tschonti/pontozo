@@ -3,6 +3,7 @@ import { UserPreview, UserRole } from '@pontozo/common'
 import { useEffect, useState } from 'react'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { ConfirmDialogButton } from 'src/components/commons/ConfirmDialogButton'
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { onError } from 'src/util/onError'
@@ -93,9 +94,13 @@ export const UraCreatePage = () => {
             Mentés
           </Button>
           {uraId > -1 && (
-            <Button colorScheme="red" onClick={onDelete}>
-              Törlés
-            </Button>
+            <ConfirmDialogButton
+              confirmAction={onDelete}
+              initiatorButtonText="Törlés"
+              bodyText={`Biztosan a törlöd ${data?.userFullName} kinevezését? Ezt az akciót nem lehet visszavonni!`}
+              headerText="Biztosan törlöd a kinevezést?"
+              initiatorButtonDisabled={false}
+            />
           )}
         </HStack>
       </Flex>
