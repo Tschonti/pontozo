@@ -4,7 +4,7 @@ import { transformEvent } from 'src/util/typeTransforms'
 import { functionAxios } from '../../util/axiosConfig'
 import { APIM_HOST, APIM_KEY } from '../../util/environment'
 
-export const useFetchEventsLastMonthFromMtfsz = () => {
+export const useFetchRateableEventsFromMtfsz = () => {
   return useQuery<DbEvent[]>(
     ['fetchEventsMtfsz'],
     async () => {
@@ -15,11 +15,22 @@ export const useFetchEventsLastMonthFromMtfsz = () => {
   )
 }
 
-export const useFetchEventsLastMonthFromDb = () => {
+export const useFetchRateableEventsFromDb = () => {
   return useQuery<DbEvent[], PontozoError>(
     ['fetchEventsDb'],
     async () => {
       const res = await functionAxios.get<DbEvent[]>('events/rateable')
+      return res.data.sort((e1, e2) => -e1.startDate.localeCompare(e2.startDate))
+    },
+    { retry: false }
+  )
+}
+
+export const useFetchRateableEventsFromCache = () => {
+  return useQuery<DbEvent[], PontozoError>(
+    ['fetchEventsCached'],
+    async () => {
+      const res = await functionAxios.get<DbEvent[]>('cached/events/rateable')
       return res.data.sort((e1, e2) => -e1.startDate.localeCompare(e2.startDate))
     },
     { retry: false }
@@ -34,6 +45,17 @@ export const useFetchEvent = (eventId: number) => {
       return res.data
     },
     { retry: false, enabled: !isNaN(eventId) && eventId > 0 }
+  )
+}
+
+export const useFetchEventFromCache = (eventId: number, enabled: boolean) => {
+  return useQuery<EventWithRating, PontozoError>(
+    ['fetchEventCached', eventId],
+    async () => {
+      const res = await functionAxios.get(`cached/events/getOne/${eventId}`)
+      return res.data
+    },
+    { retry: false, enabled: enabled && !isNaN(eventId) && eventId > 0 }
   )
 }
 

@@ -10,3 +10,7 @@ export type MtfszFetchResult<T> = {
   result: T[]
   page_size: number
 }
+
+export type AuthToken = {
+  token: string
+}

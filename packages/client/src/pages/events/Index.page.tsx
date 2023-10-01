@@ -1,24 +1,27 @@
 import { Alert, AlertIcon, AlertTitle, SimpleGrid, Text } from '@chakra-ui/react'
+import { useEffect } from 'react'
+import { useCacheContext } from 'src/api/contexts/useCacheContext'
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { PATHS } from 'src/util/paths'
-import { useFetchEventsLastMonthFromDb, useFetchEventsLastMonthFromMtfsz } from '../../api/hooks/eventQueryHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { EventListItem } from './components/EventListItem'
 
 export const IndexPage = () => {
-  const { data: eventsFromMtfsz, isLoading: mtfszLoading, error: mtfszError } = useFetchEventsLastMonthFromMtfsz()
-  const { data: eventsFromDb, isLoading: dbLoading, error: dbError } = useFetchEventsLastMonthFromDb()
+  const { eventDataLoading, refetchEventData, eventData, eventDataError } = useCacheContext()
 
-  if (mtfszLoading && dbLoading) {
+  useEffect(() => {
+    refetchEventData()
+  }, [refetchEventData])
+
+  if (eventDataLoading) {
     return <LoadingSpinner />
   }
 
-  if (dbError && mtfszError) {
-    console.error(mtfszError)
-    return <NavigateWithError to={PATHS.ERROR} error={dbError} />
+  if (eventDataError) {
+    console.error(eventDataError)
+    return <NavigateWithError to={PATHS.ERROR} error={eventDataError} />
   }
-  const eventData = eventsFromDb || eventsFromMtfsz
 
   return (
     <>

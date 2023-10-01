@@ -2,6 +2,7 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/fu
 import { PontozoException, UpdateURA } from '@pontozo/common'
 import { plainToClass } from 'class-transformer'
 import { QueryFailedError } from 'typeorm'
+import { getRedisClient } from '../../redis/redisClient'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import { getUserById } from '../../service/mtfsz.service'
 import UserRoleAssignment from '../../typeorm/entities/UserRoleAssignment'
@@ -23,6 +24,9 @@ export const updateURA = async (req: HttpRequest, context: InvocationContext): P
     ura.role = dto.role
     ura.userFullName = `${user.vezeteknev} ${user.keresztnev}`
     ura.userDOB = user.szul_dat
+
+    const redisClient = await getRedisClient(context)
+    await redisClient.hSet(`user:${ura.userId}`, id, dto.role)
 
     context.log(`User #${requesterUser.szemely_id} created URA #${ura.id}`)
     return {

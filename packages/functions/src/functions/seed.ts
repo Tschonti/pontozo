@@ -1,5 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { UserRole } from '@pontozo/common'
+import { getRedisClient } from '../redis/redisClient'
 import { getUserFromHeaderAndAssertAdmin } from '../service/auth.service'
 import Category from '../typeorm/entities/Category'
 import Criterion from '../typeorm/entities/Criterion'
@@ -408,7 +409,7 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
   try {
     const user = await getUserFromHeaderAndAssertAdmin(req, context)
 
-    const ads = await getAdminDataSource()
+    const [ads, redisClient] = await Promise.all([getAdminDataSource(), getRedisClient(context)])
     const seasonRepo = ads.getRepository(Season)
     const categoryRepo = ads.getRepository(Category)
     const criterionRepo = ads.getRepository(Criterion)
@@ -433,7 +434,7 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
     }
 
     if (ADMINS.length > 0) {
-      await userRepo.save(
+      const newAdmins = await userRepo.save(
         ADMINS.map((a) => {
           const ura = new UserRoleAssignment()
           ura.userId = a.userId
@@ -443,6 +444,7 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
           return ura
         })
       )
+      await Promise.all([...newAdmins.map((a) => redisClient.hSet(`user:${a.userId}`, a.id, a.role))])
     }
 
     const newTerep = await Promise.all(

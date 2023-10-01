@@ -2,6 +2,7 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/fu
 import { CreateURA, PontozoException } from '@pontozo/common'
 import { plainToClass } from 'class-transformer'
 import { QueryFailedError } from 'typeorm'
+import { getRedisClient } from '../../redis/redisClient'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import { getUserById } from '../../service/mtfsz.service'
 import UserRoleAssignment from '../../typeorm/entities/UserRoleAssignment'
@@ -22,8 +23,11 @@ export const createURA = async (req: HttpRequest, context: InvocationContext): P
       userFullName: `${user.vezeteknev} ${user.keresztnev}`,
       userDOB: user.szul_dat,
     })
+    const createdURAId = res.identifiers[0].id
+    const redisClient = await getRedisClient(context)
+    await redisClient.hSet(`user:${dto.userId}`, createdURAId, dto.role)
 
-    context.log(`User #${requesterUser.szemely_id} created URA #${res.identifiers[0].id}`)
+    context.log(`User #${requesterUser.szemely_id} created URA #${res.identifiers[0].id} and saved it to Redis cache.`)
     return {
       jsonBody: res.raw,
     }

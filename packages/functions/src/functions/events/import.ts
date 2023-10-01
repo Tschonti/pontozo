@@ -1,5 +1,6 @@
 import { app, InvocationContext, Timer } from '@azure/functions'
 import { getHighestRank, getRateableEvents } from '@pontozo/common'
+import { getRedisClient } from '../../redis/redisClient'
 import Club from '../../typeorm/entities/Club'
 import Event from '../../typeorm/entities/Event'
 import Season from '../../typeorm/entities/Season'
@@ -15,7 +16,8 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
   try {
     const pevents = getRateableEvents(APIM_KEY, APIM_HOST)
     const pads = getAppDataSource()
-    const [events, ads] = await Promise.all([pevents, pads])
+    const predis = getRedisClient(context)
+    const [events, ads, redisClient] = await Promise.all([pevents, pads, predis])
 
     const eventRepo = ads.getRepository(Event)
     const stageRepo = ads.getRepository(Stage)
@@ -69,15 +71,22 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
       return event
     })
 
-    await eventRepo.save(eventsToSave)
-    context.log(`${eventsToSave.length} events created or updated`)
+    const [_dbres, ...redisResults] = await Promise.all([
+      eventRepo.save(eventsToSave),
+      ...eventsToSave.map((event) => redisClient.set(`event:${event.id}`, JSON.stringify(event))),
+    ])
+    context.log(
+      `${eventsToSave.length} events created or updated in db, ${
+        redisResults.filter((r) => r === 'OK').length
+      } events created or updated in Redis cache`
+    )
   } catch (error) {
     context.log(error)
   }
 }
 
 app.timer('events-import', {
-  schedule: '0 0 14 * * *', // 2 PM every day
+  schedule: '0 0 12 * * *', // 12 PM every day (noon)
   handler: importEvents,
   runOnStartup: false,
 })

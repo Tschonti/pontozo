@@ -3,6 +3,7 @@ import { EventRank, RatingRole, ratingRoleArray } from '@pontozo/common'
 import { useEffect, useState } from 'react'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, Navigate, useParams } from 'react-router-dom'
+import { useCacheContext } from 'src/api/contexts/useCacheContext'
 import { useRatingContext } from 'src/api/contexts/useRatingContext'
 import { useStartRatingMutation } from 'src/api/hooks/ratingHooks'
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
@@ -10,7 +11,7 @@ import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { formatDateRange } from 'src/util/formatDateRange'
 import { onError } from 'src/util/onError'
 import { useAuthContext } from '../../api/contexts/useAuthContext'
-import { useFetchEvent } from '../../api/hooks/eventQueryHooks'
+import { useFetchEvent, useFetchEventFromCache } from '../../api/hooks/eventQueryHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 import { GoToRatingButton } from './components/GoToRatingButton'
@@ -19,7 +20,9 @@ import { StageListItem } from './components/StageListItem'
 
 export const EventDetailsPage = () => {
   const { eventId } = useParams()
-  const { data: eventWithRating, isLoading, error, isFetchedAfterMount } = useFetchEvent(+eventId!)
+  const { dbQueryLoading } = useCacheContext()
+  const dbQuery = useFetchEvent(+eventId!)
+  const cacheQuery = useFetchEventFromCache(+eventId!, dbQueryLoading)
   const { isLoggedIn } = useAuthContext()
   const toast = useToast()
   const [role, setRole] = useState(RatingRole.COMPETITOR)
@@ -28,15 +31,15 @@ export const EventDetailsPage = () => {
   const { startRating: startRatingWithContext } = useRatingContext()
 
   useEffect(() => {
-    if (isFetchedAfterMount && eventWithRating) {
-      if (eventWithRating.userRating) {
-        setStageIds(eventWithRating.userRating.stages.map((s) => s.id))
-        setRole(eventWithRating.userRating.role)
+    if (dbQuery.isFetchedAfterMount && dbQuery.data) {
+      if (dbQuery.data.userRating) {
+        setStageIds(dbQuery.data.userRating.stages.map((s) => s.id))
+        setRole(dbQuery.data.userRating.role)
       } else {
-        setStageIds(eventWithRating.event.stages?.filter((s) => s.rank !== EventRank.NONE).map((s) => s.id) ?? [])
+        setStageIds(dbQuery.data.event.stages?.filter((s) => s.rank !== EventRank.NONE).map((s) => s.id) ?? [])
       }
     }
-  }, [isFetchedAfterMount, eventWithRating])
+  }, [dbQuery.isFetchedAfterMount, dbQuery.data])
 
   const onStartClick = () => {
     if (role) {
@@ -62,13 +65,20 @@ export const EventDetailsPage = () => {
     toast({ title: 'Jelentkezz be az oldal megtekintéséhez!', status: 'warning' })
     return <Navigate to={PATHS.INDEX} />
   }
-  if (isLoading) {
+  const eventData = dbQuery.data || cacheQuery.data
+  if (dbQuery.isLoading && cacheQuery.isLoading) {
     return <LoadingSpinner />
   }
-  if (error || !eventWithRating) {
-    return <NavigateWithError error={error} to={PATHS.INDEX} />
+  if ((dbQuery.error && cacheQuery.error) || !eventData) {
+    return (
+      <NavigateWithError
+        error={dbQuery.error || { message: 'Nem sikerült betölteni a verseny adatait', statusCode: 500 }}
+        to={PATHS.INDEX}
+      />
+    )
   }
-  const { event } = eventWithRating
+  const { event } = eventData
+
   return (
     <VStack alignItems="flex-start" spacing={3}>
       <HelmetTitle title={`Pontoz-O | ${event.name}`} />
@@ -85,7 +95,7 @@ export const EventDetailsPage = () => {
         aki nem megfelelő szerepkört választott, annak értékelését átsoroljuk vagy töröljük.
       </Text>
       {ratingRoleArray.map((r) => (
-        <RoleListItem key={r} role={r} onSelected={() => setRole(r)} selected={role === r} disabled={!!eventWithRating.userRating} />
+        <RoleListItem key={r} role={r} onSelected={() => setRole(r)} selected={role === r} disabled={!!eventData.userRating} />
       ))}
       <Heading size="md" mt={3}>
         Futamok
@@ -100,7 +110,7 @@ export const EventDetailsPage = () => {
           <StageListItem
             stage={s}
             key={s.id}
-            disabled={!!eventWithRating.userRating}
+            disabled={!!eventData.userRating}
             onChecked={(c) => onItemChecked(c, s.id)}
             checked={stageIds.includes(s.id)}
           />
@@ -109,7 +119,7 @@ export const EventDetailsPage = () => {
         <Button leftIcon={<FaArrowLeft />} as={Link} to={PATHS.INDEX}>
           Vissza
         </Button>
-        <GoToRatingButton eventWithRating={eventWithRating} onStartClick={onStartClick} disabled={!role || !stageIds.length} />
+        <GoToRatingButton eventWithRating={eventData} onStartClick={onStartClick} disabled={!role || !stageIds.length} />
       </HStack>
     </VStack>
   )

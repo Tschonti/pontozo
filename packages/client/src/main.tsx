@@ -6,6 +6,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { AuthProvider } from './api/contexts/AuthContext'
+import { CacheProvider } from './api/contexts/CacheContext'
 import { RatingProvider } from './api/contexts/RatingProvider'
 import { App } from './App'
 import { ErrorPage } from './pages/error/error.page'
@@ -30,11 +31,13 @@ root.render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <AppInsightsErrorBoundary onError={() => <ErrorPage />} appInsights={reactPlugin}>
-            <AuthProvider>
-              <RatingProvider>
-                <App />
-              </RatingProvider>
-            </AuthProvider>
+            <CacheProvider>
+              <AuthProvider>
+                <RatingProvider>
+                  <App />
+                </RatingProvider>
+              </AuthProvider>
+            </CacheProvider>
           </AppInsightsErrorBoundary>
         </BrowserRouter>
       </QueryClientProvider>

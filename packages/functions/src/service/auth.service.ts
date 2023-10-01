@@ -12,7 +12,7 @@ export const getUserFromHeader = (req: HttpRequest): DbUser => {
   }
   const jwtToken = authHeader.replace('Bearer', '').trim()
   try {
-    const userFromJwt = jwt.verify(jwtToken, JWT_SECRET) as DbUser
+    const { iat, exp, ...userFromJwt } = jwt.verify(jwtToken, JWT_SECRET) as DbUser & { iat: number; exp: number }
     return userFromJwt
   } catch (error) {
     throw new PontozoException('Érvénytelen JWT token!', 401)
