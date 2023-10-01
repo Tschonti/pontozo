@@ -1,5 +1,5 @@
 import { app, InvocationContext, Timer } from '@azure/functions'
-import { getHighestRank, getRateableEvents } from '@pontozo/common'
+import { getHighestRank, getRateableEvents, stageFilter } from '@pontozo/common'
 import { getRedisClient } from '../../redis/redisClient'
 import Club from '../../typeorm/entities/Club'
 import Event from '../../typeorm/entities/Event'
@@ -44,18 +44,17 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
       })
 
       event.stages.push(
-        ...e.programok /*.filter(stageFilter) TODO decide what to do with this */
-          .map((s, idx) =>
-            stageRepo.create({
-              id: s.program_id,
-              eventId: event.id,
-              name: s.nev_1 ?? `${idx + 1}. futam`,
-              disciplineId: s.futam.versenytav_id,
-              startTime: s.idopont_tol,
-              endTime: s.idopont_ig,
-              rank: s.futam.rangsorolo,
-            })
-          )
+        ...e.programok.filter(stageFilter).map((s, idx) =>
+          stageRepo.create({
+            id: s.program_id,
+            eventId: event.id,
+            name: s.nev_1 ?? `${idx + 1}. futam`,
+            disciplineId: s.futam.versenytav_id,
+            startTime: s.idopont_tol,
+            endTime: s.idopont_ig,
+            rank: s.futam.rangsorolo,
+          })
+        )
       )
 
       event.organisers.push(

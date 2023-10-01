@@ -33,7 +33,7 @@ export const CategoryWithCriteriaList = ({ ratingId }: Props) => {
       <Text mt={2} mb={5}>
         {currentCategory?.description}
       </Text>
-      <VStack my={5} spacing={5} alignItems="flex-start">
+      <VStack my={5} spacing={10} alignItems="flex-start">
         {criteria?.map((criteria) => (
           <CriterionRateForm criterion={criteria} key={criteria.id} />
         ))}

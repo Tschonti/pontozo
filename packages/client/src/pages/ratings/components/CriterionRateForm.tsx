@@ -41,7 +41,7 @@ export const CriterionRateForm = ({ criterion }: Props) => {
       <FormLabel>{criterion.name}</FormLabel>
       <FormHelperText mb={2}>{criterion.description}</FormHelperText>
       <RadioGroup isDisabled={eventRatingInfo?.status === RatingStatus.SUBMITTED} colorScheme="brand" onChange={onChange} value={value}>
-        <Stack direction={['column', 'row']} spacing={5}>
+        <Stack direction={['column', 'row']} spacing={10}>
           {criterion.text0 && <Radio value="0">{criterion.text0}</Radio>}
           {criterion.text1 && <Radio value="1">{criterion.text1}</Radio>}
           {criterion.text2 && <Radio value="2">{criterion.text2}</Radio>}

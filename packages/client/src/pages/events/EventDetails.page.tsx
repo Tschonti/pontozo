@@ -1,5 +1,5 @@
 import { Button, Heading, HStack, Stack, Text, useToast, VStack } from '@chakra-ui/react'
-import { EventRank, RatingRole, ratingRoleArray } from '@pontozo/common'
+import { RatingRole, ratingRoleArray } from '@pontozo/common'
 import { useEffect, useState } from 'react'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, Navigate, useParams } from 'react-router-dom'
@@ -36,7 +36,7 @@ export const EventDetailsPage = () => {
         setStageIds(dbQuery.data.userRating.stages.map((s) => s.id))
         setRole(dbQuery.data.userRating.role)
       } else {
-        setStageIds(dbQuery.data.event.stages?.filter((s) => s.rank !== EventRank.NONE).map((s) => s.id) ?? [])
+        setStageIds(dbQuery.data.event.stages?.map((s) => s.id) ?? [])
       }
     }
   }, [dbQuery.isFetchedAfterMount, dbQuery.data])
