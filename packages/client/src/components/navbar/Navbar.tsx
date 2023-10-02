@@ -21,7 +21,7 @@ export const Navbar = () => {
       toast({ status: 'error', title: 'Nincs jogosultságod az oldal megtekintéséhez!' })
       nav(PATHS.INDEX)
     }
-  }, [isAdmin, isAdminPath, loggedInUserLoading])
+  }, [isAdmin, isAdminPath, loggedInUserLoading, nav, toast])
 
   return (
     <>
@@ -29,7 +29,7 @@ export const Navbar = () => {
         <Box flex={1}>
           <Flex flexDirection="column" maxWidth={['100%', '48rem', '48rem', '64rem']} mx="auto">
             <Box as={Link} to={PATHS.INDEX} p={4}>
-              <Image src={isAdminPath ? '/img/logo-admin.png' : '/img/logo.png'} />
+              <Image h="80px" src={isAdminPath ? '/img/admin_logo.svg' : '/img/logo.svg'} />
             </Box>
           </Flex>
         </Box>

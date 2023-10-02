@@ -53,11 +53,6 @@ export const CacheProvider = ({ children }: PropsWithChildren) => {
           </Box>
         ),
       })
-      toast({
-        title: 'Betöltés...',
-        description: 'Betöltés folyamatban, addig nem tudsz minden funkciót használni!',
-        duration: null,
-      })
     }, 3000)
     setToastTimeout(timeout)
     return () => {
