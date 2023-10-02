@@ -35,11 +35,18 @@ export const EventDetailsPage = () => {
       if (dbQuery.data.userRating) {
         setStageIds(dbQuery.data.userRating.stages.map((s) => s.id))
         setRole(dbQuery.data.userRating.role)
-      } else {
+      } else if (!cacheQuery.isFetchedAfterMount) {
         setStageIds(dbQuery.data.event.stages?.map((s) => s.id) ?? [])
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dbQuery.isFetchedAfterMount, dbQuery.data])
+
+  useEffect(() => {
+    if (cacheQuery.isFetchedAfterMount && cacheQuery.data) {
+      setStageIds(cacheQuery.data.event.stages?.map((s) => s.id) ?? [])
+    }
+  }, [cacheQuery.isFetchedAfterMount, cacheQuery.data])
 
   const onStartClick = () => {
     if (role) {
@@ -119,7 +126,12 @@ export const EventDetailsPage = () => {
         <Button leftIcon={<FaArrowLeft />} as={Link} to={PATHS.INDEX}>
           Vissza
         </Button>
-        <GoToRatingButton eventWithRating={eventData} onStartClick={onStartClick} disabled={!role || !stageIds.length} />
+        <GoToRatingButton
+          isLoading={startRating.isLoading || dbQueryLoading}
+          eventWithRating={eventData}
+          onStartClick={onStartClick}
+          disabled={!role || !stageIds.length}
+        />
       </HStack>
     </VStack>
   )

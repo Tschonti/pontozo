@@ -1,11 +1,11 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { CreateEventRating, PontozoException, RatingRole, UserRole } from '@pontozo/common'
 import { plainToClass } from 'class-transformer'
+import { QueryFailedError } from 'typeorm'
 import { getUserFromHeader } from '../../service/auth.service'
 import Event from '../../typeorm/entities/Event'
 import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
-import { handleException } from '../../util/handleException'
 import { validateBody, validateWithWhitelist } from '../../util/validation'
 
 /**
@@ -55,8 +55,35 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
       status: 201,
       jsonBody: res,
     }
-  } catch (error) {
-    return handleException(req, context, error)
+  } catch (e) {
+    switch (e.constructor) {
+      case QueryFailedError:
+        if ((e as QueryFailedError).message.startsWith('Error: Violation of UNIQUE KEY constraint')) {
+          return {
+            status: 400,
+            jsonBody: {
+              statusCode: 400,
+              message: 'Már megkezdted ennek a versenynek az értékelését!',
+            },
+          }
+        }
+        break
+      case PontozoException: {
+        const error = e as PontozoException
+        return {
+          status: error.status,
+          jsonBody: error.getError(),
+        }
+      }
+    }
+    context.log(e)
+    return {
+      status: 500,
+      jsonBody: {
+        statusCode: 500,
+        message: 'Ismeretlen hiba!',
+      },
+    }
   }
 }
 

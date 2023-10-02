@@ -6,10 +6,11 @@ import { PATHS } from '../../../util/paths'
 type Props = {
   eventWithRating: EventWithRating
   onStartClick: () => void
+  isLoading: boolean
   disabled: boolean
 }
 
-export const GoToRatingButton = ({ eventWithRating, onStartClick, disabled }: Props) => {
+export const GoToRatingButton = ({ eventWithRating, onStartClick, disabled, isLoading }: Props) => {
   if (eventWithRating.userRating) {
     let url = `${PATHS.RATINGS}/${eventWithRating.userRating.id}?categoryIdx=`
     if (eventWithRating.userRating.status === RatingStatus.STARTED) {
@@ -27,7 +28,7 @@ export const GoToRatingButton = ({ eventWithRating, onStartClick, disabled }: Pr
     )
   }
   return (
-    <Button colorScheme="brand" onClick={onStartClick} isDisabled={disabled}>
+    <Button colorScheme="brand" isLoading={isLoading} onClick={onStartClick} isDisabled={disabled}>
       Értékelés kezdése
     </Button>
   )

@@ -14,6 +14,7 @@ import Stage from './entities/Stage'
 import UserRoleAssignment from './entities/UserRoleAssignment'
 import { Init1694205775872 } from './migrations/1694205775872-init'
 import { AddRaterAge1695666298049 } from './migrations/1695666298049-add_rater_age'
+import { UniqueEventForUser1696272553417 } from './migrations/1696272553417-unique_event_for_user'
 
 export const DBConfig: SqlServerConnectionOptions = {
   type: 'mssql',
@@ -40,6 +41,6 @@ export const DBConfig: SqlServerConnectionOptions = {
     SeasonCriterionCount,
   ],
   subscribers: [],
-  migrations: [Init1694205775872, AddRaterAge1695666298049],
+  migrations: [Init1694205775872, AddRaterAge1695666298049, UniqueEventForUser1696272553417],
   options: { encrypt: ENCRYPT },
 }

@@ -1,5 +1,5 @@
 import { EventRating as IEventRating } from '@pontozo/common'
-import { Check, Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { Check, Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm'
 import CriterionRating from './CriterionRating'
 import Event from './Event'
 import Stage from './Stage'
@@ -17,6 +17,7 @@ export enum RatingRole {
 }
 
 @Entity()
+@Unique(['eventId', 'userId'])
 class EventRating implements IEventRating {
   @PrimaryGeneratedColumn()
   id: number
