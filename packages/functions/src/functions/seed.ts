@@ -13,7 +13,7 @@ import { handleException } from '../util/handleException'
 const terep = [
   {
     name: 'Versenyszámok profilja szerinti megfelelés (hosszú, közép, rövid)',
-    description: 'test',
+    description: 'Mennyire felelt meg a pályád hossza a versenyszám által előírtaknak?',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
@@ -26,8 +26,9 @@ const terep = [
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
-    name: 'Technikai fokozatok megfelelősége 10D pályák',
-    description: 'test',
+    name: 'Technikai fokozatok megfelelősége: Szalagos pályák',
+    description:
+      'Mennyire volt megfelelő a szalagos pályák technikai nehézsége? Voltak egyszerű és biztonságos lehetőségek a szalag levágásra?',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
@@ -40,8 +41,8 @@ const terep = [
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
-    name: 'Technikai fokozatok megfelelősége E-A-B-Br pályák',
-    description: 'test',
+    name: 'Technikai fokozatok megfelelősége: E-A-B-Br pályák',
+    description: 'Mennyire voltak megfelelőek az adott pályák technikai nehézsége?',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
@@ -54,8 +55,9 @@ const terep = [
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
-    name: 'Technikai fokozatok megfelelősége C pályák',
-    description: 'test',
+    name: 'Technikai fokozatok megfelelősége: C pályák',
+    description:
+      'Mennyire voltak megfelelőek a C pályák technikai nehézsége? Voltak egyszerű és biztonságos lehetőségek az utak elhagyására?',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
@@ -69,7 +71,7 @@ const terep = [
   },
   {
     name: 'Technikai fokozatok megfelelősége időskorú szenior pályák',
-    description: 'test',
+    description: 'Mennyire voltak megfelelőek az adott pályák technikai nehézsége?',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
@@ -86,7 +88,7 @@ const terep = [
 const terkep = [
   {
     name: 'Szabványosság',
-    description: 'test',
+    description: 'Mennyire követte a térkép a hivatalos szabványt?',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
@@ -100,7 +102,7 @@ const terkep = [
   },
   {
     name: 'Pontosság',
-    description: 'test',
+    description: 'Mennyire volt a valóságnak megfelelő a térkép?',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
@@ -114,7 +116,7 @@ const terkep = [
   },
   {
     name: 'Nyomtatás, kűlcsín, hordozó',
-    description: 'test',
+    description: 'Milyen minőségű volt a térkép nyomtatása és a megjelenése?',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
@@ -131,7 +133,8 @@ const terkep = [
 const vk = [
   {
     name: 'Megközelíthetőség',
-    description: 'test',
+    description:
+      'Mennyire volt megközelíthető a VK? Milyen volt a bevezetőút minősége, volt-e lehetőség tömegközlekedéssel való megközelítésre?',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
@@ -145,7 +148,7 @@ const vk = [
   },
   {
     name: 'Infrastruktúra - Parkolás',
-    description: 'test',
+    description: 'Milyen volt a parkoló és parkoltatás minősége? Nem volt túl messze a parkoló a VK-tól?',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
@@ -159,7 +162,7 @@ const vk = [
   },
   {
     name: 'Infrastruktúra - Ivóvíz, mosdás',
-    description: 'test',
+    description: 'Volt-e megfelelő ivóvíz szolgáltatás és mosdási lehetőség?',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
@@ -173,7 +176,7 @@ const vk = [
   },
   {
     name: 'Infrastruktúra - Térerő, internet',
-    description: 'test',
+    description: 'Milyen volt a VK internet lefedettsége?',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
@@ -214,8 +217,8 @@ const vk = [
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
-    name: 'Kísérő szogáltatások (Büfé, árusok)',
-    description: 'test',
+    name: 'Kísérő szogáltatások: Büfé, árusok',
+    description: 'Milyen volt a büfék, árusok kínálata, ára, felszolgálás minősége?',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
@@ -228,8 +231,8 @@ const vk = [
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
-    name: 'Kísérő szogáltatások (Időtöltés, múzeum, kilátó, stb)',
-    description: 'test',
+    name: 'Kísérő szogáltatások: Időtöltés, múzeum, kilátó, stb',
+    description: 'Voltak-e ajánlott kulturális programok?',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
@@ -246,21 +249,21 @@ const vk = [
 const rajt = [
   {
     name: 'Víz, WC',
-    description: 'test',
+    description: 'Ivóvíz és WC mennyisége és minősége a karanténban',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
     text3: 'Kiváló',
     nationalOnly: true,
     stageSpecific: true,
-    allowEmpty: false,
+    allowEmpty: true,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
-    name: 'Várakozási és melegítési lehetőség ',
-    description: 'test',
+    name: 'Várakozási és melegítési lehetőség',
+    description: 'Várakozási és melegítési lehetőség minősége a rajtban',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
@@ -274,7 +277,7 @@ const rajt = [
   },
   {
     name: 'Rajtoltatás áttekinthetősége, egyértelműsége',
-    description: 'test',
+    description: 'Mennyire volt áttekinthető, egyértelmű és gördülékeny a rajtoltatás?',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
@@ -288,7 +291,7 @@ const rajt = [
   },
   {
     name: 'Rajt rendszere: Repülőrajt alkalmazása, Kifutók ne látszódjanak',
-    description: 'test',
+    description: 'Szigorúan volt-e véve a repülőrajt, lehetett-e látni az előtted rajtolók kifutási irányát?',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
@@ -305,35 +308,35 @@ const rajt = [
 const szabalyzat = [
   {
     name: 'Kiírás',
-    description: 'test',
+    description: 'Milyen volt a kiírás minősége?',
     text0: 'Nincs',
     text1: 'Rossz',
     text2: 'Hiányos',
     text3: 'Szabályzatnak megfelelő',
     nationalOnly: false,
     stageSpecific: false,
-    allowEmpty: false,
+    allowEmpty: true,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["ORGANISER", "JURY"]',
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
     name: 'Értesítő, rajtlista',
-    description: 'test',
+    description: 'Milyen volt a értesítő, rajtlista minősége?',
     text0: 'Nincs',
     text1: 'Rossz',
     text2: 'Hiányos',
     text3: 'Szabályzatnak megfelelő',
     nationalOnly: false,
     stageSpecific: false,
-    allowEmpty: false,
+    allowEmpty: true,
     competitorWeight: 1,
     organiserWeight: 1,
-    roles: '["ORGANISER", "JURY"]',
+    roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
     name: 'Versenynapi szabályeltérések',
-    description: 'test',
+    description: 'Voltak-e szabálysértések a versenyen?',
     text0: 'Nem engedélyezett eltérés',
     text2: 'Engedélyezett eltérés',
     text3: 'Nincs eltérés',
@@ -346,8 +349,8 @@ const szabalyzat = [
   },
   {
     name: 'Súlyos rendezői hiba',
-    description: 'test',
-    text0: ' Kategória törlésre került sor',
+    description: 'Történt-e súlyos rendezői hiba a verseny során?',
+    text0: 'Kategória törlésre került sor',
     text1: 'Volt eredményt befolyásoló rendezői hiba',
     text2: 'Nem volt jogos (elfogadott) óvás, de érkezett óvás; vagy volt eredményt nem befolyásoló, de súlyos rendezői hiba',
     text3: 'Nem volt eredményt befolyásoló súlyos hiba',
@@ -363,7 +366,8 @@ const szabalyzat = [
 const kommunikáció = [
   {
     name: 'Információk kellő időben',
-    description: 'test',
+    description:
+      'A kiírás, értesítő, rajtlista és fontos értesítések mennyire érkeztek időben és a versenyzők mekkora részéhez jutottak el?',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
@@ -377,7 +381,7 @@ const kommunikáció = [
   },
   {
     name: 'Esemény honlap léte, összeszedettsége, naprakészsége',
-    description: 'test',
+    description: 'Volt-e honlapja a versenynek, és ha igen, mennyire volt naprakész és könnyen használható?',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
@@ -391,14 +395,14 @@ const kommunikáció = [
   },
   {
     name: 'Mtfsz és saját támogatók megjelenése',
-    description: 'test',
+    description: 'Megjelentek-e megfelelő minőségben a támogatók?',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
     text3: 'Kiváló',
     nationalOnly: true,
     stageSpecific: false,
-    allowEmpty: false,
+    allowEmpty: true,
     competitorWeight: 1,
     organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
@@ -454,7 +458,7 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
     )
     const terepCat = new Category()
     terepCat.name = 'Terepválasztás, Pályakitűzés'
-    terepCat.description = 'test'
+    terepCat.description = 'Ezen az oldalon az adott futamot a terep és pályák alapján értékelheted.'
     terepCat.criteria = newTerep.map((t, i) => ({
       criterion: t,
       order: i,
@@ -471,7 +475,7 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
     )
     const terkepCat = new Category()
     terkepCat.name = 'Terkép minőség'
-    terkepCat.description = 'test'
+    terkepCat.description = 'Ezen az oldalon az adott futamot a térkép minősége alapján értékelheted.'
     terkepCat.criteria = newTerkep.map((t, i) => ({
       criterion: t,
       order: i,
@@ -488,7 +492,7 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
     )
     const vkCat = new Category()
     vkCat.name = 'Versenyközpont, célterület'
-    vkCat.description = 'test'
+    vkCat.description = 'Ezen az oldalon a verseny versenyközpontját értékelheted.'
     vkCat.criteria = newVk.map((t, i) => ({
       criterion: t,
       order: i,
@@ -505,7 +509,7 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
     )
     const rajtCat = new Category()
     rajtCat.name = 'Rajt'
-    rajtCat.description = 'test'
+    rajtCat.description = 'Ezen az oldalon az adott futamot a rajt minősége alapján értékelheted.'
     rajtCat.criteria = newRajt.map((t, i) => ({
       criterion: t,
       order: i,
@@ -522,7 +526,7 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
     )
     const szabCat = new Category()
     szabCat.name = 'Versenyszabályzat és Bajnoki Rendszer megfelelés'
-    szabCat.description = 'test'
+    szabCat.description = 'Ezen az oldalon a versenyt az alapján értékelheted, hogy mennyire felelt meg a szabályzatoknak.'
     szabCat.criteria = newSzab.map((t, i) => ({
       criterion: t,
       order: i,
@@ -539,7 +543,7 @@ export const seed = async (req: HttpRequest, context: InvocationContext): Promis
     )
     const kommCat = new Category()
     kommCat.name = 'Kommunikáció'
-    kommCat.description = 'test'
+    kommCat.description = 'Ezen az oldalon a versennyel kapcsolatos kommunikációt értékelheted.'
     kommCat.criteria = newKomm.map((t, i) => ({
       criterion: t,
       order: i,
