@@ -70,7 +70,7 @@ const terep = [
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
-    name: 'Technikai fokozatok megfelelősége időskorú szenior pályák',
+    name: 'Technikai fokozatok megfelelősége: időskorú szenior pályák',
     description: 'Mennyire voltak megfelelőek az adott pályák technikai nehézsége?',
     text0: 'Rossz',
     text1: 'Gyenge',
@@ -102,7 +102,7 @@ const terkep = [
   },
   {
     name: 'Pontosság',
-    description: 'Mennyire volt a valóságnak megfelelő a térkép?',
+    description: 'Mennyire tükrözte a valóságot a térkép?',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
@@ -116,7 +116,7 @@ const terkep = [
   },
   {
     name: 'Nyomtatás, kűlcsín, hordozó',
-    description: 'Milyen minőségű volt a térkép nyomtatása és a megjelenése?',
+    description: 'Milyen minőségű volt a térkép nyomtatása és megjelenése?',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
@@ -190,7 +190,7 @@ const vk = [
   },
   {
     name: 'Aréna jelleg',
-    description: 'Áttekinthető elrendezés, Követhető befutó, Látható átfutás, Cél-Rajt együtt',
+    description: 'Áttekinthető elrendezés, követhető befutó, látható átfutás, cél-rajt együtt',
     text0: 'Rossz',
     text1: 'Gyenge',
     text2: 'Megfelelő',
