@@ -44,7 +44,7 @@ export const DesktopRatingProgressBar = () => {
             w="100%"
             justify="space-between"
           >
-            <Heading title="Vissza a versenyhez" as={Link} to={`${PATHS.EVENTS}/${eventRatingInfo.eventId}`} size={sticky ? 'md' : 'lg'}>
+            <Heading title="Vissza a versenyhez" as={Link} to={`${PATHS.EVENTS}/${eventRatingInfo.eventId}`} size={'md'}>
               {eventRatingInfo.eventName} értékelése
             </Heading>
             <Heading size="sm">{formatDateRange(eventRatingInfo.startDate, eventRatingInfo.endDate)}</Heading>

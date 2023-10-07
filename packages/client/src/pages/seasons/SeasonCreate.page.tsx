@@ -90,7 +90,7 @@ export const SeasonCreatePage = () => {
     <VStack spacing={5} alignItems="flex-start">
       <HelmetTitle title="Pontoz-O Admin | Szezon szerkesztése" />
       <Heading>{seasonId === -1 ? 'Új szezon' : 'Szezon szerkesztése'}</Heading>
-      {!seasonEditable && <Text>TODO ide valami szöveg hogy mért nem szerkeszthető</Text>}
+      {!seasonEditable && <Text>Ez a szezon már nem szerkeszthető, mert már elkezdődött!</Text>}
       <FormControl isInvalid={!!errors.name}>
         <FormLabel>Név</FormLabel>
         <Input {...register('name', { required: true, disabled: !seasonEditable })} />

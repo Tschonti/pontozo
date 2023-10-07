@@ -122,7 +122,7 @@ export const CriteriaCreatePage = () => {
         </HStack>
       </HStack>
 
-      {!criterionEditable && <Text>TODO ide valami szöveg hogy mért nem szerkeszthető</Text>}
+      {!criterionEditable && <Text>Ez a szempont már nem szerkeszthető, mert része egy olyan szezonnak, ami már elkezdődött!</Text>}
       <FormControl isInvalid={!!errors.name}>
         <FormLabel>Név</FormLabel>
         <Input {...register('name', { required: true, disabled: !criterionEditable })} />

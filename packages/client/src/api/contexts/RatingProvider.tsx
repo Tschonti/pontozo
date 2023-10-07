@@ -52,12 +52,12 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
       splitPath.length === 3 &&
       splitPath[1] === 'ratings' &&
       !isNaN(parseInt(splitPath[2])) &&
-      !isNaN(parseInt(searchParams.get('categoryIdx') || ''))
+      !isNaN(parseInt(searchParams.get('categoryIdx') ?? ''))
     ) {
       setRatingId(parseInt(splitPath[2]))
-      setCategoryIdx(parseInt(searchParams.get('categoryIdx') || ''))
-      if (!isNaN(parseInt(searchParams.get('stageIdx') || ''))) {
-        setStageIdx(parseInt(searchParams.get('stageIdx') || ''))
+      setCategoryIdx(parseInt(searchParams.get('categoryIdx') ?? ''))
+      if (!isNaN(parseInt(searchParams.get('stageIdx') ?? ''))) {
+        setStageIdx(parseInt(searchParams.get('stageIdx') ?? ''))
       }
     } else {
       reset()

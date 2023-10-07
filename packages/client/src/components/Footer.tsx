@@ -1,6 +1,6 @@
 import { Box, Container, Flex, HStack, Link, Stack, Text } from '@chakra-ui/react'
 import { FC } from 'react'
-import { FaGithub, FaGlobe, FaLinkedin } from 'react-icons/fa'
+import { FaEnvelope, FaGithub, FaGlobe, FaLinkedin } from 'react-icons/fa'
 import { ColorfulExternalLink } from './commons/ColorfulExternalLink'
 
 export const Footer: FC = () => {
@@ -35,6 +35,9 @@ export const Footer: FC = () => {
           </ColorfulExternalLink>
           <ColorfulExternalLink url="https://github.com/Tschonti" hoverColor="brand.500">
             <FaGlobe size={25} />
+          </ColorfulExternalLink>
+          <ColorfulExternalLink url="mailto:feketesamu@gmail.com" hoverColor="brand.500">
+            <FaEnvelope size={25} />
           </ColorfulExternalLink>
           <ColorfulExternalLink url="https://www.linkedin.com/in/samuel-fekete/" hoverColor="brand.500">
             <FaLinkedin size={25} />

@@ -1,12 +1,13 @@
-import { Stack } from '@chakra-ui/react'
+import { Stack, useDisclosure } from '@chakra-ui/react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../../api/contexts/useAuthContext'
 import { adminNavItems, navItems } from '../../util/navItems'
-import { onLoginClick } from '../../util/onLoginClick'
+import { LoginModal } from '../commons/LoginModal'
 import { NavbarButton } from '../commons/NavbarButton'
 
 const DesktopNav = () => {
   const { pathname } = useLocation()
+  const { isOpen, onClose, onOpen } = useDisclosure()
   const { isLoggedIn, isAdmin } = useAuthContext()
   const navItemsToRender = (pathname.startsWith('/admin') ? adminNavItems : navItems).filter((navItem) =>
     navItem.shown(isLoggedIn, isAdmin)
@@ -21,10 +22,11 @@ const DesktopNav = () => {
         </NavbarButton>
       ))}
       {!isLoggedIn && (
-        <NavbarButton onClick={onLoginClick} active={false}>
+        <NavbarButton onClick={onOpen} active={false}>
           BEJELENTKEZÉS
         </NavbarButton>
       )}
+      <LoginModal isOpen={isOpen} onClose={onClose} />
     </Stack>
   )
 }

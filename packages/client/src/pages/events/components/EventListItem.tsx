@@ -13,15 +13,15 @@ type Props = {
 
 export const EventListItem = ({ event, status }: Props) => {
   return (
-    <Card variant="outline" as={Link} to={`${PATHS.EVENTS}/${event.id}`}>
-      <CardHeader>
+    <Card justify="space-between" variant="outline" as={Link} to={`${PATHS.EVENTS}/${event.id}`}>
+      <CardHeader flexGrow={1}>
         <Heading size="md">{event.name}</Heading>
         <Heading mt={1} size="sm">
           {formatDateRange(event.startDate, event.endDate)}
         </Heading>
       </CardHeader>
 
-      <CardBody py={2}>
+      <CardBody flexGrow={0} py={2}>
         {status && (
           <HStack alignItems="center">
             <Text>Étékelés státusza:</Text>

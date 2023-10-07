@@ -1,4 +1,4 @@
-import { Button, Heading, HStack, Stack, Text, useToast, VStack } from '@chakra-ui/react'
+import { Button, Heading, HStack, Link as ChakraLink, Stack, Text, useToast, VStack } from '@chakra-ui/react'
 import { RatingRole, ratingRoleArray } from '@pontozo/common'
 import { useEffect, useState } from 'react'
 import { FaArrowLeft } from 'react-icons/fa'
@@ -89,11 +89,14 @@ export const EventDetailsPage = () => {
   return (
     <VStack alignItems="flex-start" spacing={3}>
       <HelmetTitle title={`Pontoz-O | ${event.name}`} />
-      <Heading>{event.name}</Heading>
+      <Heading>{event.name} értékelése</Heading>
       <Heading size="md">{formatDateRange(event.startDate, event.endDate)}</Heading>
       <Text>
         <b>Rendező{event.organisers.length > 1 && 'k'}:</b> {event.organisers.map((o) => o.shortName).join(', ')}
       </Text>
+      <ChakraLink color="brand.500" fontWeight="bold" href={`http://adatbank.mtfsz.hu/esemeny/show/esemeny_id/${event.id}`} target="_blank">
+        MTFSZ Adatbank esemény
+      </ChakraLink>
       <Heading size="md" mt={3}>
         Szerepkör
       </Heading>

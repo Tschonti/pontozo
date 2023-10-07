@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, AlertTitle, SimpleGrid, Text } from '@chakra-ui/react'
+import { Alert, AlertIcon, AlertTitle, Heading, Link, SimpleGrid, Text } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { useCacheContext } from 'src/api/contexts/useCacheContext'
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
@@ -28,9 +28,16 @@ export const IndexPage = () => {
       <HelmetTitle title="Pontoz-O" />
       <Alert status="warning" my={2}>
         <AlertIcon />
-        <AlertTitle>Az oldal még fejlesztés alatt áll!</AlertTitle>
+        <AlertTitle>
+          Az oldal még fejlesztés alatt áll! Visszajelzéseket és hibajelentéseket{' '}
+          <Link href="mailto:feketesamu@gmail.com?subject=Pontoz-O visszajelzés" isExternal color="brand.500">
+            emailben
+          </Link>{' '}
+          várok.
+        </AlertTitle>
       </Alert>
-      {(eventData?.length || 0) > 0 ? (
+      <Heading my={5}>Értékelhető versenyek</Heading>
+      {(eventData?.length ?? 0) > 0 ? (
         <SimpleGrid spacing={4} columns={[1, 1, 2]}>
           {eventData?.map((e) => (
             <EventListItem key={e.id} event={e} />

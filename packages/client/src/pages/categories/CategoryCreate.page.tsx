@@ -23,9 +23,9 @@ export const CategoryCreatePage = () => {
 
   const form = useForm<CreateCategoryForm>({
     values: {
-      name: data?.name || '',
-      description: data?.description || '',
-      criteria: data?.criteria || [],
+      name: data?.name ?? '',
+      description: data?.description ?? '',
+      criteria: data?.criteria ?? [],
     },
   })
 
@@ -57,7 +57,7 @@ export const CategoryCreatePage = () => {
     <VStack spacing={5} alignItems="flex-start">
       <HelmetTitle title="Pontoz-O Admin | Kategória szerkesztése" />
       <Heading>{categoryId === -1 ? 'Új kategória' : 'Kategória szerkesztése'}</Heading>
-      {!categoryEditable && <Text>TODO ide valami szöveg hogy mért nem szerkeszthető</Text>}
+      {!categoryEditable && <Text>Ez a kategória már nem szerkeszthető, mert része egy olyan szezonnak, ami már elkezdődött!</Text>}
       <FormControl isInvalid={!!errors.name}>
         <FormLabel>Név</FormLabel>
         <Input {...register('name', { required: true, disabled: !categoryEditable })} />

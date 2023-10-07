@@ -1,14 +1,15 @@
-import { HStack, Stack, Text } from '@chakra-ui/react'
+import { HStack, Stack, Text, useDisclosure } from '@chakra-ui/react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuthContext } from '../../api/contexts/useAuthContext'
 import { adminNavItems, navItems } from '../../util/navItems'
-import { onLoginClick } from '../../util/onLoginClick'
+import { LoginModal } from '../commons/LoginModal'
 
 type Props = {
   onNavigate: () => void
 }
 
 const MobileNav = ({ onNavigate }: Props) => {
+  const { isOpen, onClose, onOpen } = useDisclosure()
   const { pathname } = useLocation()
   const { isLoggedIn, isAdmin } = useAuthContext()
   const navItemsToRender = (pathname.startsWith('/admin') ? adminNavItems : navItems).filter((navItem) =>
@@ -29,10 +30,11 @@ const MobileNav = ({ onNavigate }: Props) => {
         </HStack>
       ))}
       {!isLoggedIn && (
-        <HStack cursor="pointer" onClick={onLoginClick} color="white">
+        <HStack cursor="pointer" onClick={onOpen} color="white">
           <Text textAlign="center">BEJELENTKEZÉS</Text>
         </HStack>
       )}
+      <LoginModal isOpen={isOpen} onClose={onClose} />
     </Stack>
   )
 }
