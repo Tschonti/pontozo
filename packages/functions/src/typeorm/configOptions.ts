@@ -25,7 +25,7 @@ export const DBConfig: SqlServerConnectionOptions = {
   database: DB_NAME,
   synchronize: false,
   logging: !(ENV === 'production'),
-  connectionTimeout: 60000,
+  connectionTimeout: 120000,
   entities: [
     Criterion,
     CriterionRating,
