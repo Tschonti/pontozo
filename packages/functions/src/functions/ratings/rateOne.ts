@@ -40,6 +40,9 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
     if (eventRating.userId !== user.szemely_id) {
       throw new PontozoException('Nincs jogosultságod értékelni ezt a szempontot!', 403)
     }
+    if (!eventRating.event.rateable) {
+      throw new PontozoException('Ez a verseny már nem értékelhető!', 400)
+    }
     if (criterion === null) {
       throw new PontozoException('Szempont nem található!', 404)
     }

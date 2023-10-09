@@ -7,10 +7,11 @@ type Props = {
   eventWithRating: EventWithRating
   onStartClick: () => void
   isLoading: boolean
-  disabled: boolean
+  startDisabled: boolean
+  continueDisabled: boolean
 }
 
-export const GoToRatingButton = ({ eventWithRating, onStartClick, disabled, isLoading }: Props) => {
+export const GoToRatingButton = ({ eventWithRating, onStartClick, startDisabled, isLoading, continueDisabled }: Props) => {
   if (eventWithRating.userRating) {
     let url = `${PATHS.RATINGS}/${eventWithRating.userRating.id}?categoryIdx=`
     if (eventWithRating.userRating.status === RatingStatus.STARTED) {
@@ -22,13 +23,18 @@ export const GoToRatingButton = ({ eventWithRating, onStartClick, disabled, isLo
       url += '0'
     }
     return (
-      <Button as={Link} to={url} colorScheme="brand">
+      <Button
+        as={Link}
+        to={eventWithRating.userRating.status !== RatingStatus.SUBMITTED && continueDisabled ? undefined : url}
+        colorScheme="brand"
+        isDisabled={eventWithRating.userRating.status !== RatingStatus.SUBMITTED && continueDisabled}
+      >
         {eventWithRating.userRating.status === RatingStatus.SUBMITTED ? 'Értékelésed megtekintése' : 'Értékelés folytatása'}
       </Button>
     )
   }
   return (
-    <Button colorScheme="brand" isLoading={isLoading} onClick={onStartClick} isDisabled={disabled}>
+    <Button colorScheme="brand" isLoading={isLoading} onClick={onStartClick} isDisabled={startDisabled}>
       Értékelés kezdése
     </Button>
   )

@@ -1,4 +1,4 @@
-import { Button, Heading, HStack, Link as ChakraLink, Stack, Text, useToast, VStack } from '@chakra-ui/react'
+import { Badge, Button, Heading, HStack, Link as ChakraLink, Stack, Text, useToast, VStack } from '@chakra-ui/react'
 import { RatingRole, ratingRoleArray } from '@pontozo/common'
 import { useEffect, useState } from 'react'
 import { FaArrowLeft } from 'react-icons/fa'
@@ -90,6 +90,11 @@ export const EventDetailsPage = () => {
     <VStack alignItems="flex-start" spacing={3}>
       <HelmetTitle title={`Pontoz-O | ${event.name}`} />
       <Heading>{event.name} értékelése</Heading>
+      {!event.rateable && (
+        <Badge colorScheme="red" variant="solid" fontSize="1rem">
+          Értékelés lezárult
+        </Badge>
+      )}
       <Heading size="md">{formatDateRange(event.startDate, event.endDate)}</Heading>
       <Text>
         <b>Rendező{event.organisers.length > 1 && 'k'}:</b> {event.organisers.map((o) => o.shortName).join(', ')}
@@ -105,7 +110,13 @@ export const EventDetailsPage = () => {
         aki nem megfelelő szerepkört választott, annak értékelését átsoroljuk vagy töröljük.
       </Text>
       {ratingRoleArray.map((r) => (
-        <RoleListItem key={r} role={r} onSelected={() => setRole(r)} selected={role === r} disabled={!!eventData.userRating} />
+        <RoleListItem
+          key={r}
+          role={r}
+          onSelected={() => setRole(r)}
+          selected={role === r}
+          disabled={!!eventData.userRating || !event.rateable}
+        />
       ))}
       <Heading size="md" mt={3}>
         Futamok
@@ -120,7 +131,7 @@ export const EventDetailsPage = () => {
           <StageListItem
             stage={s}
             key={s.id}
-            disabled={!!eventData.userRating}
+            disabled={!!eventData.userRating || !event.rateable}
             onChecked={(c) => onItemChecked(c, s.id)}
             checked={stageIds.includes(s.id)}
           />
@@ -133,7 +144,8 @@ export const EventDetailsPage = () => {
           isLoading={startRating.isLoading || dbQueryLoading}
           eventWithRating={eventData}
           onStartClick={onStartClick}
-          disabled={!role || !stageIds.length}
+          startDisabled={!role || !stageIds.length}
+          continueDisabled={!event.rateable}
         />
       </HStack>
     </VStack>
