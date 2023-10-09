@@ -73,7 +73,7 @@ export const UraCreatePage = () => {
       <UserSelector setUser={setUser} user={user} edit={uraId > -1} />
 
       <FormLabel>Szerepkör</FormLabel>
-      <Select placeholder="Válassz szerepkört!" value={role} onChange={(e) => setRole(e.target.value as UserRole)}>
+      <Select placeholder="Válassz szerepkört!" value={role} onChange={(e) => setRole(e.target.value as UserRole)} bg="white">
         <option value={UserRole.COACH}>Edző</option>
         <option value={UserRole.JURY}>MTFSZ Zsűri</option>
         <option value={UserRole.SITE_ADMIN}>Admin</option>

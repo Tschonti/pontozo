@@ -74,7 +74,7 @@ export const CriteriaSelector = ({ editable }: { editable: boolean }) => {
     <>
       <FormControl isInvalid={!!errors.criteria}>
         <FormLabel>Kategória szempontjai</FormLabel>
-        <VStack w="100%" alignItems="flex-start" borderRadius={6} borderWidth={1} mb={2} p={2}>
+        <VStack w="100%" alignItems="flex-start" bg="white" borderRadius={6} borderWidth={1} mb={2} p={2}>
           {watch('criteria').map((c, idx) => (
             <Box w="100%" borderRadius={6} borderWidth={1} key={c.id}>
               <HStack flexGrow={1} p={2}>

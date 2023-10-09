@@ -26,7 +26,7 @@ export const UraListPage = () => {
       </Flex>
       <VStack spacing={3} alignItems="flex-start">
         {data?.map((u) => (
-          <Box w="100%" as={Link} to={`${PATHS.USERS}/${u.id}/edit`} borderRadius={6} borderWidth={1} p={2} key={u.id}>
+          <Box w="100%" as={Link} to={`${PATHS.USERS}/${u.id}/edit`} bg="white" borderRadius={6} borderWidth={1} p={2} key={u.id}>
             <HStack spacing={2}>
               <Heading size="sm">{u.userFullName}</Heading>
               <Badge colorScheme={urColor[u.role]} variant="solid">

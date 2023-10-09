@@ -81,6 +81,7 @@ export const CategorySelector = ({ editable }: { editable: boolean }) => {
           p={2}
           onClick={watch('categories').length === 0 ? onOpen : undefined}
           cursor={watch('categories').length === 0 ? 'pointer' : undefined}
+          bg="white"
         >
           {watch('categories').map((c, idx) => (
             <Box w="100%" borderRadius={6} borderWidth={1} key={c.id}>

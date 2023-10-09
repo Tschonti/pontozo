@@ -93,7 +93,7 @@ export const SeasonCreatePage = () => {
       {!seasonEditable && <Text>Ez a szezon már nem szerkeszthető, mert már elkezdődött!</Text>}
       <FormControl isInvalid={!!errors.name}>
         <FormLabel>Név</FormLabel>
-        <Input {...register('name', { required: true, disabled: !seasonEditable })} />
+        <Input {...register('name', { required: true, disabled: !seasonEditable })} bg="white" />
         <FormErrorMessage>Kötelező megadni a szezon nevét.</FormErrorMessage>
       </FormControl>
 
@@ -109,6 +109,7 @@ export const SeasonCreatePage = () => {
                 validate: (sd, formValues) => new Date(sd) < new Date(formValues?.endDate),
                 deps: 'endDate',
               })}
+              bg="white"
             />
           </FormControl>
           <FormControl isInvalid={!!errors.endDate}>
@@ -121,6 +122,7 @@ export const SeasonCreatePage = () => {
                 validate: (ed, formValues) => new Date(ed) > new Date(formValues.startDate),
                 deps: 'startDate',
               })}
+              bg="white"
             />
           </FormControl>
         </Stack>

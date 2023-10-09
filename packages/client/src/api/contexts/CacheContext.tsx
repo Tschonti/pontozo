@@ -23,8 +23,19 @@ export const CacheProvider = ({ children }: PropsWithChildren) => {
   const [dbDataInitialLoad, setDbDataInitialLoad] = useState(true)
   const [toastTimeout, setToastTimeout] = useState<NodeJS.Timeout>()
   const toastRef = useRef<ToastId>()
-  const { data: dbData, isLoading: dbDataLoading, error: dbDataError, refetch } = useFetchRateableEventsFromDb()
-  const { data: cachedData, isLoading: cachedDataLoading, error: cachedDataError } = useFetchRateableEventsFromCache()
+  const {
+    data: dbData,
+    isLoading: dbDataLoading,
+    error: dbDataError,
+    refetch,
+    isFetchedAfterMount: dbIsFetchedAfterMount,
+  } = useFetchRateableEventsFromDb()
+  const {
+    data: cachedData,
+    isLoading: cachedDataLoading,
+    error: cachedDataError,
+    isFetchedAfterMount: cacheIsFetchedAfterMount,
+  } = useFetchRateableEventsFromCache()
   const toast = useToast()
 
   useEffect(() => {
@@ -39,26 +50,28 @@ export const CacheProvider = ({ children }: PropsWithChildren) => {
   }, [dbDataLoading, dbDataInitialLoad])
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      toastRef.current = toast({
-        duration: null,
-        position: 'top-right',
-        render: () => (
-          <Box bgColor="brand.500" color="white" display="flex" padding="12px 32px 12px 16px" borderRadius="0.375rem" alignItems="center">
-            <Spinner mr="12px" size="sm" thickness="3px" color="white" />
-            <VStack alignItems="flex-start" spacing={0}>
-              <Heading size="sm">Betöltés...</Heading>
-              <Text>Betöltés folyamatban, addig nem tudsz minden funkciót használni!</Text>
-            </VStack>
-          </Box>
-        ),
-      })
-    }, 3000)
-    setToastTimeout(timeout)
-    return () => {
-      clearTimeout(timeout)
+    if (cacheIsFetchedAfterMount && !dbIsFetchedAfterMount) {
+      const timeout = setTimeout(() => {
+        toastRef.current = toast({
+          duration: null,
+          position: 'top-right',
+          render: () => (
+            <Box bgColor="brand.500" color="white" display="flex" padding="12px 32px 12px 16px" borderRadius="0.375rem" alignItems="center">
+              <Spinner mr="12px" size="sm" thickness="3px" color="white" />
+              <VStack alignItems="flex-start" spacing={0}>
+                <Heading size="sm">Betöltés...</Heading>
+                <Text>Betöltés folyamatban, addig nem tudsz minden funkciót használni!</Text>
+              </VStack>
+            </Box>
+          ),
+        })
+      }, 1000)
+      setToastTimeout(timeout)
+      return () => {
+        clearTimeout(timeout)
+      }
     }
-  }, [toast])
+  }, [toast, cacheIsFetchedAfterMount, dbIsFetchedAfterMount])
 
   return (
     <CacheContext.Provider

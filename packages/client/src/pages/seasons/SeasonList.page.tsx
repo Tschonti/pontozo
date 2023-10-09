@@ -25,7 +25,7 @@ export const SeasonListPage = () => {
       </Flex>
       <VStack spacing={3} alignItems="flex-start">
         {data?.map((s) => (
-          <Box w="100%" as={Link} to={`${PATHS.SEASONS}/${s.id}/edit`} borderRadius={6} borderWidth={1} p={2} key={s.id}>
+          <Box w="100%" as={Link} to={`${PATHS.SEASONS}/${s.id}/edit`} bg="white" borderRadius={6} borderWidth={1} p={2} key={s.id}>
             <Heading size="sm">{s.name}</Heading>
             <Text>{`${new Date(s.startDate).toLocaleDateString()} - ${new Date(s.endDate).toLocaleDateString()}`}</Text>
           </Box>

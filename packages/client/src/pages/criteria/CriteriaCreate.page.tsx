@@ -125,38 +125,38 @@ export const CriteriaCreatePage = () => {
       {!criterionEditable && <Text>Ez a szempont már nem szerkeszthető, mert része egy olyan szezonnak, ami már elkezdődött!</Text>}
       <FormControl isInvalid={!!errors.name}>
         <FormLabel>Név</FormLabel>
-        <Input {...register('name', { required: true, disabled: !criterionEditable })} />
+        <Input {...register('name', { required: true, disabled: !criterionEditable })} bg="white" />
         <FormErrorMessage>Kötelező megadni a szempont nevét.</FormErrorMessage>
       </FormControl>
 
       <FormControl isInvalid={!!errors.description}>
         <FormLabel>Publikus leírás</FormLabel>
-        <Input {...register('description', { required: true, disabled: !criterionEditable })} />
+        <Input {...register('description', { required: true, disabled: !criterionEditable })} bg="white" />
         <FormErrorMessage>Kötelező megadni a szempont leírását.</FormErrorMessage>
       </FormControl>
       <FormControl isInvalid={!!errors.editorsNote}>
         <FormLabel>Privát leírás</FormLabel>
-        <Input {...register('editorsNote', { disabled: !criterionEditable })} />
+        <Input {...register('editorsNote', { disabled: !criterionEditable })} bg="white" />
       </FormControl>
       <Stack direction={['column', 'column', 'row']} spacing={5} w="100%">
         <FormControl isInvalid={!!errors.text0}>
           <FormLabel>0 jelentése</FormLabel>
-          <Input {...register('text0', { disabled: !criterionEditable })} />
+          <Input {...register('text0', { disabled: !criterionEditable })} bg="white" />
         </FormControl>
         <FormControl isInvalid={!!errors.text1}>
           <FormLabel>1 jelentése</FormLabel>
-          <Input {...register('text1', { disabled: !criterionEditable })} />
+          <Input {...register('text1', { disabled: !criterionEditable })} bg="white" />
         </FormControl>
       </Stack>
 
       <Stack direction={['column', 'column', 'row']} spacing={5} w="100%">
         <FormControl isInvalid={!!errors.text2}>
           <FormLabel>2 jelentése</FormLabel>
-          <Input {...register('text2', { disabled: !criterionEditable })} />
+          <Input {...register('text2', { disabled: !criterionEditable })} bg="white" />
         </FormControl>
         <FormControl isInvalid={!!errors.text3}>
           <FormLabel>3 jelentése</FormLabel>
-          <Input {...register('text3', { disabled: !criterionEditable })} />
+          <Input {...register('text3', { disabled: !criterionEditable })} bg="white" />
         </FormControl>
       </Stack>
       {/* TODO listából érkezve első alkalommal a checkbox értékek nem frissek!  */}
@@ -223,6 +223,7 @@ export const CriteriaCreatePage = () => {
                 validate: (val, formVal) => !formVal.competitorAllowed || val > 0,
                 deps: ['competitorAllowed'],
               })}
+              bg="white"
             />
             <FormErrorMessage>Kötelező megadni a szempont súlyát a szerepkörhöz.</FormErrorMessage>
           </FormControl>
@@ -238,6 +239,7 @@ export const CriteriaCreatePage = () => {
                 validate: (val, formVal) => !formVal.juryAllowed || val > 0,
                 deps: ['juryAllowed'],
               })}
+              bg="white"
             />
             <FormErrorMessage>Kötelező megadni a szempont súlyát a szerepkörhöz.</FormErrorMessage>
           </FormControl>

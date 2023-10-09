@@ -65,7 +65,7 @@ export const UserSelector = ({ setUser, user, edit }: Props) => {
           p={2}
           onClick={edit ? undefined : onModalOpen}
           cursor={edit ? 'not-allowed' : 'pointer'}
-          bg={edit ? 'gray.200' : undefined}
+          bg={edit ? 'gray.200' : 'white'}
         >
           <Heading size="sm">{user.userFullName}</Heading>
 

@@ -5,7 +5,7 @@ import { ColorfulExternalLink } from './commons/ColorfulExternalLink'
 
 export const Footer: FC = () => {
   return (
-    <Box as="footer" borderTop="1px" borderTopColor="gray.300">
+    <Box as="footer" borderTop="1px" borderTopColor="gray.300" bg="white">
       <Container
         py={5}
         as={Flex}

@@ -60,13 +60,13 @@ export const CategoryCreatePage = () => {
       {!categoryEditable && <Text>Ez a kategória már nem szerkeszthető, mert része egy olyan szezonnak, ami már elkezdődött!</Text>}
       <FormControl isInvalid={!!errors.name}>
         <FormLabel>Név</FormLabel>
-        <Input {...register('name', { required: true, disabled: !categoryEditable })} />
+        <Input {...register('name', { required: true, disabled: !categoryEditable })} bg="white" />
         <FormErrorMessage>Kötelező megadni a kategória nevét.</FormErrorMessage>
       </FormControl>
 
       <FormControl isInvalid={!!errors.description}>
         <FormLabel>Publikus leírás</FormLabel>
-        <Input {...register('description', { required: true, disabled: !categoryEditable })} />
+        <Input {...register('description', { required: true, disabled: !categoryEditable })} bg="white" />
         <FormErrorMessage>Kötelező megadni a kategória leírását.</FormErrorMessage>
       </FormControl>
       <FormProvider {...form}>
