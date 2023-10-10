@@ -40,5 +40,5 @@ export const closeRating = async (myTimer: Timer, context: InvocationContext): P
 app.timer('events-close-rating', {
   schedule: '0 0 3 * * *', // 3 AM every day
   handler: closeRating,
-  runOnStartup: true,
+  runOnStartup: false,
 })
