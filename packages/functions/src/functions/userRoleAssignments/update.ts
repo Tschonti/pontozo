@@ -17,7 +17,7 @@ export const updateURA = async (req: HttpRequest, context: InvocationContext): P
     const dto = plainToClass(UpdateURA, await req.json())
     await validateWithWhitelist(dto)
 
-    const uraRepo = (await getAppDataSource()).getRepository(UserRoleAssignment)
+    const uraRepo = (await getAppDataSource(context)).getRepository(UserRoleAssignment)
     const ura = await uraRepo.findOne({ where: { id } })
     const user = await getUserById(ura.userId)
 

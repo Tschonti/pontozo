@@ -22,7 +22,7 @@ export const getUserFromHeader = (req: HttpRequest): DbUser => {
 export const getUserFromHeaderAndAssertAdmin = async (req: HttpRequest, context: InvocationContext): Promise<DbUser> => {
   const user = getUserFromHeader(req)
   context.log(`User #${user.szemely_id} attempting to access entity reserved for admins`)
-  const ura = await (await getAppDataSource())
+  const ura = await (await getAppDataSource(context))
     .getRepository(UserRoleAssignment)
     .findOne({ where: { userId: user.szemely_id, role: UserRole.SITE_ADMIN } })
   if (!ura) {

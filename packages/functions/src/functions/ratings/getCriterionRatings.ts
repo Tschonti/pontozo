@@ -21,7 +21,7 @@ export const getCriterionRatings = async (req: HttpRequest, context: InvocationC
     const dto = plainToClass(GetCriterionRatings, await req.json())
     await validateWithWhitelist(dto)
 
-    const ads = await getAppDataSource()
+    const ads = await getAppDataSource(context)
     const eventRatingRepo = ads.getRepository(EventRating)
     const criterionRatingRepo = ads.getRepository(CriterionRating)
 

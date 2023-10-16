@@ -17,7 +17,7 @@ export const getOneEvent = async (req: HttpRequest, context: InvocationContext):
     }
 
     const user = getUserFromHeader(req)
-    const ads = await getAppDataSource()
+    const ads = await getAppDataSource(context)
     const eventQuery = ads.getRepository(Event).findOne({ where: { id: eventId }, relations: { organisers: true, stages: true } })
     const userRatingQuery = ads
       .getRepository(EventRating)

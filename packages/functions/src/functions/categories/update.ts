@@ -18,7 +18,7 @@ export const updateCategory = async (req: HttpRequest, context: InvocationContex
     const dto = plainToClass(CreateCategory, await req.json())
     await validateWithWhitelist(dto)
 
-    const ads = await getAppDataSource()
+    const ads = await getAppDataSource(context)
     const criteria = await ads.getRepository(Criterion).find({ where: { id: In(dto.criterionIds) } })
     let category = await ads.manager.findOne(Category, {
       where: { id },

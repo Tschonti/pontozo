@@ -9,7 +9,7 @@ export const getURAs = async (req: HttpRequest, context: InvocationContext): Pro
   try {
     await getUserFromHeaderAndAssertAdmin(req, context)
 
-    const urasRepo = (await getAppDataSource()).getRepository(UserRoleAssignment)
+    const urasRepo = (await getAppDataSource(context)).getRepository(UserRoleAssignment)
     const uras = await urasRepo.find()
 
     return {

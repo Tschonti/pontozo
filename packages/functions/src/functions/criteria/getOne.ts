@@ -10,7 +10,7 @@ export const getCriterion = async (req: HttpRequest, context: InvocationContext)
   try {
     await getUserFromHeaderAndAssertAdmin(req, context)
     const id = validateId(req)
-    const criterionRepo = (await getAppDataSource()).getRepository(Criterion)
+    const criterionRepo = (await getAppDataSource(context)).getRepository(Criterion)
     const criterion = await criterionRepo.findOne({ where: { id }, relations: { categories: { category: { seasons: { season: true } } } } })
     if (!criterion) {
       throw new PontozoException('A szempont nem található!', 404)

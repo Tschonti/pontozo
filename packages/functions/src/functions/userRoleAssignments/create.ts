@@ -17,7 +17,7 @@ export const createURA = async (req: HttpRequest, context: InvocationContext): P
     await validateWithWhitelist(dto)
 
     const user = await getUserById(dto.userId)
-    const uraRepo = (await getAppDataSource()).getRepository(UserRoleAssignment)
+    const uraRepo = (await getAppDataSource(context)).getRepository(UserRoleAssignment)
     const res = await uraRepo.insert({
       ...dto,
       userFullName: `${user.vezeteknev} ${user.keresztnev}`,

@@ -15,7 +15,7 @@ export const updateCriteria = async (req: HttpRequest, context: InvocationContex
     const dto = plainToClass(CreateCriteria, await req.json())
     await validateWithWhitelist(dto)
 
-    const criterionRepo = (await getAppDataSource()).getRepository(Criterion)
+    const criterionRepo = (await getAppDataSource(context)).getRepository(Criterion)
     const criterion = await criterionRepo.findOne({ where: { id }, relations: { categories: { category: { seasons: { season: true } } } } })
     if (criterion === null) {
       throw new PontozoException('A szempont nem található!', 404)

@@ -10,7 +10,7 @@ export const duplicateCriterion = async (req: HttpRequest, context: InvocationCo
   try {
     const user = await getUserFromHeaderAndAssertAdmin(req, context)
     const id = validateId(req)
-    const criterionRepo = (await getAppDataSource()).getRepository(Criterion)
+    const criterionRepo = (await getAppDataSource(context)).getRepository(Criterion)
     const criterion = await criterionRepo.findOne({ where: { id } })
     if (!criterion) {
       throw new PontozoException('A szempont nem található!', 404)

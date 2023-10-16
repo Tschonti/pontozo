@@ -10,7 +10,7 @@ export const getCategory = async (req: HttpRequest, context: InvocationContext):
   try {
     await getUserFromHeaderAndAssertAdmin(req, context)
     const id = validateId(req)
-    const categoryRepo = (await getAppDataSource()).getRepository(Category)
+    const categoryRepo = (await getAppDataSource(context)).getRepository(Category)
     const category = await categoryRepo.findOne({ where: { id }, relations: { criteria: { criterion: true }, seasons: { season: true } } })
     if (!category) {
       throw new PontozoException('A kategória nem taláálható!', 404)

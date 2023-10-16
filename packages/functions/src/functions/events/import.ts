@@ -15,7 +15,7 @@ import { APIM_HOST, APIM_KEY } from '../../util/env'
 export const importEvents = async (myTimer: Timer, context: InvocationContext): Promise<void> => {
   try {
     const pevents = getRateableEvents(APIM_KEY, APIM_HOST)
-    const pads = getAppDataSource()
+    const pads = getAppDataSource(context)
     const predis = getRedisClient(context)
     const [events, ads, redisClient] = await Promise.all([pevents, pads, predis])
 

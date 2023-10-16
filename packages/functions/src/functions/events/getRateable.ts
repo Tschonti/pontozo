@@ -8,7 +8,7 @@ import { handleException } from '../../util/handleException'
  */
 export const getRateableEvents = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
-    const events = await (await getAppDataSource())
+    const events = await (await getAppDataSource(context))
       .getRepository(Event)
       .find({ where: { rateable: true }, relations: { organisers: true } })
     return {

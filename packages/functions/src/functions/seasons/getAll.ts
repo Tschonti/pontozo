@@ -9,7 +9,7 @@ export const getSeasons = async (req: HttpRequest, context: InvocationContext): 
   try {
     await getUserFromHeaderAndAssertAdmin(req, context)
 
-    const seasonRepo = (await getAppDataSource()).getRepository(Season)
+    const seasonRepo = (await getAppDataSource(context)).getRepository(Season)
     const seasons = await seasonRepo.find({ relations: { categories: true } })
     return {
       jsonBody: seasons,

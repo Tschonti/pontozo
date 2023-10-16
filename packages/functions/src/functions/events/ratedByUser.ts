@@ -10,7 +10,7 @@ import { handleException } from '../../util/handleException'
 export const getRatedEvents = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
     const user = getUserFromHeader(req)
-    const eventRatings = await (await getAppDataSource())
+    const eventRatings = await (await getAppDataSource(context))
       .getRepository(EventRating)
       .find({ where: { userId: user.szemely_id }, relations: { event: { organisers: true } } })
 

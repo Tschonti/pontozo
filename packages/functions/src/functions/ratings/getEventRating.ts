@@ -1,5 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
-import { PontozoException } from '../../../../common/src'
+import { PontozoException } from '@pontozo/common'
 import { getUserFromHeader } from '../../service/auth.service'
 import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
@@ -16,7 +16,7 @@ export const getEventRating = async (req: HttpRequest, context: InvocationContex
     }
 
     const user = getUserFromHeader(req)
-    const ratingRepo = (await getAppDataSource()).getRepository(EventRating)
+    const ratingRepo = (await getAppDataSource(context)).getRepository(EventRating)
     const eventRating = await ratingRepo.findOne({
       where: { eventId, userId: user.szemely_id },
       relations: { event: { organisers: true, stages: true } },

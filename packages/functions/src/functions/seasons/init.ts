@@ -12,7 +12,7 @@ import { ENV } from '../../util/env'
  */
 export const initSeason = async (myTimer: Timer, context: InvocationContext): Promise<void> => {
   try {
-    const ads = await getAppDataSource()
+    const ads = await getAppDataSource(context)
     const season = await ads.getRepository(Season).findOne({
       where: currentSeasonFilter,
       relations: { categories: { category: { criteria: { criterion: true } } }, criterionCount: true },

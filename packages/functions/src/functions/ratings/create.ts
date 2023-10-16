@@ -25,7 +25,7 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
     ) {
       throw new PontozoException('Ebben a szerepkörben te nem értékelhetsz!', 403)
     }
-    const ads = await getAppDataSource()
+    const ads = await getAppDataSource(context)
     const eventRepo = ads.getRepository(Event)
     const ratingRepo = ads.getRepository(EventRating)
 

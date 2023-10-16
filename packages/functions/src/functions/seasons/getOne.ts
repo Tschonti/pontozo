@@ -10,7 +10,7 @@ export const getSeason = async (req: HttpRequest, context: InvocationContext): P
   try {
     await getUserFromHeaderAndAssertAdmin(req, context)
     const id = validateId(req)
-    const seasonRepo = (await getAppDataSource()).getRepository(Season)
+    const seasonRepo = (await getAppDataSource(context)).getRepository(Season)
     const season = await seasonRepo.findOne({ where: { id }, relations: { categories: { category: true } } })
     if (!season) {
       throw new PontozoException('A szezon nem található!', 404)

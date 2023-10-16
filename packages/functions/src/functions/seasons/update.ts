@@ -17,7 +17,7 @@ export const updateSeason = async (req: HttpRequest, context: InvocationContext)
     const id = validateId(req)
     const dto = plainToClass(CreateSeason, await req.json())
     await validateWithWhitelist(dto)
-    const ads = await getAppDataSource()
+    const ads = await getAppDataSource(context)
     const categories = await ads.getRepository(Category).find({ where: { id: In(dto.categoryIds) } })
     let season = await ads.manager.findOne(Season, { where: { id }, relations: { categories: { category: true } } })
     if (season === null) {

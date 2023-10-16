@@ -18,7 +18,7 @@ export const login = async (req: HttpRequest, context: InvocationContext): Promi
 
     const oauthToken = await getToken(authorizationCode)
     const user = await getUser(oauthToken.access_token)
-    const dataSource = await Promise.race([getAppDataSource(), getRedisClient(context)])
+    const dataSource = await Promise.race([getAppDataSource(context), getRedisClient(context)])
 
     let roles = []
     if (dataSource instanceof DataSource) {

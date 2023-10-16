@@ -17,7 +17,7 @@ export const createSeason = async (req: HttpRequest, context: InvocationContext)
     const dto = plainToClass(CreateSeason, await req.json())
     await validateWithWhitelist(dto)
 
-    const ads = await getAppDataSource()
+    const ads = await getAppDataSource(context)
     const conflictingSeasons = await ads.getRepository(Season).find({
       where: [
         { startDate: Between(dto.startDate, dto.endDate) },

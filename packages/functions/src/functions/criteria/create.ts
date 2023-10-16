@@ -21,7 +21,7 @@ export const createCriteria = async (req: HttpRequest, context: InvocationContex
       throw new PontozoException('A szempont súlyát kötelező megadni!', 400)
     }
 
-    const criterionRepo = (await getAppDataSource()).getRepository(Criterion)
+    const criterionRepo = (await getAppDataSource(context)).getRepository(Criterion)
     const res = await criterionRepo.insert({ ...dto, roles: JSON.stringify(dto.roles) })
 
     context.log(`User #${user.szemely_id} created criterion #${res.identifiers[0].id}`)

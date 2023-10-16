@@ -23,7 +23,7 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
     const user = getUserFromHeader(req)
     const dto = plainToClass(CreateCriterionRating, await req.json())
     await validateWithWhitelist(dto)
-    const ads = await getAppDataSource()
+    const ads = await getAppDataSource(context)
     const eventRatingRepo = ads.getRepository(EventRating)
     const criterionRepo = ads.getRepository(Criterion)
 

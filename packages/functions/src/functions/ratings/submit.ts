@@ -14,7 +14,7 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
   try {
     const id = validateId(req)
     const user = getUserFromHeader(req)
-    const ads = await getAppDataSource()
+    const ads = await getAppDataSource(context)
     const eventRatingRepo = ads.getRepository(EventRating)
     const rating = await eventRatingRepo.findOne({
       where: { id },

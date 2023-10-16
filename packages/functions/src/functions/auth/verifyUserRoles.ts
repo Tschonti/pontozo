@@ -9,7 +9,7 @@ import { handleException } from '../../util/handleException'
 export const verifyUserRoles = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
     const user = getUserFromHeader(req)
-    const ads = await getAppDataSource()
+    const ads = await getAppDataSource(context)
 
     const roles = (await ads.getRepository(UserRoleAssignment).find({ where: { userId: user.szemely_id } })).map((r) => r.role)
     const jwtToken = jwt.sign({ ...user, roles }, JWT_SECRET, { expiresIn: '2 days' })

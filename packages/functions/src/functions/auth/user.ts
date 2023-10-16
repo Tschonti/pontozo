@@ -8,7 +8,7 @@ import { handleException } from '../../util/handleException'
 export const currentUser = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
     const user = getUserFromHeader(req)
-    const roles = await (await getAppDataSource()).getRepository(UserRoleAssignment).find({ where: { userId: user.szemely_id } })
+    const roles = await (await getAppDataSource(context)).getRepository(UserRoleAssignment).find({ where: { userId: user.szemely_id } })
     return {
       jsonBody: { ...user, roles: roles.map((r) => r.role) } as DbUser,
     }

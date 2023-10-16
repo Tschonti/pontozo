@@ -9,7 +9,7 @@ export const getCategories = async (req: HttpRequest, context: InvocationContext
   try {
     await getUserFromHeaderAndAssertAdmin(req, context)
 
-    const categoryRepo = (await getAppDataSource()).getRepository(Category)
+    const categoryRepo = (await getAppDataSource(context)).getRepository(Category)
     const categories = await categoryRepo.find({ relations: { criteria: true } })
     return {
       jsonBody: categories,

@@ -18,7 +18,7 @@ export const turnPage = async (req: HttpRequest, context: InvocationContext): Pr
     const user = getUserFromHeader(req)
     const dto = plainToClass(PageTurn, await req.json())
     await validateWithWhitelist(dto)
-    const ads = await getAppDataSource()
+    const ads = await getAppDataSource(context)
     const eventRatingRepo = ads.getRepository(EventRating)
 
     const eventRating = await eventRatingRepo.findOne({ where: { id }, relations: { event: true } })

@@ -17,7 +17,7 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
       throw new PontozoException('Érvénytelen azonosító!', 400)
     }
     const user = getUserFromHeader(req)
-    const ratingRepo = (await getAppDataSource()).getRepository(EventRating)
+    const ratingRepo = (await getAppDataSource(context)).getRepository(EventRating)
     const eventRatingAndEvent = await ratingRepo.findOne({
       where: { id: ratingId },
       relations: { event: { season: { categories: { category: { criteria: { criterion: true } } } } }, stages: true },

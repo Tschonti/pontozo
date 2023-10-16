@@ -9,7 +9,7 @@ import { getAppDataSource } from '../../typeorm/getConfig'
  */
 export const closeRating = async (myTimer: Timer, context: InvocationContext): Promise<void> => {
   try {
-    const pads = getAppDataSource()
+    const pads = getAppDataSource(context)
     const predis = getRedisClient(context)
     const [ads, redisClient] = await Promise.all([pads, predis])
 

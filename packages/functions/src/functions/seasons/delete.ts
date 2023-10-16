@@ -10,7 +10,7 @@ export const deleteSeason = async (req: HttpRequest, context: InvocationContext)
     const user = await getUserFromHeaderAndAssertAdmin(req, context)
 
     const id = validateId(req)
-    const seasonRepo = (await getAppDataSource()).getRepository(Season)
+    const seasonRepo = (await getAppDataSource(context)).getRepository(Season)
     const res = await seasonRepo.delete({ id })
 
     context.log(`User #${user.szemely_id} created season #${id}`)

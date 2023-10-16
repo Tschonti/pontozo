@@ -9,7 +9,7 @@ export const deleteCriterion = async (req: HttpRequest, context: InvocationConte
   try {
     const user = await getUserFromHeaderAndAssertAdmin(req, context)
     const id = validateId(req)
-    const criterionRepo = (await getAppDataSource()).getRepository(Criterion)
+    const criterionRepo = (await getAppDataSource(context)).getRepository(Criterion)
     const res = await criterionRepo.delete({ id })
 
     if (res.affected > 0) {

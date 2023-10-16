@@ -11,7 +11,7 @@ export const deleteURA = async (req: HttpRequest, context: InvocationContext): P
     const user = await getUserFromHeaderAndAssertAdmin(req, context)
 
     const id = validateId(req)
-    const [redisClient, ads] = await Promise.all([getRedisClient(context), getAppDataSource()])
+    const [redisClient, ads] = await Promise.all([getRedisClient(context), getAppDataSource(context)])
     const uraRepo = ads.getRepository(UserRoleAssignment)
     const ura = await uraRepo.findOne({ where: { id } })
     const res = await uraRepo.delete({ id })

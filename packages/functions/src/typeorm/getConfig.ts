@@ -1,10 +1,16 @@
+import { InvocationContext } from '@azure/functions'
 import { DataSource } from 'typeorm'
 import { DB_ADMIN_PWD, DB_ADMIN_USER } from '../util/env'
 import { DBConfig } from './configOptions'
 
-export const getAppDataSource = async () => {
+export const getAppDataSource = async (context: InvocationContext) => {
   const ads = new DataSource(DBConfig)
-  return await ads.initialize()
+  try {
+    return await ads.initialize()
+  } catch (e) {
+    context.warn('Connection to DB failed, retrying...', e)
+    return await ads.initialize()
+  }
 }
 
 export const getAdminDataSource = async () => {

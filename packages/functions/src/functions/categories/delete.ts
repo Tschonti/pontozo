@@ -9,7 +9,7 @@ export const deleteCategory = async (req: HttpRequest, context: InvocationContex
   try {
     const user = await getUserFromHeaderAndAssertAdmin(req, context)
     const id = validateId(req)
-    const categoryRepo = (await getAppDataSource()).getRepository(Category)
+    const categoryRepo = (await getAppDataSource(context)).getRepository(Category)
     const res = await categoryRepo.delete({ id })
 
     if (res.affected > 0) {
