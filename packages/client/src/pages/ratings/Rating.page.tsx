@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { useParams } from 'react-router-dom'
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
+import { RatingStatus } from '../../../../common/src'
 import { useRatingContext } from '../../api/contexts/useRatingContext'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { CategoryWithCriteriaList } from './components/CategoryWithCriteriaList'
@@ -27,9 +28,11 @@ export const RatingPage = () => {
         <Button leftIcon={<FaChevronLeft />} onClick={() => previousCategory()}>
           {hasPrev ? 'Előző' : 'Vissza a versenyhez'}
         </Button>
-        <Button rightIcon={<FaChevronRight />} colorScheme="brand" onClick={() => nextCategory()}>
-          {hasNext ? 'Következő' : 'Véglegesítés'}
-        </Button>
+        {(eventRatingInfo?.status === RatingStatus.STARTED || hasNext) && (
+          <Button rightIcon={<FaChevronRight />} colorScheme="brand" onClick={() => nextCategory()}>
+            {hasNext ? 'Következő' : 'Véglegesítés'}
+          </Button>
+        )}
       </HStack>
     </>
   )

@@ -1,4 +1,5 @@
 import { Box, Button, Grid, Heading, HStack, Stack, useMediaQuery } from '@chakra-ui/react'
+import { RatingStatus } from '@pontozo/common'
 import { useEffect, useState } from 'react'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
@@ -71,9 +72,11 @@ export const DesktopRatingProgressBar = () => {
           <Button color="brand.500" leftIcon={<FaChevronLeft />} onClick={() => previousCategory()} variant="ghost">
             {hasPrev ? 'Előző' : 'Vissza'}
           </Button>
-          <Button color="brand.500" rightIcon={<FaChevronRight />} onClick={() => nextCategory()} variant="ghost">
-            {hasNext ? 'Következő' : 'Véglegesítés'}
-          </Button>
+          {(eventRatingInfo.status === RatingStatus.STARTED || hasNext) && (
+            <Button color="brand.500" rightIcon={<FaChevronRight />} onClick={() => nextCategory()} variant="ghost">
+              {hasNext ? 'Következő' : 'Véglegesítés'}
+            </Button>
+          )}
         </HStack>
       )}
     </Box>
