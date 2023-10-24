@@ -28,8 +28,12 @@ export const closeRating = async (myTimer: Timer, context: InvocationContext): P
 
     await eventRepo.save(toArchive)
     const redisKeysToDelete = toArchive.map((e) => `event:${e.id}`)
+    let deleted = 0
     if (redisKeysToDelete.length > 0) {
-      await redisClient.del(redisKeysToDelete)
+      deleted = await redisClient.del(redisKeysToDelete)
+    }
+    if (toArchive.length !== deleted) {
+      context.warn(`${toArchive.length} events archived, but ${deleted} events deleted from cache!`)
     }
     context.log(`Closed the rating session for ${toArchive.length} event(s)`)
   } catch (error) {

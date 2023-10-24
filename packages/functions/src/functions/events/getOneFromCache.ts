@@ -1,6 +1,7 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { PontozoException } from '@pontozo/common'
 import { getRedisClient } from '../../redis/redisClient'
+import { getUserFromHeader } from '../../service/auth.service'
 import { handleException } from '../../util/handleException'
 
 /**
@@ -13,6 +14,7 @@ export const getOneEventFromCache = async (req: HttpRequest, context: Invocation
     if (isNaN(eventId)) {
       throw new PontozoException('Érvénytelen azonosító!', 400)
     }
+    getUserFromHeader(req)
 
     const redisClient = await getRedisClient(context)
     const event = await redisClient.get(`event:${eventId}`)

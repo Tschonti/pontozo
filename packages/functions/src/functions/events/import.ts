@@ -29,51 +29,49 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
       context.log('No active season, skipping event import...')
       return
     }
-    const eventsToSave = events
-      .filter((e) => e.esemeny_id === 7838)
-      .map((e) => {
-        const event = eventRepo.create({
-          id: e.esemeny_id,
-          name: e.nev_1,
-          type: e.tipus,
-          startDate: e.datum_tol,
-          endDate: e.datum_ig,
-          highestRank: getHighestRank(e),
-          seasonId: season.id,
-          stages: [],
-          organisers: [],
-        })
-
-        event.stages.push(
-          ...e.programok.filter(stageFilter).map((s, idx) =>
-            stageRepo.create({
-              id: s.program_id,
-              eventId: event.id,
-              name: s.nev_1 ?? `${idx + 1}. futam`,
-              disciplineId: s.futam.versenytav_id,
-              startTime: s.idopont_tol,
-              endTime: s.idopont_ig,
-              rank: s.futam.rangsorolo,
-            })
-          )
-        )
-
-        event.organisers.push(
-          ...e.rendezok.map((o) =>
-            clubRepo.create({
-              id: o.szervezet_id,
-              code: o.kod,
-              shortName: o.rovid_nev_1,
-              longName: o.nev_1,
-            })
-          )
-        )
-        return event
+    const eventsToSave = events.map((e) => {
+      const event = eventRepo.create({
+        id: e.esemeny_id,
+        name: e.nev_1,
+        type: e.tipus,
+        startDate: e.datum_tol,
+        endDate: e.datum_ig,
+        highestRank: getHighestRank(e),
+        seasonId: season.id,
+        stages: [],
+        organisers: [],
       })
+
+      event.stages.push(
+        ...e.programok.filter(stageFilter).map((s, idx) =>
+          stageRepo.create({
+            id: s.program_id,
+            eventId: event.id,
+            name: s.nev_1 ?? `${idx + 1}. futam`,
+            disciplineId: s.futam.versenytav_id,
+            startTime: s.idopont_tol,
+            endTime: s.idopont_ig,
+            rank: s.futam.rangsorolo,
+          })
+        )
+      )
+
+      event.organisers.push(
+        ...e.rendezok.map((o) =>
+          clubRepo.create({
+            id: o.szervezet_id,
+            code: o.kod,
+            shortName: o.rovid_nev_1,
+            longName: o.nev_1,
+          })
+        )
+      )
+      return event
+    })
 
     const [_dbres, ...redisResults] = await Promise.all([
       eventRepo.save(eventsToSave),
-      ...eventsToSave.map((event) => redisClient.set(`event:${event.id}`, JSON.stringify(event))),
+      ...eventsToSave.map((event) => redisClient.set(`event:${event.id}`, JSON.stringify(event), { EX: (7 * 24 + 15) * 60 * 60 })), // expires the next Monday at 3 AM
     ])
     context.log(
       `${eventsToSave.length} events created or updated in db, ${
