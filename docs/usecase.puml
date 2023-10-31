@@ -1,0 +1,28 @@
+@startuml usecase
+left to right direction
+
+(Értékelhető versenyek megtekintése) as v1
+(Értékelhető versenyek értékelése) as v2
+(Saját értékeléseid megtekintése) as v6
+
+(Szempontok módosítása) as a1
+(Kategóriák módosítása) as a2
+(Szezonok módosítása) as a3
+(Felahsználók jogainak módosítása) as a4
+
+:Tájfutó felhasználó: as v
+:Adminisztrátor: as a
+
+v --> v1
+v --> v2
+v --> v6
+
+v1 <-- a
+v2 <-- a
+v6 <-- a
+a1 <-- a
+a2 <-- a
+a3 <-- a
+a4 <-- a
+
+@enduml
