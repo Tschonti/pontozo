@@ -1,4 +1,4 @@
-import { app, InvocationContext, Timer } from '@azure/functions'
+import { InvocationContext, Timer } from '@azure/functions'
 import { getRedisClient } from '../../redis/redisClient'
 import Event from '../../typeorm/entities/Event'
 import { getAppDataSource } from '../../typeorm/getConfig'
@@ -41,8 +41,9 @@ export const closeRating = async (myTimer: Timer, context: InvocationContext): P
   }
 }
 
+/* Disabling this function until the end of the winter period, so the testing events will stay rateable
 app.timer('events-close-rating', {
   schedule: '0 0 3 * * *', // 3 AM every day
   handler: closeRating,
   runOnStartup: false,
-})
+})*/

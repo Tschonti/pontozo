@@ -1,4 +1,4 @@
-import { app, InvocationContext, Timer } from '@azure/functions'
+import { InvocationContext, Timer } from '@azure/functions'
 import { getHighestRank, getRateableEvents, stageFilter } from '@pontozo/common'
 import { getRedisClient } from '../../redis/redisClient'
 import Club from '../../typeorm/entities/Club'
@@ -83,8 +83,9 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
   }
 }
 
+/* Disabling this function until the end of the winter period, so only the testing events will be rateable
 app.timer('events-import', {
   schedule: '0 0 12 * * *', // 12 PM every day (noon)
   handler: importEvents,
   runOnStartup: false,
-})
+})*/
