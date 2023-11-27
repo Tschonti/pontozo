@@ -12,10 +12,10 @@ The setup for local development is time consuming and requires access to some re
 
 You'll need the following applications:
 
-- VS Code with the Azure Functions extension v1.10.4 or above and the Nx extension
-- Node.js 18.x or above
-- Azure Functions Core Tools v4.0.5382 or above
-- Azure Storage Emulator
+- [VS Code](https://code.visualstudio.com/) with the [Azure Functions extension v1.10.4 or above](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions) and the [Nx Console extension](https://marketplace.visualstudio.com/items?itemName=nrwl.angular-console)
+- [Node.js 18.x or above](https://nodejs.org/en)
+- [Azure Functions Core Tools v4.0.5382 or above](https://github.com/Azure/azure-functions-core-tools/blob/v4.x/README.md#windows)
+- [Azure Storage Emulator](https://learn.microsoft.com/en-us/azure/storage/common/storage-use-emulator)
 
 You'll need to be able to connect to the following services:
 
@@ -38,7 +38,7 @@ Fill with the following values:
     "CLIENT_ID": "<client id of your registered app at MTFSZ SSO>",
     "CLIENT_SECRET": "<client secret of your registered app at MTFSZ SSO>",
     "JWT_SECRET": "a very secret value dont share it with anyone",
-    "ADMINS": "<array of MTFSZ users that the seed function will set as admin>",
+    "ADMINS": "<array of MTFSZ users that the seed function will set as admin (optional)>",
     "WEBSITE_RUN_FROM_PACKAGE": "1",
     "REDIS_HOST": "<host url of your redis instance>",
     "REDIS_PORT": "<port of your redis instance>",
