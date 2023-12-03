@@ -65,13 +65,15 @@ VITE_APIM_KEY=<subscription key for your APIM instance>
 PORT=3001
 ```
 
-Install the dependencies:
+Then start the Azure Storage Emulator. Make sure that the Azure SQL or MSSQL database and Redis is also running.
+
+Next, install the dependencies:
 
 ```
 npm i
 ```
 
-Then start the frontend and backend with Nx:
+Finally, start the frontend and backend with Nx (in separate terminals):
 
 ```
 nx run functions:start
