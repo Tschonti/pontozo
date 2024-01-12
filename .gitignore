@@ -41,3 +41,4 @@ Thumbs.db
 .env
 local.settings.json
 az-login.bat
+/.nx/cache

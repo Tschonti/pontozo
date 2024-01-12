@@ -20,7 +20,7 @@
       "defaultConfiguration": "prod",
       "configurations": {
         "prod": {
-          "name": "pontozo"
+          "name": "pontozo-api"
         }
       }
     }

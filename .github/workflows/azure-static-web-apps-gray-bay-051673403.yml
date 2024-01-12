@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     env:
-      VITE_FUNC_HOST: https://pontozo.azurewebsites.net
+      VITE_FUNC_HOST: https://pontozo-api.azurewebsites.net
       VITE_APIM_HOST: https://pontozoapim.azure-api.net
       VITE_APIM_KEY: ${{ secrets.APIM_KEY }}
       VITE_CLIENT_ID: ${{ secrets.CLIENT_ID }}
