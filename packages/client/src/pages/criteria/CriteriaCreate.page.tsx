@@ -1,4 +1,7 @@
 import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
   Badge,
   Button,
   Checkbox,
@@ -12,7 +15,6 @@ import {
   SimpleGrid,
   Stack,
   Switch,
-  Text,
   useToast,
   VStack,
 } from '@chakra-ui/react'
@@ -122,7 +124,12 @@ export const CriteriaCreatePage = () => {
         </HStack>
       </HStack>
 
-      {!criterionEditable && <Text>Ez a szempont már nem szerkeszthető, mert része egy olyan szezonnak, ami már elkezdődött!</Text>}
+      {!criterionEditable && (
+        <Alert status="error">
+          <AlertIcon />
+          <AlertTitle>Ez a szempont nem szerkeszthető, mert része egy olyan szezonnak, ami már elkezdődött!</AlertTitle>
+        </Alert>
+      )}
       <FormControl isInvalid={!!errors.name}>
         <FormLabel>Név</FormLabel>
         <Input {...register('name', { required: true, disabled: !criterionEditable })} bg="white" />

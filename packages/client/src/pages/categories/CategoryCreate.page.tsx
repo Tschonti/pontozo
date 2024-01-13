@@ -1,4 +1,18 @@
-import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, HStack, Input, Text, VStack } from '@chakra-ui/react'
+import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  Button,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Heading,
+  HStack,
+  Input,
+  useToast,
+  VStack,
+} from '@chakra-ui/react'
 import { CreateCategoryForm } from '@pontozo/common'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa'
@@ -9,6 +23,7 @@ import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import {
   useCreateCategoryMutation,
   useDeleteCategoryMutation,
+  useDuplicateCategoryMutation,
   useFetchCategory,
   useUpdateCategoryMutation,
 } from '../../api/hooks/categoryHooks'
@@ -35,9 +50,11 @@ export const CategoryCreatePage = () => {
     formState: { errors },
   } = form
   const navigate = useNavigate()
+  const toast = useToast()
   const createMutation = useCreateCategoryMutation()
   const updateMutation = useUpdateCategoryMutation(categoryId)
   const deleteMutation = useDeleteCategoryMutation(categoryId)
+  const duplicateMutation = useDuplicateCategoryMutation(categoryId)
 
   const onSubmit: SubmitHandler<CreateCategoryForm> = ({ criteria, ...restOfData }) => {
     if (categoryId === -1) {
@@ -45,6 +62,15 @@ export const CategoryCreatePage = () => {
     } else {
       updateMutation.mutate({ ...restOfData, criterionIds: criteria.map((c) => c.id) }, { onSuccess: () => navigate(PATHS.CATEGORIES) })
     }
+  }
+
+  const onDuplicateClick = () => {
+    duplicateMutation.mutate(undefined, {
+      onSuccess: (res) => {
+        navigate(`${PATHS.CATEGORIES}/${res.id}/edit`)
+        toast({ title: 'Kategória duplikálva!', description: 'Most már az újonnan létrejött kategóriát szerkeszted!', status: 'success' })
+      },
+    })
   }
 
   if (isLoading && isFetching) {
@@ -57,7 +83,13 @@ export const CategoryCreatePage = () => {
     <VStack spacing={5} alignItems="flex-start">
       <HelmetTitle title="Pontoz-O Admin | Kategória szerkesztése" />
       <Heading>{categoryId === -1 ? 'Új kategória' : 'Kategória szerkesztése'}</Heading>
-      {!categoryEditable && <Text>Ez a kategória már nem szerkeszthető, mert része egy olyan szezonnak, ami már elkezdődött!</Text>}
+
+      {!categoryEditable && (
+        <Alert status="error">
+          <AlertIcon />
+          <AlertTitle>Ez a kategória nem szerkeszthető, mert része egy olyan szezonnak, ami már elkezdődött!</AlertTitle>
+        </Alert>
+      )}
       <FormControl isInvalid={!!errors.name}>
         <FormLabel>Név</FormLabel>
         <Input {...register('name', { required: true, disabled: !categoryEditable })} bg="white" />
@@ -78,6 +110,11 @@ export const CategoryCreatePage = () => {
           Vissza
         </Button>
         <HStack spacing={1}>
+          {categoryId > -1 && (
+            <Button colorScheme="brand" onClick={onDuplicateClick}>
+              Duplikálás
+            </Button>
+          )}
           {categoryId > -1 && (
             <ConfirmDialogButton
               confirmAction={() => deleteMutation.mutate(undefined, { onSuccess: () => navigate(PATHS.CATEGORIES) })}

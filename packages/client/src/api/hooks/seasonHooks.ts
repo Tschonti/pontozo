@@ -33,3 +33,7 @@ export const useUpdateSeasonMutation = (seasonId: number) => {
 export const useDeleteSeasonMutation = (seasonId: number) => {
   return useMutation<CreateResponse[], PontozoError>(async () => (await functionAxios.delete(`/seasons/${seasonId}`)).data)
 }
+
+export const useDuplicateSeasonMutation = (seasonId: number) => {
+  return useMutation<Season, Error>(async () => (await functionAxios.post(`/seasons/${seasonId}/duplicate`)).data)
+}

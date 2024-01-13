@@ -1,4 +1,7 @@
 import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
   Button,
   Flex,
   FormControl,
@@ -8,7 +11,6 @@ import {
   HStack,
   Input,
   Stack,
-  Text,
   useToast,
   VStack,
 } from '@chakra-ui/react'
@@ -21,7 +23,13 @@ import { ConfirmDialogButton } from 'src/components/commons/ConfirmDialogButton'
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { onError } from 'src/util/onError'
-import { useCreateSeasonMutation, useDeleteSeasonMutation, useFetchSeason, useUpdateSeasonMutation } from '../../api/hooks/seasonHooks'
+import {
+  useCreateSeasonMutation,
+  useDeleteSeasonMutation,
+  useDuplicateSeasonMutation,
+  useFetchSeason,
+  useUpdateSeasonMutation,
+} from '../../api/hooks/seasonHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 import { CategorySelector } from './components/CategorySelector'
@@ -51,6 +59,7 @@ export const SeasonCreatePage = () => {
   const createMutation = useCreateSeasonMutation()
   const updateMutation = useUpdateSeasonMutation(seasonId)
   const deleteMutation = useDeleteSeasonMutation(seasonId)
+  const duplicateMutation = useDuplicateSeasonMutation(seasonId)
 
   useEffect(() => {
     if (seasonId !== -1 && data && !isLoading) {
@@ -63,6 +72,15 @@ export const SeasonCreatePage = () => {
       setValue('endDate', endStr)
     }
   }, [data, isLoading, seasonId, setValue])
+
+  const onDuplicateClick = () => {
+    duplicateMutation.mutate(undefined, {
+      onSuccess: (res) => {
+        navigate(`${PATHS.SEASONS}/${res.id}/edit`)
+        toast({ title: 'Szezon duplikálva!', description: 'Most már az újonnan létrejött szezont szerkeszted!', status: 'success' })
+      },
+    })
+  }
 
   if (isLoading && isFetching) {
     return <LoadingSpinner />
@@ -90,7 +108,13 @@ export const SeasonCreatePage = () => {
     <VStack spacing={5} alignItems="flex-start">
       <HelmetTitle title="Pontoz-O Admin | Szezon szerkesztése" />
       <Heading>{seasonId === -1 ? 'Új szezon' : 'Szezon szerkesztése'}</Heading>
-      {!seasonEditable && <Text>Ez a szezon már nem szerkeszthető, mert már elkezdődött!</Text>}
+
+      {!seasonEditable && (
+        <Alert status="error">
+          <AlertIcon />
+          <AlertTitle>Ez a szezon nem szerkeszthető, mert már elkezdődött!</AlertTitle>
+        </Alert>
+      )}
       <FormControl isInvalid={!!errors.name}>
         <FormLabel>Név</FormLabel>
         <Input {...register('name', { required: true, disabled: !seasonEditable })} bg="white" />
@@ -138,6 +162,11 @@ export const SeasonCreatePage = () => {
           Vissza
         </Button>
         <HStack spacing={1}>
+          {seasonId > -1 && (
+            <Button colorScheme="brand" onClick={onDuplicateClick}>
+              Duplikálás
+            </Button>
+          )}
           {seasonId > -1 && (
             <ConfirmDialogButton
               confirmAction={() =>

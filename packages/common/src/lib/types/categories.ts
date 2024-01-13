@@ -1,5 +1,6 @@
 import { ArrayUnique, IsInt, IsNotEmpty, IsString, Min } from 'class-validator'
 import { Criterion } from './criteria'
+import { Season } from './seasons'
 
 export interface Category {
   id: number
@@ -24,4 +25,8 @@ export type CreateCategoryForm = Omit<CategoryWithCriteria, 'id'>
 
 export interface CategoryWithCriteria extends Category {
   criteria: Criterion[]
+}
+
+export interface CategoryWithSeasons extends Category {
+  seasons: Season[]
 }

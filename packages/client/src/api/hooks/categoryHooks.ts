@@ -1,9 +1,17 @@
-import { Category, CategoryWithCriteria, CreateCategory, CreateResponse, EntityWithEditableIndicator, PontozoError } from '@pontozo/common'
+import {
+  Category,
+  CategoryWithCriteria,
+  CategoryWithSeasons,
+  CreateCategory,
+  CreateResponse,
+  EntityWithEditableIndicator,
+  PontozoError,
+} from '@pontozo/common'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { functionAxios } from '../../util/axiosConfig'
 
 export const useFetchCategories = () => {
-  return useQuery<Category[], PontozoError>(['fetchCategories'], async () => (await functionAxios.get(`/categories`)).data, {
+  return useQuery<CategoryWithSeasons[], PontozoError>(['fetchCategories'], async () => (await functionAxios.get(`/categories`)).data, {
     retry: false,
   })
 }
@@ -34,4 +42,8 @@ export const useUpdateCategoryMutation = (categoryId: number) => {
 
 export const useDeleteCategoryMutation = (categoryId: number) => {
   return useMutation<CreateResponse[], PontozoError>(async () => (await functionAxios.delete(`/categories/${categoryId}`)).data)
+}
+
+export const useDuplicateCategoryMutation = (categoryId: number) => {
+  return useMutation<Category, Error>(async () => (await functionAxios.post(`/categories/${categoryId}/duplicate`)).data)
 }

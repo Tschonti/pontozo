@@ -1,9 +1,11 @@
 import {
+  Badge,
   Box,
   Button,
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Heading,
   HStack,
   IconButton,
   Input,
@@ -173,7 +175,8 @@ export const CategorySelector = ({ editable }: { editable: boolean }) => {
                 <Text fontStyle="italic">Nincs találat</Text>
               ) : (
                 filteredCategoryList.map((c) => (
-                  <Box
+                  <VStack
+                    alignItems="flex-start"
                     borderRadius={6}
                     borderWidth={1}
                     p={2}
@@ -185,8 +188,17 @@ export const CategorySelector = ({ editable }: { editable: boolean }) => {
                       onClose()
                     }}
                   >
-                    <Text width="100%">{c.name}</Text>
-                  </Box>
+                    <Heading size="xs" width="100%">
+                      {c.name}
+                    </Heading>
+                    <HStack>
+                      {c.seasons.map((s) => (
+                        <Badge variant="solid" colorScheme="brand" key={s.id}>
+                          {s.name}
+                        </Badge>
+                      ))}
+                    </HStack>
+                  </VStack>
                 ))
               )}
             </VStack>

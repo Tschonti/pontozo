@@ -84,7 +84,7 @@ export const CriteriaSelector = ({ editable }: { editable: boolean }) => {
                 <IconButton
                   aria-label="Szempont előrehozása"
                   size="xs"
-                  isDisabled={idx === 0 ?? !editable}
+                  isDisabled={idx === 0 || !editable}
                   icon={<FaCaretUp />}
                   colorScheme="brand"
                   onClick={() => moveCriterion(idx, c, -1)}
@@ -92,7 +92,7 @@ export const CriteriaSelector = ({ editable }: { editable: boolean }) => {
                 <IconButton
                   aria-label="Szempont hátrébb vitele"
                   size="xs"
-                  isDisabled={idx === watch('criteria').length - 1 ?? !editable}
+                  isDisabled={idx === watch('criteria').length - 1 || !editable}
                   icon={<FaCaretDown />}
                   colorScheme="brand"
                   onClick={() => moveCriterion(idx, c, 1)}
