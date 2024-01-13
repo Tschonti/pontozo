@@ -46,7 +46,7 @@ export const CriterionRateForm = ({ criterion }: Props) => {
           {criterion.text1 && <Radio value="1">{criterion.text1}</Radio>}
           {criterion.text2 && <Radio value="2">{criterion.text2}</Radio>}
           {criterion.text3 && <Radio value="3">{criterion.text3}</Radio>}
-          {criterion.allowEmpty && <Radio value="-1">Nem tudom megítélni</Radio>}
+          {criterion.allowEmpty && <Radio value="-1">Nem tudom megítélni/nem releváns</Radio>}
         </Stack>
       </RadioGroup>
     </FormControl>

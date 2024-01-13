@@ -18,6 +18,8 @@ export type RatingContextType = {
   rateCriteria: (criterionId: number[]) => void
   nextCategory: () => void
   previousCategory: () => void
+  submitRating: (message?: string) => void
+  openSubmitModal: (onSuccessfulOpen: () => void) => void
 }
 
 export const RatingContext = createContext<RatingContextType>({
@@ -37,4 +39,6 @@ export const RatingContext = createContext<RatingContextType>({
   rateCriteria: () => {},
   nextCategory: () => {},
   previousCategory: () => {},
+  submitRating: () => {},
+  openSubmitModal: () => {},
 })

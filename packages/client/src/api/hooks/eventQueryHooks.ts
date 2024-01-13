@@ -33,7 +33,7 @@ export const useFetchRateableEventsFromCache = () => {
       const res = await functionAxios.get<DbEvent[]>('cached/events/rateable')
       return res.data.sort((e1, e2) => -e1.startDate.localeCompare(e2.startDate))
     },
-    { retry: false }
+    { retry: false, enabled: false } // cache likely won't be used in the future
   )
 }
 

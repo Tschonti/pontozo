@@ -7,6 +7,7 @@ import {
   GetEventRating,
   PageTurn,
   PontozoError,
+  SubmitEventRating,
 } from '@pontozo/common'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { functionAxios } from '../../util/axiosConfig'
@@ -18,9 +19,14 @@ export const useStartRatingMutation = () => {
   )
 }
 
+type SubmitEventRatingMutation = SubmitEventRating & {
+  ratingId: number
+}
+
 export const useSubmitRatingMutation = () => {
-  return useMutation<unknown, PontozoError, number>(
-    async (ratingId: number) => (await functionAxios.post(`${FUNC_HOST}/ratings/${ratingId}/submit`)).data
+  return useMutation<unknown, PontozoError, SubmitEventRatingMutation>(
+    async (data: SubmitEventRatingMutation) =>
+      (await functionAxios.post<SubmitEventRating>(`${FUNC_HOST}/ratings/${data.ratingId}/submit`, { message: data.message })).data
   )
 }
 

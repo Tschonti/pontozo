@@ -9,6 +9,7 @@ import { formatDateRange } from 'src/util/formatDateRange'
 import { PATHS } from 'src/util/paths'
 import './progressBar.css'
 import { ProgressBarItem } from './ProgressBarItem'
+import { SubmitRatingModal } from './SubmitRatingModal'
 
 export const DesktopRatingProgressBar = () => {
   const { eventRatingInfo, nextCategory, previousCategory, hasNext, hasPrev } = useRatingContext()
@@ -72,9 +73,10 @@ export const DesktopRatingProgressBar = () => {
           <Button color="brand.500" leftIcon={<FaChevronLeft />} onClick={() => previousCategory()} variant="ghost">
             {hasPrev ? 'Előző' : 'Vissza'}
           </Button>
-          {(eventRatingInfo.status === RatingStatus.STARTED || hasNext) && (
-            <Button color="brand.500" rightIcon={<FaChevronRight />} onClick={() => nextCategory()} variant="ghost">
-              {hasNext ? 'Következő' : 'Véglegesítés'}
+          {eventRatingInfo?.status === RatingStatus.STARTED && !hasNext && <SubmitRatingModal variant="ghost" color="brand.500" />}
+          {hasNext && (
+            <Button rightIcon={<FaChevronRight />} onClick={() => nextCategory()} variant="ghost">
+              Következő
             </Button>
           )}
         </HStack>

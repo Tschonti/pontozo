@@ -15,6 +15,7 @@ import UserRoleAssignment from './entities/UserRoleAssignment'
 import { Init1694205775872 } from './migrations/1694205775872-init'
 import { AddRaterAge1695666298049 } from './migrations/1695666298049-add_rater_age'
 import { UniqueEventForUser1696272553417 } from './migrations/1696272553417-unique_event_for_user'
+import { MessageToRating1705141629515 } from './migrations/1705141629515-message_to_rating'
 
 export const DBConfig: SqlServerConnectionOptions = {
   type: 'mssql',
@@ -41,6 +42,6 @@ export const DBConfig: SqlServerConnectionOptions = {
     SeasonCriterionCount,
   ],
   subscribers: [],
-  migrations: [Init1694205775872, AddRaterAge1695666298049, UniqueEventForUser1696272553417],
+  migrations: [Init1694205775872, AddRaterAge1695666298049, UniqueEventForUser1696272553417, MessageToRating1705141629515],
   options: { encrypt: ENCRYPT },
 }

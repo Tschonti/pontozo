@@ -1,4 +1,4 @@
-import { ArrayNotEmpty, ArrayUnique, IsEnum, IsInt, IsOptional, Min } from 'class-validator'
+import { ArrayNotEmpty, ArrayUnique, IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator'
 import { CategoryWithCriteria } from './categories'
 import { DbEvent, DbStage } from './dbEvents'
 
@@ -86,4 +86,10 @@ export interface GetEventRating {
 export type RatingStartedResponse = {
   id: number
   status: string
+}
+
+export class SubmitEventRating {
+  @IsOptional()
+  @IsString()
+  message?: string
 }

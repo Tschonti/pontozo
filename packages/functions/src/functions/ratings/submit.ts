@@ -1,10 +1,11 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
-import { isHigherRank, PontozoException, RatingStatus } from '@pontozo/common'
+import { isHigherRank, PontozoException, RatingStatus, SubmitEventRating } from '@pontozo/common'
+import { plainToClass } from 'class-transformer'
 import { getUserFromHeader } from '../../service/auth.service'
 import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { handleException } from '../../util/handleException'
-import { validateId } from '../../util/validation'
+import { validateBody, validateId, validateWithWhitelist } from '../../util/validation'
 
 /**
  * Called when the users submits their rating of an event.
@@ -14,6 +15,10 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
   try {
     const id = validateId(req)
     const user = getUserFromHeader(req)
+    validateBody(req)
+    const dto = plainToClass(SubmitEventRating, await req.json())
+    await validateWithWhitelist(dto)
+
     const ads = await getAppDataSource(context)
     const eventRatingRepo = ads.getRepository(EventRating)
     const rating = await eventRatingRepo.findOne({
@@ -41,6 +46,9 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
       throw new PontozoException('Nem értékelted le a versenyt az összes szempont szerint!', 400)
     }
 
+    if (dto.message) {
+      rating.message = dto.message
+    }
     rating.status = RatingStatus.SUBMITTED
     rating.submittedAt = new Date()
     await eventRatingRepo.save(rating)

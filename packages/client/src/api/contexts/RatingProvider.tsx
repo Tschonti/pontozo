@@ -94,6 +94,15 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
     setRatedCriteria(newArray)
   }
 
+  const openSubmitModal = (onSuccessfulOpen: () => void) => {
+    if (category?.criteria.some((c) => !ratedCriteria.includes(generateCriterionId(c.id)))) {
+      setValidate(true)
+      toast({ title: 'Minden szempont kitöltése kötelező!', status: 'warning' })
+      return
+    }
+    onSuccessfulOpen()
+  }
+
   const nextCategory = () => {
     if (!data) {
       return
@@ -191,15 +200,18 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
     setStage(newStage)
   }
 
-  const submitRating = () => {
-    submitMutation.mutate(ratingId, {
-      onSuccess: () => {
-        reset()
-        toast({ title: 'Értékelés véglegesítve!', status: 'success' })
-        navigate(`${PATHS.EVENTS}/${data?.eventId}`)
-      },
-      onError: (e) => onError(e, toast),
-    })
+  const submitRating = (message?: string) => {
+    submitMutation.mutate(
+      { ratingId, message },
+      {
+        onSuccess: () => {
+          reset()
+          toast({ title: 'Értékelés véglegesítve!', status: 'success' })
+          navigate(`${PATHS.EVENTS}/${data?.eventId}`)
+        },
+        onError: (e) => onError(e, toast),
+      }
+    )
   }
 
   const reset = () => {
@@ -231,6 +243,8 @@ export const RatingProvider = ({ children }: PropsWithChildren) => {
         rateCriterion,
         nextCategory,
         previousCategory,
+        submitRating,
+        openSubmitModal,
       }}
     >
       {children}

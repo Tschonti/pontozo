@@ -38,6 +38,9 @@ class EventRating implements IEventRating {
   @Check("status in('STARTED', 'SUBMITTED')")
   status: RatingStatus
 
+  @Column({ nullable: true })
+  message?: string
+
   @Column()
   @Check("role in('COMPETITOR', 'COACH', 'ORGANISER', 'JURY')")
   role: RatingRole

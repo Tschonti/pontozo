@@ -1,14 +1,15 @@
 import { Button, HStack, useMediaQuery } from '@chakra-ui/react'
+import { RatingStatus } from '@pontozo/common'
 import { createPortal } from 'react-dom'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { useParams } from 'react-router-dom'
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
-import { RatingStatus } from '../../../../common/src'
 import { useRatingContext } from '../../api/contexts/useRatingContext'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { CategoryWithCriteriaList } from './components/CategoryWithCriteriaList'
 import { DesktopRatingProgressBar } from './components/DesktopRatingProgressBar'
 import { MobileRatingProgressBar } from './components/MobileRatingProgressBar'
+import { SubmitRatingModal } from './components/SubmitRatingModal'
 
 export const RatingPage = () => {
   const { ratingId } = useParams()
@@ -28,9 +29,10 @@ export const RatingPage = () => {
         <Button leftIcon={<FaChevronLeft />} onClick={() => previousCategory()}>
           {hasPrev ? 'Előző' : 'Vissza a versenyhez'}
         </Button>
-        {(eventRatingInfo?.status === RatingStatus.STARTED || hasNext) && (
+        {eventRatingInfo?.status === RatingStatus.STARTED && !hasNext && <SubmitRatingModal colorScheme="brand" />}
+        {hasNext && (
           <Button rightIcon={<FaChevronRight />} colorScheme="brand" onClick={() => nextCategory()}>
-            {hasNext ? 'Következő' : 'Véglegesítés'}
+            Következő
           </Button>
         )}
       </HStack>
