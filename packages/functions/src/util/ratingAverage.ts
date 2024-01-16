@@ -1,6 +1,9 @@
 import { ageGroupFilterDict, ALL_AGE_GROUPS, ALL_ROLES, RatingResult as IRatingResult, RatingResultItem } from '@pontozo/common'
+import Category from '../typeorm/entities/Category'
+import Criterion from '../typeorm/entities/Criterion'
 import CriterionRating from '../typeorm/entities/CriterionRating'
 import EventRating from '../typeorm/entities/EventRating'
+import { RatingResult } from '../typeorm/entities/RatingResult'
 type Average = {
   count: number
   average: number
@@ -69,4 +72,57 @@ export const accumulateCategory = (results: Omit<IRatingResult, 'id'>[]): Rating
     ageGroup: results[0].items[i].ageGroup,
     role: results[0].items[i].role,
   }))
+}
+
+type Params = {
+  eventId: number
+  stageId?: number
+  categories: (Omit<Category, 'criteria'> & { criteria: Criterion[] })[]
+  eventRatings: EventRating[]
+}
+
+export type StageResult = {
+  root: RatingResult
+  categories: RatingResult[]
+  criteria: RatingResult[]
+}
+
+export const accumulateStage = ({ eventId, stageId, categories, eventRatings }: Params): StageResult => {
+  const root = new RatingResult()
+  root.eventId = eventId
+  root.stageId = stageId
+
+  const categoryResultEntitesAndRawData = categories.map((c) => {
+    const categoryResult = new RatingResult()
+    categoryResult.eventId = eventId
+    categoryResult.parent = root
+    categoryResult.categoryId = c.id
+    categoryResult.stageId = stageId
+
+    const criteriaResults = c.criteria
+      .filter((c) => !stageId || c.stageSpecific)
+      .map((crit) => ({
+        eventId,
+        items: averageByRoleAndGroup(eventRatings, (cr) => cr.criterionId === crit.id && (!stageId || cr.stageId === stageId)),
+        criterionId: crit.id,
+      }))
+    const rawCategory = accumulateCategory(criteriaResults)
+    categoryResult.items = JSON.stringify(rawCategory)
+    const criteriaResultEntities: RatingResult[] = criteriaResults.map((cr) => {
+      const cre = new RatingResult()
+      cre.eventId = cr.eventId
+      cre.criterionId = cr.criterionId
+      cre.parent = categoryResult
+      cre.items = JSON.stringify(cr.items)
+      cre.stageId = stageId
+      return cre
+    })
+    categoryResult.children = criteriaResultEntities
+    return { entity: categoryResult, raw: rawCategory }
+  })
+  root.children = categoryResultEntitesAndRawData.map((cr) => cr.entity)
+  root.items = JSON.stringify(
+    accumulateCategory(categoryResultEntitesAndRawData.map((cr) => ({ eventId, items: cr.raw, categoryId: cr.entity.categoryId })))
+  )
+  return { root, categories: root.children, criteria: root.children.flatMap((s) => s.children) }
 }
