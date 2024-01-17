@@ -16,7 +16,7 @@ export class RatingResult implements Omit<IRatingResult, 'items'> {
   @ManyToOne(() => RatingResult, (c) => c.children, { onDelete: 'NO ACTION', nullable: true })
   parent?: RatingResult
 
-  @OneToMany(() => RatingResult, (r) => r.criterion, { eager: false, onDelete: 'NO ACTION' })
+  @OneToMany(() => RatingResult, (r) => r.parent, { eager: false, onDelete: 'NO ACTION' })
   children: RatingResult[]
 
   @Column()
