@@ -1,4 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { EventState } from '@pontozo/common'
 import Event from '../../typeorm/entities/Event'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { handleException } from '../../util/handleException'
@@ -10,7 +11,7 @@ export const getRateableEvents = async (req: HttpRequest, context: InvocationCon
   try {
     const events = await (await getAppDataSource(context))
       .getRepository(Event)
-      .find({ where: { rateable: true }, relations: { organisers: true } })
+      .find({ where: { state: EventState.RATEABLE }, relations: { organisers: true } })
     return {
       jsonBody: events,
     }

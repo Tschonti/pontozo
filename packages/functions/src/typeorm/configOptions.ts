@@ -19,6 +19,7 @@ import { UniqueEventForUser1696272553417 } from './migrations/1696272553417-uniq
 import { MessageToRating1705141629515 } from './migrations/1705141629515-message_to_rating'
 import { AddRatingResult1705251815793 } from './migrations/1705251815793-add_rating_result'
 import { RatingResultItemsText1705347424162 } from './migrations/1705347424162-rating_result_items_text'
+import { EventState1705779906213 } from './migrations/1705779906213-event_state'
 
 export const DBConfig: SqlServerConnectionOptions = {
   type: 'mssql',
@@ -53,6 +54,7 @@ export const DBConfig: SqlServerConnectionOptions = {
     MessageToRating1705141629515,
     AddRatingResult1705251815793,
     RatingResultItemsText1705347424162,
+    EventState1705779906213,
   ],
   options: { encrypt: ENCRYPT },
 }

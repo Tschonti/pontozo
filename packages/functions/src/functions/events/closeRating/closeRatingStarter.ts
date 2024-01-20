@@ -1,4 +1,5 @@
 import { app, InvocationContext, Timer } from '@azure/functions'
+import { EventState } from '@pontozo/common'
 import * as df from 'durable-functions'
 import Event from '../../../typeorm/entities/Event'
 import { getAppDataSource } from '../../../typeorm/getConfig'
@@ -13,7 +14,7 @@ const closeRatingStarter = async (myTimer: Timer, context: InvocationContext): P
     const ads = await getAppDataSource(context)
 
     const eventRepo = ads.getRepository(Event)
-    const rateableEvents = await eventRepo.find({ where: { rateable: true } })
+    const rateableEvents = await eventRepo.find({ where: { state: EventState.RATEABLE } })
     const now = new Date().getTime()
     const toArchive = rateableEvents
       .filter((event) => {
@@ -22,7 +23,7 @@ const closeRatingStarter = async (myTimer: Timer, context: InvocationContext): P
       })
       .map((event) => ({
         ...event,
-        rateable: false,
+        state: EventState.VALIDATING,
       }))
 
     //await eventRepo.save(toArchive) TODO
