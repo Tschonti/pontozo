@@ -1,6 +1,5 @@
-import { InvocationContext, Timer } from '@azure/functions'
+import { app, InvocationContext, Timer } from '@azure/functions'
 import { getHighestRank, getRateableEvents, stageFilter } from '@pontozo/common'
-import { getRedisClient } from '../../redis/redisClient'
 import Club from '../../typeorm/entities/Club'
 import Event from '../../typeorm/entities/Event'
 import Season from '../../typeorm/entities/Season'
@@ -16,8 +15,8 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
   try {
     const pevents = getRateableEvents(APIM_KEY, APIM_HOST)
     const pads = getAppDataSource(context)
-    const predis = getRedisClient(context)
-    const [events, ads, redisClient] = await Promise.all([pevents, pads, predis])
+    // const predis = getRedisClient(context)
+    const [events, ads /*redisClient*/] = await Promise.all([pevents, pads /*predis*/])
 
     const eventRepo = ads.getRepository(Event)
     const stageRepo = ads.getRepository(Stage)
@@ -69,23 +68,25 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
       return event
     })
 
-    const [_dbres, ...redisResults] = await Promise.all([
-      eventRepo.save(eventsToSave),
-      ...eventsToSave.map((event) => redisClient.set(`event:${event.id}`, JSON.stringify(event), { EX: (7 * 24 + 15) * 60 * 60 })), // expires the next Monday at 3 AM
-    ])
-    context.log(
-      `${eventsToSave.length} events created or updated in db, ${
-        redisResults.filter((r) => r === 'OK').length
-      } events created or updated in Redis cache`
-    )
+    await eventRepo.save(eventsToSave)
+    context.log(`${eventsToSave.length} events created or updated in db`)
+
+    // const [_dbres, ...redisResults] = await Promise.all([
+    //   eventRepo.save(eventsToSave),
+    //   ...eventsToSave.map((event) => redisClient.set(`event:${event.id}`, JSON.stringify(event), { EX: (7 * 24 + 15) * 60 * 60 })), // expires the next Monday at 3 AM
+    // ])
+    // context.log(
+    //   `${eventsToSave.length} events created or updated in db, ${
+    //     redisResults.filter((r) => r === 'OK').length
+    //   } events created or updated in Redis cache`
+    // )
   } catch (error) {
     context.log(error)
   }
 }
 
-/* Disabling this function until the end of the winter period, so only the testing events will be rateable
 app.timer('events-import', {
   schedule: '0 0 12 * * *', // 12 PM every day (noon)
   handler: importEvents,
   runOnStartup: false,
-})*/
+})

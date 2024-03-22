@@ -1,5 +1,4 @@
-import { InvocationContext, Timer } from '@azure/functions'
-import { getRedisClient } from '../../redis/redisClient'
+import { app, InvocationContext, Timer } from '@azure/functions'
 import Event from '../../typeorm/entities/Event'
 import { getAppDataSource } from '../../typeorm/getConfig'
 
@@ -10,8 +9,8 @@ import { getAppDataSource } from '../../typeorm/getConfig'
 export const closeRating = async (myTimer: Timer, context: InvocationContext): Promise<void> => {
   try {
     const pads = getAppDataSource(context)
-    const predis = getRedisClient(context)
-    const [ads, redisClient] = await Promise.all([pads, predis])
+    // const predis = getRedisClient(context)
+    const [ads /*redisClient*/] = await Promise.all([pads /*predis*/])
 
     const eventRepo = ads.getRepository(Event)
     const rateableEvents = await eventRepo.find({ where: { rateable: true } })
@@ -27,23 +26,22 @@ export const closeRating = async (myTimer: Timer, context: InvocationContext): P
       }))
 
     await eventRepo.save(toArchive)
-    const redisKeysToDelete = toArchive.map((e) => `event:${e.id}`)
-    let deleted = 0
-    if (redisKeysToDelete.length > 0) {
-      deleted = await redisClient.del(redisKeysToDelete)
-    }
-    if (toArchive.length !== deleted) {
-      context.warn(`${toArchive.length} events archived, but ${deleted} events deleted from cache!`)
-    }
+    // const redisKeysToDelete = toArchive.map((e) => `event:${e.id}`)
+    // let deleted = 0
+    // if (redisKeysToDelete.length > 0) {
+    //   deleted = await redisClient.del(redisKeysToDelete)
+    // }
+    // if (toArchive.length !== deleted) {
+    //   context.warn(`${toArchive.length} events archived, but ${deleted} events deleted from cache!`)
+    // }
     context.log(`Closed the rating session for ${toArchive.length} event(s)`)
   } catch (error) {
     context.log(error)
   }
 }
 
-/* Disabling this function until the end of the winter period, so the testing events will stay rateable
 app.timer('events-close-rating', {
   schedule: '0 0 3 * * *', // 3 AM every day
   handler: closeRating,
   runOnStartup: false,
-})*/
+})
