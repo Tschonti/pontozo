@@ -16,6 +16,7 @@ enum EventState {
   VALIDATING = 'VALIDATING',
   ACCUMULATING = 'ACCUMULATING',
   RESULTS_READY = 'RESULTS_READY',
+  INVALIDATED = 'INVALIDATED',
 }
 
 @Entity()
@@ -42,7 +43,7 @@ class Event implements DbEvent {
   ratings: EventRating[]
 
   @Column({ default: EventState.RATEABLE })
-  @Check("state in('RATEABLE', 'VALIDATING', 'ACCUMULATING', 'RESULTS_READY')")
+  @Check("state in('RATEABLE', 'VALIDATING', 'ACCUMULATING', 'RESULTS_READY', 'INVALIDATED')")
   state: EventState
 
   @Column()

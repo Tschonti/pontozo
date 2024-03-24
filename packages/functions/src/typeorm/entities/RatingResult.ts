@@ -6,7 +6,7 @@ import Event from './Event'
 import Stage from './Stage'
 
 @Entity()
-export class RatingResult implements Omit<IRatingResult, 'items'> {
+export class RatingResult implements Omit<IRatingResult, 'items' | 'criterion'> {
   @PrimaryGeneratedColumn()
   id: number
 

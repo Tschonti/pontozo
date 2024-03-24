@@ -1,6 +1,7 @@
 import { app, InvocationContext, Timer } from '@azure/functions'
 import { EventState } from '@pontozo/common'
 import * as df from 'durable-functions'
+import { Not } from 'typeorm'
 import Event from '../../../typeorm/entities/Event'
 import { getAppDataSource } from '../../../typeorm/getConfig'
 import { orchestratorName } from './closeRatingOrchestrator'
@@ -14,33 +15,25 @@ const closeRatingStarter = async (myTimer: Timer, context: InvocationContext): P
     const ads = await getAppDataSource(context)
 
     const eventRepo = ads.getRepository(Event)
-    const rateableEvents = await eventRepo.find({ where: { state: EventState.RATEABLE } })
+    const eventsWithoutResults = await eventRepo.find({ where: { state: Not(EventState.RESULTS_READY) } })
     const now = new Date().getTime()
-    const toArchive = rateableEvents
+    const toArchive = eventsWithoutResults
       .filter((event) => {
         const endTimestamp = new Date(event.endDate ?? event.startDate).getTime()
-        return now - endTimestamp > 8 * 24 * 60 * 60 * 1000
+        return event.state === EventState.RATEABLE && now - endTimestamp > 8 * 24 * 60 * 60 * 1000
       })
       .map((event) => ({
         ...event,
         state: EventState.VALIDATING,
       }))
 
-    //await eventRepo.save(toArchive) TODO
+    await eventRepo.save(toArchive)
     context.log(`Closed the rating session for ${toArchive.length} event(s)`)
 
-    /* const redisKeysToDelete = toArchive.map((e) => `event:${e.id}`)
-    let deleted = 0
-    if (redisKeysToDelete.length > 0) {
-      deleted = await redisClient.del(redisKeysToDelete)
-    }
-    if (toArchive.length !== deleted) {
-      context.warn(`${toArchive.length} events archived, but ${deleted} events deleted from cache!`)
-    } */
-
-    if (toArchive.length > 0) {
+    const toClose = [...toArchive, ...eventsWithoutResults.filter((e) => e.state !== EventState.RATEABLE)]
+    if (toClose.length > 0) {
       const client = df.getClient(context)
-      const instanceId = await client.startNew(orchestratorName, { input: toArchive.map((e) => e.id) })
+      const instanceId = await client.startNew(orchestratorName, { input: toClose.map((e) => ({ eventId: e.id, state: e.state })) })
       context.log(`Started orchestration with ID = '${instanceId}'.`)
     }
   } catch (error) {

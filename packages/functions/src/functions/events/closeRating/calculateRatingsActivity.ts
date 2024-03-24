@@ -1,27 +1,32 @@
+import { InvocationContext } from '@azure/functions'
 import { EventState, RatingStatus } from '@pontozo/common'
 import * as df from 'durable-functions'
-import { ActivityHandler, OrchestrationContext } from 'durable-functions'
-import { DataSource } from 'typeorm'
+import { ActivityHandler } from 'durable-functions'
+import { DataSource, IsNull } from 'typeorm'
+import { getRedisClient } from '../../../redis/redisClient'
 import { DBConfig } from '../../../typeorm/configOptions'
 import Event from '../../../typeorm/entities/Event'
 import EventRating from '../../../typeorm/entities/EventRating'
+import { RatingResult } from '../../../typeorm/entities/RatingResult'
+import { parseRatingResults } from '../../../util/parseRatingResults'
 import { accumulateStage, StageResult } from '../../../util/ratingAverage'
+import { ActivityOutput } from './closeRatingOrchestrator'
 
 export const calculateAvgRatingActivityName = 'calculateAvgRatingActivity'
-type CalculateAvgRatingInput = { eventId: number; context: OrchestrationContext }
-export type CalculateAvgRatingOutput = { eventId: number; success: boolean }
 
-const calculateAvgRating: ActivityHandler = async ({ context, eventId }: CalculateAvgRatingInput): Promise<CalculateAvgRatingOutput> => {
+const calculateAvgRating: ActivityHandler = async (eventId: number, context: InvocationContext): Promise<ActivityOutput> => {
   try {
     const ads = new DataSource(DBConfig)
     await ads.initialize()
+    const eventRepo = ads.getRepository(Event)
+
     const eventRatingsPrmoise = ads.getRepository(EventRating).find({
       where: { eventId, status: RatingStatus.SUBMITTED },
       relations: { ratings: true },
     })
-    const eventPromise = ads.getRepository(Event).findOne({
+    const eventPromise = eventRepo.findOne({
       where: { id: eventId, state: EventState.ACCUMULATING },
-      relations: { season: { categories: { category: { criteria: { criterion: true } } } }, stages: true },
+      relations: { season: { categories: { category: { criteria: { criterion: true } } } }, stages: true, organisers: true },
     })
 
     const [eventRatings, event] = await Promise.all([eventRatingsPrmoise, eventPromise])
@@ -60,7 +65,20 @@ const calculateAvgRating: ActivityHandler = async ({ context, eventId }: Calcula
       })
       await Promise.all(promises)
       await transactionalEntityManager.getRepository(Event).update(eventId, { state: EventState.RESULTS_READY })
+      event.state = EventState.RESULTS_READY
     })
+    context.log(`Results of event:${event.id} saved to db.`)
+
+    const redisClient = await getRedisClient(context)
+    const results = await ads.getRepository(RatingResult).find({
+      where: { eventId: eventId, parentId: IsNull() },
+      relations: { children: { category: true, children: { criterion: true } } },
+    })
+    const { season, ...restOfEvent } = event
+    const parsed = parseRatingResults(results, restOfEvent)
+    await redisClient.set(`ratingResult:${event.id}`, JSON.stringify(parsed))
+    context.log(`Results of event:${event.id} saved to cache.`)
+
     return { success: true, eventId }
   } catch (e) {
     context.error(`Error in calculate average rating activity for event:${eventId}: ${e}`)

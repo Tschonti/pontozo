@@ -20,6 +20,7 @@ import { MessageToRating1705141629515 } from './migrations/1705141629515-message
 import { AddRatingResult1705251815793 } from './migrations/1705251815793-add_rating_result'
 import { RatingResultItemsText1705347424162 } from './migrations/1705347424162-rating_result_items_text'
 import { EventState1705779906213 } from './migrations/1705779906213-event_state'
+import { AddInvalidatedState1711307184824 } from './migrations/1711307184824-add_invalidated_state'
 
 export const DBConfig: SqlServerConnectionOptions = {
   type: 'mssql',
@@ -55,6 +56,7 @@ export const DBConfig: SqlServerConnectionOptions = {
     AddRatingResult1705251815793,
     RatingResultItemsText1705347424162,
     EventState1705779906213,
+    AddInvalidatedState1711307184824,
   ],
   options: { encrypt: ENCRYPT },
 }

@@ -18,6 +18,7 @@ export enum EventState {
   VALIDATING = 'VALIDATING',
   ACCUMULATING = 'ACCUMULATING',
   RESULTS_READY = 'RESULTS_READY',
+  INVALIDATED = 'INVALIDATED',
 }
 
 export interface EventWithRating {
