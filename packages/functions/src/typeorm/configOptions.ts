@@ -1,5 +1,6 @@
 import { SqlServerConnectionOptions } from 'typeorm/driver/sqlserver/SqlServerConnectionOptions'
 import { DB_NAME, DB_PWD, DB_SERVER, DB_USER, ENCRYPT, ENV } from '../util/env'
+import Alert from './entities/Alert'
 import Category from './entities/Category'
 import { CategoryToCriterion } from './entities/CategoryToCriterion'
 import Club from './entities/Club'
@@ -21,6 +22,7 @@ import { AddRatingResult1705251815793 } from './migrations/1705251815793-add_rat
 import { RatingResultItemsText1705347424162 } from './migrations/1705347424162-rating_result_items_text'
 import { EventState1705779906213 } from './migrations/1705779906213-event_state'
 import { AddInvalidatedState1711307184824 } from './migrations/1711307184824-add_invalidated_state'
+import { AddAlertTable1711394423616 } from './migrations/1711394423616-add_alert_table'
 
 export const DBConfig: SqlServerConnectionOptions = {
   type: 'mssql',
@@ -33,6 +35,7 @@ export const DBConfig: SqlServerConnectionOptions = {
   logging: !(ENV === 'production'),
   connectionTimeout: 120000,
   entities: [
+    Alert,
     Criterion,
     CriterionRating,
     EventRating,
@@ -57,6 +60,7 @@ export const DBConfig: SqlServerConnectionOptions = {
     RatingResultItemsText1705347424162,
     EventState1705779906213,
     AddInvalidatedState1711307184824,
+    AddAlertTable1711394423616,
   ],
   options: { encrypt: ENCRYPT },
 }

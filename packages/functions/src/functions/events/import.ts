@@ -1,5 +1,6 @@
 import { app, InvocationContext, Timer } from '@azure/functions'
 import { getHighestRank, getRateableEvents, stageFilter } from '@pontozo/common'
+import { newAlertItem } from '../../service/alert.service'
 import Club from '../../typeorm/entities/Club'
 import Event from '../../typeorm/entities/Event'
 import Season from '../../typeorm/entities/Season'
@@ -15,8 +16,7 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
   try {
     const pevents = getRateableEvents(APIM_KEY, APIM_HOST)
     const pads = getAppDataSource(context)
-    // const predis = getRedisClient(context)
-    const [events, ads /*redisClient*/] = await Promise.all([pevents, pads /*predis*/])
+    const [events, ads] = await Promise.all([pevents, pads])
 
     const eventRepo = ads.getRepository(Event)
     const stageRepo = ads.getRepository(Stage)
@@ -28,6 +28,7 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
       context.log('No active season, skipping event import...')
       return
     }
+    const eventCountBefore = await eventRepo.count()
     const eventsToSave = events.map((e) => {
       const event = eventRepo.create({
         id: e.esemeny_id,
@@ -69,17 +70,10 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
     })
 
     await eventRepo.save(eventsToSave)
-    context.log(`${eventsToSave.length} events created or updated in db`)
 
-    // const [_dbres, ...redisResults] = await Promise.all([
-    //   eventRepo.save(eventsToSave),
-    //   ...eventsToSave.map((event) => redisClient.set(`event:${event.id}`, JSON.stringify(event), { EX: (7 * 24 + 15) * 60 * 60 })), // expires the next Monday at 3 AM
-    // ])
-    // context.log(
-    //   `${eventsToSave.length} events created or updated in db, ${
-    //     redisResults.filter((r) => r === 'OK').length
-    //   } events created or updated in Redis cache`
-    // )
+    const eventCountAfter = await eventRepo.count()
+    const created = eventCountAfter - eventCountBefore
+    newAlertItem({ ads, context, desc: `${created} events created, ${eventsToSave.length - created} updated in db` })
   } catch (error) {
     context.log(error)
   }

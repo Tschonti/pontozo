@@ -1,5 +1,6 @@
 import { app, InvocationContext, Timer } from '@azure/functions'
 import { ratingRoleArray } from '@pontozo/common'
+import { newAlertItem } from '../../service/alert.service'
 import Season from '../../typeorm/entities/Season'
 import SeasonCriterionCount from '../../typeorm/entities/SeasonCriterionCount'
 import { getAppDataSource } from '../../typeorm/getConfig'
@@ -46,7 +47,7 @@ export const initSeason = async (myTimer: Timer, context: InvocationContext): Pr
           return scc
         })
       )
-      context.log(`Criterion count refreshed for Season #${season.id}`)
+      newAlertItem({ ads, context, desc: `Criterion count refreshed for Season #${season.id}` })
     }
   } catch (error) {
     context.log(error)
