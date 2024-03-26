@@ -73,7 +73,9 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
 
     const eventCountAfter = await eventRepo.count()
     const created = eventCountAfter - eventCountBefore
-    newAlertItem({ ads, context, desc: `${created} events created, ${eventsToSave.length - created} updated in db` })
+    if (eventsToSave.length > 0) {
+      newAlertItem({ ads, context, desc: `${created} events created, ${eventsToSave.length - created} updated in db` })
+    }
   } catch (error) {
     context.log(error)
   }

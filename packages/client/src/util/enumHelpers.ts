@@ -1,4 +1,4 @@
-import { EventRank, RatingRole, RatingStatus, UserRole } from '@pontozo/common'
+import { AlertLevel, EventRank, RatingRole, RatingStatus, UserRole } from '@pontozo/common'
 
 type RoleDict = {
   [K in RatingRole]: string
@@ -79,4 +79,14 @@ export const rankColor: RankDict = {
   [EventRank.NATIONAL]: 'orange',
   [EventRank.FEATURED]: 'red',
   [EventRank.NONE]: 'gray',
+}
+
+type AlertDict = {
+  [K in AlertLevel]: 'info' | 'warning' | 'error'
+}
+
+export const alertLevelToChakraStatus: AlertDict = {
+  [AlertLevel.INFO]: 'info',
+  [AlertLevel.WARN]: 'warning',
+  [AlertLevel.ERROR]: 'error',
 }
