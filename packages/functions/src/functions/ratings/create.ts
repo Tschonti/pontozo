@@ -1,5 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
-import { CreateEventRating, PontozoException, RatingRole, UserRole } from '@pontozo/common'
+import { CreateEventRating, EventState, PontozoException, RatingRole, UserRole } from '@pontozo/common'
 import { plainToClass } from 'class-transformer'
 import { QueryFailedError } from 'typeorm'
 import { getUserFromHeader } from '../../service/auth.service'
@@ -29,7 +29,7 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
     const eventRepo = ads.getRepository(Event)
     const ratingRepo = ads.getRepository(EventRating)
 
-    const event = await eventRepo.findOne({ where: { id: dto.eventId, rateable: true }, relations: { stages: true } })
+    const event = await eventRepo.findOne({ where: { id: dto.eventId, state: EventState.RATEABLE }, relations: { stages: true } })
     if (event === null) {
       throw new PontozoException('A verseny nem található vagy nem értékelhető!', 404)
     }

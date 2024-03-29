@@ -46,7 +46,7 @@ export const SubmitRatingModal = ({ variant, color, colorScheme }: Props) => {
           <ModalBody textAlign="justify">
             <Text mb={5}>
               Köszönjük, hogy értékelted a versenyt! Az értékélest a 'Küldés' gombbal tudod véglegesíteni, ezután már nem fogod tudni
-              szerkeszteni. Ha szeretnél még szöveges formában visszajelzést küldeni a szervezőknek, azt megteheted az alábbi
+              szerkeszteni. Ha szeretnél még szöveges formában (névtelen) visszajelzést küldeni a szervezőknek, azt megteheted az alábbi
               szövegdobozban.
             </Text>
             <FormControl>

@@ -6,11 +6,19 @@ export interface DbEvent {
   type: string
   startDate: string
   endDate?: string
-  rateable: boolean
+  state: EventState
   highestRank: Rank
   seasonId: number
   organisers: Club[]
   stages?: DbStage[]
+}
+
+export enum EventState {
+  RATEABLE = 'RATEABLE',
+  VALIDATING = 'VALIDATING',
+  ACCUMULATING = 'ACCUMULATING',
+  RESULTS_READY = 'RESULTS_READY',
+  INVALIDATED = 'INVALIDATED',
 }
 
 export interface EventWithRating {

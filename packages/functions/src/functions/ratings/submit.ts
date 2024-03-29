@@ -1,5 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
-import { isHigherRank, PontozoException, RatingStatus, SubmitEventRating } from '@pontozo/common'
+import { EventState, isHigherRank, PontozoException, RatingStatus, SubmitEventRating } from '@pontozo/common'
 import { plainToClass } from 'class-transformer'
 import { getUserFromHeader } from '../../service/auth.service'
 import EventRating from '../../typeorm/entities/EventRating'
@@ -32,7 +32,7 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
     if (rating.userId !== user.szemely_id) {
       throw new PontozoException('Te nem véglegesítheted ezt az értékelést!', 403)
     }
-    if (!rating.event.rateable) {
+    if (rating.event.state !== EventState.RATEABLE) {
       throw new PontozoException('Ezt a versenyt már nem lehet értékelni!', 400)
     }
     const { season } = rating.event

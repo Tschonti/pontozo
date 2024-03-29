@@ -2,6 +2,7 @@ import { Criterion as ICriterion } from '@pontozo/common'
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { CategoryToCriterion } from './CategoryToCriterion'
 import CriterionRating from './CriterionRating'
+import { RatingResult } from './RatingResult'
 
 @Entity()
 class Criterion implements Omit<ICriterion, 'roles'> {
@@ -46,6 +47,9 @@ class Criterion implements Omit<ICriterion, 'roles'> {
 
   @OneToMany(() => CriterionRating, (r) => r.criterion, { eager: false })
   ratings: CriterionRating[]
+
+  @OneToMany(() => RatingResult, (r) => r.criterion, { eager: false })
+  ratingResults: RatingResult[]
 
   @Column({
     type: 'nvarchar',

@@ -11,6 +11,14 @@ enum Rank {
   FEATURED = 'KIEMELT',
 }
 
+enum EventState {
+  RATEABLE = 'RATEABLE',
+  VALIDATING = 'VALIDATING',
+  ACCUMULATING = 'ACCUMULATING',
+  RESULTS_READY = 'RESULTS_READY',
+  INVALIDATED = 'INVALIDATED',
+}
+
 @Entity()
 class Event implements DbEvent {
   @PrimaryColumn()
@@ -34,8 +42,9 @@ class Event implements DbEvent {
   @OneToMany(() => EventRating, (er) => er.event, { eager: false })
   ratings: EventRating[]
 
-  @Column({ default: true })
-  rateable: boolean
+  @Column({ default: EventState.RATEABLE })
+  @Check("state in('RATEABLE', 'VALIDATING', 'ACCUMULATING', 'RESULTS_READY', 'INVALIDATED')")
+  state: EventState
 
   @Column()
   @Check("highestRank in('REGIONALIS', 'ORSZAGOS', 'KIEMELT')")

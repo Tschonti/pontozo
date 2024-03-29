@@ -65,3 +65,9 @@ export interface MtfszToken {
   access_token: string
   refresh_token: string
 }
+
+export enum AgeGroup {
+  YOUTH = 'YOUTH',
+  ELITE = 'ELITE',
+  MASTER = 'MASTER',
+}
