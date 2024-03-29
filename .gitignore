@@ -42,3 +42,4 @@ Thumbs.db
 local.settings.json
 az-login.bat
 /.nx/cache
+/infra/.terraform/
