@@ -1,0 +1,59 @@
+name: Deploy Infrastructure
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  terraform:
+    name: Deploy to Azure with Terraform
+    defaults:
+      run:
+        working-directory: 'infra'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform Apply
+        id: apply
+        run: terraform apply -no-color
+        continue-on-error: true
+
+  # deploy_aswa:
+  #   needs: terraform
+  #   runs-on: ubuntu-latest
+  #   name: Build and Deploy client to Azure Static Web Apps
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         submodules: false
+  #         lfs: false
+  #     - name: Build And Deploy
+  #       id: builddeploy
+  #       uses: Azure/static-web-apps-deploy@v1
+  #       with:
+  #         azure_static_web_apps_api_token: ${{secrets.SWA_API_KEY}}
+  #         repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+  #         action: "upload"
+  #         ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
+  #         # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
+  #         app_location: "." # App source code path
+  #         output_location: "/dist" # Built app content directory - optional
+  #         ###### End of Repository/Build Configurations ######
