@@ -16,6 +16,10 @@ resource "azurerm_api_management" "apim" {
   publisher_email     = "feketesamu@gmail.com"
 
   sku_name = "Consumption_0"
+
+  identity {
+    type = "SystemAssigned"
+  }
 }
 
 resource "azurerm_api_management_api" "mtfsz-api" {
@@ -98,7 +102,7 @@ resource "azurerm_api_management_authorization_server" "mtfsz-oauth" {
   name                         = "mtfsz"
   api_management_name          = azurerm_api_management.apim.name
   resource_group_name          = azurerm_api_management.apim.resource_group_name
-  display_name                 = "MTFSZ OAuth 2.0"
+  display_name                 = "MTFSZ OAuth"
   authorization_endpoint       = "https://api.mtfsz.hu/oauth/v2/auth"
   client_registration_endpoint = "https://api.mtfsz.hu/oauth/v2/token"
   client_id                    = var.MTFSZ_CLIENT_ID
