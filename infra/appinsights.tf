@@ -6,9 +6,6 @@ resource "azurerm_application_insights" "appinsights" {
 }
 
 output "appinsights_connection_string" {
-  value = azurerm_application_insights.appinsights.connection_string
-}
-
-output "app_id" {
-  value = azurerm_application_insights.appinsights.app_id
+  value     = azurerm_application_insights.appinsights.connection_string
+  sensitive = true
 }
