@@ -43,7 +43,7 @@ jobs:
   deploy_fa:
     name: Deploy backend code to Azure Function App
     needs: terraform
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@v4
@@ -54,8 +54,9 @@ jobs:
           node-version: 18
 
       - name: 'Resolve Project Dependencies Using Npm'
-        shell: pwsh
+        shell: bash
         run: |
+          echo tsc --version
           npm run build:common
           npm run build:functions
 
