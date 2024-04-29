@@ -61,6 +61,7 @@ resource "azurerm_windows_function_app" "function-app" {
     "DB_SERVER"                = azurerm_mssql_server.sqlserver.fully_qualified_domain_name
     "DB_USER"                  = var.DB_PWD
     "ENCRYPT"                  = true
+    "ENV"                      = "production"
     "FRONTEND_URL"             = "TODO"
     "FUNCTION_HOST"            = var.FA_FUNCTIONS_URL
     "FUNCTIONS_WORKER_RUNTIME" = "node"
