@@ -56,7 +56,7 @@ jobs:
       - name: 'Resolve Project Dependencies Using Npm'
         shell: bash
         run: |
-          echo tsc --version
+          echo "$(tsc --version)"
           npm run build:common
           npm run build:functions
 
