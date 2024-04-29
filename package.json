@@ -4,6 +4,8 @@
   "license": "MIT",
   "scripts": {
     "build": "cd packages/client && vite build",
+    "build:common": "cd packages/common && npm ci",
+    "build:functions": "cd packages/functions && npm ci && npm run build",
     "ghal": "gh extension exec act push -W .github/workflows/deploy.yml"
   },
   "private": true,
