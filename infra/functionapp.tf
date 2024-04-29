@@ -56,7 +56,7 @@ resource "azurerm_windows_function_app" "function-app" {
     "CLIENT_SECRET" = var.MTFSZ_CLIENT_SECRET
     # "DB_ADMIN_PWD" = ""
     # "DB_ADMIN_USER" = ""
-    "DB_NAME"                  = azurerm_mssql_database.sqldatabase.sqldatabase.name
+    "DB_NAME"                  = azurerm_mssql_database.sqldatabase.name
     "DB_PWD"                   = var.DB_PWD
     "DB_SERVER"                = azurerm_mssql_server.sqlserver.fully_qualified_domain_name
     "DB_USER"                  = var.DB_PWD
