@@ -56,14 +56,9 @@ jobs:
       - name: 'Resolve Project Dependencies Using Npm'
         shell: bash
         run: |
-          echo "$(./node_modules/.bin/tsc --version)"
-          echo "$(./packages/functions/node_modules/.bin/tsc --version)"
-          npm run build:common
-          cd packages/functions
-          rimraf dist
-          ./packages/functions/node_modules/.bin/tsc -p tsconfig.build.json
+          npm i
+          cd packages/functions && npm run build
 
-        # npm run build:functions
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
