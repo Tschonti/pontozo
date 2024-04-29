@@ -2,9 +2,12 @@
   "name": "pontozo-functions",
   "version": "1.0.0",
   "description": "",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "tsc -p tsconfig.build.json",
+    "build": "tsc",
     "watch": "tsc -w",
     "prestart": "npm run build",
     "start": "func start",
