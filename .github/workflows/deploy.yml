@@ -57,9 +57,13 @@ jobs:
         shell: bash
         run: |
           echo "$(./node_modules/.bin/tsc --version)"
+          echo "$(./packages/functions/node_modules/.bin/tsc --version)"
           npm run build:common
-          npm run build:functions
+          cd packages/functions
+          rimraf dist
+          ./packages/functions/node_modules/.bin/tsc -p tsconfig.build.json
 
+        # npm run build:functions
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
