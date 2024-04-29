@@ -13,8 +13,3 @@ resource "azurerm_application_insights" "appinsights" {
   workspace_id        = azurerm_log_analytics_workspace.law.id
   application_type    = "web"
 }
-
-output "appinsights_connection_string" {
-  value     = azurerm_application_insights.appinsights.connection_string
-  sensitive = true
-}
