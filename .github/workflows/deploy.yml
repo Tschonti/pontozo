@@ -5,6 +5,10 @@ on:
     branches:
       - master
 
+env:
+  AZURE_FUNCTIONAPP_NAME: 'pontozo-api-tf'
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: './packages/functions'
+
 jobs:
   terraform:
     name: Deploy to Azure with Terraform
@@ -35,6 +39,34 @@ jobs:
         id: apply
         run: terraform apply -no-color -auto-approve
         continue-on-error: true
+
+  deploy_fa:
+    needs: terraform
+    runs-on: windows-latest
+    steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v4
+
+      - name: Setup Node 18 Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: 'Resolve Project Dependencies Using Npm'
+        shell: pwsh
+        run: |
+          pushd '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          npm install
+          npm run build --if-present
+          popd
+
+      - name: 'Run Azure Functions Action'
+        uses: Azure/functions-action@v1
+        id: fa
+        with:
+          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
 
   # deploy_aswa:
   #   needs: terraform
