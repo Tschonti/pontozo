@@ -57,10 +57,10 @@ jobs:
         shell: pwsh
         run: |
           pushd ./packages/common
-          npm install
+          npm ci
           popd
           pushd '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          npm install
+          npm ci
           npm run build --if-present
           popd
 
