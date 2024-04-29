@@ -5,10 +5,6 @@ on:
     branches:
       - master
 
-env:
-  AZURE_FUNCTIONAPP_NAME: 'pontozo-api-tf'
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: './packages/functions'
-
 jobs:
   terraform:
     name: Setup infrastructure in Azure with Terraform
@@ -63,8 +59,9 @@ jobs:
         uses: Azure/functions-action@v1
         id: fa
         with:
-          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          respect-funcignore: true
+          app-name: pontozo-api-tf
+          package: ./packages/functions/dist
           publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
 
   # deploy_aswa:
