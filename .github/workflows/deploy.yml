@@ -11,7 +11,7 @@ env:
 
 jobs:
   terraform:
-    name: Deploy to Azure with Terraform
+    name: Setup infrastructure in Azure with Terraform
     defaults:
       run:
         working-directory: 'infra'
@@ -41,6 +41,7 @@ jobs:
         continue-on-error: true
 
   deploy_fa:
+    name: Deploy backend code to Azure Function App
     needs: terraform
     runs-on: windows-latest
     steps:
@@ -55,6 +56,9 @@ jobs:
       - name: 'Resolve Project Dependencies Using Npm'
         shell: pwsh
         run: |
+          pushd ./packages/common
+          npm install
+          popd
           pushd '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
           npm install
           npm run build --if-present

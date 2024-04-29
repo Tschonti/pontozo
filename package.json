@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "build": "cd packages/client && vite build"
+    "build": "cd packages/client && vite build",
+    "ghal": "gh extension exec act push -W .github/workflows/deploy.yml"
   },
   "private": true,
   "dependencies": {
