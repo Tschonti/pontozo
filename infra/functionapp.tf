@@ -49,14 +49,14 @@ resource "azurerm_windows_function_app" "function-app" {
     }
 
     cors {
-      allowed_origins = ["https://pontozo.mtfsz.hu"]
+      allowed_origins = ["https://pontozo.mtfsz.hu", format("%s%s", "https://", azurerm_static_web_app.swa.default_host_name)]
     }
   }
 
   app_settings = {
     "ADMINS"                   = var.FA_ADMINS
     "APIM_HOST"                = azurerm_api_management.apim.gateway_url
-    "APIM_KEY"                 = "TODO"
+    "APIM_KEY"                 = azurerm_api_management_subscription.backend-sub.primary_key
     "CLIENT_ID"                = var.MTFSZ_CLIENT_ID
     "CLIENT_SECRET"            = var.MTFSZ_CLIENT_SECRET
     "DB_NAME"                  = azurerm_mssql_database.sqldatabase.name
@@ -65,7 +65,7 @@ resource "azurerm_windows_function_app" "function-app" {
     "DB_USER"                  = var.DB_USER
     "ENCRYPT"                  = true
     "ENV"                      = "production"
-    "FRONTEND_URL"             = azurerm_static_web_app.swa.default_host_name
+    "FRONTEND_URL"             = format("%s%s", "https://", azurerm_static_web_app.swa.default_host_name)
     "FUNCTION_HOST"            = "https://pontozo-api-tf.azurewebsites.net"
     "FUNCTIONS_WORKER_RUNTIME" = "node"
     "JWT_SECRET"               = var.FA_JWT_SECRET

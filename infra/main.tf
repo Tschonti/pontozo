@@ -4,6 +4,9 @@ terraform {
       source  = "hashicorp/azurerm"
       version = ">=3.96.0"
     }
+    azapi = {
+      source = "azure/azapi"
+    }
   }
   cloud {
     organization = "feketesamu"
@@ -15,6 +18,9 @@ terraform {
 
 provider "azurerm" {
   features {}
+}
+
+provider "azapi" {
 }
 
 resource "azurerm_resource_group" "tf-rg" {

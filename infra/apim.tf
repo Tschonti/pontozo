@@ -1,10 +1,10 @@
 variable "MTFSZ_CLIENT_ID" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 variable "MTFSZ_CLIENT_SECRET" {
-  type = string
+  type      = string
   sensitive = true
 }
 
@@ -61,6 +61,62 @@ resource "azurerm_api_management_api_operation" "get-events" {
 
 }
 
+resource "azurerm_api_management_api_operation" "get-user" {
+  operation_id        = "get-user"
+  api_name            = azurerm_api_management_api.mtfsz-api.name
+  api_management_name = azurerm_api_management_api.mtfsz-api.api_management_name
+  resource_group_name = azurerm_api_management_api.mtfsz-api.resource_group_name
+  display_name        = "Get user by ID"
+  method              = "GET"
+  url_template        = "/szemelyek/{userId}"
+
+  template_parameter {
+    name     = "userId"
+    type     = "number"
+    required = true
+  }
+
+
+  response {
+    status_code = 200
+  }
+}
+
+resource "azurerm_api_management_api_operation" "search-users" {
+  operation_id        = "search-users"
+  api_name            = azurerm_api_management_api.mtfsz-api.name
+  api_management_name = azurerm_api_management_api.mtfsz-api.api_management_name
+  resource_group_name = azurerm_api_management_api.mtfsz-api.resource_group_name
+  display_name        = "Search users"
+  method              = "GET"
+  url_template        = "/szemelyek"
+
+  request {
+    query_parameter {
+      name     = "vezeteknev"
+      type     = "string"
+      required = false
+    }
+
+    query_parameter {
+      name     = "keresztnev"
+      type     = "string"
+      required = false
+    }
+
+    query_parameter {
+      name     = "szul_ev"
+      type     = "number"
+      required = false
+    }
+  }
+
+
+  response {
+    status_code = 200
+  }
+}
+
 resource "azurerm_api_management_api_policy" "mtfsz-api-policy" {
   api_name            = azurerm_api_management_api.mtfsz-api.name
   api_management_name = azurerm_api_management_api.mtfsz-api.api_management_name
@@ -75,6 +131,7 @@ resource "azurerm_api_management_api_policy" "mtfsz-api-policy" {
             <allowed-origins>
                 <origin>http://localhost:3001/</origin>
                 <origin>https://pontozo.mtfsz.hu/</origin>
+                <origin>${format("%s%s", "https://", azurerm_static_web_app.swa.default_host_name)}</origin>
             </allowed-origins>
             <allowed-methods>
                 <method>GET</method>
@@ -98,20 +155,40 @@ resource "azurerm_api_management_api_policy" "mtfsz-api-policy" {
 XML
 }
 
-resource "azurerm_api_management_authorization_server" "mtfsz-oauth" {
-  name                         = "mtfsz"
-  api_management_name          = azurerm_api_management.apim.name
-  resource_group_name          = azurerm_api_management.apim.resource_group_name
-  display_name                 = "MTFSZ OAuth"
-  authorization_endpoint       = "https://api.mtfsz.hu/oauth/v2/auth"
-  client_registration_endpoint = "https://api.mtfsz.hu/oauth/v2/token"
-  client_id                    = var.MTFSZ_CLIENT_ID
-  client_secret                = var.MTFSZ_CLIENT_SECRET
+resource "azapi_resource" "auth-provider" {
+  type      = "Microsoft.ApiManagement/service/authorizationProviders@2023-05-01-preview"
+  name      = "mtfsz"
+  parent_id = azurerm_api_management.apim.id
+  body = jsonencode({
+    properties = {
+      displayName      = "MTFSZ"
+      identityProvider = "oauth2"
+      oauth2 = {
+        grantTypes = {
+          clientCredentials = {
+            authorizationUrl = "https://api.mtfsz.hu/oauth/v2/auth"
+            tokenUrl         = "https://api.mtfsz.hu/oauth/v2/token"
+          }
+        }
+      }
+    }
+  })
+}
 
-  grant_types = [
-    "clientCredentials",
-  ]
-  authorization_methods = [
-    "GET",
-  ]
+
+resource "azurerm_api_management_subscription" "backend-sub" {
+  api_management_name = azurerm_api_management.apim.name
+  resource_group_name = azurerm_api_management.apim.resource_group_name
+  display_name        = "Functions App subscription"
+}
+
+resource "azurerm_api_management_subscription" "frontend-sub" {
+  api_management_name = azurerm_api_management.apim.name
+  resource_group_name = azurerm_api_management.apim.resource_group_name
+  display_name        = "Client App subscription"
+}
+
+output "frontend-subscription-key" {
+  value     = azurerm_api_management_subscription.frontend-sub.primary_key
+  sensitive = true
 }
