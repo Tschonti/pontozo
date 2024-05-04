@@ -67,7 +67,7 @@ resource "azurerm_windows_function_app" "function-app" {
     "FUNCTIONS_WORKER_RUNTIME" = "node"
     "JWT_SECRET"               = var.FA_JWT_SECRET
     "REDIS_HOST"               = "TODO"
-    "REDIS_PORT"               = "TODO"
+    "REDIS_PORT"               = 0
     "REDIS_PWD"                = "TODO"
     "WEBSITE_RUN_FROM_PACKAGE" = 1
     "WEBSITE_TIME_ZONE"        = "Central Europe Standard Time"
