@@ -85,6 +85,5 @@
     "vite": "~4.3.9",
     "vite-tsconfig-paths": "~4.2.0",
     "vitest": "~0.32.0"
-  },
-  "main": "packages/functions/dist/packages/functions/src/functions/**/*.js"
+  }
 }
