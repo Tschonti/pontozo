@@ -11,3 +11,5 @@ packages/client/
 packages/common/
 docs/
 infra/
+packages/functions/host.json
+packages/functions/package.json
