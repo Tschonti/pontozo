@@ -49,13 +49,11 @@ resource "azurerm_windows_function_app" "function-app" {
   }
 
   app_settings = {
-    "ADMINS"        = var.FA_ADMINS
-    "APIM_HOST"     = azurerm_api_management.apim.gateway_url
-    "APIM_KEY"      = ""
-    "CLIENT_ID"     = var.MTFSZ_CLIENT_ID
-    "CLIENT_SECRET" = var.MTFSZ_CLIENT_SECRET
-    # "DB_ADMIN_PWD" = ""
-    # "DB_ADMIN_USER" = ""
+    "ADMINS"                   = var.FA_ADMINS
+    "APIM_HOST"                = azurerm_api_management.apim.gateway_url
+    "APIM_KEY"                 = ""
+    "CLIENT_ID"                = var.MTFSZ_CLIENT_ID
+    "CLIENT_SECRET"            = var.MTFSZ_CLIENT_SECRET
     "DB_NAME"                  = azurerm_mssql_database.sqldatabase.name
     "DB_PWD"                   = var.DB_PWD
     "DB_SERVER"                = azurerm_mssql_server.sqlserver.fully_qualified_domain_name
