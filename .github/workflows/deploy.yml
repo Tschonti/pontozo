@@ -53,7 +53,9 @@ jobs:
       - name: 'Resolve Project Dependencies Using Npm'
         shell: bash
         run: |
-          cd packages/functions && npm ci
+          npx nx build functions
+          cd packages/functions
+          npm ci
 
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
