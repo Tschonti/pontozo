@@ -36,7 +36,9 @@
     "@nx/js": "16.5.1",
     "@nx/linter": "16.5.1",
     "@nx/workspace": "16.5.1",
-    "@nxazure/func": "^1.0.17"
+    "@nxazure/func": "^1.0.17",
+    "nx": "16.5.1",
+    "nx-cloud": "latest"
   },
   "main": "dist/packages/functions/src/functions/**/*.js"
 }
