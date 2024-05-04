@@ -12,6 +12,11 @@ variable "DB_PWD" {
   sensitive = true
 }
 
+variable "DB_USER" {
+  type      = string
+  sensitive = true
+}
+
 variable "FA_JWT_SECRET" {
   type      = string
   sensitive = true
@@ -51,22 +56,22 @@ resource "azurerm_windows_function_app" "function-app" {
   app_settings = {
     "ADMINS"                   = var.FA_ADMINS
     "APIM_HOST"                = azurerm_api_management.apim.gateway_url
-    "APIM_KEY"                 = ""
+    "APIM_KEY"                 = "TODO"
     "CLIENT_ID"                = var.MTFSZ_CLIENT_ID
     "CLIENT_SECRET"            = var.MTFSZ_CLIENT_SECRET
     "DB_NAME"                  = azurerm_mssql_database.sqldatabase.name
     "DB_PWD"                   = var.DB_PWD
     "DB_SERVER"                = azurerm_mssql_server.sqlserver.fully_qualified_domain_name
-    "DB_USER"                  = var.DB_PWD
+    "DB_USER"                  = var.DB_USER
     "ENCRYPT"                  = true
     "ENV"                      = "production"
-    "FRONTEND_URL"             = "TODO"
-    "FUNCTION_HOST"            = var.FA_FUNCTIONS_URL
+    "FRONTEND_URL"             = azurerm_static_web_app.swa.default_host_name
+    "FUNCTION_HOST"            = "https://pontozo-api-tf.azurewebsites.net"
     "FUNCTIONS_WORKER_RUNTIME" = "node"
     "JWT_SECRET"               = var.FA_JWT_SECRET
-    "REDIS_HOST"               = "TODO"
-    "REDIS_PORT"               = 0
-    "REDIS_PWD"                = "TODO"
+    "REDIS_HOST"               = azurerm_redis_cache.redis-cache.hostname
+    "REDIS_PORT"               = azurerm_redis_cache.redis-cache.ssl_port
+    "REDIS_PWD"                = azurerm_redis_cache.redis-cache.primary_access_key
     "WEBSITE_RUN_FROM_PACKAGE" = 1
     "WEBSITE_TIME_ZONE"        = "Central Europe Standard Time"
   }
