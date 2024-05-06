@@ -22,6 +22,11 @@ variable "FA_JWT_SECRET" {
   sensitive = true
 }
 
+variable "DB_ADMIN_USER" {
+  type      = string
+  sensitive = true
+}
+
 resource "azurerm_service_plan" "sp" {
   name                = "pontozo-sp-tf"
   resource_group_name = azurerm_resource_group.tf-rg.name
@@ -61,6 +66,8 @@ resource "azurerm_windows_function_app" "function-app" {
     "CLIENT_SECRET"            = var.MTFSZ_CLIENT_SECRET
     "DB_NAME"                  = azurerm_mssql_database.sqldatabase.name
     "DB_PWD"                   = var.DB_PWD
+    "DB_ADMIN_PWD"             = var.DB_ADMIN_PWD
+    "DB_ADMIN_USER"            = var.DB_ADMIN_USER
     "DB_SERVER"                = azurerm_mssql_server.sqlserver.fully_qualified_domain_name
     "DB_USER"                  = var.DB_USER
     "ENCRYPT"                  = true
