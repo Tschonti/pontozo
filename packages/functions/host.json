@@ -2,8 +2,10 @@
   "version": "2.0",
   "logging": {
     "logLevel": {
-      "default": "Information",
-      "Host.Triggers.DurableTask": "Warning"
+      "DurableTask.AzureStorage": "Warning",
+      "DurableTask.Core": "Warning",
+      "Host.Triggers.DurableTask": "Warning",
+      "default": "Information"
     }
   },
   "extensionBundle": {
@@ -13,6 +15,12 @@
   "extensions": {
     "http": {
       "routePrefix": ""
+    },
+    "durableTask": {
+      "tracing": {
+        "traceReplayEvents": false,
+        "traceInputsAndOutputs": false
+      }
     }
   }
 }
