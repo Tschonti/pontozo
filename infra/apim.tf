@@ -180,12 +180,14 @@ resource "azurerm_api_management_subscription" "backend-sub" {
   api_management_name = azurerm_api_management.apim.name
   resource_group_name = azurerm_api_management.apim.resource_group_name
   display_name        = "Functions App subscription"
+  state               = "active"
 }
 
 resource "azurerm_api_management_subscription" "frontend-sub" {
   api_management_name = azurerm_api_management.apim.name
   resource_group_name = azurerm_api_management.apim.resource_group_name
   display_name        = "Client App subscription"
+  state               = "active"
 }
 
 output "frontend-subscription-key" {
