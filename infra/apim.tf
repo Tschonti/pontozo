@@ -155,25 +155,25 @@ resource "azurerm_api_management_api_policy" "mtfsz-api-policy" {
 XML
 }
 
-resource "azapi_resource" "auth-provider" {
-  type      = "Microsoft.ApiManagement/service/authorizationProviders@2023-05-01-preview"
-  name      = "mtfsz"
-  parent_id = azurerm_api_management.apim.id
-  body = jsonencode({
-    properties = {
-      displayName      = "MTFSZ"
-      identityProvider = "oauth2"
-      oauth2 = {
-        grantTypes = {
-          clientCredentials = {
-            authorizationUrl = "https://api.mtfsz.hu/oauth/v2/auth"
-            tokenUrl         = "https://api.mtfsz.hu/oauth/v2/token"
-          }
-        }
-      }
-    }
-  })
-}
+# resource "azapi_resource" "auth-provider" {
+#   type      = "Microsoft.ApiManagement/service/authorizationProviders@2023-05-01-preview"
+#   name      = "mtfsz"
+#   parent_id = azurerm_api_management.apim.id
+#   body = jsonencode({
+#     properties = {
+#       displayName      = "MTFSZ"
+#       identityProvider = "oauth2"
+#       oauth2 = {
+#         grantTypes = {
+#           clientCredentials = {
+#             authorizationUrl = "https://api.mtfsz.hu/oauth/v2/auth"
+#             tokenUrl         = "https://api.mtfsz.hu/oauth/v2/token"
+#           }
+#         }
+#       }
+#     }
+#   })
+# }
 
 
 resource "azurerm_api_management_subscription" "backend-sub" {
