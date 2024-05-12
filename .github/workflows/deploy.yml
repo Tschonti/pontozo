@@ -34,7 +34,6 @@ jobs:
       - name: Terraform Apply
         id: apply
         run: terraform apply -no-color -auto-approve
-        continue-on-error: true
 
   deploy_fa:
     name: Deploy backend code to Azure Function App
