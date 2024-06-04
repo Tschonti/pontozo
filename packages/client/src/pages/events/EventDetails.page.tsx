@@ -1,11 +1,12 @@
-import { Badge, Button, Heading, HStack, Link as ChakraLink, Stack, Text, useToast, VStack } from '@chakra-ui/react'
-import { RatingRole, ratingRoleArray } from '@pontozo/common'
+import { Button, Heading, HStack, Link as ChakraLink, Stack, Text, useToast, VStack } from '@chakra-ui/react'
+import { EventState, RatingRole, ratingRoleArray } from '@pontozo/common'
 import { useEffect, useState } from 'react'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { useCacheContext } from 'src/api/contexts/useCacheContext'
 import { useRatingContext } from 'src/api/contexts/useRatingContext'
 import { useStartRatingMutation } from 'src/api/hooks/ratingHooks'
+import { EventRatingStateBadge } from 'src/components/commons/EventRatingStateBadge'
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { formatDateRange } from 'src/util/formatDateRange'
@@ -90,11 +91,7 @@ export const EventDetailsPage = () => {
     <VStack alignItems="flex-start" spacing={3}>
       <HelmetTitle title={`Pontoz-O | ${event.name}`} />
       <Heading>{event.name} értékelése</Heading>
-      {!event.rateable && (
-        <Badge colorScheme="red" variant="solid" fontSize="1rem">
-          Értékelés lezárult
-        </Badge>
-      )}
+      <EventRatingStateBadge state={event.state} />
       <Heading size="md">{formatDateRange(event.startDate, event.endDate)}</Heading>
       <Text>
         <b>Rendező{event.organisers.length > 1 && 'k'}:</b> {event.organisers.map((o) => o.shortName).join(', ')}
@@ -115,7 +112,7 @@ export const EventDetailsPage = () => {
           role={r}
           onSelected={() => setRole(r)}
           selected={role === r}
-          disabled={!!eventData.userRating || !event.rateable}
+          disabled={!!eventData.userRating || event.state !== EventState.RATEABLE}
         />
       ))}
       <Heading size="md" mt={3}>
@@ -131,7 +128,7 @@ export const EventDetailsPage = () => {
           <StageListItem
             stage={s}
             key={s.id}
-            disabled={!!eventData.userRating || !event.rateable}
+            disabled={!!eventData.userRating || event.state !== EventState.RATEABLE}
             onChecked={(c) => onItemChecked(c, s.id)}
             checked={stageIds.includes(s.id)}
           />
@@ -145,7 +142,7 @@ export const EventDetailsPage = () => {
           eventWithRating={eventData}
           onStartClick={onStartClick}
           startDisabled={!role || !stageIds.length}
-          continueDisabled={!event.rateable}
+          continueDisabled={event.state !== EventState.RATEABLE}
         />
       </HStack>
     </VStack>

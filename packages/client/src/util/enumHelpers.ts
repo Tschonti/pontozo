@@ -1,4 +1,4 @@
-import { AlertLevel, EventRank, RatingRole, RatingStatus, UserRole } from '@pontozo/common'
+import { AlertLevel, EventRank, EventState, RatingRole, RatingStatus, UserRole } from '@pontozo/common'
 
 type RoleDict = {
   [K in RatingRole]: string
@@ -89,4 +89,24 @@ export const alertLevelToChakraStatus: AlertDict = {
   [AlertLevel.INFO]: 'info',
   [AlertLevel.WARN]: 'warning',
   [AlertLevel.ERROR]: 'error',
+}
+
+type EventStateDict = {
+  [K in EventState]: string
+}
+
+export const translateEventState: EventStateDict = {
+  [EventState.RATEABLE]: 'ÉRTÉKELHETŐ',
+  [EventState.VALIDATING]: 'VALIDÁCIÓ FOLYAMATBAN',
+  [EventState.ACCUMULATING]: 'ÖSSZEGZÉS FOLYAMATBAN',
+  [EventState.RESULTS_READY]: 'VÉGLEGES EREDMÉNY',
+  [EventState.INVALIDATED]: 'ÉRVÉNYTELENÍTETT',
+}
+
+export const eventStateColor: EventStateDict = {
+  [EventState.RATEABLE]: 'brand',
+  [EventState.VALIDATING]: 'gray',
+  [EventState.ACCUMULATING]: 'gray',
+  [EventState.RESULTS_READY]: 'orange',
+  [EventState.INVALIDATED]: 'yellow',
 }
