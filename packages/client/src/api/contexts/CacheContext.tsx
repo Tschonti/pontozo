@@ -3,6 +3,8 @@ import { DbEvent, PontozoError } from '@pontozo/common'
 import { createContext, PropsWithChildren, useEffect, useRef, useState } from 'react'
 import { useFetchRateableEventsFromCache, useFetchRateableEventsFromDb } from '../hooks/eventQueryHooks'
 
+// NOT USED ANYMORE
+
 export type CacheContextType = {
   dbQueryLoading: boolean
   eventData?: DbEvent[]
@@ -14,7 +16,7 @@ export type CacheContextType = {
 export const CacheContext = createContext<CacheContextType>({
   dbQueryLoading: true,
   eventDataLoading: true,
-  refetchEventData: () => {},
+  refetchEventData: () => { },
   eventData: undefined,
   eventDataError: undefined,
 })

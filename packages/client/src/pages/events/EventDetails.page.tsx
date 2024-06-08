@@ -3,7 +3,6 @@ import { EventState, RatingRole, ratingRoleArray } from '@pontozo/common'
 import { useEffect, useState } from 'react'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link, Navigate, useParams } from 'react-router-dom'
-import { useCacheContext } from 'src/api/contexts/useCacheContext'
 import { useRatingContext } from 'src/api/contexts/useRatingContext'
 import { useStartRatingMutation } from 'src/api/hooks/ratingHooks'
 import { EventRatingStateBadge } from 'src/components/commons/EventRatingStateBadge'
@@ -12,7 +11,7 @@ import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { formatDateRange } from 'src/util/formatDateRange'
 import { onError } from 'src/util/onError'
 import { useAuthContext } from '../../api/contexts/useAuthContext'
-import { useFetchEvent, useFetchEventFromCache } from '../../api/hooks/eventQueryHooks'
+import { useFetchEvent } from '../../api/hooks/eventQueryHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 import { GoToRatingButton } from './components/GoToRatingButton'
@@ -21,9 +20,7 @@ import { StageListItem } from './components/StageListItem'
 
 export const EventDetailsPage = () => {
   const { eventId } = useParams()
-  const { dbQueryLoading } = useCacheContext()
   const dbQuery = useFetchEvent(+eventId!)
-  const cacheQuery = useFetchEventFromCache(+eventId!, dbQueryLoading)
   const { isLoggedIn } = useAuthContext()
   const toast = useToast()
   const [role, setRole] = useState(RatingRole.COMPETITOR)
@@ -36,18 +33,11 @@ export const EventDetailsPage = () => {
       if (dbQuery.data.userRating) {
         setStageIds(dbQuery.data.userRating.stages.map((s) => s.id))
         setRole(dbQuery.data.userRating.role)
-      } else if (!cacheQuery.isFetchedAfterMount) {
-        setStageIds(dbQuery.data.event.stages?.map((s) => s.id) ?? [])
+      } else {
+        setStageIds(dbQuery.data.event?.stages?.map((s) => s.id) || [])
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dbQuery.isFetchedAfterMount, dbQuery.data])
-
-  useEffect(() => {
-    if (cacheQuery.isFetchedAfterMount && cacheQuery.data) {
-      setStageIds(cacheQuery.data.event.stages?.map((s) => s.id) ?? [])
-    }
-  }, [cacheQuery.isFetchedAfterMount, cacheQuery.data])
 
   const onStartClick = () => {
     if (role) {
@@ -73,11 +63,10 @@ export const EventDetailsPage = () => {
     toast({ title: 'Jelentkezz be az oldal megtekintéséhez!', status: 'warning' })
     return <Navigate to={PATHS.INDEX} />
   }
-  const eventData = dbQuery.data || cacheQuery.data
-  if (dbQuery.isLoading && cacheQuery.isLoading) {
+  if (dbQuery.isLoading) {
     return <LoadingSpinner />
   }
-  if ((dbQuery.error && cacheQuery.error) || !eventData) {
+  if (dbQuery.error || !dbQuery.data) {
     return (
       <NavigateWithError
         error={dbQuery.error || { message: 'Nem sikerült betölteni a verseny adatait', statusCode: 500 }}
@@ -85,7 +74,7 @@ export const EventDetailsPage = () => {
       />
     )
   }
-  const { event } = eventData
+  const { event, userRating } = dbQuery.data
 
   return (
     <VStack alignItems="flex-start" spacing={3}>
@@ -112,7 +101,7 @@ export const EventDetailsPage = () => {
           role={r}
           onSelected={() => setRole(r)}
           selected={role === r}
-          disabled={!!eventData.userRating || event.state !== EventState.RATEABLE}
+          disabled={!!userRating || event.state !== EventState.RATEABLE}
         />
       ))}
       <Heading size="md" mt={3}>
@@ -128,7 +117,7 @@ export const EventDetailsPage = () => {
           <StageListItem
             stage={s}
             key={s.id}
-            disabled={!!eventData.userRating || event.state !== EventState.RATEABLE}
+            disabled={!!userRating || event.state !== EventState.RATEABLE}
             onChecked={(c) => onItemChecked(c, s.id)}
             checked={stageIds.includes(s.id)}
           />
@@ -138,8 +127,8 @@ export const EventDetailsPage = () => {
           Vissza
         </Button>
         <GoToRatingButton
-          isLoading={startRating.isLoading || dbQueryLoading}
-          eventWithRating={eventData}
+          isLoading={startRating.isLoading || dbQuery.isLoading}
+          eventWithRating={dbQuery.data}
           onStartClick={onStartClick}
           startDisabled={!role || !stageIds.length}
           continueDisabled={event.state !== EventState.RATEABLE}

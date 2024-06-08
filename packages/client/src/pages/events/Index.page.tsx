@@ -1,6 +1,5 @@
 import { Alert, AlertIcon, AlertTitle, Heading, Link, SimpleGrid, Text } from '@chakra-ui/react'
-import { useEffect } from 'react'
-import { useCacheContext } from 'src/api/contexts/useCacheContext'
+import { useFetchRateableEventsFromDb } from 'src/api/hooks/eventQueryHooks'
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { PATHS } from 'src/util/paths'
@@ -8,19 +7,15 @@ import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { EventListItem } from './components/EventListItem'
 
 export const IndexPage = () => {
-  const { eventDataLoading, refetchEventData, eventData, eventDataError } = useCacheContext()
+  const { data, isLoading, error } = useFetchRateableEventsFromDb()
 
-  useEffect(() => {
-    refetchEventData()
-  }, [refetchEventData])
-
-  if (eventDataLoading) {
+  if (isLoading) {
     return <LoadingSpinner />
   }
 
-  if (eventDataError) {
-    console.error(eventDataError)
-    return <NavigateWithError to={PATHS.ERROR} error={eventDataError} />
+  if (error) {
+    console.error(error)
+    return <NavigateWithError to={PATHS.ERROR} error={error} />
   }
 
   return (
@@ -37,9 +32,9 @@ export const IndexPage = () => {
         </AlertTitle>
       </Alert>
       <Heading my={5}>Értékelhető versenyek</Heading>
-      {(eventData?.length ?? 0) > 0 ? (
+      {data.length > 0 ? (
         <SimpleGrid spacing={4} columns={[1, 1, 2]}>
-          {eventData?.map((e) => (
+          {data.map((e) => (
             <EventListItem key={e.id} event={e} />
           ))}
         </SimpleGrid>
