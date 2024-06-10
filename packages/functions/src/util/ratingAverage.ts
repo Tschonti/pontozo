@@ -1,4 +1,4 @@
-import { ageGroupFilterDict, ALL_AGE_GROUPS, ALL_ROLES, RatingResult as IRatingResult, RatingResultItem } from '@pontozo/common'
+import { ageGroupFilterDict, ALL_AGE_GROUPS, ALL_ROLES, RatingResultItem, RatingResultWithJoins } from '@pontozo/common'
 import Category from '../typeorm/entities/Category'
 import Criterion from '../typeorm/entities/Criterion'
 import CriterionRating from '../typeorm/entities/CriterionRating'
@@ -54,7 +54,7 @@ export const averageByRoleAndGroup = (
   }),
 ]
 
-export const accumulateCategory = (results: Omit<IRatingResult, 'id'>[]): RatingResultItem[] => {
+export const accumulateCategory = (results: Omit<RatingResultWithJoins, 'id'>[]): RatingResultItem[] => {
   const variatons = ALL_ROLES.length + ALL_AGE_GROUPS.length + 1
   const zeroToN = Array.from({ length: variatons }, (_, i) => i)
   const sum = Array.from({ length: variatons }, () => 0)

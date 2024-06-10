@@ -1,6 +1,6 @@
 import { HttpRequest } from '@azure/functions'
+import { PontozoException } from '@pontozo/common'
 import { validate } from 'class-validator'
-import { PontozoException } from '../../../common/src'
 
 export const validateWithWhitelist = async (object: object): Promise<void> => {
   const errors = await validate(object, { whitelist: true })

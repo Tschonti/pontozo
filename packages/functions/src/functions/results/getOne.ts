@@ -7,13 +7,11 @@ import { RatingResult } from '../../typeorm/entities/RatingResult'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { handleException } from '../../util/handleException'
 import { parseRatingResults } from '../../util/parseRatingResults'
+import { validateId } from '../../util/validation'
 
 export const getOneResult = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
-    const eventId = parseInt(req.params.eventId)
-    if (isNaN(eventId)) {
-      throw new PontozoException('Érvénytelen azonosító!', 400)
-    }
+    const eventId = validateId(req)
 
     const redisClient = await getRedisClient(context)
     const ratingResult = await redisClient.get(`ratingResult:${eventId}`)
@@ -46,6 +44,6 @@ export const getOneResult = async (req: HttpRequest, context: InvocationContext)
 
 app.http('results-getOne', {
   methods: ['GET'],
-  route: 'results/{eventId}',
+  route: 'results/{id}',
   handler: getOneResult,
 })

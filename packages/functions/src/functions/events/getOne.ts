@@ -5,16 +5,14 @@ import Event from '../../typeorm/entities/Event'
 import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { handleException } from '../../util/handleException'
+import { validateId } from '../../util/validation'
 
 /**
  * Called when the user visits an event page to get the event data and the user's rating.
  */
 export const getOneEvent = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
-    const eventId = parseInt(req.params.eventId)
-    if (isNaN(eventId)) {
-      throw new PontozoException('Érvénytelen azonosító!', 400)
-    }
+    const eventId = validateId(req)
 
     const user = getUserFromHeader(req)
     const ads = await getAppDataSource(context)
@@ -40,6 +38,6 @@ export const getOneEvent = async (req: HttpRequest, context: InvocationContext):
 
 app.http('events-getOne', {
   methods: ['GET'],
-  route: 'events/getOne/{eventId}',
+  route: 'events/getOne/{id}',
   handler: getOneEvent,
 })

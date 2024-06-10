@@ -1,9 +1,9 @@
-import { Criterion as Criterion_DTO, DbEvent, EventWithResults, RatingResult as RR_DTO } from '@pontozo/common'
+import { Criterion as Criterion_DTO, DbEvent, EventWithResults, RatingResultWithJoins } from '@pontozo/common'
 import Criterion_DB from '../typeorm/entities/Criterion'
 import { RatingResult as RR_DB } from '../typeorm/entities/RatingResult'
 
 export const parseRatingResults = (results: RR_DB[], event: DbEvent): EventWithResults => {
-  const parsed: RR_DTO[] = results.map((r) => ({
+  const parsed: RatingResultWithJoins[] = results.map((r) => ({
     ...r,
     items: JSON.parse(r.items),
     criterion: parseCriterion(r.criterion),

@@ -1,6 +1,7 @@
 import { Category } from './categories'
 import { Criterion } from './criteria'
 import { DbEvent, DbStage } from './dbEvents'
+import { Season } from './seasons'
 
 export interface RatingResult {
   id: number
@@ -8,10 +9,13 @@ export interface RatingResult {
   eventId: number
   stageId?: number
   criterionId?: number
-  criterion?: Criterion
   categoryId?: number
-  category?: Category
   items: RatingResultItem[]
+}
+
+export interface RatingResultWithJoins extends RatingResult {
+  criterion?: Criterion
+  category?: Category
 }
 
 export interface RatingResultItem {
@@ -22,8 +26,28 @@ export interface RatingResultItem {
 }
 
 export interface EventWithResults extends Omit<DbEvent, 'stages'> {
-  ratingResults: RatingResult
+  ratingResults: RatingResultWithJoins
   stages: (DbStage & {
-    ratingResults: RatingResult
+    ratingResults: RatingResultWithJoins
   })[]
+}
+
+export interface EventResultList {
+  season: Season
+  categories: Category[]
+  criteria: Criterion[]
+  eventResults: EventResult[]
+}
+
+export interface EventResult {
+  eventId: number
+  eventName: string
+  results: RatingResult[]
+  stages: StageResult[]
+}
+
+export interface StageResult {
+  stageId: number
+  stageName: string
+  results: RatingResult[]
 }
