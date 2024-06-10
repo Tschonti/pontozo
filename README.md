@@ -15,7 +15,7 @@ You'll need the following applications:
 - [VS Code](https://code.visualstudio.com/) with the [Azure Functions extension v1.10.4 or above](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions) and the [Nx Console extension](https://marketplace.visualstudio.com/items?itemName=nrwl.angular-console)
 - [Node.js 18.x or above](https://nodejs.org/en)
 - [Azure Functions Core Tools v4.0.5382 or above](https://github.com/Azure/azure-functions-core-tools/blob/v4.x/README.md#windows)
-- [Azure Storage Emulator](https://learn.microsoft.com/en-us/azure/storage/common/storage-use-emulator)
+- [Azurite VS Code extension](https://marketplace.visualstudio.com/items?itemName=Azurite.azurite)
 
 You'll need to be able to connect to the following services:
 
@@ -65,7 +65,7 @@ VITE_APIM_KEY=<subscription key for your APIM instance>
 PORT=3001
 ```
 
-Then start the Azure Storage Emulator. Make sure that the Azure SQL or MSSQL database and Redis is also running.
+Then start the Azurite Storage Emulator. You can do this in VS Code by pressing F1 and selecting the `Azurite: Start` task.
 
 Next, install the dependencies:
 

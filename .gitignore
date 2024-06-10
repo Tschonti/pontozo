@@ -44,3 +44,8 @@ az-login.bat
 /.nx/cache
 /infra/.terraform/
 .secrets
+
+# Azurite stuff
+__azurite*.json
+__blobstorage__/
+__queuestorage__/
