@@ -19,11 +19,9 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - redisdata:/root/redis
-      - redisconf:/usr/local/etc/redis/redis.conf
+      - redis:/data
     environment:
       - REDIS_PASSWORD=hablatyrandomszoveg1235t436
 volumes:
   mssqlv:
-  redisdata:
-  redisconf:
+  redis:

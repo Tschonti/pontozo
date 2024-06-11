@@ -1,6 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { EventResult, EventResultList, EventState, PontozoException } from '@pontozo/common'
-import { In } from 'typeorm'
+import { In, LessThan } from 'typeorm'
 import Category from '../../typeorm/entities/Category'
 import Criterion from '../../typeorm/entities/Criterion'
 import { RatingResult } from '../../typeorm/entities/RatingResult'
@@ -36,6 +36,13 @@ export const getEventResults = async (req: HttpRequest, context: InvocationConte
       season = await seasonRepo.findOne({ where: { id: parseInt(seasonId) }, relations: { events: { stages: true } } })
     } else {
       season = await seasonRepo.findOne({ where: currentSeasonFilter, relations: { events: { stages: true } } })
+      if (!season) {
+        season = await seasonRepo.findOne({
+          where: { endDate: LessThan(new Date()) },
+          order: { endDate: 'DESC' },
+          relations: { events: { stages: true } },
+        })
+      }
     }
     if (!season) {
       throw new PontozoException('Nem található a szezon!', 404)
@@ -44,11 +51,14 @@ export const getEventResults = async (req: HttpRequest, context: InvocationConte
     const categoriesQuery = categorynRepo.find({ where: { id: In(categoryIds) } })
     const criteriaQuery = criterionRepo.find({ where: { id: In(criterionIds) } })
     const [categories, criteria] = await Promise.all([categoriesQuery, criteriaQuery])
+    const closedEvents = season.events.filter((e) => e.state === EventState.RESULTS_READY)
 
     const results = await resultsRepo.find({
-      where: [{ categoryId: In(categories.map((c) => c.id)) }, { criterionId: In(criteria.map((c) => c.id)) }],
+      where: [
+        { categoryId: In(categories.map((c) => c.id)), eventId: In(closedEvents.map((e) => e.id)) },
+        { criterionId: In(criteria.map((c) => c.id)), eventId: In(closedEvents.map((e) => e.id)) },
+      ],
     })
-    const closedEvents = season.events.filter((e) => e.state === EventState.RESULTS_READY)
     const eventResults: EventResult[] = closedEvents.map((e) => ({
       eventId: e.id,
       eventName: e.name,
