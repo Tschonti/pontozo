@@ -1,12 +1,16 @@
-import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { app, HttpRequest, InvocationContext } from '@azure/functions'
 import { CategoryWithCriteria, EntityWithEditableIndicator, PontozoException } from '@pontozo/common'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Category from '../../typeorm/entities/Category'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { handleException } from '../../util/handleException'
+import { PontozoResponse } from '../../util/pontozoResponse'
 import { validateId } from '../../util/validation'
 
-export const getCategory = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
+export const getCategory = async (
+  req: HttpRequest,
+  context: InvocationContext
+): Promise<PontozoResponse<EntityWithEditableIndicator<CategoryWithCriteria>>> => {
   try {
     await getUserFromHeaderAndAssertAdmin(req, context)
     const id = validateId(req)
@@ -23,7 +27,7 @@ export const getCategory = async (req: HttpRequest, context: InvocationContext):
           .sort((ctc1, ctc2) => ctc1.order - ctc2.order)
           .map((ctc) => ({ ...ctc.criterion, roles: JSON.parse(ctc.criterion.roles) })),
         editable: !seasons.some(({ season }) => season.startDate < new Date()),
-      } as EntityWithEditableIndicator<CategoryWithCriteria>,
+      },
     }
   } catch (error) {
     return handleException(req, context, error)

@@ -1,14 +1,15 @@
-import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { app, HttpRequest, InvocationContext } from '@azure/functions'
 import { Between } from 'typeorm'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Alert from '../../typeorm/entities/Alert'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { handleException } from '../../util/handleException'
+import { PontozoResponse } from '../../util/pontozoResponse'
 
 /**
  * Called when the user visits the admin frontpage. Returns all the alerts from the past 14 days.
  */
-export const getAlerts = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
+export const getAlerts = async (req: HttpRequest, context: InvocationContext): Promise<PontozoResponse<Alert[]>> => {
   try {
     await getUserFromHeaderAndAssertAdmin(req, context)
     const currentDate = new Date()

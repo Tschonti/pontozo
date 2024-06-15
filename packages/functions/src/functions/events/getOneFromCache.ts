@@ -1,14 +1,16 @@
-import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
-import { PontozoException } from '@pontozo/common'
+import { app, HttpRequest, InvocationContext } from '@azure/functions'
+import { EventWithRating, PontozoException } from '@pontozo/common'
 import { getRedisClient } from '../../redis/redisClient'
 import { getUserFromHeader } from '../../service/auth.service'
 import { handleException } from '../../util/handleException'
+import { PontozoResponse } from '../../util/pontozoResponse'
 
 /**
+ * NOT USED
  * Called when the user visits an event page while the DB is still starting up.
  * Return the data of the event from the cache, omits the user's rating since that is not stored in the cache
  */
-export const getOneEventFromCache = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
+export const getOneEventFromCache = async (req: HttpRequest, context: InvocationContext): Promise<PontozoResponse<EventWithRating>> => {
   try {
     const eventId = parseInt(req.params.eventId)
     if (isNaN(eventId)) {

@@ -1,15 +1,16 @@
-import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { app, HttpRequest, InvocationContext } from '@azure/functions'
 import { CategoryWithCriteria, EventRatingInfo, isHigherRank, PontozoException } from '@pontozo/common'
 import { getUserFromHeader } from '../../service/auth.service'
 import Criterion from '../../typeorm/entities/Criterion'
 import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { handleException } from '../../util/handleException'
+import { PontozoResponse } from '../../util/pontozoResponse'
 
 /**
  * Called after the users starts the rating of an event to get all the rating categories and criteria.
  */
-export const getEventInfo = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
+export const getEventInfo = async (req: HttpRequest, context: InvocationContext): Promise<PontozoResponse<EventRatingInfo>> => {
   try {
     const ratingId = parseInt(req.params.id)
 
@@ -81,7 +82,7 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
         endDate: event.endDate,
         eventCategories,
         stageCategories,
-      } as EventRatingInfo,
+      },
     }
   } catch (error) {
     return handleException(req, context, error)

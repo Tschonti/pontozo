@@ -1,4 +1,4 @@
-import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { app, HttpRequest, InvocationContext } from '@azure/functions'
 import { EventResult, EventResultList, EventState, PontozoException } from '@pontozo/common'
 import { In, LessThan } from 'typeorm'
 import Category from '../../typeorm/entities/Category'
@@ -8,8 +8,9 @@ import Season from '../../typeorm/entities/Season'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { currentSeasonFilter } from '../../util/currentSeasonFilter'
 import { handleException } from '../../util/handleException'
+import { PontozoResponse } from '../../util/pontozoResponse'
 
-export const getEventResults = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
+export const getEventResults = async (req: HttpRequest, context: InvocationContext): Promise<PontozoResponse<EventResultList>> => {
   try {
     const seasonId = req.query.get('seasonId')
     const categoryIds =
@@ -70,14 +71,15 @@ export const getEventResults = async (req: HttpRequest, context: InvocationConte
       })),
     }))
     const { events, ...rawSeason } = season
-    const resultList: EventResultList = {
-      season: rawSeason,
-      categories,
-      criteria: criteria.map((c) => ({ ...c, roles: JSON.parse(c.roles) })),
-      eventResults,
-    }
 
-    return { jsonBody: resultList }
+    return {
+      jsonBody: {
+        season: rawSeason,
+        categories,
+        criteria: criteria.map((c) => ({ ...c, roles: JSON.parse(c.roles) })),
+        eventResults,
+      },
+    }
   } catch (error) {
     return handleException(req, context, error)
   }

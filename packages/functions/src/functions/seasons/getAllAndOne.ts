@@ -1,11 +1,12 @@
-import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { app, HttpRequest, InvocationContext } from '@azure/functions'
 import { AllSeasonsAndOne } from '@pontozo/common'
 import { LessThan } from 'typeorm'
 import Season from '../../typeorm/entities/Season'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { handleException } from '../../util/handleException'
+import { PontozoResponse } from '../../util/pontozoResponse'
 
-export const getAllAndOneSeasons = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
+export const getAllAndOneSeasons = async (req: HttpRequest, context: InvocationContext): Promise<PontozoResponse<AllSeasonsAndOne>> => {
   try {
     const now = new Date(2026, 3, 23)
     const seasonId = req.query.get('seasonId')
@@ -23,17 +24,18 @@ export const getAllAndOneSeasons = async (req: HttpRequest, context: InvocationC
       where: { id: selectedSeason.id },
       relations: { categories: { category: { criteria: { criterion: true } } } },
     })
-    const res: AllSeasonsAndOne = {
-      selectedSeason: {
-        ...selectedSeason,
-        categories: selectedSeason.categories.map((stc) => ({
-          ...stc.category,
-          criteria: stc.category.criteria.map((ctc) => ({ ...ctc.criterion, roles: JSON.parse(ctc.criterion.roles) })),
-        })),
+    return {
+      jsonBody: {
+        selectedSeason: {
+          ...selectedSeason,
+          categories: selectedSeason.categories.map((stc) => ({
+            ...stc.category,
+            criteria: stc.category.criteria.map((ctc) => ({ ...ctc.criterion, roles: JSON.parse(ctc.criterion.roles) })),
+          })),
+        },
+        allSeasons: seasons,
       },
-      allSeasons: seasons,
     }
-    return { jsonBody: res }
   } catch (error) {
     return handleException(req, context, error)
   }

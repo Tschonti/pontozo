@@ -4,6 +4,7 @@ import Event from '../../typeorm/entities/Event'
 import { handleException } from '../../util/handleException'
 
 /**
+ * NOT USED
  * Called when the user visits the frontpage. Returns all the events that are in the cache
  */
 export const getRateableEventsFromCache = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {

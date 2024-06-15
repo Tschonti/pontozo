@@ -1,16 +1,17 @@
-import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { app, HttpRequest, InvocationContext } from '@azure/functions'
 import { EventWithRating, PontozoException } from '@pontozo/common'
 import { getUserFromHeader } from '../../service/auth.service'
 import Event from '../../typeorm/entities/Event'
 import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { handleException } from '../../util/handleException'
+import { PontozoResponse } from '../../util/pontozoResponse'
 import { validateId } from '../../util/validation'
 
 /**
  * Called when the user visits an event page to get the event data and the user's rating.
  */
-export const getOneEvent = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
+export const getOneEvent = async (req: HttpRequest, context: InvocationContext): Promise<PontozoResponse<EventWithRating>> => {
   try {
     const eventId = validateId(req)
 
@@ -29,7 +30,7 @@ export const getOneEvent = async (req: HttpRequest, context: InvocationContext):
       jsonBody: {
         event,
         userRating,
-      } as EventWithRating,
+      },
     }
   } catch (error) {
     return handleException(req, context, error)

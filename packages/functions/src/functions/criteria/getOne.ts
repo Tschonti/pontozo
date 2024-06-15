@@ -1,12 +1,16 @@
-import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { app, HttpRequest, InvocationContext } from '@azure/functions'
 import { CriterionWithSeason, EntityWithEditableIndicator, PontozoException } from '@pontozo/common'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Criterion from '../../typeorm/entities/Criterion'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { handleException } from '../../util/handleException'
+import { PontozoResponse } from '../../util/pontozoResponse'
 import { validateId } from '../../util/validation'
 
-export const getCriterion = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
+export const getCriterion = async (
+  req: HttpRequest,
+  context: InvocationContext
+): Promise<PontozoResponse<EntityWithEditableIndicator<CriterionWithSeason>>> => {
   try {
     await getUserFromHeaderAndAssertAdmin(req, context)
     const id = validateId(req)
@@ -23,7 +27,7 @@ export const getCriterion = async (req: HttpRequest, context: InvocationContext)
         seasons: [...new Set(seasons)],
         roles: JSON.parse(criterion.roles),
         editable: !categories.some(({ category }) => category.seasons.some(({ season }) => season.startDate < new Date())),
-      } as EntityWithEditableIndicator<CriterionWithSeason>,
+      },
     }
   } catch (error) {
     return handleException(req, context, error)
