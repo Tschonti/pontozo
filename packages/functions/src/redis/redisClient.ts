@@ -4,7 +4,7 @@ import { ENV, REDIS_HOST, REDIS_PORT, REDIS_PWD } from '../util/env'
 
 export const getRedisClient = async (ctx: InvocationContext) => {
   const client = createClient({
-    password: REDIS_PWD,
+    password: ENV === 'production' ? REDIS_PWD : undefined,
     socket: {
       tls: ENV === 'production',
       host: REDIS_HOST,

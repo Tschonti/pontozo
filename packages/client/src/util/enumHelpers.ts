@@ -1,4 +1,4 @@
-import { AlertLevel, EventRank, EventState, RatingRole, RatingStatus, UserRole } from '@pontozo/common'
+import { AgeGroup, AlertLevel, EventRank, EventState, RatingRole, RatingStatus, UserRole } from '@pontozo/common'
 
 type RoleDict = {
   [K in RatingRole]: string
@@ -37,6 +37,16 @@ export const statusColor: StatusDict = {
 
 type UserRoleDictionary = {
   [K in UserRole]: string
+}
+
+type AgeGroupDictionary = {
+  [K in AgeGroup]: string
+}
+
+export const translateAgeGroup: AgeGroupDictionary = {
+  [AgeGroup.YOUTH]: 'Utánpótlás',
+  [AgeGroup.ELITE]: 'Felnőtt',
+  [AgeGroup.MASTER]: 'Szenior',
 }
 
 export const translateUR: UserRoleDictionary = {

@@ -1,5 +1,6 @@
 export enum PATHS {
   INDEX = '/',
+  RESULTS = '/results',
   LOGIN = '/login',
   CRITERIA = '/admin/criteria',
   CATEGORIES = '/admin/categories',
