@@ -8,6 +8,7 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
+  FormLabel,
   Heading,
   HStack,
   Select,
@@ -31,14 +32,18 @@ export const ResultsPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [selectedCriterionIds, setSelectedCriterionIds] = useState<number[]>([])
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([])
+  const [storedCriterionIds, setStoredCriterionIds] = useState<number[]>([])
+  const [storedCategoryIds, setStoredCategoryIds] = useState<number[]>([])
   const [selectedSeasonId, setSelectedSeasonId] = useState<number>()
   const [selectedRole, setSelectedRole] = useState<RatingRole | 'ALL'>('ALL')
   const [selectedAgeGroup, setSelectedAgeGroup] = useState<AgeGroup | 'ALL'>('ALL')
   const [nationalOnly, setNationalOnly] = useState(false)
+  const [includeTotal, setIncludeTotal] = useState(true)
+  const [storedIncludeTotal, setStoredIncludeTotal] = useState(true)
 
   useEffect(() => {
     seasonsMutation.mutate(undefined)
-    resultsMutation.mutate({ categoryIds: [], criterionIds: [], nationalOnly: false })
+    resultsMutation.mutate({ categoryIds: [], criterionIds: [], nationalOnly: false, includeTotal: true })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -70,6 +75,7 @@ export const ResultsPage = () => {
       categoryIds: selectedCategoryIds,
       criterionIds: selectedCriterionIds,
       nationalOnly: national ?? nationalOnly,
+      includeTotal,
     })
   }
 
@@ -97,44 +103,67 @@ export const ResultsPage = () => {
     sendResultRequest((event.target as HTMLInputElement).checked)
   }
 
+  const drawerOpened = () => {
+    setStoredCategoryIds(selectedCategoryIds)
+    setStoredCriterionIds(selectedCriterionIds)
+    setStoredIncludeTotal(includeTotal)
+    onOpen()
+  }
+
+  const drawerDismissed = () => {
+    setSelectedCategoryIds(storedCategoryIds)
+    setSelectedCriterionIds(storedCriterionIds)
+    setIncludeTotal(storedIncludeTotal)
+    onClose()
+  }
+
   return (
     <>
       <HelmetTitle title="Pontoz-O" />
       <Heading my={5}>Értékelt versenyek</Heading>
       <HStack gap={2}>
-        <Select value={selectedSeasonId ?? seasonsMutation.data?.selectedSeason.id} onChange={selectedSeasonChange}>
-          {seasonsMutation.data?.allSeasons.map((s) => (
-            <option key={s.id} value={s.id}>
-              {s.name}
-            </option>
-          ))}
-        </Select>
-        <Select value={selectedAgeGroup} onChange={selectedAgeGroupChange}>
-          <option value="ALL">Mind</option>
-          {ALL_AGE_GROUPS.map((ag) => (
-            <option key={ag} value={ag}>
-              {translateAgeGroup[ag]}
-            </option>
-          ))}
-        </Select>
-        <Select value={selectedRole} onChange={selectedRoleChange}>
-          <option value="ALL">Mind</option>
-          {ALL_ROLES.map((r) => (
-            <option key={r} value={r}>
-              {translateRole[r]}
-            </option>
-          ))}
-        </Select>
+        <VStack gap={0.5} alignItems="flex-start" width="33%">
+          <FormLabel>Szezon</FormLabel>
+          <Select bg="white" value={selectedSeasonId ?? seasonsMutation.data?.selectedSeason.id} onChange={selectedSeasonChange}>
+            {seasonsMutation.data?.allSeasons.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name}
+              </option>
+            ))}
+          </Select>
+        </VStack>
+        <VStack gap={0.5} alignItems="flex-start" width="33%">
+          <FormLabel>Korcsoport</FormLabel>
+          <Select bg="white" value={selectedAgeGroup} onChange={selectedAgeGroupChange}>
+            <option value="ALL">Mind</option>
+            {ALL_AGE_GROUPS.map((ag) => (
+              <option key={ag} value={ag}>
+                {translateAgeGroup[ag]}
+              </option>
+            ))}
+          </Select>
+        </VStack>
+        <VStack gap={0.5} alignItems="flex-start" width="33%">
+          <FormLabel>Rang</FormLabel>
+          <Select bg="white" value={selectedRole} onChange={selectedRoleChange}>
+            <option value="ALL">Mind</option>
+            {ALL_ROLES.map((r) => (
+              <option key={r} value={r}>
+                {translateRole[r]}
+              </option>
+            ))}
+          </Select>
+        </VStack>
       </HStack>
       <HStack my={2} justify="space-between">
         <Checkbox colorScheme="brand" isChecked={nationalOnly} onChange={nationalOnlyChange}>
           Csak országos és kiemelt rangsoroló versenyek
         </Checkbox>
-        <Button colorScheme="brand" onClick={onOpen}>
-          Szempontok ({selectedCategoryIds.length + selectedCriterionIds.length})
+        <Button colorScheme="brand" onClick={drawerOpened}>
+          Szempontok ({selectedCategoryIds.length + selectedCriterionIds.length + (includeTotal ? 1 : 0)})
         </Button>
       </HStack>
-      <Drawer isOpen={isOpen} placement="right" onClose={onClose} size="md">
+      <Drawer isOpen={isOpen} placement="right" onClose={drawerDismissed} size="md">
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
@@ -142,6 +171,13 @@ export const ResultsPage = () => {
 
           <DrawerBody>
             <VStack alignItems="flex-start" gap={1}>
+              <Text mb={2}>
+                Itt választhatod ki, mely szempontok és kategóriák szerint szeretnéd megtekinteni az értékelés eredményeit. A kategóriáknál
+                a hozzá tartozó szempontok átlagai, az 'Összesített átlag' esetében pedig minden szempont átlaga fog megjelenni.
+              </Text>
+              <Checkbox colorScheme="brand" isChecked={includeTotal} onChange={() => setIncludeTotal(!includeTotal)}>
+                <Text fontWeight="bold">Összesített átlag</Text>
+              </Checkbox>
               {seasonsMutation.data?.selectedSeason.categories.map((c) => (
                 <Fragment key={c.id}>
                   <Checkbox
@@ -169,7 +205,7 @@ export const ResultsPage = () => {
           </DrawerBody>
 
           <DrawerFooter>
-            <Button colorScheme="gray" mr={3} onClick={onClose}>
+            <Button colorScheme="gray" mr={3} onClick={drawerDismissed}>
               Mégse
             </Button>
             <Button colorScheme="brand" onClick={saveSelectedIds}>
@@ -183,6 +219,7 @@ export const ResultsPage = () => {
       ) : (
         <EventResultTable
           results={resultsMutation.data}
+          includeTotal={includeTotal}
           role={selectedRole === 'ALL' ? undefined : selectedRole}
           ageGroup={selectedAgeGroup === 'ALL' ? undefined : selectedAgeGroup}
         />

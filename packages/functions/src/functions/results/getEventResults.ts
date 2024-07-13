@@ -1,6 +1,6 @@
 import { app, HttpRequest, InvocationContext } from '@azure/functions'
-import { EventResult, EventResultList, EventState, PontozoException } from '@pontozo/common'
-import { In, LessThan } from 'typeorm'
+import { EventResult, EventResultList, EventState, isHigherRank, PontozoException } from '@pontozo/common'
+import { In, IsNull, LessThan } from 'typeorm'
 import Category from '../../typeorm/entities/Category'
 import Criterion from '../../typeorm/entities/Criterion'
 import { RatingResult } from '../../typeorm/entities/RatingResult'
@@ -13,6 +13,8 @@ import { PontozoResponse } from '../../util/pontozoResponse'
 export const getEventResults = async (req: HttpRequest, context: InvocationContext): Promise<PontozoResponse<EventResultList>> => {
   try {
     const seasonId = req.query.get('seasonId')
+    const nationalOnly = req.query.get('nationalOnly') === 'true'
+    const includeTotal = req.query.get('includeTotal') === 'true'
     const categoryIds =
       req.query
         .get('categoryIds')
@@ -52,15 +54,16 @@ export const getEventResults = async (req: HttpRequest, context: InvocationConte
     const categoriesQuery = categorynRepo.find({ where: { id: In(categoryIds) } })
     const criteriaQuery = criterionRepo.find({ where: { id: In(criterionIds) } })
     const [categories, criteria] = await Promise.all([categoriesQuery, criteriaQuery])
-    const closedEvents = season.events.filter((e) => e.state === EventState.RESULTS_READY)
+    const filteredEvents = season.events.filter((e) => e.state === EventState.RESULTS_READY && (!nationalOnly || isHigherRank(e)))
 
     const results = await resultsRepo.find({
       where: [
-        { categoryId: In(categories.map((c) => c.id)), eventId: In(closedEvents.map((e) => e.id)) },
-        { criterionId: In(criteria.map((c) => c.id)), eventId: In(closedEvents.map((e) => e.id)) },
+        { categoryId: In(categories.map((c) => c.id)), eventId: In(filteredEvents.map((e) => e.id)) },
+        { criterionId: In(criteria.map((c) => c.id)), eventId: In(filteredEvents.map((e) => e.id)) },
+        includeTotal ? { categoryId: IsNull(), criterionId: IsNull() } : undefined,
       ],
     })
-    const eventResults: EventResult[] = closedEvents.map((e) => ({
+    const eventResults: EventResult[] = filteredEvents.map((e) => ({
       eventId: e.id,
       eventName: e.name,
       results: results.filter((r) => r.eventId === e.id && !r.stageId).map((r) => ({ ...r, items: JSON.parse(r.items) })),

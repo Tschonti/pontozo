@@ -3,4 +3,5 @@ export type EventFilter = {
   categoryIds: number[]
   criterionIds: number[]
   nationalOnly: boolean
+  includeTotal: boolean
 }

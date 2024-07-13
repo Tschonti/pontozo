@@ -17,6 +17,7 @@ export const useFetchEventResultsMutation = () => {
       url.searchParams.append('criterionIds', data.criterionIds.join(','))
     }
     url.searchParams.append('nationalOnly', data.nationalOnly.toString())
+    url.searchParams.append('includeTotal', data.includeTotal.toString())
     return (await functionAxios.get<EventResultList>(url.toString())).data
   })
 }

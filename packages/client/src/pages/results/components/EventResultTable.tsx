@@ -4,17 +4,19 @@ import { EventResultCell } from './EventResultCell'
 
 interface Props {
   results: EventResultList
+  includeTotal: boolean
   role?: RatingRole
   ageGroup?: AgeGroup
 }
 
-export const EventResultTable = ({ results: { categories, criteria, eventResults }, role, ageGroup }: Props) => {
+export const EventResultTable = ({ results: { categories, criteria, eventResults }, role, ageGroup, includeTotal }: Props) => {
   return (
     <TableContainer>
       <Table variant="striped" colorScheme="brand">
         <Thead>
           <Tr>
             <Th>Verseny</Th>
+            {includeTotal && <Th isNumeric>Összesített átlag</Th>}
             {categories.map((c) => (
               <Th key={`cat-${c.id}`} isNumeric>
                 {c.name}
@@ -31,6 +33,13 @@ export const EventResultTable = ({ results: { categories, criteria, eventResults
           {eventResults.map((er) => (
             <Tr key={er.eventId}>
               <Td>{er.eventName}</Td>
+              {includeTotal && (
+                <EventResultCell
+                  resultItems={er.results.find((r) => !r.categoryId && !r.criterionId)?.items ?? []}
+                  role={role}
+                  ageGroup={ageGroup}
+                />
+              )}
               {categories.map((c) => (
                 <EventResultCell
                   key={`cat-${c.id}`}
