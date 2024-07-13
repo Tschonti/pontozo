@@ -14,6 +14,7 @@ import {
   Select,
   Text,
   useDisclosure,
+  useToast,
   VStack,
 } from '@chakra-ui/react'
 import { AgeGroup, ALL_AGE_GROUPS, ALL_ROLES, RatingRole } from '@pontozo/common'
@@ -40,6 +41,8 @@ export const ResultsPage = () => {
   const [nationalOnly, setNationalOnly] = useState(false)
   const [includeTotal, setIncludeTotal] = useState(true)
   const [storedIncludeTotal, setStoredIncludeTotal] = useState(true)
+  const selectCritCount = selectedCategoryIds.length + selectedCriterionIds.length + (includeTotal ? 1 : 0)
+  const toast = useToast()
 
   useEffect(() => {
     seasonsMutation.mutate(undefined)
@@ -53,8 +56,16 @@ export const ResultsPage = () => {
     return <NavigateWithError to={PATHS.ERROR} error={resultsMutation.error ?? seasonsMutation.error!} />
   }
 
+  const showToast = () => {
+    const toastId = 'max-crit-reached-warning'
+    if (!toast.isActive(toastId)) {
+      toast({ id: toastId, title: 'Maximum 5 szempont jeleníthető meg egyszerre!', status: 'warning' })
+    }
+  }
+
   const categoryCheckChange = (event: ChangeEvent, categoryId: number) => {
     if ((event.target as HTMLInputElement).checked) {
+      if (selectCritCount > 4) return showToast()
       setSelectedCategoryIds([...selectedCategoryIds, categoryId])
     } else {
       setSelectedCategoryIds(selectedCategoryIds.filter((cId) => cId !== categoryId))
@@ -63,6 +74,7 @@ export const ResultsPage = () => {
 
   const criterionCheckChange = (event: ChangeEvent, criterrionId: number) => {
     if ((event.target as HTMLInputElement).checked) {
+      if (selectCritCount > 4) return showToast()
       setSelectedCriterionIds([...selectedCriterionIds, criterrionId])
     } else {
       setSelectedCriterionIds(selectedCriterionIds.filter((cId) => cId !== criterrionId))
@@ -85,8 +97,19 @@ export const ResultsPage = () => {
   }
 
   const selectedSeasonChange = (event: ChangeEvent) => {
-    setSelectedSeasonId(parseInt((event.target as HTMLInputElement).value))
-    seasonsMutation.mutate(parseInt((event.target as HTMLInputElement).value))
+    const newSeasonId = parseInt((event.target as HTMLInputElement).value)
+    setSelectedSeasonId(newSeasonId)
+    seasonsMutation.mutate(newSeasonId)
+    resultsMutation.mutate({
+      seasonId: newSeasonId,
+      categoryIds: [],
+      criterionIds: [],
+      nationalOnly: nationalOnly,
+      includeTotal: true,
+    })
+    setSelectedCategoryIds([])
+    setSelectedCriterionIds([])
+    setIncludeTotal(true)
   }
 
   const selectedAgeGroupChange = (event: ChangeEvent) => {
@@ -144,7 +167,7 @@ export const ResultsPage = () => {
           </Select>
         </VStack>
         <VStack gap={0.5} alignItems="flex-start" width="33%">
-          <FormLabel>Rang</FormLabel>
+          <FormLabel>Szerepkör</FormLabel>
           <Select bg="white" value={selectedRole} onChange={selectedRoleChange}>
             <option value="ALL">Mind</option>
             {ALL_ROLES.map((r) => (
@@ -160,7 +183,7 @@ export const ResultsPage = () => {
           Csak országos és kiemelt rangsoroló versenyek
         </Checkbox>
         <Button colorScheme="brand" onClick={drawerOpened}>
-          Szempontok ({selectedCategoryIds.length + selectedCriterionIds.length + (includeTotal ? 1 : 0)})
+          Szempontok ({selectCritCount})
         </Button>
       </HStack>
       <Drawer isOpen={isOpen} placement="right" onClose={drawerDismissed} size="md">
