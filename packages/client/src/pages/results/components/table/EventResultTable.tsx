@@ -1,6 +1,6 @@
 import { Text } from '@chakra-ui/react'
 import { AgeGroup, EventResultList, RatingRole } from '@pontozo/common'
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import { EventResultCell } from '../EventResultCell'
 import { TD } from './TD'
 import { TH } from './TH'
@@ -14,6 +14,7 @@ interface Props {
 }
 
 export const EventResultTable = ({ results: { categories, criteria, eventResults }, roles, ageGroups, includeTotal }: Props) => {
+  const [hoveredEventId, setHoveredEventId] = useState<number | undefined>(undefined)
   return (
     <table>
       <thead style={{ backgroundColor: '#7fd77f52' }}>
@@ -35,7 +36,7 @@ export const EventResultTable = ({ results: { categories, criteria, eventResults
       <tbody>
         {eventResults.map((er, i) => (
           <Fragment key={er.eventId}>
-            <TR index={i}>
+            <TR index={i} eventId={er.eventId} hovered={hoveredEventId === er.eventId} setHoverEventId={setHoveredEventId}>
               <TD>
                 <Text fontWeight="semibold" m={1}>
                   {er.eventName}
@@ -70,7 +71,13 @@ export const EventResultTable = ({ results: { categories, criteria, eventResults
               ))}
             </TR>
             {er.stages.map((s) => (
-              <TR key={s.stageId} index={i}>
+              <TR
+                key={s.stageId}
+                index={i}
+                eventId={er.eventId}
+                hovered={hoveredEventId === er.eventId}
+                setHoverEventId={setHoveredEventId}
+              >
                 <TD>
                   <Text m={1} ml={5}>
                     {s.stageName}

@@ -11,6 +11,7 @@ import { EventDetailsPage } from './pages/events/EventDetails.page'
 import { IndexPage } from './pages/events/Index.page'
 import { ProfilePage } from './pages/profile/Profile.page'
 import { RatingPage } from './pages/ratings/Rating.page'
+import { ResultDetailsPage } from './pages/results/ResultDetails.page'
 import { ResultsPage } from './pages/results/Results.page'
 import { SeasonCreatePage } from './pages/seasons/SeasonCreate.page'
 import { SeasonListPage } from './pages/seasons/SeasonList.page'
@@ -74,9 +75,9 @@ export const App = () => {
           </Route>
           <Route path={PATHS.RESULTS}>
             <Route index element={<ResultsPage />} />
-            {/* TODO <Route path=":eventId">
-              <Route index element={<EventDetailsPage />} />
-            </Route> */}
+            <Route path=":eventId">
+              <Route index element={<ResultDetailsPage />} />
+            </Route>
           </Route>
         </Route>
       </Routes>
