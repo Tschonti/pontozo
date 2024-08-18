@@ -8,7 +8,7 @@ import { PATHS } from 'src/util/paths'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { AgeGroupRoleSelector } from './components/AgeGroupRoleSelector'
 import { CriteriaDrawer } from './components/CriteriaDrawer'
-import { EventResultTable } from './components/EventResultTable'
+import { EventResultTable } from './components/table/EventResultTable'
 
 export const ResultsPage = () => {
   const resultsMutation = useFetchEventResultsMutation()

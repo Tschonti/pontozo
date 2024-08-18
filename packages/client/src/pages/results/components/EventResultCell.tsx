@@ -1,21 +1,30 @@
-import { Td, Tooltip } from '@chakra-ui/react'
+import { Text, Tooltip } from '@chakra-ui/react'
 import { AgeGroup, RatingResultItem, RatingRole } from '@pontozo/common'
 import { getResultItem } from 'src/util/getResultItem'
+import { TD } from './table/TD'
 
 interface Props {
   resultItems: RatingResultItem[]
   roles: RatingRole[]
   ageGroups: AgeGroup[]
+  bold?: boolean
 }
 
-export const EventResultCell = ({ resultItems, ageGroups, roles }: Props) => {
+export const EventResultCell = ({ resultItems, ageGroups, roles, bold = false }: Props) => {
   const item = getResultItem(resultItems, roles, ageGroups)
-  if (!item) return null
+  if (!item)
+    return (
+      <TD centered>
+        <Tooltip hasArrow label="Teljes versenyre vonatkozó szempont">
+          -
+        </Tooltip>
+      </TD>
+    )
   return (
-    <Td isNumeric>
+    <TD centered>
       <Tooltip hasArrow label={item.count + ' értékelés alapján'}>
-        {item.average === -1 ? '-' : item.average.toFixed(2)}
+        <Text fontWeight={bold ? 'semibold' : 'normal'}>{item.average === -1 ? '-' : item.average.toFixed(2)}</Text>
       </Tooltip>
-    </Td>
+    </TD>
   )
 }

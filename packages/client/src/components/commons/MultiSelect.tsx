@@ -56,6 +56,7 @@ export const MultiSelect = <T extends string | number | boolean | object>({ allT
       </HStack>
       {isOpen && (
         <VStack
+          boxShadow="2xl"
           alignItems="flex-start"
           w={containerRef.current?.clientWidth}
           pos="absolute"

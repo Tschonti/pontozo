@@ -113,9 +113,15 @@ export const CriteriaDrawer = ({
 
           <DrawerBody>
             <VStack alignItems="flex-start" gap={1}>
-              <Text mb={2}>
+              <Text textAlign="justify">
                 Itt választhatod ki, mely szempontok és kategóriák szerint szeretnéd megtekinteni az értékelés eredményeit. A kategóriáknál
                 a hozzá tartozó szempontok átlagai, az 'Összesített átlag' esetében pedig minden szempont átlaga fog megjelenni.
+              </Text>
+              <Text>
+                <span style={{ fontWeight: 'bold' }}>(V)</span> - Teljes versenyre vonatkozó szempont/kategória
+              </Text>
+              <Text mb={4}>
+                <span style={{ fontWeight: 'bold' }}>(F)</span> - Futamra vonatkozó szempont/kategória
               </Text>
               <Checkbox colorScheme="brand" isChecked={includeTotal} onChange={includeTotalChange}>
                 <Text fontWeight="bold">Összesített átlag</Text>
@@ -127,7 +133,10 @@ export const CriteriaDrawer = ({
                     isChecked={selectedCategoryIds.includes(c.id)}
                     onChange={(e) => categoryCheckChange(e, c.id)}
                   >
-                    <Text fontWeight="bold">{c.name}</Text>
+                    <Text fontWeight="bold">
+                      {c.name} {c.criteria.every((cc) => cc.stageSpecific) && '(F)'}
+                      {c.criteria.every((cc) => !cc.stageSpecific) && '(V)'}
+                    </Text>
                   </Checkbox>
                   <VStack alignItems="flex-start" gap={1} ml={4}>
                     {c.criteria.map((cc) => (
@@ -137,7 +146,7 @@ export const CriteriaDrawer = ({
                         isChecked={selectedCriterionIds.includes(cc.id)}
                         onChange={(e) => criterionCheckChange(e, cc.id)}
                       >
-                        {cc.name}
+                        {cc.name} ({cc.stageSpecific ? 'F' : 'V'})
                       </Checkbox>
                     ))}
                   </VStack>

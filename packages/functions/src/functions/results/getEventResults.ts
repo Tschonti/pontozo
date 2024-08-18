@@ -1,5 +1,5 @@
 import { app, HttpRequest, InvocationContext } from '@azure/functions'
-import { EventResult, EventResultList, EventState, isHigherRank, PontozoException } from '@pontozo/common'
+import { EventResult, EventResultList, EventState, isHigherRank, PontozoException, RatingResultItem } from '@pontozo/common'
 import { In, IsNull, LessThan } from 'typeorm'
 import Category from '../../typeorm/entities/Category'
 import Criterion from '../../typeorm/entities/Criterion'
@@ -63,16 +63,18 @@ export const getEventResults = async (req: HttpRequest, context: InvocationConte
         includeTotal ? { categoryId: IsNull(), criterionId: IsNull() } : undefined,
       ],
     })
-    const eventResults: EventResult[] = filteredEvents.map((e) => ({
-      eventId: e.id,
-      eventName: e.name,
-      results: results.filter((r) => r.eventId === e.id && !r.stageId).map((r) => ({ ...r, items: JSON.parse(r.items) })),
-      stages: e.stages.map((s) => ({
-        stageId: s.id,
-        stageName: s.name,
-        results: results.filter((r) => r.eventId === e.id && r.stageId === s.id).map((r) => ({ ...r, items: JSON.parse(r.items) })),
-      })),
-    }))
+    const eventResults: EventResult[] = filteredEvents
+      .map((e) => ({
+        eventId: e.id,
+        eventName: e.name,
+        results: results.filter((r) => r.eventId === e.id && !r.stageId).map((r) => ({ ...r, items: JSON.parse(r.items) })),
+        stages: e.stages.map((s) => ({
+          stageId: s.id,
+          stageName: s.name,
+          results: results.filter((r) => r.eventId === e.id && r.stageId === s.id).map((r) => ({ ...r, items: JSON.parse(r.items) })),
+        })),
+      }))
+      .filter((er) => er.results.some((r) => (r.items as RatingResultItem[]).find((rri) => !rri.ageGroup && !rri.role)?.count > 0))
     const { events, ...rawSeason } = season
 
     return {
