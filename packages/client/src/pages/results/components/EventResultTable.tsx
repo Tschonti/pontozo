@@ -5,25 +5,25 @@ import { EventResultCell } from './EventResultCell'
 interface Props {
   results: EventResultList
   includeTotal: boolean
-  role?: RatingRole
-  ageGroup?: AgeGroup
+  roles: RatingRole[]
+  ageGroups: AgeGroup[]
 }
 
-export const EventResultTable = ({ results: { categories, criteria, eventResults }, role, ageGroup, includeTotal }: Props) => {
+export const EventResultTable = ({ results: { categories, criteria, eventResults }, roles, ageGroups, includeTotal }: Props) => {
   return (
     <TableContainer>
-      <Table variant="striped" colorScheme="brand">
-        <Thead>
+      <Table variant="striped" colorScheme="green" whiteSpace="normal">
+        <Thead top={0}>
           <Tr>
-            <Th>Verseny</Th>
-            {includeTotal && <Th isNumeric>Összesített átlag</Th>}
+            <Th maxW="33%">Verseny</Th>
+            {includeTotal && <Th textAlign="center">Összesített átlag</Th>}
             {categories.map((c) => (
-              <Th key={`cat-${c.id}`} isNumeric>
+              <Th textAlign="center" key={`cat-${c.id}`}>
                 {c.name}
               </Th>
             ))}
             {criteria.map((c) => (
-              <Th key={`crit-${c.id}`} isNumeric>
+              <Th textAlign="center" key={`crit-${c.id}`}>
                 {c.name}
               </Th>
             ))}
@@ -36,24 +36,24 @@ export const EventResultTable = ({ results: { categories, criteria, eventResults
               {includeTotal && (
                 <EventResultCell
                   resultItems={er.results.find((r) => !r.categoryId && !r.criterionId)?.items ?? []}
-                  role={role}
-                  ageGroup={ageGroup}
+                  roles={roles}
+                  ageGroups={ageGroups}
                 />
               )}
               {categories.map((c) => (
                 <EventResultCell
                   key={`cat-${c.id}`}
                   resultItems={er.results.find((r) => r.categoryId === c.id)?.items ?? []}
-                  role={role}
-                  ageGroup={ageGroup}
+                  roles={roles}
+                  ageGroups={ageGroups}
                 />
               ))}
               {criteria.map((c) => (
                 <EventResultCell
                   key={`crit-${c.id}`}
                   resultItems={er.results.find((r) => r.criterionId === c.id)?.items ?? []}
-                  role={role}
-                  ageGroup={ageGroup}
+                  roles={roles}
+                  ageGroups={ageGroups}
                 />
               ))}
             </Tr>

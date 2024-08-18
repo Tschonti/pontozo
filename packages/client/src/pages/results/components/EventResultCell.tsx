@@ -1,17 +1,15 @@
 import { Td, Tooltip } from '@chakra-ui/react'
 import { AgeGroup, RatingResultItem, RatingRole } from '@pontozo/common'
+import { getResultItem } from 'src/util/getResultItem'
 
 interface Props {
   resultItems: RatingResultItem[]
-  role?: RatingRole
-  ageGroup?: AgeGroup
+  roles: RatingRole[]
+  ageGroups: AgeGroup[]
 }
 
-export const EventResultCell = ({ resultItems, ageGroup, role }: Props) => {
-  let item
-  if (ageGroup) item = resultItems.find((ri) => ri.ageGroup === ageGroup)
-  else if (role) item = resultItems.find((ri) => ri.role === role)
-  else item = resultItems.find((ri) => !ri.role && !ri.ageGroup)
+export const EventResultCell = ({ resultItems, ageGroups, roles }: Props) => {
+  const item = getResultItem(resultItems, roles, ageGroups)
   if (!item) return null
   return (
     <Td isNumeric>

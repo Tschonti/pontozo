@@ -10,8 +10,8 @@ import {
   DrawerOverlay,
   FormLabel,
   Heading,
-  HStack,
   Select,
+  Stack,
   Text,
   useDisclosure,
   useToast,
@@ -22,9 +22,9 @@ import { ChangeEvent, Fragment, useEffect, useState } from 'react'
 import { useFetchEventResultsMutation, useFetchSeasonsMutation } from 'src/api/hooks/resultHooks'
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
-import { translateAgeGroup, translateRole } from 'src/util/enumHelpers'
 import { PATHS } from 'src/util/paths'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
+import { AgeGroupRoleSelector } from './components/AgeGroupRoleSelector'
 import { EventResultTable } from './components/EventResultTable'
 
 export const ResultsPage = () => {
@@ -36,8 +36,8 @@ export const ResultsPage = () => {
   const [storedCriterionIds, setStoredCriterionIds] = useState<number[]>([])
   const [storedCategoryIds, setStoredCategoryIds] = useState<number[]>([])
   const [selectedSeasonId, setSelectedSeasonId] = useState<number>()
-  const [selectedRole, setSelectedRole] = useState<RatingRole | 'ALL'>('ALL')
-  const [selectedAgeGroup, setSelectedAgeGroup] = useState<AgeGroup | 'ALL'>('ALL')
+  const [selectedRoles, setSelectedRoles] = useState<RatingRole[]>(ALL_ROLES)
+  const [selectedAgeGroups, setSelectedAgeGroups] = useState<AgeGroup[]>(ALL_AGE_GROUPS)
   const [nationalOnly, setNationalOnly] = useState(false)
   const [includeTotal, setIncludeTotal] = useState(true)
   const [storedIncludeTotal, setStoredIncludeTotal] = useState(true)
@@ -112,13 +112,9 @@ export const ResultsPage = () => {
     setIncludeTotal(true)
   }
 
-  const selectedAgeGroupChange = (event: ChangeEvent) => {
-    setSelectedRole('ALL')
-    setSelectedAgeGroup(((event.target as HTMLInputElement).value as AgeGroup) || undefined)
-  }
-  const selectedRoleChange = (event: ChangeEvent) => {
-    setSelectedAgeGroup('ALL')
-    setSelectedRole(((event.target as HTMLInputElement).value as RatingRole) || undefined)
+  const ageGroupOrRoleSelectionChanged = (ageGroups: AgeGroup[], roles: RatingRole[]) => {
+    setSelectedAgeGroups(ageGroups)
+    setSelectedRoles(roles)
   }
 
   const nationalOnlyChange = (event: ChangeEvent) => {
@@ -144,8 +140,8 @@ export const ResultsPage = () => {
     <>
       <HelmetTitle title="Pontoz-O" />
       <Heading my={5}>Értékelt versenyek</Heading>
-      <HStack gap={2}>
-        <VStack gap={0.5} alignItems="flex-start" width="33%">
+      <Stack direction={['column', 'column', 'row']} gap={2}>
+        <VStack gap={0.5} alignItems="flex-start" width={['100%', '100%', '33%']}>
           <FormLabel>Szezon</FormLabel>
           <Select bg="white" value={selectedSeasonId ?? seasonsMutation.data?.selectedSeason.id} onChange={selectedSeasonChange}>
             {seasonsMutation.data?.allSeasons.map((s) => (
@@ -155,37 +151,20 @@ export const ResultsPage = () => {
             ))}
           </Select>
         </VStack>
-        <VStack gap={0.5} alignItems="flex-start" width="33%">
-          <FormLabel>Korcsoport</FormLabel>
-          <Select bg="white" value={selectedAgeGroup} onChange={selectedAgeGroupChange}>
-            <option value="ALL">Mind</option>
-            {ALL_AGE_GROUPS.map((ag) => (
-              <option key={ag} value={ag}>
-                {translateAgeGroup[ag]}
-              </option>
-            ))}
-          </Select>
-        </VStack>
-        <VStack gap={0.5} alignItems="flex-start" width="33%">
-          <FormLabel>Szerepkör</FormLabel>
-          <Select bg="white" value={selectedRole} onChange={selectedRoleChange}>
-            <option value="ALL">Mind</option>
-            {ALL_ROLES.map((r) => (
-              <option key={r} value={r}>
-                {translateRole[r]}
-              </option>
-            ))}
-          </Select>
-        </VStack>
-      </HStack>
-      <HStack my={2} justify="space-between">
+        <AgeGroupRoleSelector
+          selectedAgeGroups={selectedAgeGroups}
+          selectedRoles={selectedRoles}
+          onChange={ageGroupOrRoleSelectionChanged}
+        />
+      </Stack>
+      <Stack my={2} direction={['column', 'column', 'row']} justify="space-between" gap={2}>
         <Checkbox colorScheme="brand" isChecked={nationalOnly} onChange={nationalOnlyChange}>
           Csak országos és kiemelt rangsoroló versenyek
         </Checkbox>
         <Button colorScheme="brand" onClick={drawerOpened}>
           Szempontok ({selectCritCount})
         </Button>
-      </HStack>
+      </Stack>
       <Drawer isOpen={isOpen} placement="right" onClose={drawerDismissed} size="md">
         <DrawerOverlay />
         <DrawerContent>
@@ -240,12 +219,7 @@ export const ResultsPage = () => {
       {!resultsMutation.data || resultsMutation.isLoading ? (
         <LoadingSpinner />
       ) : (
-        <EventResultTable
-          results={resultsMutation.data}
-          includeTotal={includeTotal}
-          role={selectedRole === 'ALL' ? undefined : selectedRole}
-          ageGroup={selectedAgeGroup === 'ALL' ? undefined : selectedAgeGroup}
-        />
+        <EventResultTable results={resultsMutation.data} includeTotal={includeTotal} roles={selectedRoles} ageGroups={selectedAgeGroups} />
       )}
     </>
   )
