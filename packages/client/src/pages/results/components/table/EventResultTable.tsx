@@ -1,7 +1,9 @@
 import { Text } from '@chakra-ui/react'
 import { AgeGroup, EventResultList, RatingRole } from '@pontozo/common'
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
+import { sortEvents } from '../../../../util/resultItemHelpers'
 import { EventResultCell } from '../EventResultCell'
+import { CriterionHeader } from './CriterionHeader'
 import { TD } from './TD'
 import { TH } from './TH'
 import { TR } from './TR'
@@ -13,28 +15,69 @@ interface Props {
   ageGroups: AgeGroup[]
 }
 
+export type CriterionId = 'total' | `crit-${string}` | `cat-${string}`
+export type SortOrder = 'desc' | 'asc'
+
 export const EventResultTable = ({ results: { categories, criteria, eventResults }, roles, ageGroups, includeTotal }: Props) => {
   const [hoveredEventId, setHoveredEventId] = useState<number | undefined>(undefined)
+  const [sortCriterion, setSortCriterion] = useState<CriterionId | undefined>()
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
+  const [sortedEvents, setSortedEvents] = useState(eventResults)
+
+  const onCritClick = (id: CriterionId | undefined) => {
+    if (sortCriterion === id && id) {
+      setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')
+    } else {
+      setSortCriterion(id)
+      setSortOrder('desc')
+    }
+  }
+
+  useEffect(() => {
+    if (!sortCriterion) {
+      setSortedEvents(eventResults)
+    } else if (sortCriterion === 'total') {
+      setSortedEvents(sortEvents(eventResults, sortOrder, (r) => !r.categoryId && !r.criterionId, roles, ageGroups))
+    } else {
+      const [type, id] = sortCriterion.split('-')
+      setSortedEvents(
+        sortEvents(
+          eventResults,
+          sortOrder,
+          (r) => (type === 'crit' ? r.criterionId === parseInt(id) : r.categoryId === parseInt(id)),
+          roles,
+          ageGroups
+        )
+      )
+    }
+  }, [sortOrder, sortCriterion, eventResults, ageGroups, roles])
+
   return (
     <table>
       <thead style={{ backgroundColor: '#7fd77f52' }}>
         <tr>
-          <TH>Verseny</TH>
-          {includeTotal && <TH centered>Összesített átlag</TH>}
+          <TH onClick={() => onCritClick(undefined)}>
+            <CriterionHeader name="Verseny" criterionId={undefined} sortOrder={sortOrder} sortCriterion={sortCriterion} />
+          </TH>
+          {includeTotal && (
+            <TH onClick={() => onCritClick('total')} centered>
+              <CriterionHeader name="Összesített átlag" criterionId="total" sortOrder={sortOrder} sortCriterion={sortCriterion} />
+            </TH>
+          )}
           {categories.map((c) => (
-            <TH centered key={`cat-h-${c.id}`}>
-              {c.name}
+            <TH onClick={() => onCritClick(`cat-${c.id}`)} centered key={`cat-h-${c.id}`}>
+              <CriterionHeader name={c.name} criterionId={`cat-${c.id}`} sortOrder={sortOrder} sortCriterion={sortCriterion} />
             </TH>
           ))}
           {criteria.map((c) => (
-            <TH centered key={`crit-h-${c.id}`}>
-              {c.name}
+            <TH onClick={() => onCritClick(`crit-${c.id}`)} centered key={`crit-h-${c.id}`}>
+              <CriterionHeader name={c.name} criterionId={`crit-${c.id}`} sortOrder={sortOrder} sortCriterion={sortCriterion} />
             </TH>
           ))}
         </tr>
       </thead>
       <tbody>
-        {eventResults.map((er, i) => (
+        {sortedEvents.map((er, i) => (
           <Fragment key={er.eventId}>
             <TR index={i} eventId={er.eventId} hovered={hoveredEventId === er.eventId} setHoverEventId={setHoveredEventId}>
               <TD>

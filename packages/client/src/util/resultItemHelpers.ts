@@ -1,4 +1,5 @@
-import { AgeGroup, ALL_AGE_GROUPS, ALL_ROLES, RatingResultItem, RatingRole } from '@pontozo/common'
+import { AgeGroup, ALL_AGE_GROUPS, ALL_ROLES, EventResult, RatingResult, RatingResultItem, RatingRole } from '@pontozo/common'
+import { SortOrder } from 'src/pages/results/components/table/EventResultTable'
 
 export const getResultItem = (
   resultItems: RatingResultItem[],
@@ -28,6 +29,20 @@ export const getResultItem = (
     })
     return generateResultItem(count, sum)
   }
+}
+
+export const sortEvents = (
+  eventResults: EventResult[],
+  sortOrder: SortOrder,
+  ratingResultFinder: (rr: RatingResult) => boolean,
+  roles: RatingRole[],
+  ageGroups: AgeGroup[]
+) => {
+  return [...eventResults].sort((er1, er2) => {
+    const rri1 = getResultItem((er1.results.find(ratingResultFinder)?.items ?? []) as RatingResultItem[], roles, ageGroups)
+    const rri2 = getResultItem((er2.results.find(ratingResultFinder)?.items ?? []) as RatingResultItem[], roles, ageGroups)
+    return (sortOrder === 'desc' ? -1 : 1) * ((rri1?.average || 0) - (rri2?.average || 0))
+  })
 }
 
 const generateResultItem = (count: number, sum: number): RatingResultItem => {

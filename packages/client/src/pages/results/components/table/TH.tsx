@@ -2,11 +2,13 @@ import { PropsWithChildren } from 'react'
 
 type Props = {
   centered?: boolean
+  onClick?: () => void
 } & PropsWithChildren
 
-export const TH = ({ children, centered = false }: Props) => (
+export const TH = ({ children, centered = false, onClick }: Props) => (
   <th
     style={{
+      cursor: 'pointer',
       padding: '0.5rem',
       textTransform: 'uppercase',
       fontSize: '0.75rem',
@@ -15,6 +17,7 @@ export const TH = ({ children, centered = false }: Props) => (
       textAlign: centered ? 'center' : 'start',
       border: '1px lightgray solid',
     }}
+    onClick={onClick}
   >
     {children}
   </th>

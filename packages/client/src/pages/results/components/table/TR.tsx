@@ -18,7 +18,7 @@ export const TR = ({ index, children, eventId, hovered, setHoverEventId }: Props
       onClick={() => nav(`${PATHS.RESULTS}/${eventId}`)}
       style={{
         padding: '2rem',
-        backgroundColor: index % 2 === 0 ? (hovered ? '#cacaca52' : '#ffffff52') : hovered ? '#7fd77f52' : '#c0ddc052',
+        backgroundColor: index % 2 === 0 ? (hovered ? '#ececec78' : '#ffffff52') : hovered ? '#7fd77f52' : '#b1e2b152',
         cursor: 'pointer',
       }}
     >

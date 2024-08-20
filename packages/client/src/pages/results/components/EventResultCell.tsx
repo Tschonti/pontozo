@@ -1,6 +1,6 @@
 import { Text, Tooltip } from '@chakra-ui/react'
 import { AgeGroup, RatingResultItem, RatingRole } from '@pontozo/common'
-import { getResultItem } from 'src/util/getResultItem'
+import { getResultItem } from 'src/util/resultItemHelpers'
 import { TD } from './table/TD'
 
 interface Props {
