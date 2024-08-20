@@ -14,45 +14,37 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react'
-import { SeasonWithEverything } from '@pontozo/common'
 import { ChangeEvent, Fragment, useState } from 'react'
+import { useResultTableContext } from 'src/api/contexts/useResultTableContext'
 import { CheckboxOrRadio } from './CheckboxOrRadio'
 
 type Props = {
-  selectedCriterionIds: number[]
-  setSelectedCriterionIds: (newIds: number[]) => void
-  selectedCategoryIds: number[]
-  setSelectedCategoryIds: (newIds: number[]) => void
-  includeTotal: boolean
-  setIncludeTotal: (newValue: boolean) => void
-  onSave: () => void
   isMobile: boolean
-  selectedSeason?: SeasonWithEverything
 }
 
 const maxCritToastId = 'max-crit-reached-warning'
 const maxCritToastTitle = 'Maximum 5 szempont jeleníthető meg egyszerre!'
 
-export const CriteriaDrawer = ({
-  includeTotal,
-  selectedCategoryIds,
-  selectedCriterionIds,
-  onSave,
-  selectedSeason,
-  setSelectedCategoryIds,
-  setSelectedCriterionIds,
-  setIncludeTotal,
-  isMobile,
-}: Props) => {
+export const CriteriaDrawer = ({ isMobile }: Props) => {
   const [storedCriterionIds, setStoredCriterionIds] = useState<number[]>([])
   const [storedCategoryIds, setStoredCategoryIds] = useState<number[]>([])
   const [storedIncludeTotal, setStoredIncludeTotal] = useState(true)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
+  const {
+    includeTotal,
+    selectedCategoryIds,
+    selectedCriterionIds,
+    seasonsData,
+    setSelectedCategoryIds,
+    setSelectedCriterionIds,
+    setIncludeTotal,
+    sendResultRequest,
+  } = useResultTableContext()
   const selectCritCount = selectedCategoryIds.length + selectedCriterionIds.length + (includeTotal ? 1 : 0)
 
   const saveSelectedIds = () => {
-    onSave()
+    sendResultRequest()
     onClose()
   }
 
@@ -63,44 +55,44 @@ export const CriteriaDrawer = ({
   }
 
   const categoryCheckChange = (event: ChangeEvent, categoryId: number) => {
-    if ((event.target as HTMLInputElement).checked) {
-      if (selectCritCount > 4) return showToast(maxCritToastId, maxCritToastTitle)
-      setSelectedCategoryIds([...selectedCategoryIds, categoryId])
+    if (isMobile) {
+      setSelectedCriterionIds([])
+      setIncludeTotal(false)
+      setSelectedCategoryIds([categoryId])
     } else {
-      setSelectedCategoryIds(selectedCategoryIds.filter((cId) => cId !== categoryId))
+      if ((event.target as HTMLInputElement).checked) {
+        if (selectCritCount > 4) return showToast(maxCritToastId, maxCritToastTitle)
+        setSelectedCategoryIds([...selectedCategoryIds, categoryId])
+      } else {
+        setSelectedCategoryIds(selectedCategoryIds.filter((cId) => cId !== categoryId))
+      }
     }
-  }
-
-  const categoryRadioChange = (categoryId: number) => {
-    setSelectedCriterionIds([])
-    setIncludeTotal(false)
-    setSelectedCategoryIds([categoryId])
   }
 
   const criterionCheckChange = (event: ChangeEvent, criterionId: number) => {
-    if ((event.target as HTMLInputElement).checked) {
-      if (selectCritCount > 4) return showToast(maxCritToastId, maxCritToastTitle)
-      setSelectedCriterionIds([...selectedCriterionIds, criterionId])
+    if (isMobile) {
+      setSelectedCriterionIds([criterionId])
+      setIncludeTotal(false)
+      setSelectedCategoryIds([])
     } else {
-      setSelectedCriterionIds(selectedCriterionIds.filter((cId) => cId !== criterionId))
+      if ((event.target as HTMLInputElement).checked) {
+        if (selectCritCount > 4) return showToast(maxCritToastId, maxCritToastTitle)
+        setSelectedCriterionIds([...selectedCriterionIds, criterionId])
+      } else {
+        setSelectedCriterionIds(selectedCriterionIds.filter((cId) => cId !== criterionId))
+      }
     }
   }
 
-  const criterionRadioChange = (criterionId: number) => {
-    setSelectedCriterionIds([criterionId])
-    setIncludeTotal(false)
-    setSelectedCategoryIds([])
-  }
-
   const includeTotalChange = () => {
-    if (!includeTotal && selectCritCount > 4) return showToast(maxCritToastId, maxCritToastTitle)
-    setIncludeTotal(!includeTotal)
-  }
-
-  const includeTotalRadioChange = () => {
-    setSelectedCriterionIds([])
-    setIncludeTotal(true)
-    setSelectedCategoryIds([])
+    if (isMobile) {
+      setSelectedCriterionIds([])
+      setIncludeTotal(true)
+      setSelectedCategoryIds([])
+    } else {
+      if (!includeTotal && selectCritCount > 4) return showToast(maxCritToastId, maxCritToastTitle)
+      setIncludeTotal(!includeTotal)
+    }
   }
 
   const drawerOpened = () => {
@@ -148,22 +140,16 @@ export const CriteriaDrawer = ({
                 <span style={{ fontWeight: 'bold' }}>(F)</span> - Futamra vonatkozó szempont/kategória
               </Text>
 
-              <CheckboxOrRadio
-                isMobile={isMobile}
-                isChecked={includeTotal}
-                onDesktopChange={includeTotalChange}
-                onMobileChange={includeTotalRadioChange}
-              >
+              <CheckboxOrRadio isMobile={isMobile} isChecked={includeTotal} onChange={includeTotalChange}>
                 Összesített átlag
               </CheckboxOrRadio>
 
-              {selectedSeason?.categories.map((c) => (
+              {seasonsData?.selectedSeason?.categories.map((c) => (
                 <Fragment key={c.id}>
                   <CheckboxOrRadio
                     isMobile={isMobile}
                     isChecked={selectedCategoryIds.includes(c.id)}
-                    onDesktopChange={(e) => categoryCheckChange(e, c.id)}
-                    onMobileChange={() => categoryRadioChange(c.id)}
+                    onChange={(e) => categoryCheckChange(e, c.id)}
                   >
                     <Text fontWeight="bold">
                       {c.name} {c.criteria.every((cc) => cc.stageSpecific) && '(F)'}
@@ -176,8 +162,7 @@ export const CriteriaDrawer = ({
                         isMobile={isMobile}
                         key={cc.id}
                         isChecked={selectedCriterionIds.includes(cc.id)}
-                        onDesktopChange={(e) => criterionCheckChange(e, cc.id)}
-                        onMobileChange={() => criterionRadioChange(cc.id)}
+                        onChange={(e) => criterionCheckChange(e, cc.id)}
                       >
                         {cc.name} ({cc.stageSpecific ? 'F' : 'V'})
                       </CheckboxOrRadio>

@@ -8,6 +8,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { AuthProvider } from './api/contexts/AuthContext'
 import { CacheProvider } from './api/contexts/CacheContext'
 import { RatingProvider } from './api/contexts/RatingProvider'
+import { ResultTableProvider } from './api/contexts/ResultTableContext'
 import { App } from './App'
 import { ErrorPage } from './pages/error/error.page'
 import { APP_INSIGHTS_CONN_STR } from './util/environment'
@@ -34,7 +35,9 @@ root.render(
             <CacheProvider>
               <AuthProvider>
                 <RatingProvider>
-                  <App />
+                  <ResultTableProvider>
+                    <App />
+                  </ResultTableProvider>
                 </RatingProvider>
               </AuthProvider>
             </CacheProvider>

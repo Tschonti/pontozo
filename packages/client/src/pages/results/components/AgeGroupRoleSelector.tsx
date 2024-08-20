@@ -1,18 +1,14 @@
 import { FormLabel, useToast, VStack } from '@chakra-ui/react'
 import { AgeGroup, ALL_AGE_GROUPS, ALL_ROLES, RatingRole } from '@pontozo/common'
+import { useResultTableContext } from 'src/api/contexts/useResultTableContext'
 import { MultiSelect } from 'src/components/commons/MultiSelect'
 import { translateAgeGroup, translateRole } from 'src/util/enumHelpers'
 
 export type Option<T> = { label: string; value: T }
 
-type Props = {
-  selectedAgeGroups: AgeGroup[]
-  selectedRoles: RatingRole[]
-  onChange: (ageGroups: AgeGroup[], roles: RatingRole[]) => void
-}
-
-export const AgeGroupRoleSelector = ({ onChange, selectedAgeGroups, selectedRoles }: Props) => {
+export const AgeGroupRoleSelector = () => {
   const toast = useToast()
+  const { selectedAgeGroups, selectedRoles, setSelectedAgeGroups, setSelectedRoles } = useResultTableContext()
 
   const showToast = (ageGroup: boolean) => {
     const toastId = 'min-options-reached-warning'
@@ -34,7 +30,8 @@ export const AgeGroupRoleSelector = ({ onChange, selectedAgeGroups, selectedRole
     } else {
       newArray = [...selectedAgeGroups, option.value]
     }
-    onChange(newArray, ALL_ROLES)
+    setSelectedAgeGroups(newArray)
+    setSelectedRoles(ALL_ROLES)
   }
 
   const onRoleCheckChange = (option: Option<RatingRole>) => {
@@ -47,7 +44,8 @@ export const AgeGroupRoleSelector = ({ onChange, selectedAgeGroups, selectedRole
     } else {
       newArray = [...selectedRoles, option.value]
     }
-    onChange(ALL_AGE_GROUPS, newArray)
+    setSelectedAgeGroups(ALL_AGE_GROUPS)
+    setSelectedRoles(newArray)
   }
 
   return (

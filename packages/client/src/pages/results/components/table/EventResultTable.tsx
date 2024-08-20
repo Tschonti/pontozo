@@ -1,76 +1,50 @@
 import { Text } from '@chakra-ui/react'
-import { AgeGroup, EventResultList, RatingRole } from '@pontozo/common'
-import { Fragment, useEffect, useState } from 'react'
-import { sortEvents } from '../../../../util/resultItemHelpers'
+import { Fragment, useState } from 'react'
+import { useResultTableContext } from 'src/api/contexts/useResultTableContext'
+import { LoadingSpinner } from 'src/components/commons/LoadingSpinner'
 import { EventResultCell } from '../EventResultCell'
 import { CriterionHeader } from './CriterionHeader'
 import { TD } from './TD'
 import { TH } from './TH'
 import { TR } from './TR'
 
-interface Props {
-  results: EventResultList
-  includeTotal: boolean
-  roles: RatingRole[]
-  ageGroups: AgeGroup[]
-}
-
-export type CriterionId = 'total' | `crit-${string}` | `cat-${string}`
-export type SortOrder = 'desc' | 'asc'
-
-export const EventResultTable = ({ results: { categories, criteria, eventResults }, roles, ageGroups, includeTotal }: Props) => {
+export const EventResultTable = () => {
   const [hoveredEventId, setHoveredEventId] = useState<number | undefined>(undefined)
-  const [sortCriterion, setSortCriterion] = useState<CriterionId | undefined>()
-  const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
-  const [sortedEvents, setSortedEvents] = useState(eventResults)
+  const {
+    resultsLoading,
+    resultsData,
+    selectedAgeGroups,
+    selectedRoles,
+    includeTotal,
+    sortOrder,
+    sortCriterion,
+    sortedEvents,
+    sortByCrit,
+  } = useResultTableContext()
 
-  const onCritClick = (id: CriterionId | undefined) => {
-    if (sortCriterion === id && id) {
-      setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')
-    } else {
-      setSortCriterion(id)
-      setSortOrder('desc')
-    }
+  if (!resultsData || resultsLoading) {
+    return <LoadingSpinner />
   }
-
-  useEffect(() => {
-    if (!sortCriterion) {
-      setSortedEvents(eventResults)
-    } else if (sortCriterion === 'total') {
-      setSortedEvents(sortEvents(eventResults, sortOrder, (r) => !r.categoryId && !r.criterionId, roles, ageGroups))
-    } else {
-      const [type, id] = sortCriterion.split('-')
-      setSortedEvents(
-        sortEvents(
-          eventResults,
-          sortOrder,
-          (r) => (type === 'crit' ? r.criterionId === parseInt(id) : r.categoryId === parseInt(id)),
-          roles,
-          ageGroups
-        )
-      )
-    }
-  }, [sortOrder, sortCriterion, eventResults, ageGroups, roles])
-
+  const { categories, criteria } = resultsData
   return (
     <table>
       <thead style={{ backgroundColor: '#7fd77f52' }}>
         <tr>
-          <TH onClick={() => onCritClick(undefined)}>
+          <TH onClick={() => sortByCrit(undefined)}>
             <CriterionHeader name="Verseny" criterionId={undefined} sortOrder={sortOrder} sortCriterion={sortCriterion} />
           </TH>
           {includeTotal && (
-            <TH onClick={() => onCritClick('total')} centered>
+            <TH onClick={() => sortByCrit('total')} centered>
               <CriterionHeader name="Összesített átlag" criterionId="total" sortOrder={sortOrder} sortCriterion={sortCriterion} />
             </TH>
           )}
           {categories.map((c) => (
-            <TH onClick={() => onCritClick(`cat-${c.id}`)} centered key={`cat-h-${c.id}`}>
+            <TH onClick={() => sortByCrit(`cat-${c.id}`)} centered key={`cat-h-${c.id}`}>
               <CriterionHeader name={c.name} criterionId={`cat-${c.id}`} sortOrder={sortOrder} sortCriterion={sortCriterion} />
             </TH>
           ))}
           {criteria.map((c) => (
-            <TH onClick={() => onCritClick(`crit-${c.id}`)} centered key={`crit-h-${c.id}`}>
+            <TH onClick={() => sortByCrit(`crit-${c.id}`)} centered key={`crit-h-${c.id}`}>
               <CriterionHeader name={c.name} criterionId={`crit-${c.id}`} sortOrder={sortOrder} sortCriterion={sortCriterion} />
             </TH>
           ))}
@@ -89,8 +63,8 @@ export const EventResultTable = ({ results: { categories, criteria, eventResults
               {includeTotal && (
                 <EventResultCell
                   resultItems={er.results.find((r) => !r.categoryId && !r.criterionId)?.items ?? []}
-                  roles={roles}
-                  ageGroups={ageGroups}
+                  roles={selectedRoles}
+                  ageGroups={selectedAgeGroups}
                   bold={true}
                 />
               )}
@@ -98,8 +72,8 @@ export const EventResultTable = ({ results: { categories, criteria, eventResults
                 <EventResultCell
                   key={`cat-${c.id}-${er.eventId}`}
                   resultItems={er.results.find((r) => r.categoryId === c.id)?.items ?? []}
-                  roles={roles}
-                  ageGroups={ageGroups}
+                  roles={selectedRoles}
+                  ageGroups={selectedAgeGroups}
                   bold={true}
                 />
               ))}
@@ -107,8 +81,8 @@ export const EventResultTable = ({ results: { categories, criteria, eventResults
                 <EventResultCell
                   key={`crit-${c.id}-${er.eventId}`}
                   resultItems={er.results.find((r) => r.criterionId === c.id)?.items ?? []}
-                  roles={roles}
-                  ageGroups={ageGroups}
+                  roles={selectedRoles}
+                  ageGroups={selectedAgeGroups}
                   bold={true}
                 />
               ))}
@@ -129,8 +103,8 @@ export const EventResultTable = ({ results: { categories, criteria, eventResults
                 {includeTotal && (
                   <EventResultCell
                     resultItems={s.results.find((r) => !r.categoryId && !r.criterionId)?.items ?? []}
-                    roles={roles}
-                    ageGroups={ageGroups}
+                    roles={selectedRoles}
+                    ageGroups={selectedAgeGroups}
                   />
                 )}
 
@@ -138,16 +112,16 @@ export const EventResultTable = ({ results: { categories, criteria, eventResults
                   <EventResultCell
                     key={`cat-${c.id}-${er.eventId}-${s.stageId}`}
                     resultItems={s.results.find((r) => r.categoryId === c.id)?.items ?? []}
-                    roles={roles}
-                    ageGroups={ageGroups}
+                    roles={selectedRoles}
+                    ageGroups={selectedAgeGroups}
                   />
                 ))}
                 {criteria.map((c) => (
                   <EventResultCell
                     key={`crit-${c.id}-${er.eventId}-${s.stageId}`}
                     resultItems={s.results.find((r) => r.criterionId === c.id)?.items ?? []}
-                    roles={roles}
-                    ageGroups={ageGroups}
+                    roles={selectedRoles}
+                    ageGroups={selectedAgeGroups}
                   />
                 ))}
               </TR>
