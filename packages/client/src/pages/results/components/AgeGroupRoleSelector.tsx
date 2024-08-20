@@ -8,7 +8,7 @@ export type Option<T> = { label: string; value: T }
 
 export const AgeGroupRoleSelector = () => {
   const toast = useToast()
-  const { selectedAgeGroups, selectedRoles, setSelectedAgeGroups, setSelectedRoles } = useResultTableContext()
+  const { selectedAgeGroups, selectedRoles, setSelectedAgeGroups, setSelectedRoles, saveToLocalStorage } = useResultTableContext()
 
   const showToast = (ageGroup: boolean) => {
     const toastId = 'min-options-reached-warning'
@@ -32,6 +32,7 @@ export const AgeGroupRoleSelector = () => {
     }
     setSelectedAgeGroups(newArray)
     setSelectedRoles(ALL_ROLES)
+    saveToLocalStorage({ roles: ALL_ROLES, ageGroups: newArray })
   }
 
   const onRoleCheckChange = (option: Option<RatingRole>) => {
@@ -46,6 +47,7 @@ export const AgeGroupRoleSelector = () => {
     }
     setSelectedAgeGroups(ALL_AGE_GROUPS)
     setSelectedRoles(newArray)
+    saveToLocalStorage({ roles: newArray, ageGroups: ALL_AGE_GROUPS })
   }
 
   return (

@@ -1,5 +1,6 @@
 import { AgeGroup, AllSeasonsAndOne, EventResult, EventResultList, RatingRole } from '@pontozo/common'
 import { ChangeEvent, createContext } from 'react'
+import { ResultTableState } from 'src/pages/results/types/ResultTableState'
 
 export type CriterionId = 'total' | `crit-${string}` | `cat-${string}`
 export type SortOrder = 'desc' | 'asc'
@@ -30,6 +31,7 @@ export type ResultTableContextType = {
   selectedSeasonChange: (event: ChangeEvent) => void
   sendResultRequest: (national?: boolean) => void
   sortByCrit: (id: CriterionId | undefined) => void
+  saveToLocalStorage: (newValues: Partial<ResultTableState>) => void
 }
 
 export const ResultTableContext = createContext<ResultTableContextType>({
@@ -56,4 +58,5 @@ export const ResultTableContext = createContext<ResultTableContextType>({
   selectedSeasonChange: () => { },
   sendResultRequest: () => { },
   sortByCrit: () => { },
+  saveToLocalStorage: () => { },
 })

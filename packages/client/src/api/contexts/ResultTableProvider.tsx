@@ -1,7 +1,7 @@
 import { AgeGroup, ALL_AGE_GROUPS, ALL_ROLES, EventResult, RatingRole } from '@pontozo/common'
 import { ChangeEvent, PropsWithChildren, useEffect, useState } from 'react'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
-import { EventFilter } from 'src/pages/results/types/EventFilter'
+import { ResultTableState } from 'src/pages/results/types/ResultTableState'
 import { PATHS } from 'src/util/paths'
 import { sortEvents } from 'src/util/resultItemHelpers'
 import { useFetchEventResultsMutation, useFetchSeasonsMutation } from '../hooks/resultHooks'
@@ -30,18 +30,24 @@ export const ResultTableProvider = ({ children }: PropsWithChildren) => {
       seasonsMutation.mutate(undefined)
       resultsMutation.mutate({ categoryIds: [], criterionIds: [], nationalOnly: false, includeTotal: true })
     } else {
-      const filterData: EventFilter = JSON.parse(saved)
+      const filterData: ResultTableState = JSON.parse(saved)
       seasonsMutation.mutate(filterData.seasonId)
       resultsMutation.mutate({
+        seasonId: filterData.seasonId,
         categoryIds: filterData.categoryIds,
         criterionIds: filterData.criterionIds,
         nationalOnly: filterData.nationalOnly,
         includeTotal: filterData.includeTotal,
       })
+      setSelectedSeasonId(filterData.seasonId)
       setSelectedCategoryIds(filterData.categoryIds)
       setSelectedCriterionIds(filterData.criterionIds)
       setNationalOnly(filterData.nationalOnly)
       setIncludeTotal(filterData.includeTotal)
+      setSelectedAgeGroups(filterData.ageGroups)
+      setSelectedRoles(filterData.roles)
+      setSortCriterion(filterData.sortId)
+      setSortOrder(filterData.sortOrder)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -74,18 +80,20 @@ export const ResultTableProvider = ({ children }: PropsWithChildren) => {
     return <NavigateWithError to={PATHS.ERROR} error={resultsMutation.error ?? seasonsMutation.error!} />
   }
 
-  const saveToLocalStorage = (newValue?: EventFilter) => {
+  const saveToLocalStorage = (newValues: Partial<ResultTableState>) => {
     localStorage.setItem(
       FILTER_LS_KEY,
-      JSON.stringify(
-        newValue ?? {
-          seasonId: seasonsMutation.data?.selectedSeason.id,
-          categoryIds: selectedCategoryIds,
-          criterionIds: selectedCriterionIds,
-          nationalOnly: nationalOnly,
-          includeTotal: includeTotal,
-        }
-      )
+      JSON.stringify({
+        seasonId: newValues.seasonId ?? seasonsMutation.data?.selectedSeason.id,
+        categoryIds: newValues.categoryIds ?? selectedCategoryIds,
+        criterionIds: newValues.criterionIds ?? selectedCriterionIds,
+        nationalOnly: newValues.nationalOnly ?? nationalOnly,
+        includeTotal: newValues.includeTotal ?? includeTotal,
+        ageGroups: newValues.ageGroups ?? selectedAgeGroups,
+        roles: newValues.roles ?? selectedRoles,
+        sortId: newValues.sortId ?? sortCriterion,
+        sortOrder: newValues.sortOrder ?? sortOrder,
+      })
     )
   }
 
@@ -107,7 +115,7 @@ export const ResultTableProvider = ({ children }: PropsWithChildren) => {
     setSelectedCategoryIds([])
     setSelectedCriterionIds([])
     setIncludeTotal(true)
-    saveToLocalStorage({ seasonId: newSeasonId, categoryIds: [], criterionIds: [], includeTotal: true, nationalOnly: false })
+    saveToLocalStorage({ seasonId: newSeasonId, categoryIds: [], criterionIds: [], includeTotal: true })
 
     seasonsMutation.mutate(newSeasonId)
     resultsMutation.mutate({
@@ -121,10 +129,13 @@ export const ResultTableProvider = ({ children }: PropsWithChildren) => {
 
   const sortByCrit = (id: CriterionId | undefined) => {
     if (sortCriterion === id && id) {
-      setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')
+      const newOrder = sortOrder === 'desc' ? 'asc' : 'desc'
+      setSortOrder(newOrder)
+      saveToLocalStorage({ sortOrder: newOrder })
     } else {
       setSortCriterion(id)
       setSortOrder('desc')
+      saveToLocalStorage({ sortOrder: 'desc', sortId: id })
     }
   }
 
@@ -153,6 +164,7 @@ export const ResultTableProvider = ({ children }: PropsWithChildren) => {
         selectedSeasonChange,
         sendResultRequest,
         sortByCrit,
+        saveToLocalStorage,
       }}
     >
       {children}
