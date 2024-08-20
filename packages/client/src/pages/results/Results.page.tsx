@@ -94,16 +94,31 @@ export const ResultsPage = () => {
         <Checkbox colorScheme="brand" isChecked={nationalOnly} onChange={nationalOnlyChange}>
           Csak országos és kiemelt rangsoroló versenyek
         </Checkbox>
-        <CriteriaDrawer
-          includeTotal={includeTotal}
-          setIncludeTotal={setIncludeTotal}
-          selectedCriterionIds={selectedCriterionIds}
-          setSelectedCriterionIds={setSelectedCriterionIds}
-          selectedCategoryIds={selectedCategoryIds}
-          setSelectedCategoryIds={setSelectedCategoryIds}
-          selectedSeason={seasonsMutation.data?.selectedSeason}
-          onSave={sendResultRequest}
-        />
+        {window.innerWidth < 768 ? (
+          <CriteriaDrawer
+            includeTotal={includeTotal}
+            setIncludeTotal={setIncludeTotal}
+            selectedCriterionIds={selectedCriterionIds}
+            setSelectedCriterionIds={setSelectedCriterionIds}
+            selectedCategoryIds={selectedCategoryIds}
+            setSelectedCategoryIds={setSelectedCategoryIds}
+            selectedSeason={seasonsMutation.data?.selectedSeason}
+            onSave={sendResultRequest}
+            isMobile
+          />
+        ) : (
+          <CriteriaDrawer
+            includeTotal={includeTotal}
+            setIncludeTotal={setIncludeTotal}
+            selectedCriterionIds={selectedCriterionIds}
+            setSelectedCriterionIds={setSelectedCriterionIds}
+            selectedCategoryIds={selectedCategoryIds}
+            setSelectedCategoryIds={setSelectedCategoryIds}
+            selectedSeason={seasonsMutation.data?.selectedSeason}
+            onSave={sendResultRequest}
+            isMobile={false}
+          />
+        )}
       </Stack>
       {!resultsMutation.data || resultsMutation.isLoading ? (
         <LoadingSpinner />

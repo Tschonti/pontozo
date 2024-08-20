@@ -1,6 +1,7 @@
 import {
+  Alert,
+  AlertIcon,
   Button,
-  Checkbox,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -15,6 +16,7 @@ import {
 } from '@chakra-ui/react'
 import { SeasonWithEverything } from '@pontozo/common'
 import { ChangeEvent, Fragment, useState } from 'react'
+import { CheckboxOrRadio } from './CheckboxOrRadio'
 
 type Props = {
   selectedCriterionIds: number[]
@@ -24,14 +26,12 @@ type Props = {
   includeTotal: boolean
   setIncludeTotal: (newValue: boolean) => void
   onSave: () => void
+  isMobile: boolean
   selectedSeason?: SeasonWithEverything
 }
 
 const maxCritToastId = 'max-crit-reached-warning'
 const maxCritToastTitle = 'Maximum 5 szempont jeleníthető meg egyszerre!'
-
-const minCritToastId = 'min-crit-reached-warning'
-const minCritToastTitle = 'Minimum 1 szempontot ki kell választanod!'
 
 export const CriteriaDrawer = ({
   includeTotal,
@@ -42,6 +42,7 @@ export const CriteriaDrawer = ({
   setSelectedCategoryIds,
   setSelectedCriterionIds,
   setIncludeTotal,
+  isMobile,
 }: Props) => {
   const [storedCriterionIds, setStoredCriterionIds] = useState<number[]>([])
   const [storedCategoryIds, setStoredCategoryIds] = useState<number[]>([])
@@ -66,24 +67,40 @@ export const CriteriaDrawer = ({
       if (selectCritCount > 4) return showToast(maxCritToastId, maxCritToastTitle)
       setSelectedCategoryIds([...selectedCategoryIds, categoryId])
     } else {
-      if (selectCritCount === 1) return showToast(minCritToastId, minCritToastTitle)
       setSelectedCategoryIds(selectedCategoryIds.filter((cId) => cId !== categoryId))
     }
   }
 
-  const criterionCheckChange = (event: ChangeEvent, criterrionId: number) => {
+  const categoryRadioChange = (categoryId: number) => {
+    setSelectedCriterionIds([])
+    setIncludeTotal(false)
+    setSelectedCategoryIds([categoryId])
+  }
+
+  const criterionCheckChange = (event: ChangeEvent, criterionId: number) => {
     if ((event.target as HTMLInputElement).checked) {
       if (selectCritCount > 4) return showToast(maxCritToastId, maxCritToastTitle)
-      setSelectedCriterionIds([...selectedCriterionIds, criterrionId])
+      setSelectedCriterionIds([...selectedCriterionIds, criterionId])
     } else {
-      if (selectCritCount === 1) return showToast(minCritToastId, minCritToastTitle)
-      setSelectedCriterionIds(selectedCriterionIds.filter((cId) => cId !== criterrionId))
+      setSelectedCriterionIds(selectedCriterionIds.filter((cId) => cId !== criterionId))
     }
   }
 
+  const criterionRadioChange = (criterionId: number) => {
+    setSelectedCriterionIds([criterionId])
+    setIncludeTotal(false)
+    setSelectedCategoryIds([])
+  }
+
   const includeTotalChange = () => {
-    if (includeTotal && selectCritCount === 1) return showToast(minCritToastId, minCritToastTitle)
+    if (!includeTotal && selectCritCount > 4) return showToast(maxCritToastId, maxCritToastTitle)
     setIncludeTotal(!includeTotal)
+  }
+
+  const includeTotalRadioChange = () => {
+    setSelectedCriterionIds([])
+    setIncludeTotal(true)
+    setSelectedCategoryIds([])
   }
 
   const drawerOpened = () => {
@@ -109,45 +126,61 @@ export const CriteriaDrawer = ({
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>Megjelenített szempontok</DrawerHeader>
+          <DrawerHeader>Megjelenített szempont{isMobile ? '' : 'ok'}</DrawerHeader>
 
           <DrawerBody>
             <VStack alignItems="flex-start" gap={1}>
               <Text textAlign="justify">
-                Itt választhatod ki, mely szempontok és kategóriák szerint szeretnéd megtekinteni az értékelés eredményeit. A kategóriáknál
-                a hozzá tartozó szempontok átlagai, az 'Összesített átlag' esetében pedig minden szempont átlaga fog megjelenni.
+                {isMobile
+                  ? "Itt választhatod ki, mely szempont vagy kategória szerint szeretnéd megtekinteni az értékelés eredményeit. A kategóriáknál a hozzá tartozó szempontok átlagai, az 'Összesített átlag' esetében pedig minden szempont átlaga fog megjelenni."
+                  : "Itt választhatod ki, mely szempontok és kategóriák szerint szeretnéd megtekinteni az értékelés eredményeit. A kategóriáknál a hozzá tartozó szempontok átlagai, az 'Összesített átlag' esetében pedig minden szempont átlaga fog megjelenni."}
               </Text>
+              {isMobile && (
+                <Alert my={1} status="warning">
+                  <AlertIcon />
+                  Kis képernyőn csak egy szempont jeleníthető meg egyszerre, részletesebb elemzéshez használj nagyobb kijelzőt!
+                </Alert>
+              )}
               <Text>
                 <span style={{ fontWeight: 'bold' }}>(V)</span> - Teljes versenyre vonatkozó szempont/kategória
               </Text>
               <Text mb={4}>
                 <span style={{ fontWeight: 'bold' }}>(F)</span> - Futamra vonatkozó szempont/kategória
               </Text>
-              <Checkbox colorScheme="brand" isChecked={includeTotal} onChange={includeTotalChange}>
-                <Text fontWeight="bold">Összesített átlag</Text>
-              </Checkbox>
+
+              <CheckboxOrRadio
+                isMobile={isMobile}
+                isChecked={includeTotal}
+                onDesktopChange={includeTotalChange}
+                onMobileChange={includeTotalRadioChange}
+              >
+                Összesített átlag
+              </CheckboxOrRadio>
+
               {selectedSeason?.categories.map((c) => (
                 <Fragment key={c.id}>
-                  <Checkbox
-                    colorScheme="brand"
+                  <CheckboxOrRadio
+                    isMobile={isMobile}
                     isChecked={selectedCategoryIds.includes(c.id)}
-                    onChange={(e) => categoryCheckChange(e, c.id)}
+                    onDesktopChange={(e) => categoryCheckChange(e, c.id)}
+                    onMobileChange={() => categoryRadioChange(c.id)}
                   >
                     <Text fontWeight="bold">
                       {c.name} {c.criteria.every((cc) => cc.stageSpecific) && '(F)'}
                       {c.criteria.every((cc) => !cc.stageSpecific) && '(V)'}
                     </Text>
-                  </Checkbox>
+                  </CheckboxOrRadio>
                   <VStack alignItems="flex-start" gap={1} ml={4}>
                     {c.criteria.map((cc) => (
-                      <Checkbox
-                        colorScheme="brand"
+                      <CheckboxOrRadio
+                        isMobile={isMobile}
                         key={cc.id}
                         isChecked={selectedCriterionIds.includes(cc.id)}
-                        onChange={(e) => criterionCheckChange(e, cc.id)}
+                        onDesktopChange={(e) => criterionCheckChange(e, cc.id)}
+                        onMobileChange={() => criterionRadioChange(cc.id)}
                       >
                         {cc.name} ({cc.stageSpecific ? 'F' : 'V'})
-                      </Checkbox>
+                      </CheckboxOrRadio>
                     ))}
                   </VStack>
                 </Fragment>
@@ -159,7 +192,7 @@ export const CriteriaDrawer = ({
             <Button colorScheme="gray" mr={3} onClick={drawerDismissed}>
               Mégse
             </Button>
-            <Button colorScheme="brand" onClick={saveSelectedIds}>
+            <Button isDisabled={selectCritCount === 0} colorScheme="brand" onClick={saveSelectedIds}>
               Alkalmaz
             </Button>
           </DrawerFooter>
