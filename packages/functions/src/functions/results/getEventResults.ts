@@ -67,6 +67,7 @@ export const getEventResults = async (req: HttpRequest, context: InvocationConte
       .map((e) => ({
         eventId: e.id,
         eventName: e.name,
+        startDate: e.startDate,
         results: results.filter((r) => r.eventId === e.id && !r.stageId).map((r) => ({ ...r, items: JSON.parse(r.items) })),
         stages: e.stages.map((s) => ({
           stageId: s.id,
@@ -75,6 +76,7 @@ export const getEventResults = async (req: HttpRequest, context: InvocationConte
         })),
       }))
       .filter((er) => er.results.some((r) => (r.items as RatingResultItem[]).find((rri) => !rri.ageGroup && !rri.role)?.count > 0))
+      .sort((e1, e2) => e1.startDate.localeCompare(e2.startDate))
     const { events, ...rawSeason } = season
 
     return {

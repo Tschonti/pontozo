@@ -42,6 +42,7 @@ export interface EventResultList {
 export interface EventResult {
   eventId: number
   eventName: string
+  startDate: string
   results: RatingResult[]
   stages: StageResult[]
 }
