@@ -1,5 +1,5 @@
 import { Badge, Card, CardBody, CardHeader, Heading, HStack, Text } from '@chakra-ui/react'
-import { DbEvent, RatingStatus } from '@pontozo/common'
+import { DbEvent, EventState, RatingStatus } from '@pontozo/common'
 import { Link } from 'react-router-dom'
 import { formatDateRange } from 'src/util/formatDateRange'
 import { statusColor, translateStatus } from '../../../util/enumHelpers'
@@ -13,7 +13,12 @@ type Props = {
 
 export const EventListItem = ({ event, status }: Props) => {
   return (
-    <Card justify="space-between" variant="outline" as={Link} to={`${PATHS.EVENTS}/${event.id}`}>
+    <Card
+      justify="space-between"
+      variant="outline"
+      as={Link}
+      to={event.state === EventState.RESULTS_READY ? `${PATHS.RESULTS}/${event.id}` : `${PATHS.EVENTS}/${event.id}`}
+    >
       <CardHeader flexGrow={1}>
         <Heading size="md">{event.name}</Heading>
         <Heading mt={1} size="sm">

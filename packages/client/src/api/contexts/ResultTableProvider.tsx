@@ -9,7 +9,11 @@ import { CriterionId, ResultTableContext, SortOrder } from './ResultTableContext
 
 const FILTER_LS_KEY = 'FILTER_LS_KEY'
 
-export const ResultTableProvider = ({ children }: PropsWithChildren) => {
+type Props = {
+  minimal?: boolean
+} & PropsWithChildren
+
+export const ResultTableProvider = ({ children, minimal = false }: Props) => {
   const resultsMutation = useFetchEventResultsMutation()
   const seasonsMutation = useFetchSeasonsMutation()
 
@@ -25,6 +29,7 @@ export const ResultTableProvider = ({ children }: PropsWithChildren) => {
   const [sortedEvents, setSortedEvents] = useState<EventResult[]>([])
 
   useEffect(() => {
+    if (minimal) return
     const saved = localStorage.getItem(FILTER_LS_KEY)
     if (!saved) {
       seasonsMutation.mutate(undefined)
@@ -53,7 +58,7 @@ export const ResultTableProvider = ({ children }: PropsWithChildren) => {
   }, [])
 
   useEffect(() => {
-    if (!resultsMutation.data?.eventResults) return
+    if (!resultsMutation.data?.eventResults || minimal) return
     if (!sortCriterion) {
       setSortedEvents(resultsMutation.data.eventResults)
     } else if (sortCriterion === 'total') {
@@ -72,7 +77,7 @@ export const ResultTableProvider = ({ children }: PropsWithChildren) => {
         )
       )
     }
-  }, [sortOrder, sortCriterion, resultsMutation.data?.eventResults, selectedAgeGroups, selectedRoles])
+  }, [sortOrder, sortCriterion, resultsMutation.data?.eventResults, selectedAgeGroups, selectedRoles, minimal])
 
   if (resultsMutation.error || seasonsMutation.error) {
     console.error(resultsMutation.error)
@@ -81,6 +86,7 @@ export const ResultTableProvider = ({ children }: PropsWithChildren) => {
   }
 
   const saveToLocalStorage = (newValues: Partial<ResultTableState>) => {
+    if (minimal) return
     localStorage.setItem(
       FILTER_LS_KEY,
       JSON.stringify({

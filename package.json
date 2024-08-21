@@ -37,6 +37,7 @@
     "react-icons": "^4.8.0",
     "react-router-dom": "^6.9.0",
     "react-scripts": "5.0.1",
+    "recharts": "^2.12.7",
     "redis": "^4.6.10",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",

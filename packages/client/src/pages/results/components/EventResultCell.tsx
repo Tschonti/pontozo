@@ -1,17 +1,17 @@
 import { Text, Tooltip } from '@chakra-ui/react'
-import { AgeGroup, RatingResultItem, RatingRole } from '@pontozo/common'
+import { RatingResultItem } from '@pontozo/common'
+import { useResultTableContext } from 'src/api/contexts/useResultTableContext'
 import { getResultItem } from 'src/util/resultItemHelpers'
 import { TD } from './table/TD'
 
 interface Props {
   resultItems: RatingResultItem[]
-  roles: RatingRole[]
-  ageGroups: AgeGroup[]
   bold?: boolean
 }
 
-export const EventResultCell = ({ resultItems, ageGroups, roles, bold = false }: Props) => {
-  const item = getResultItem(resultItems, roles, ageGroups)
+export const EventResultCell = ({ resultItems, bold = false }: Props) => {
+  const { selectedAgeGroups, selectedRoles } = useResultTableContext()
+  const item = getResultItem(resultItems, selectedRoles, selectedAgeGroups)
   if (!item)
     return (
       <TD centered>

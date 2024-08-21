@@ -16,6 +16,7 @@ export interface RatingResult {
 export interface RatingResultWithJoins extends RatingResult {
   criterion?: Criterion
   category?: Category
+  children?: RatingResultWithJoins[]
 }
 
 export interface RatingResultItem {
@@ -25,11 +26,13 @@ export interface RatingResultItem {
   ageGroup?: string
 }
 
+export interface StageWithResults extends DbStage {
+  ratingResults: RatingResultWithJoins
+}
+
 export interface EventWithResults extends Omit<DbEvent, 'stages'> {
   ratingResults: RatingResultWithJoins
-  stages: (DbStage & {
-    ratingResults: RatingResultWithJoins
-  })[]
+  stages: StageWithResults[]
 }
 
 export interface EventResultList {

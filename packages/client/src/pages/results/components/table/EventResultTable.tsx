@@ -10,17 +10,7 @@ import { TR } from './TR'
 
 export const EventResultTable = () => {
   const [hoveredEventId, setHoveredEventId] = useState<number | undefined>(undefined)
-  const {
-    resultsLoading,
-    resultsData,
-    selectedAgeGroups,
-    selectedRoles,
-    includeTotal,
-    sortOrder,
-    sortCriterion,
-    sortedEvents,
-    sortByCrit,
-  } = useResultTableContext()
+  const { resultsLoading, resultsData, includeTotal, sortOrder, sortCriterion, sortedEvents, sortByCrit } = useResultTableContext()
 
   if (!resultsData || resultsLoading) {
     return <LoadingSpinner />
@@ -61,19 +51,12 @@ export const EventResultTable = () => {
               </TD>
 
               {includeTotal && (
-                <EventResultCell
-                  resultItems={er.results.find((r) => !r.categoryId && !r.criterionId)?.items ?? []}
-                  roles={selectedRoles}
-                  ageGroups={selectedAgeGroups}
-                  bold={true}
-                />
+                <EventResultCell resultItems={er.results.find((r) => !r.categoryId && !r.criterionId)?.items ?? []} bold={true} />
               )}
               {categories.map((c) => (
                 <EventResultCell
                   key={`cat-${c.id}-${er.eventId}`}
                   resultItems={er.results.find((r) => r.categoryId === c.id)?.items ?? []}
-                  roles={selectedRoles}
-                  ageGroups={selectedAgeGroups}
                   bold={true}
                 />
               ))}
@@ -81,8 +64,6 @@ export const EventResultTable = () => {
                 <EventResultCell
                   key={`crit-${c.id}-${er.eventId}`}
                   resultItems={er.results.find((r) => r.criterionId === c.id)?.items ?? []}
-                  roles={selectedRoles}
-                  ageGroups={selectedAgeGroups}
                   bold={true}
                 />
               ))}
@@ -100,28 +81,18 @@ export const EventResultTable = () => {
                     {s.stageName}
                   </Text>
                 </TD>
-                {includeTotal && (
-                  <EventResultCell
-                    resultItems={s.results.find((r) => !r.categoryId && !r.criterionId)?.items ?? []}
-                    roles={selectedRoles}
-                    ageGroups={selectedAgeGroups}
-                  />
-                )}
+                {includeTotal && <EventResultCell resultItems={s.results.find((r) => !r.categoryId && !r.criterionId)?.items ?? []} />}
 
                 {categories.map((c) => (
                   <EventResultCell
                     key={`cat-${c.id}-${er.eventId}-${s.stageId}`}
                     resultItems={s.results.find((r) => r.categoryId === c.id)?.items ?? []}
-                    roles={selectedRoles}
-                    ageGroups={selectedAgeGroups}
                   />
                 ))}
                 {criteria.map((c) => (
                   <EventResultCell
                     key={`crit-${c.id}-${er.eventId}-${s.stageId}`}
                     resultItems={s.results.find((r) => r.criterionId === c.id)?.items ?? []}
-                    roles={selectedRoles}
-                    ageGroups={selectedAgeGroups}
                   />
                 ))}
               </TR>

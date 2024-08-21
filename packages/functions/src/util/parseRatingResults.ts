@@ -11,7 +11,9 @@ export const parseRatingResults = (results: RR_DB[], event: DbEvent): EventWithR
       ...c,
       items: JSON.parse(c.items),
       criterion: parseCriterion(c.criterion),
-      children: c.children.map((cc) => ({ ...cc, items: JSON.parse(cc.items), criterion: parseCriterion(cc.criterion) })),
+      // Trust me, I'm smarter than TypeScript
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      children: c.children.map((cc) => ({ ...cc, items: JSON.parse(cc.items), criterion: parseCriterion(cc.criterion) } as any)),
     })),
   }))
   return {

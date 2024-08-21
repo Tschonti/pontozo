@@ -1,4 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
+import { ResultTableProvider } from './api/contexts/ResultTableProvider'
 import { PLayout } from './components/commons/PLayout'
 import { AdminIndex } from './pages/adminIndex/AdminIndex.page'
 import { AuthorizedPage } from './pages/authorized/Authorized.page'
@@ -74,9 +75,24 @@ export const App = () => {
             <Route path=":ratingId" element={<RatingPage />} />
           </Route>
           <Route path={PATHS.RESULTS}>
-            <Route index element={<ResultsPage />} />
+            <Route
+              index
+              element={
+                <ResultTableProvider>
+                  <ResultsPage />
+                </ResultTableProvider>
+              }
+            />
+
             <Route path=":eventId">
-              <Route index element={<ResultDetailsPage />} />
+              <Route
+                index
+                element={
+                  <ResultTableProvider minimal>
+                    <ResultDetailsPage />
+                  </ResultTableProvider>
+                }
+              />
             </Route>
           </Route>
         </Route>
