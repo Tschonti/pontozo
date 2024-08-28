@@ -75,7 +75,7 @@ export const DesktopRatingProgressBar = () => {
           </Button>
           {eventRatingInfo?.status === RatingStatus.STARTED && !hasNext && <SubmitRatingModal variant="ghost" color="brand.500" />}
           {hasNext && (
-            <Button rightIcon={<FaChevronRight />} onClick={() => nextCategory()} variant="ghost">
+            <Button color="brand.500" rightIcon={<FaChevronRight />} onClick={() => nextCategory()} variant="ghost">
               Következő
             </Button>
           )}

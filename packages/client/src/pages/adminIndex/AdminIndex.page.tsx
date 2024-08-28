@@ -18,18 +18,42 @@ export const AdminIndex = () => {
     <>
       <HelmetTitle title="Pontoz-O Admin" />
       <Heading>Admin oldal tudnivalók</Heading>
-      <Text>
-        Lórum ipse fűző szecskát tózik: a gubátos csillagos fagyans, iget bráni ez. Edre pedig azért egyetnek pátorban, hogy a letleni
-        murgácsban kedő parás a becse spána és fenyére érdekében cinthetsen. Ponokba nőzködnek annak a meddő ható óvadélynak az elmelései,
-        aki éppen a vazásról áttelepülve zuharozódta meg vétlen szapjas és virágyatos avánai fekényét. Bargadka szutya pálgálta
-        tekevezékeire nemcsak nyögésről ebeckedt mong, hanem a taló taságoktól is. Csolás empőzs packávonálai újra meg újra ségetsék a
-        fogást arra, hogy a haság és az olások elmenek amustól. A fetles ezer empőzs kasolta, hogy a szegséges ülöntés dikás karázsálnia az
-        ehető haságot.
-      </Text>
+      <VStack gap={2}>
+        <Text textAlign="justify">
+          Üdv a Pontoz-O admin felületén! Itt lehet testreszabni, hogy milyen szempontok és kategóriák által értékelhetőek az egyes
+          versenyek az alkalmazásban.
+        </Text>
+        <Text textAlign="justify">
+          Ahhoz, hogy a versenyek egymással összehasonlíthatóak legyenek, elengedhetetlen, hogy ugyanazon szempontok alapján legyenek
+          értékelve. Azonban az is fontos, hogy időnként ezeken lehessen változtatni. Ezért a versenyeket az alkalmazás <b>szezon</b>okba
+          sorolja. Egy szezonon belül minden verseny pontosan ugyanazon szempontok alapján lesz értékelve. Egyszerre csak egy szezon lehet
+          aktív. Ha egy szezon már elkezdődött, sem a szezon, sem annak kategóriái és szempontjai nem szerkeszthető.
+        </Text>
+        <Text textAlign="justify">
+          Az értékelés során nem az összes szempontot egy oldalon fogja látni a felhasználó, hanem külön oldalanként. Erre a csoportosításra
+          alkalmasak a <b>kategóriák</b>, hiszen egy kategóriában szereplő szempontok már egy oldalon fognak megjelenni. Érdemes tehát a
+          hasonló témájú szempontokat azonos kategóriába tenni.
+        </Text>
+        <Text textAlign="justify">
+          Az alkalmazásban a legkisebb értékelési egység a <b>szempont</b>, ez az, amire a felhasználónak valamilyen választ kell adnia. Az
+          értékelés során minden szemponthoz kötelező valamit válaszolni, azonban ha a "Nem tudom" válasz engedett és azt választja, az ő
+          döntése nem fogja befolyásolni az eredményt. A válaszlehetőségek értéke 0, 1, 2 és 3 lehet. Testreszabható, hogy milyen szöveggel
+          jelenjenek meg az értékek. Amennyiben valamelyik értékhez nem tartozik jelentés, azt az értéket nem fogja tudni választani az
+          értékelő. Minden szempontnál testreszabható az is, hogy milyen szerepkörbe tartozó felhasználók számára lesz elérhető. Amennyiben
+          a futam specifikus beállítás be van kapcsolva, a verseny minden futamához értékelni kell a szempontot, egyébként csak egyszer, a
+          teljes versenyre vonatkozóan.
+        </Text>
+        <Text textAlign="justify">
+          Edzői vagy MTFSZ zsűri szerepkört a <b>Felhasználók</b> menüpontban lehet adni. Ezek a felhasználók később képesek lesznek az
+          adott szerepkörben leadni egy értékelést, így olyan versenyeket is értékelhetnek, amiken nem vettek részt. Az Admin szerepkör ad
+          hozzáférést ezen admin felülethez, ilyet csak valódi szükség esetén adjunk ki.
+        </Text>
+      </VStack>
       <Heading fontSize={30} mt={5}>
         Figyelmeztetések
       </Heading>
-      <VStack mt={5}>
+      <Text my={2}>A rendszer legfrissebb naplóbejegyzései</Text>
+      <VStack>
         {data.length > 0 ? (
           data.map((a) => (
             <Alert variant="left-accent" status={alertLevelToChakraStatus[a.level]} justifyContent="space-between">

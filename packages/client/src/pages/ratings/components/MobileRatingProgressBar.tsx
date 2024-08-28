@@ -45,7 +45,7 @@ export const MobileRatingProgressBar = () => {
       </Box>
 
       <VStack w="100%" spacing={0} bgColor="white">
-        <Text py={2} fontWeight="bold">
+        <Text py={2} fontWeight="bold" transform="auto" skewX={-15}>
           {currentStage?.name || 'Teljes verseny'}
         </Text>
         <Progress

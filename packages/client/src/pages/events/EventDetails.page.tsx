@@ -92,8 +92,8 @@ export const EventDetailsPage = () => {
         Szerepkör
       </Heading>
       <Text>
-        Válaszd ki, melyik szerepkörbe tartozol. Rajthozállást és rendezői tevékenységet csak az értékelés lezárulása után érétkeljük ki,
-        aki nem megfelelő szerepkört választott, annak értékelését átsoroljuk vagy töröljük.
+        Válaszd ki, melyik szerepkörbe tartozol. A rajthozállás és rendezői tevékenység csak az értékelés lezárulása után kerül
+        ellenőrzésre, aki nem megfelelő szerepkört választott, annak értékelése átsorololásra vagy törölésre kerül.
       </Text>
       {ratingRoleArray.map((r) => (
         <RoleListItem

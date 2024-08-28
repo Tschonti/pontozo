@@ -17,7 +17,7 @@ export const ProgressBarItem = ({ itemStageIdx, name }: Props) => {
   }
   return (
     <VStack display="flex" justify="flex-end" w="100%" spacing={0} borderRightWidth={3} borderRightColor="white">
-      <Text textAlign="center" py={2} fontWeight={currentStage ? 'bold' : undefined}>
+      <Text textAlign="center" transform="auto" skewX={currentStage ? -15 : 0} py={2} fontWeight={currentStage ? 'bold' : undefined}>
         {name}
       </Text>
       <Progress

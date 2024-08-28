@@ -30,9 +30,13 @@ export const CategoryWithCriteriaList = ({ ratingId }: Props) => {
   return (
     <>
       <Heading size="md">Kategória: {currentCategory?.name}</Heading>
-      <Text mt={2} mb={5}>
-        {currentCategory?.description}
-      </Text>
+      {currentStage && <Heading size="md"> Futam: {currentStage.name}</Heading>}
+      <Text
+        mt={2}
+        mb={5}
+        dangerouslySetInnerHTML={{ __html: currentCategory?.description.replace('az adott', `a(z) <b>${currentStage?.name}</b>`) ?? '' }}
+      />
+
       <VStack my={5} spacing={10} alignItems="flex-start">
         {criteria?.map((criteria) => (
           <CriterionRateForm criterion={criteria} key={criteria.id} />

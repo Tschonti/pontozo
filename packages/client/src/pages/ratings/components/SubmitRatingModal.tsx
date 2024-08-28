@@ -59,7 +59,7 @@ export const SubmitRatingModal = ({ variant, color, colorScheme }: Props) => {
             <Button mr={3} colorScheme="gray" onClick={onClose}>
               Mégse
             </Button>
-            <Button colorScheme="brand" mr={3} onClick={() => submitRating(value)}>
+            <Button colorScheme="brand" onClick={() => submitRating(value)}>
               Küldés
             </Button>
           </ModalFooter>
