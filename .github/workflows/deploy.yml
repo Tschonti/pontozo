@@ -1,94 +1,94 @@
-# name: Deploy to Azure
+name: Deploy to Azure
 
-# on:
-#   push:
-#     branches:
-#       - master
+on:
+  push:
+    branches:
+      - master
 
-# jobs:
-#   terraform:
-#     name: Setup infrastructure in Azure with Terraform
-#     defaults:
-#       run:
-#         working-directory: 'infra'
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v4
-#       - uses: hashicorp/setup-terraform@v3
-#         with:
-#           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+jobs:
+  terraform:
+    name: Setup infrastructure in Azure with Terraform
+    defaults:
+      run:
+        working-directory: 'infra'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-#       - name: Terraform fmt
-#         id: fmt
-#         run: terraform fmt -check
-#         continue-on-error: true
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
 
-#       - name: Terraform Init
-#         id: init
-#         run: terraform init
+      - name: Terraform Init
+        id: init
+        run: terraform init
 
-#       - name: Terraform Validate
-#         id: validate
-#         run: terraform validate -no-color
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
 
-#       - name: Terraform Apply
-#         id: apply
-#         run: terraform apply -no-color -auto-approve
+      - name: Terraform Apply
+        id: apply
+        run: terraform apply -no-color -auto-approve
 
-#   deploy_fa:
-#     name: Deploy backend code to Azure Function App
-#     needs: terraform
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: 'Checkout GitHub Action'
-#         uses: actions/checkout@v4
+  deploy_fa:
+    name: Deploy backend code to Azure Function App
+    needs: terraform
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v4
 
-#       - name: Setup Node 18 Environment
-#         uses: actions/setup-node@v4
-#         with:
-#           node-version: 18
+      - name: Setup Node 18 Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
 
-#       - name: 'Resolve Project Dependencies Using Npm'
-#         shell: bash
-#         run: |
-#           npm i @nx/js@16.5.1 @nx/linter@16.5.1 @nx/workspace@16.5.1 @nxazure/func@^1.0.17 nx@16.5.1
-#           npx nx build functions
-#           cd packages/functions
-#           npm ci
+      - name: 'Resolve Project Dependencies Using Npm'
+        shell: bash
+        run: |
+          npm i @nx/js@16.5.1 @nx/linter@16.5.1 @nx/workspace@16.5.1 @nxazure/func@^1.0.17 nx@16.5.1
+          npx nx build functions
+          cd packages/functions
+          npm ci
 
-#       - name: 'Run Azure Functions Action'
-#         uses: Azure/functions-action@v1
-#         id: fa
-#         with:
-#           respect-funcignore: true
-#           app-name: pontozo-api-tf
-#           package: packages/functions
-#           publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+      - name: 'Run Azure Functions Action'
+        uses: Azure/functions-action@v1
+        id: fa
+        with:
+          respect-funcignore: true
+          app-name: pontozo-api-tf
+          package: packages/functions
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
 
-#   deploy_aswa:
-#     needs: terraform
-#     runs-on: ubuntu-latest
-#     name: Build and Deploy client to Azure Static Web Apps
-#     env:
-#       VITE_FUNC_HOST: ${{ secrets.FUNC_HOST }}
-#       VITE_APIM_HOST: ${{ secrets.APIM_HOST }}
-#       VITE_APIM_KEY: ${{ secrets.APIM_KEY }}
-#       VITE_CLIENT_ID: ${{ secrets.CLIENT_ID }}
-#       VITE_APP_INSIGHTS_CONN_STR: ${{ secrets.APP_INSIGHTS_CONN_STR}}
-#     steps:
-#       - uses: actions/checkout@v4
-#         with:
-#           submodules: false
-#           lfs: false
-#       - name: Build And Deploy
-#         id: builddeploy
-#         uses: Azure/static-web-apps-deploy@v1
-#         with:
-#           azure_static_web_apps_api_token: ${{secrets.SWA_API_KEY}}
-#           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
-#           action: 'upload'
-#           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-#           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-#           app_location: '.' # App source code path
-#           output_location: '/packages/client/dist' # Built app content directory - optional
-#           ###### End of Repository/Build Configurations ######
+  deploy_aswa:
+    needs: terraform
+    runs-on: ubuntu-latest
+    name: Build and Deploy client to Azure Static Web Apps
+    env:
+      VITE_FUNC_HOST: ${{ secrets.FUNC_HOST }}
+      VITE_APIM_HOST: ${{ secrets.APIM_HOST }}
+      VITE_APIM_KEY: ${{ secrets.APIM_KEY }}
+      VITE_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+      VITE_APP_INSIGHTS_CONN_STR: ${{ secrets.APP_INSIGHTS_CONN_STR}}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+          lfs: false
+      - name: Build And Deploy
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{secrets.SWA_API_KEY}}
+          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+          action: 'upload'
+          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
+          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
+          app_location: '.' # App source code path
+          output_location: '/packages/client/dist' # Built app content directory - optional
+          ###### End of Repository/Build Configurations ######
