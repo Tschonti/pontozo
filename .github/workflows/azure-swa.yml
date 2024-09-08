@@ -10,8 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     env:
-      VITE_FUNC_HOST: https://pontozo-api.azurewebsites.net
-      VITE_APIM_HOST: https://pontozoapim.azure-api.net
+      VITE_FUNC_HOST: ${{ secrets.FUNC_HOST }}
+      VITE_APIM_HOST: ${{ secrets.APIM_HOST }}
+      VITE_MTFSZ_API_URL: ${{ secrets.MTFSZ_API_URL }}
       VITE_APIM_KEY: ${{ secrets.APIM_KEY }}
       VITE_CLIENT_ID: ${{ secrets.CLIENT_ID }}
       VITE_APP_INSIGHTS_CONN_STR: ${{ secrets.APP_INSIGHTS_CONN_STR}}
