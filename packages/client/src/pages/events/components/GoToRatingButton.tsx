@@ -66,6 +66,12 @@ export const GoToRatingButton = ({ eventWithRating, onStartClick, startDisabled,
                 A felső sávban mindig látod, hogy jelenleg a teljes versenyt, vagy az egyik futamot értékeled.
               </Text>
               <Text>
+                Egyes szempontok leírásában több, összetett kérdést is megfogalmaztunk, hogy segítsünk átgondolni, mik befolyásolhatják a
+                döntésed. Előfordulhat, hogy ha ezeket külön tennék fel, eltérő válaszokat adnál rájuk. Arra kérünk, hogy az adott szempont
+                értékelését az alapján válaszd ki, hogy Neked mi a legfontosabb az adott kérdésben, és azon a területen milyen élménnyel
+                távoztál a versenyről.
+              </Text>
+              <Text>
                 Az értékelést bármikor megszakíthatod, a válaszaid folyamatosan mentésre kerülnek, így amikor következőre visszatérsz erre
                 az oldalra, onnan folytathatod, ahol abbahagytad. Az értékelésed csak akkor fog beszámítani az eredményekbe, ha minden
                 kategóriát kitöltesz, majd a végén véglegesíted azt. Minden versenyt a lezárultát követő hét napban lehet értékelni, ezután
