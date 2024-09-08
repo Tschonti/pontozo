@@ -74,6 +74,7 @@ resource "azurerm_windows_function_app" "function-app" {
     "ENV"                      = "production"
     "FRONTEND_URL"             = format("%s%s", "https://", azurerm_static_web_app.swa.default_host_name)
     "FUNCTION_HOST"            = "https://pontozo-api-tf.azurewebsites.net"
+    "MTFSZ_API_HOST"           = var.MTFSZ_API_HOST
     "FUNCTIONS_WORKER_RUNTIME" = "node"
     "JWT_SECRET"               = var.FA_JWT_SECRET
     "REDIS_HOST"               = azurerm_redis_cache.redis-cache.hostname

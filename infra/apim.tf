@@ -8,6 +8,11 @@ variable "MTFSZ_CLIENT_SECRET" {
   sensitive = true
 }
 
+variable "MTFSZ_API_HOST" {
+  type      = string
+  sensitive = true
+}
+
 resource "azurerm_api_management" "apim" {
   name                = "pontozo-apim-tf"
   location            = "West Europe"
@@ -29,7 +34,7 @@ resource "azurerm_api_management_api" "mtfsz-api" {
   revision              = "1"
   display_name          = "MTFSZ API"
   protocols             = ["https"]
-  service_url           = "https://api.mtfsz.hu/api/v1_0"
+  service_url           = format("%s/api/v1_0", var.MTFSZ_API_HOST)
   subscription_required = true
   subscription_key_parameter_names {
     header = "Ocp-Apim-Subscription-Key"
