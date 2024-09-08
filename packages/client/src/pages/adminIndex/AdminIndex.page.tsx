@@ -6,7 +6,7 @@ import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { alertLevelToChakraStatus } from 'src/util/enumHelpers'
 import { PATHS } from 'src/util/paths'
 
-export const AdminIndex = () => {
+export default function () {
   const { data, isLoading, error } = useFetchAlerts()
   if (isLoading) {
     return <LoadingSpinner />

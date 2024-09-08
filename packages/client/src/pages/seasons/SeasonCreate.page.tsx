@@ -34,7 +34,7 @@ import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 import { CategorySelector } from './components/CategorySelector'
 
-export const SeasonCreatePage = () => {
+export default function () {
   const seasonId = parseInt(useParams<{ seasonId: string }>().seasonId ?? '-1')
   const { data, isLoading, isFetching, error } = useFetchSeason(seasonId)
   const seasonEditable = new Date(data?.startDate ?? new Date(Date.now() + 1000)) > new Date()

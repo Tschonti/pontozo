@@ -6,7 +6,7 @@ import { useFetchCriteria } from '../../api/hooks/criteriaHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 
-export const CriteriaListPage = () => {
+export default function () {
   const { isLoading, error, data } = useFetchCriteria()
   if (isLoading) {
     return <LoadingSpinner />

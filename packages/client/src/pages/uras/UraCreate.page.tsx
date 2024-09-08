@@ -11,7 +11,7 @@ import { useCreateUraMutation, useDeleteUraMutation, useFetchUra, useUpdateUraMu
 import { PATHS } from '../../util/paths'
 import { UserSelector } from './components/UserSelector'
 
-export const UraCreatePage = () => {
+export default function () {
   const uraId = parseInt(useParams<{ uraId: string }>().uraId ?? '-1')
   const { data, isLoading, error } = useFetchUra(uraId)
   const [user, setUser] = useState<UserPreview>()

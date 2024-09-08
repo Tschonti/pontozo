@@ -6,7 +6,7 @@ import { useFetchSeasons } from '../../api/hooks/seasonHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 
-export const SeasonListPage = () => {
+export default function () {
   const { isLoading, error, data } = useFetchSeasons()
   if (isLoading) {
     return <LoadingSpinner />

@@ -35,7 +35,7 @@ import {
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 
-export const CriteriaCreatePage = () => {
+export default function () {
   const criterionId = parseInt(useParams<{ criterionId: string }>().criterionId ?? '-1')
   const { data, isLoading, isFetching, error } = useFetchCriterion(criterionId)
   const criterionEditable = data?.editable ?? true

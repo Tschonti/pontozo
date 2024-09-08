@@ -7,7 +7,7 @@ import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { translateUR, urColor } from '../../util/enumHelpers'
 import { PATHS } from '../../util/paths'
 
-export const UraListPage = () => {
+export default function () {
   const { isLoading, error, data } = useFetchUras()
   if (isLoading) {
     return <LoadingSpinner />

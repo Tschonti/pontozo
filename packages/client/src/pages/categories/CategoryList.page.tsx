@@ -6,7 +6,7 @@ import { useFetchCategories } from '../../api/hooks/categoryHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { PATHS } from '../../util/paths'
 
-export const CategoryListPage = () => {
+export default function () {
   const { isLoading, error, data } = useFetchCategories()
   if (isLoading) {
     return <LoadingSpinner />
