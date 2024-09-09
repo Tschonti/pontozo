@@ -14,3 +14,8 @@ export const formatDateRange = (startDate: string, endDate?: string) => {
     return `${start}${endParts[2]}.`
   }
 }
+
+export const getRatingResultPublishedDate = (endDate: Date) => {
+  const publishDate = new Date(endDate.getTime() + 9 * 24 * 60 * 60 * 1000)
+  return publishDate.toLocaleDateString('hu')
+}

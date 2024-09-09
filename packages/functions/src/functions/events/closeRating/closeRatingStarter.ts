@@ -1,7 +1,8 @@
 import { app, InvocationContext, Timer } from '@azure/functions'
-import { EventState } from '@pontozo/common'
+import { AlertLevel, EventState } from '@pontozo/common'
 import * as df from 'durable-functions'
 import { Not } from 'typeorm'
+import { newAlertItem } from '../../../service/alert.service'
 import Event from '../../../typeorm/entities/Event'
 import { getAppDataSource } from '../../../typeorm/getConfig'
 import { orchestratorName } from './closeRatingOrchestrator'
@@ -37,7 +38,7 @@ const closeRatingStarter = async (myTimer: Timer, context: InvocationContext): P
       context.log(`Started orchestration with ID = '${instanceId}'.`)
     }
   } catch (error) {
-    context.log(error)
+    newAlertItem({ context, desc: `Error during closeRatingStarter: ${error}`, level: AlertLevel.ERROR })
   }
 }
 

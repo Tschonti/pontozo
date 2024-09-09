@@ -1,5 +1,5 @@
 import { app, InvocationContext, Timer } from '@azure/functions'
-import { getHighestRank, getRateableEvents, stageFilter } from '@pontozo/common'
+import { AlertLevel, getHighestRank, getRateableEvents, stageFilter } from '@pontozo/common'
 import { newAlertItem } from '../../service/alert.service'
 import Club from '../../typeorm/entities/Club'
 import Event from '../../typeorm/entities/Event'
@@ -77,7 +77,7 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
       newAlertItem({ ads, context, desc: `${created} events created, ${eventsToSave.length - created} updated in db` })
     }
   } catch (error) {
-    context.log(error)
+    newAlertItem({ context, desc: `Error during event import: ${error}`, level: AlertLevel.ERROR })
   }
 }
 

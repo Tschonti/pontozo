@@ -171,8 +171,8 @@ XML
 #       oauth2 = {
 #         grantTypes = {
 #           clientCredentials = {
-#             authorizationUrl = "https://api.mtfsz.hu/oauth/v2/auth"
-#             tokenUrl         = "https://api.mtfsz.hu/oauth/v2/token"
+#             authorizationUrl = "https://adatbank2.mtfsz.hu/oauth/v2/auth"
+#             tokenUrl         = "https://adatbank2.mtfsz.hu/oauth/v2/token"
 #           }
 #         }
 #       }

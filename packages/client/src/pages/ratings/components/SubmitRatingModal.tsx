@@ -12,10 +12,12 @@ import {
   Text,
   Textarea,
   useDisclosure,
+  VStack,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { FaChevronRight } from 'react-icons/fa'
 import { useRatingContext } from 'src/api/contexts/useRatingContext'
+import { getRatingResultPublishedDate } from 'src/util/dateHelpers'
 
 type Props = {
   variant?: string
@@ -24,7 +26,7 @@ type Props = {
 }
 
 export const SubmitRatingModal = ({ variant, color, colorScheme }: Props) => {
-  const { submitRating, openSubmitModal } = useRatingContext()
+  const { submitRating, openSubmitModal, eventRatingInfo } = useRatingContext()
   const [value, setValue] = useState('')
   const { isOpen, onClose, onOpen } = useDisclosure()
   return (
@@ -38,17 +40,23 @@ export const SubmitRatingModal = ({ variant, color, colorScheme }: Props) => {
       >
         Véglegesítés
       </Button>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} size="lg">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Értékelés véglegesítése</ModalHeader>
           <ModalCloseButton />
           <ModalBody textAlign="justify">
-            <Text mb={5}>
-              Köszönjük, hogy értékelted a versenyt! Az értékélest a 'Küldés' gombbal tudod véglegesíteni, ezután már nem fogod tudni
-              szerkeszteni. Ha szeretnél még szöveges formában (névtelen) visszajelzést küldeni a szervezőknek, azt megteheted az alábbi
-              szövegdobozban.
-            </Text>
+            <VStack gap={2} alignItems="flex-start" mb={5}>
+              <Text>
+                Köszönjük, hogy értékelted a versenyt! Az értékélest a <b>Küldés</b> gombbal tudod véglegesíteni, ezután már nem fogod tudni
+                szerkeszteni. Ha szeretnél még szöveges formában (névtelen) visszajelzést küldeni a szervezőknek, azt megteheted az alábbi
+                szövegdobozban.
+              </Text>
+              <Text>
+                Az értékelés eredményei a verseny lezárta után nyolc nappal kerülnek publikálásra, tehát nézz vissza ekkor:{' '}
+                <b>{getRatingResultPublishedDate(new Date(eventRatingInfo?.endDate ?? eventRatingInfo?.startDate ?? ''))}</b>
+              </Text>
+            </VStack>
             <FormControl>
               <FormLabel>Szöveges visszajelzés (opcionális)</FormLabel>
               <Textarea rows={8} value={value} onChange={(e) => setValue(e.target.value)} />

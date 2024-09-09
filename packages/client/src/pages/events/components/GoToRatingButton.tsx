@@ -53,13 +53,13 @@ export const GoToRatingButton = ({ eventWithRating, onStartClick, startDisabled,
       <Button colorScheme="brand" isLoading={isLoading} onClick={onOpen} isDisabled={startDisabled}>
         Értékelés kezdése
       </Button>
-      <Modal size="lg" isOpen={isOpen} onClose={onClose}>
+      <Modal size="2xl" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Tudnivalók az értékelésről</ModalHeader>
           <ModalCloseButton />
           <ModalBody textAlign="justify">
-            <VStack gap={2}>
+            <VStack gap={2} alignItems="flex-start">
               <Text>
                 Az értékelés során először a teljes versenyt lesz lehetőséged értékelni olyan szempontok alapján, melyek az egész versenyre
                 vonatkoznak. Ezután az egyes futamokat fogod értékelni futamspecifikus szempontok (például térkép, pályák minősége) alapján.
