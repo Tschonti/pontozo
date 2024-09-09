@@ -8,7 +8,7 @@ import { PontozoResponse } from '../../util/pontozoResponse'
 
 export const getAllAndOneSeasons = async (req: HttpRequest, context: InvocationContext): Promise<PontozoResponse<AllSeasonsAndOne>> => {
   try {
-    const now = new Date(2026, 3, 23)
+    const now = new Date()
     const seasonId = req.query.get('seasonId')
     const ads = await getAppDataSource(context)
     const seasonRepo = ads.getRepository(Season)

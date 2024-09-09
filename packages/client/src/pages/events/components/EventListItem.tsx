@@ -1,7 +1,7 @@
 import { Badge, Card, CardBody, CardHeader, Heading, HStack, Text } from '@chakra-ui/react'
 import { DbEvent, EventState, RatingStatus } from '@pontozo/common'
 import { Link } from 'react-router-dom'
-import { formatDateRange } from 'src/util/formatDateRange'
+import { formatDateRange } from 'src/util/dateHelpers'
 import { statusColor, translateStatus } from '../../../util/enumHelpers'
 import { PATHS } from '../../../util/paths'
 import { EventRankBadge } from './EventRankBadge'
