@@ -61,7 +61,7 @@ jobs:
         id: fa
         with:
           respect-funcignore: true
-          app-name: pontozo-api-tf
+          app-name: pontozo-api
           package: packages/functions
           publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
 
