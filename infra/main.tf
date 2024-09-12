@@ -11,7 +11,7 @@ terraform {
   cloud {
     organization = "feketesamu"
     workspaces {
-      name = "pontozo"
+      name = "pontozo-mtfsz"
     }
   }
 }

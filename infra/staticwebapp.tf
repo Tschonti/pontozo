@@ -7,7 +7,7 @@ resource "azurerm_static_web_app" "swa" {
 resource "azurerm_dns_cname_record" "pontozo-dns-record" {
   name                = "pontozo"
   zone_name           = "mtfsz.hu"
-  resource_group_name = azurerm_resource_group.pontozo-rg
+  resource_group_name = azurerm_resource_group.pontozo-rg.name
   ttl                 = 300
   record              = azurerm_static_web_app.swa.default_host_name
 }
