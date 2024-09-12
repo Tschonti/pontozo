@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">=3.96.0"
+      version = "~> 4.x"
     }
     azapi = {
       source = "azure/azapi"
@@ -23,7 +23,7 @@ provider "azurerm" {
 provider "azapi" {
 }
 
-resource "azurerm_resource_group" "tf-rg" {
-  name     = "pontozo-tf"
-  location = "Poland Central"
+resource "azurerm_resource_group" "pontozo-rg" {
+  name     = "pontozo"
+  location = "West Europe"
 }

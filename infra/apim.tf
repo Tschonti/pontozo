@@ -14,9 +14,9 @@ variable "MTFSZ_API_HOST" {
 }
 
 resource "azurerm_api_management" "apim" {
-  name                = "pontozo-apim-tf"
+  name                = "pontozo-apim"
   location            = "West Europe"
-  resource_group_name = azurerm_resource_group.tf-rg.name
+  resource_group_name = azurerm_resource_group.pontozo-rg.name
   publisher_name      = "Fekete Sámuel"
   publisher_email     = "feketesamu@gmail.com"
 
@@ -29,7 +29,7 @@ resource "azurerm_api_management" "apim" {
 
 resource "azurerm_api_management_api" "mtfsz-api" {
   name                  = "mtfsz"
-  resource_group_name   = azurerm_resource_group.tf-rg.name
+  resource_group_name   = azurerm_resource_group.pontozo-rg.name
   api_management_name   = azurerm_api_management.apim.name
   revision              = "1"
   display_name          = "MTFSZ API"

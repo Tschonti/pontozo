@@ -28,17 +28,17 @@ variable "DB_ADMIN_USER" {
 }
 
 resource "azurerm_service_plan" "sp" {
-  name                = "pontozo-sp-tf"
-  resource_group_name = azurerm_resource_group.tf-rg.name
-  location            = azurerm_resource_group.tf-rg.location
+  name                = "pontozo-sp"
+  resource_group_name = azurerm_resource_group.pontozo-rg.name
+  location            = azurerm_resource_group.pontozo-rg.location
   os_type             = "Windows"
   sku_name            = "Y1"
 }
 
 resource "azurerm_windows_function_app" "function-app" {
-  name                = "pontozo-api-tf"
-  resource_group_name = azurerm_resource_group.tf-rg.name
-  location            = azurerm_resource_group.tf-rg.location
+  name                = "pontozo-api"
+  resource_group_name = azurerm_resource_group.pontozo-rg.name
+  location            = azurerm_resource_group.pontozo-rg.location
 
   storage_account_name       = azurerm_storage_account.storage.name
   storage_account_access_key = azurerm_storage_account.storage.primary_access_key
