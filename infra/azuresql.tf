@@ -4,7 +4,7 @@ variable "DB_ADMIN_PWD" {
 }
 
 resource "azurerm_mssql_server" "sqlserver" {
-  name                         = "pontozo-db-server"
+  name                         = "mtfsz-pontozo-db-server"
   resource_group_name          = azurerm_resource_group.pontozo-rg.name
   location                     = azurerm_resource_group.pontozo-rg.location
   version                      = "12.0"

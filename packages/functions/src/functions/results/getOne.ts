@@ -34,9 +34,10 @@ export const getOneResult = async (req: HttpRequest, context: InvocationContext)
     const results = await ads
       .getRepository(RatingResult)
       .find({ where: { eventId: eventId, parentId: IsNull() }, relations: { children: { category: true, children: { criterion: true } } } })
-
+    const parsedData = parseRatingResults(results, event)
+    await redisClient.set(`ratingResult:${eventId}`, JSON.stringify(parsedData))
     return {
-      jsonBody: parseRatingResults(results, event),
+      jsonBody: parsedData,
     }
   } catch (error) {
     return handleException(req, context, error)

@@ -36,7 +36,7 @@ resource "azurerm_service_plan" "sp" {
 }
 
 resource "azurerm_windows_function_app" "function-app" {
-  name                = "pontozo-api"
+  name                = "pontozoapi"
   resource_group_name = azurerm_resource_group.pontozo-rg.name
   location            = azurerm_resource_group.pontozo-rg.location
 
@@ -73,7 +73,7 @@ resource "azurerm_windows_function_app" "function-app" {
     "ENCRYPT"                  = true
     "ENV"                      = "production"
     "FRONTEND_URL"             = format("%s%s", "https://", azurerm_static_web_app.swa.default_host_name)
-    "FUNCTION_HOST"            = "https://pontozo-api-tf.azurewebsites.net"
+    "FUNCTION_HOST"            = "https://pontozoapi.azurewebsites.net"
     "MTFSZ_API_HOST"           = var.MTFSZ_API_HOST
     "FUNCTIONS_WORKER_RUNTIME" = "node"
     "JWT_SECRET"               = var.FA_JWT_SECRET
