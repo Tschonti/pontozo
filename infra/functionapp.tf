@@ -27,6 +27,10 @@ variable "DB_ADMIN_USER" {
   sensitive = true
 }
 
+locals {
+  function_app_name = "pontozoapi"
+}
+
 resource "azurerm_service_plan" "sp" {
   name                = "pontozo-sp"
   resource_group_name = azurerm_resource_group.pontozo-rg.name
@@ -36,7 +40,7 @@ resource "azurerm_service_plan" "sp" {
 }
 
 resource "azurerm_windows_function_app" "function-app" {
-  name                = "pontozoapi"
+  name                = local.function_app_name
   resource_group_name = azurerm_resource_group.pontozo-rg.name
   location            = azurerm_resource_group.pontozo-rg.location
 
@@ -73,7 +77,7 @@ resource "azurerm_windows_function_app" "function-app" {
     "ENCRYPT"                  = true
     "ENV"                      = "production"
     "FRONTEND_URL"             = "https://pontozo.mtfsz.hu"
-    "FUNCTION_HOST"            = format("https://%s.azurewebsites.net", azurerm_windows_function_app.function-app.name)
+    "FUNCTION_HOST"            = format("https://%s.azurewebsites.net", local.function_app_name)
     "MTFSZ_API_HOST"           = var.MTFSZ_API_HOST
     "FUNCTIONS_WORKER_RUNTIME" = "node"
     "JWT_SECRET"               = var.FA_JWT_SECRET
