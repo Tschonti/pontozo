@@ -67,15 +67,15 @@ export const GoToRatingButton = ({ eventWithRating, onStartClick, startDisabled,
               </Text>
               <Text>
                 Egyes szempontok leírásában több, összetett kérdést is megfogalmaztunk, hogy segítsünk átgondolni, mik befolyásolhatják a
-                döntésed. Előfordulhat, hogy ha ezeket külön tennék fel, eltérő válaszokat adnál rájuk. Arra kérünk, hogy az adott szempont
+                döntésed. Előfordulhat, hogy ha ezeket külön tennénk fel, eltérő válaszokat adnál rájuk. Arra kérünk, hogy az adott szempont
                 értékelését az alapján válaszd ki, hogy Neked mi a legfontosabb az adott kérdésben, és azon a területen milyen élménnyel
                 távoztál a versenyről.
               </Text>
               <Text>
                 Az értékelést bármikor megszakíthatod, a válaszaid folyamatosan mentésre kerülnek, így amikor következőre visszatérsz erre
                 az oldalra, onnan folytathatod, ahol abbahagytad. Az értékelésed csak akkor fog beszámítani az eredményekbe, ha minden
-                kategóriát kitöltesz, majd a végén véglegesíted azt. Minden versenyt a lezárultát követő hét napban lehet értékelni, ezután
-                már nem fogod tudni változtatni vagy véglegesíteni az értékelésed.
+                kategóriát kitöltesz, majd a végén véglegesíted azt. Minden versenyt a lezárultát követő nyolc napban lehet értékelni,
+                ezután már nem fogod tudni változtatni vagy véglegesíteni az értékelésed.
               </Text>
               <Text>Az értékelés anonim, az eredmények csak összesítve lesznek publikálva.</Text>
             </VStack>
