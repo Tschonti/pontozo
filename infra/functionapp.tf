@@ -72,8 +72,8 @@ resource "azurerm_windows_function_app" "function-app" {
     "DB_USER"                  = var.DB_USER
     "ENCRYPT"                  = true
     "ENV"                      = "production"
-    "FRONTEND_URL"             = format("%s%s", "https://", azurerm_static_web_app.swa.default_host_name)
-    "FUNCTION_HOST"            = "https://pontozoapi.azurewebsites.net"
+    "FRONTEND_URL"             = "https://pontozo.mtfsz.hu"
+    "FUNCTION_HOST"            = format("https://%s.azurewebsites.net", azurerm_windows_function_app.function-app.name)
     "MTFSZ_API_HOST"           = var.MTFSZ_API_HOST
     "FUNCTIONS_WORKER_RUNTIME" = "node"
     "JWT_SECRET"               = var.FA_JWT_SECRET
