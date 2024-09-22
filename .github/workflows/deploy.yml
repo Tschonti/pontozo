@@ -54,6 +54,8 @@ jobs:
           npm i @nx/js@16.5.1 @nx/linter@16.5.1 @nx/workspace@16.5.1 @nxazure/func@^1.0.17 nx@16.5.1
           cd packages/functions
           npm ci
+          cd ../common
+          npm ci
           cd ../..
           npx nx build functions
 
