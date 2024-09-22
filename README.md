@@ -1,14 +1,14 @@
 # Pontoz-O
 
-This the repository of Pontoz-O, an application to rate hungarian orienteering events that was developed in collaboration with the Hungarian Orienteering Federation (MTFSZ). The repository was created with Nx and it's made of three packages:
+This is the repository of Pontoz-O, an application to rate Hungarian orienteering events developed in collaboration with the Hungarian Orienteering Federation (MTFSZ). The repository was created with Nx and it's made of three packages:
 
-- Functions: The backend of the application, which is an Azure Funtion App written in TypeScript with the Node programming model v4.
+- Functions: The backend of the application, which is an Azure Function App written in TypeScript with the Node programming model v4.
 - Client: The React frontend of the application.
 - Common: Common types and util functions of the two main packages.
 
 ## Local development
 
-The setup for local development is time consuming and requires access to some resources of the MTFSZ that are not public.
+The setup for local development is time-consuming and requires access to some resources of the MTFSZ that are not public.
 
 You'll need the following applications:
 
@@ -37,6 +37,7 @@ Fill with the following values:
     "APIM_KEY": "<subscription key for your APIM instance>",
     "CLIENT_ID": "<client id of your registered app at MTFSZ SSO>",
     "CLIENT_SECRET": "<client secret of your registered app at MTFSZ SSO>",
+    "MTFSZ_API_HOST": "https://adatbank2.mtfsz.hu",
     "JWT_SECRET": "a very secret value dont share it with anyone",
     "ADMINS": "<array of MTFSZ users that the seed function will set as admin (optional)>",
     "WEBSITE_RUN_FROM_PACKAGE": "1",
@@ -57,12 +58,13 @@ Fill with the following values:
 }
 ```
 
-Next, create a `.env` file in `/packages/client` with the follwoing content:
+Next, create a `.env` file in `/packages/client` with the following content:
 
 ```
 VITE_CLIENT_ID=<client id of your registered app at MTFSZ SSO>
 VITE_APIM_KEY=<subscription key for your APIM instance>
 PORT=3001
+VITE_MTFSZ_API_URL=https://adatbank2.mtfsz.hu
 ```
 
 Then start the Azurite Storage Emulator. You can do this in VS Code by pressing F1 and selecting the `Azurite: Start` task.
@@ -70,6 +72,10 @@ Then start the Azurite Storage Emulator. You can do this in VS Code by pressing 
 Next, install the dependencies:
 
 ```
+npm i
+cd packages/common
+npm i
+cd ../functions
 npm i
 ```
 
