@@ -1,6 +1,6 @@
 import { Badge } from '@chakra-ui/react'
+import { EventState } from '@pontozo/common'
 import { eventStateColor, translateEventState } from 'src/util/enumHelpers'
-import { EventState } from '../../../../common/src'
 
 export const EventRatingStateBadge = ({ state }: { state: EventState }) => {
   return (
