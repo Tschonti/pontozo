@@ -19,7 +19,7 @@ export const invalidateOneResult = async (req: HttpRequest, context: InvocationC
     event.state = EventState.INVALIDATED
     await eventRepo.save(event)
     await redisClient.del(`ratingResult:${eventId}`)
-    newAlertItem({
+    await newAlertItem({
       ads,
       context,
       desc: `User:${user.szemely_id} invalidated the rating results of event:${eventId}`,

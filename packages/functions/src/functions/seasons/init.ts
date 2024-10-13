@@ -47,10 +47,10 @@ export const initSeason = async (myTimer: Timer, context: InvocationContext): Pr
           return scc
         })
       )
-      newAlertItem({ ads, context, desc: `Criterion count refreshed for Season #${season.id}` })
+      await newAlertItem({ ads, context, desc: `Criterion count refreshed for Season #${season.id}` })
     }
   } catch (error) {
-    newAlertItem({ context, desc: `Error during season init: ${error}`, level: AlertLevel.ERROR })
+    await newAlertItem({ context, desc: `Error during season init: ${error}`, level: AlertLevel.ERROR })
   }
 }
 

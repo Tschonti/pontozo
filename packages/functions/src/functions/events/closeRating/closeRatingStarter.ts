@@ -38,7 +38,7 @@ const closeRatingStarter = async (myTimer: Timer, context: InvocationContext): P
       context.log(`Started orchestration with ID = '${instanceId}'.`)
     }
   } catch (error) {
-    newAlertItem({ context, desc: `Error during closeRatingStarter: ${error}`, level: AlertLevel.ERROR })
+    await newAlertItem({ context, desc: `Error during closeRatingStarter: ${error}`, level: AlertLevel.ERROR })
   }
 }
 
