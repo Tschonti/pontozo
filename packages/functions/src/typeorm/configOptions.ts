@@ -23,6 +23,7 @@ import { RatingResultItemsText1705347424162 } from './migrations/1705347424162-r
 import { EventState1705779906213 } from './migrations/1705779906213-event_state'
 import { AddInvalidatedState1711307184824 } from './migrations/1711307184824-add_invalidated_state'
 import { AddAlertTable1711394423616 } from './migrations/1711394423616-add_alert_table'
+import { RatingMessageTextType1728838819007 } from './migrations/1728838819007-rating_message_text_type'
 
 export const DBConfig: SqlServerConnectionOptions = {
   type: 'mssql',
@@ -61,6 +62,7 @@ export const DBConfig: SqlServerConnectionOptions = {
     EventState1705779906213,
     AddInvalidatedState1711307184824,
     AddAlertTable1711394423616,
+    RatingMessageTextType1728838819007,
   ],
   options: { encrypt: ENCRYPT },
 }

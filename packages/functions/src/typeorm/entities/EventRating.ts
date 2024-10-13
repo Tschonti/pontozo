@@ -38,7 +38,7 @@ class EventRating implements IEventRating {
   @Check("status in('STARTED', 'SUBMITTED')")
   status: RatingStatus
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'text' })
   message?: string
 
   @Column()
