@@ -6,17 +6,14 @@ import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { handleException } from '../../util/handleException'
 import { PontozoResponse } from '../../util/pontozoResponse'
+import { validateId } from '../../util/validation'
 
 /**
  * Called after the users starts the rating of an event to get all the rating categories and criteria.
  */
 export const getEventInfo = async (req: HttpRequest, context: InvocationContext): Promise<PontozoResponse<EventRatingInfo>> => {
   try {
-    const ratingId = parseInt(req.params.id)
-
-    if (isNaN(ratingId)) {
-      throw new PontozoException('Érvénytelen azonosító!', 400)
-    }
+    const ratingId = validateId(req)
     const user = getUserFromHeader(req)
     const ratingRepo = (await getAppDataSource(context)).getRepository(EventRating)
     const eventRatingAndEvent = await ratingRepo.findOne({

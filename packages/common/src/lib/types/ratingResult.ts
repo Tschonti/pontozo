@@ -1,7 +1,9 @@
 import { Category } from './categories'
 import { Criterion } from './criteria'
 import { DbEvent, DbStage } from './dbEvents'
+import { RatingRole } from './eventRatings'
 import { Season } from './seasons'
+import { AgeGroup } from './users'
 
 export interface RatingResult {
   id: number
@@ -48,6 +50,17 @@ export interface EventResult {
   startDate: string
   results: RatingResult[]
   stages: StageResult[]
+}
+
+export interface PublicEventMessage {
+  eventRatingId: number
+  message: string
+  role: RatingRole
+  ageGroup: AgeGroup
+}
+
+export interface EventMessages {
+  messages: PublicEventMessage[]
 }
 
 export interface StageResult {

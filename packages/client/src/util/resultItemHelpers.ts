@@ -1,5 +1,14 @@
-import { AgeGroup, ALL_AGE_GROUPS, ALL_ROLES, EventResult, RatingResult, RatingResultItem, RatingRole } from '@pontozo/common'
-import { SortOrder } from 'src/pages/results/components/table/EventResultTable'
+import {
+  AgeGroup,
+  ALL_AGE_GROUPS,
+  ALL_ROLES,
+  EventResult,
+  PublicEventMessage,
+  RatingResult,
+  RatingResultItem,
+  RatingRole,
+} from '@pontozo/common'
+import { SortOrder } from 'src/api/contexts/ResultTableContext'
 
 export const getResultItem = (
   resultItems: RatingResultItem[],
@@ -55,5 +64,15 @@ const generateResultItem = (count: number, sum: number): RatingResultItem => {
   return {
     average: sum / count,
     count: count,
+  }
+}
+
+export const filterEventMessages = (messages: PublicEventMessage[], roles: RatingRole[], ageGroups: AgeGroup[]): PublicEventMessage[] => {
+  if (roles.length === ALL_ROLES.length && ageGroups.length === ALL_AGE_GROUPS.length) {
+    return messages
+  } else if (roles.length < ALL_ROLES.length) {
+    return messages.filter((m) => roles.includes(m.role))
+  } else {
+    return messages.filter((m) => ageGroups.includes(m.ageGroup))
   }
 }

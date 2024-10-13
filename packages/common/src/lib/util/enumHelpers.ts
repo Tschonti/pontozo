@@ -32,3 +32,9 @@ export const ageGroupFilterDict: { [G in AgeGroup]: (er: EventRating) => boolean
   ELITE: (er) => er.raterAge > 20 && er.raterAge < 35,
   MASTER: (er) => er.raterAge > 34,
 }
+
+export const getAgeGroupFromAge = (age: number): AgeGroup => {
+  if (age < 21) return AgeGroup.YOUTH
+  if (age < 34) return AgeGroup.ELITE
+  return AgeGroup.MASTER
+}

@@ -1,4 +1,4 @@
-import { AllSeasonsAndOne, EventResultList, EventWithResults, PontozoError } from '@pontozo/common'
+import { AllSeasonsAndOne, EventMessages, EventResultList, EventWithResults, PontozoError } from '@pontozo/common'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { EventFilter } from 'src/pages/results/types/EventFilter'
 import { functionAxios } from 'src/util/axiosConfig'
@@ -37,6 +37,17 @@ export const useFetchEventResults = (eventId: number) => {
     ['fetchEventResults', eventId],
     async () => {
       const res = await functionAxios.get(`results/${eventId}`)
+      return res.data
+    },
+    { retry: false, enabled: !isNaN(eventId) && eventId > 0 }
+  )
+}
+
+export const useFetchEventMessages = (eventId: number) => {
+  return useQuery<EventMessages, PontozoError>(
+    ['fetchEventMessages', eventId],
+    async () => {
+      const res = await functionAxios.get(`results/${eventId}/messages`)
       return res.data
     },
     { retry: false, enabled: !isNaN(eventId) && eventId > 0 }

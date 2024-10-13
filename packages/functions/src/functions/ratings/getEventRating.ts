@@ -1,19 +1,16 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
-import { PontozoException } from '@pontozo/common'
 import { getUserFromHeader } from '../../service/auth.service'
 import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { handleException } from '../../util/handleException'
+import { validateId } from '../../util/validation'
 
 /**
  * Called when a user visits an events page to get their rating of that event and also the event data.
  */
 export const getEventRating = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
-    const eventId = parseInt(req.params.eventId)
-    if (isNaN(eventId)) {
-      throw new PontozoException('Érvénytelen azonosító!', 400)
-    }
+    const eventId = validateId(req)
 
     const user = getUserFromHeader(req)
     const ratingRepo = (await getAppDataSource(context)).getRepository(EventRating)
@@ -31,6 +28,6 @@ export const getEventRating = async (req: HttpRequest, context: InvocationContex
 
 app.http('ratings-getEventRating', {
   methods: ['GET'],
-  route: 'ratings/event/{eventId}',
+  route: 'ratings/event/{id}',
   handler: getEventRating,
 })

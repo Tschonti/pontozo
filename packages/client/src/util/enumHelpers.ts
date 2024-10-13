@@ -15,6 +15,13 @@ export const translateRole: RoleDict = {
   [RatingRole.JURY]: 'MTFSZ Zsűri',
 }
 
+export const ratingRoleColor: RoleDict = {
+  [RatingRole.COACH]: 'blue',
+  [RatingRole.COMPETITOR]: 'brand',
+  [RatingRole.JURY]: 'orange',
+  [RatingRole.ORGANISER]: 'red',
+}
+
 export const getRoleDescription: RoleDict = {
   [RatingRole.COMPETITOR]: 'A versenyen elindult versenyző. Nem kell, hogy érvényes eredményed legyen, elég ha neveztél és rajthoz álltál.',
   [RatingRole.COACH]:
@@ -47,6 +54,12 @@ export const translateAgeGroup: AgeGroupDictionary = {
   [AgeGroup.YOUTH]: 'Utánpótlás',
   [AgeGroup.ELITE]: 'Felnőtt',
   [AgeGroup.MASTER]: 'Szenior',
+}
+
+export const ageGroupColor: AgeGroupDictionary = {
+  [AgeGroup.YOUTH]: 'purple',
+  [AgeGroup.ELITE]: 'red',
+  [AgeGroup.MASTER]: 'brand',
 }
 
 export const translateUR: UserRoleDictionary = {
