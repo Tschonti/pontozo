@@ -62,3 +62,9 @@ export const useFetchRatingInfo = (onSuccess: (data: EventRatingInfo) => void, r
     onSuccess,
   })
 }
+
+export const useDeleteMessageMutation = () => {
+  return useMutation<unknown, PontozoError, number>(
+    async (ratingId) => (await functionAxios.delete(`${FUNC_HOST}/ratings/${ratingId}`)).data
+  )
+}

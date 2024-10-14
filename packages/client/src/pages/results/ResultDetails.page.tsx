@@ -1,7 +1,6 @@
-import { Badge, Box, Card, CardBody, FormLabel, Heading, HStack, Link as ChakraLink, Select, Stack, Text, VStack } from '@chakra-ui/react'
-import { ALL_ROLES, PublicEventMessage, RatingRole } from '@pontozo/common'
+import { Box, FormLabel, Heading, HStack, Link as ChakraLink, Select, Stack, Text, VStack } from '@chakra-ui/react'
+import { ALL_ROLES, PublicEventMessage } from '@pontozo/common'
 import { useEffect, useState } from 'react'
-import { FaUserCircle } from 'react-icons/fa'
 import { useParams } from 'react-router-dom'
 import { useResultTableContext } from 'src/api/contexts/useResultTableContext'
 import { useFetchEventMessages, useFetchEventResults } from 'src/api/hooks/resultHooks'
@@ -9,18 +8,18 @@ import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { LoadingSpinner } from 'src/components/commons/LoadingSpinner'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { formatDateRange } from 'src/util/dateHelpers'
-import { ageGroupColor, ratingRoleColor, translateAgeGroup, translateRole } from 'src/util/enumHelpers'
 import { PATHS } from 'src/util/paths'
 import { filterEventMessages } from 'src/util/resultItemHelpers'
 import { EventRankBadge } from '../events/components/EventRankBadge'
 import { AgeGroupRoleSelector } from './components/AgeGroupRoleSelector'
 import { CategoryBarChart } from './components/CategoriesBarChart'
 import { CriteriaBarChart } from './components/CriteriaBarChart'
+import { RatingMessage } from './components/RatingMessage'
 
 export const ResultDetailsPage = () => {
   const { eventId } = useParams()
   const { data: event, isLoading, error } = useFetchEventResults(+eventId!)
-  const { data: messageData, isLoading: messagesLoading, error: messagesError } = useFetchEventMessages(+eventId!)
+  const { data: messageData, isLoading: messagesLoading, error: messagesError, refetch } = useFetchEventMessages(+eventId!)
   const [filteredMessages, setFilteredMessages] = useState<PublicEventMessage[]>([])
   const { selectedAgeGroups, selectedRoles } = useResultTableContext()
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>()
@@ -108,29 +107,7 @@ export const ResultDetailsPage = () => {
         </Text>
       )}
       {filteredMessages.map((pem) => (
-        <Card key={pem.eventRatingId} width="100%">
-          <CardBody>
-            <VStack alignItems="flex-start">
-              <HStack>
-                <FaUserCircle fontSize={42} />
-                <VStack alignItems="flex-start" gap={1}>
-                  <Text fontWeight="bold">Névtelen felhasználó</Text>
-                  <HStack>
-                    <Badge colorScheme={ratingRoleColor[pem.role]} variant="solid">
-                      {translateRole[pem.role]}
-                    </Badge>
-                    {pem.role === RatingRole.COMPETITOR && (
-                      <Badge colorScheme={ageGroupColor[pem.ageGroup]} variant="solid">
-                        {translateAgeGroup[pem.ageGroup]}
-                      </Badge>
-                    )}
-                  </HStack>
-                </VStack>
-              </HStack>
-              <Text>{pem.message}</Text>
-            </VStack>
-          </CardBody>
-        </Card>
+        <RatingMessage ratingWithMessage={pem} refetchMessages={refetch} />
       ))}
     </VStack>
   )
