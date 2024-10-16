@@ -21,25 +21,24 @@ export const CriteriaBarChart = ({ event, selectedCategoryId }: Props) => {
       event.ratingResults.children
         ?.find((cat) => cat.categoryId === selectedCategoryId)
         ?.children?.map((r) => {
+          const rootValue = +(getResultItem(r.items, selectedRoles, selectedAgeGroups)?.average ?? -1).toFixed(2)
           const output: BarChartData = {
             name: r.criterion?.name ?? '',
-            event: Math.max(+(getResultItem(r.items, selectedRoles, selectedAgeGroups)?.average ?? 0).toFixed(2), 0),
+            event: rootValue < 0 ? '-' : rootValue,
           }
           if (event.stages.length > 1) {
             event.stages.forEach((s) => {
               if (s.ratingResults) {
-                output[s.id] = Math.max(
-                  +(
-                    getResultItem(
-                      s.ratingResults.children
-                        ?.find((cat) => cat.categoryId === selectedCategoryId)
-                        ?.children?.find((c) => c.criterionId === r.criterionId)?.items ?? [],
-                      selectedRoles,
-                      selectedAgeGroups
-                    )?.average ?? 0
-                  ).toFixed(2),
-                  0
-                )
+                const stageValue = +(
+                  getResultItem(
+                    s.ratingResults.children
+                      ?.find((cat) => cat.categoryId === selectedCategoryId)
+                      ?.children?.find((c) => c.criterionId === r.criterionId)?.items ?? [],
+                    selectedRoles,
+                    selectedAgeGroups
+                  )?.average ?? -1
+                ).toFixed(2)
+                output[s.id] = stageValue < 0 ? '-' : stageValue
               }
             })
           }
