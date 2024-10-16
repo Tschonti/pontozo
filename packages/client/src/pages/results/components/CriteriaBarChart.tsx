@@ -25,20 +25,24 @@ export const CriteriaBarChart = ({ event, selectedCategoryId }: Props) => {
             name: r.criterion?.name ?? '',
             event: Math.max(+(getResultItem(r.items, selectedRoles, selectedAgeGroups)?.average ?? 0).toFixed(2), 0),
           }
-          event.stages.forEach((s) => {
-            output[s.id] = Math.max(
-              +(
-                getResultItem(
-                  s.ratingResults.children
-                    ?.find((cat) => cat.categoryId === selectedCategoryId)
-                    ?.children?.find((c) => c.criterionId === r.criterionId)?.items ?? [],
-                  selectedRoles,
-                  selectedAgeGroups
-                )?.average ?? 0
-              ).toFixed(2),
-              0
-            )
-          })
+          if (event.stages.length > 1) {
+            event.stages.forEach((s) => {
+              if (s.ratingResults) {
+                output[s.id] = Math.max(
+                  +(
+                    getResultItem(
+                      s.ratingResults.children
+                        ?.find((cat) => cat.categoryId === selectedCategoryId)
+                        ?.children?.find((c) => c.criterionId === r.criterionId)?.items ?? [],
+                      selectedRoles,
+                      selectedAgeGroups
+                    )?.average ?? 0
+                  ).toFixed(2),
+                  0
+                )
+              }
+            })
+          }
           return output
         }) ?? []
     )
@@ -68,7 +72,9 @@ export const CriteriaBarChart = ({ event, selectedCategoryId }: Props) => {
         {!isMobile && <Tooltip cursor={{ fillOpacity: 0.4 }} />}
         <Legend />
         <Bar name="Teljes verseny" dataKey="event" fill={chartColors[0]} />
-        {stageSpecificCategory && event.stages.map((s, i) => <Bar key={s.id} name={s.name} dataKey={s.id} fill={chartColors[i + 1]} />)}
+        {event.stages.length > 1 &&
+          stageSpecificCategory &&
+          event.stages.map((s, i) => <Bar key={s.id} name={s.name} dataKey={s.id} fill={chartColors[i + 1]} />)}
       </BarChart>
     </Box>
   )

@@ -29,7 +29,7 @@ export interface RatingResultItem {
 }
 
 export interface StageWithResults extends DbStage {
-  ratingResults: RatingResultWithJoins
+  ratingResults?: RatingResultWithJoins
 }
 
 export interface EventWithResults extends Omit<DbEvent, 'stages'> {

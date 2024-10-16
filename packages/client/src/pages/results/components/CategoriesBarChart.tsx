@@ -11,7 +11,7 @@ type Props = {
   setSelectedCategoryId: (catId: number) => void
 }
 
-export const CategoryBarChart = ({ event, setSelectedCategoryId }: Props) => {
+export const CategoriesBarChart = ({ event, setSelectedCategoryId }: Props) => {
   const { selectedAgeGroups, selectedRoles } = useResultTableContext()
 
   const parseEventData = (rootResult: RatingResultWithJoins, stages: StageWithResults[]): BarChartData[] => {
@@ -19,9 +19,13 @@ export const CategoryBarChart = ({ event, setSelectedCategoryId }: Props) => {
       name: 'Összesített átlag',
       event: Math.max(+(getResultItem(rootResult.items, selectedRoles, selectedAgeGroups)?.average ?? 0).toFixed(2), 0),
     }
-    stages.forEach((s) => {
-      rootOutput[s.id] = Math.max(+(getResultItem(s.ratingResults.items, selectedRoles, selectedAgeGroups)?.average ?? 0).toFixed(2), 0)
-    })
+    if (stages.length > 1) {
+      stages.forEach((s) => {
+        if (s.ratingResults) {
+          rootOutput[s.id] = Math.max(+(getResultItem(s.ratingResults.items, selectedRoles, selectedAgeGroups)?.average ?? 0).toFixed(2), 0)
+        }
+      })
+    }
     return [
       rootOutput,
       ...(rootResult.children?.map((r) => {
@@ -30,18 +34,22 @@ export const CategoryBarChart = ({ event, setSelectedCategoryId }: Props) => {
           name: r.category?.name ?? '',
           event: Math.max(+(getResultItem(r.items, selectedRoles, selectedAgeGroups)?.average ?? 0).toFixed(2), 0),
         }
-        stages.forEach((s) => {
-          output[s.id] = Math.max(
-            +(
-              getResultItem(
-                s.ratingResults.children?.find((c) => c.categoryId === r.categoryId)?.items ?? [],
-                selectedRoles,
-                selectedAgeGroups
-              )?.average ?? 0
-            ).toFixed(2),
-            0
-          )
-        })
+        if (stages.length > 1) {
+          stages.forEach((s) => {
+            if (s.ratingResults) {
+              output[s.id] = Math.max(
+                +(
+                  getResultItem(
+                    s.ratingResults.children?.find((c) => c.categoryId === r.categoryId)?.items ?? [],
+                    selectedRoles,
+                    selectedAgeGroups
+                  )?.average ?? 0
+                ).toFixed(2),
+                0
+              )
+            }
+          })
+        }
         return output
       }) ?? []),
     ]
@@ -77,9 +85,10 @@ export const CategoryBarChart = ({ event, setSelectedCategoryId }: Props) => {
         {!isMobile && <Tooltip cursor={{ fillOpacity: 0.4 }} />}
         <Bar name="Teljes verseny" dataKey="event" fill={chartColors[0]} onClick={(e) => onChartClick(e.categoryId)} />
 
-        {event.stages.map((s, i) => (
-          <Bar key={s.id} name={s.name} dataKey={s.id} fill={chartColors[i + 1]} onClick={(e) => onChartClick(e.categoryId)} />
-        ))}
+        {event.stages.length > 1 &&
+          event.stages.map((s, i) => (
+            <Bar key={s.id} name={s.name} dataKey={s.id} fill={chartColors[i + 1]} onClick={(e) => onChartClick(e.categoryId)} />
+          ))}
       </BarChart>
     </Box>
   )

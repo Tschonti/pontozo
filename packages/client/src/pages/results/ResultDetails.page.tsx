@@ -12,7 +12,7 @@ import { PATHS } from 'src/util/paths'
 import { filterEventMessages } from 'src/util/resultItemHelpers'
 import { EventRankBadge } from '../events/components/EventRankBadge'
 import { AgeGroupRoleSelector } from './components/AgeGroupRoleSelector'
-import { CategoryBarChart } from './components/CategoriesBarChart'
+import { CategoriesBarChart } from './components/CategoriesBarChart'
 import { CriteriaBarChart } from './components/CriteriaBarChart'
 import { RatingMessage } from './components/RatingMessage'
 
@@ -74,7 +74,7 @@ export const ResultDetailsPage = () => {
         <Text>
           <b>Rendező{event.organisers.length > 1 && 'k'}:</b> {event.organisers.map((o) => o.shortName).join(', ')}
         </Text>
-        {ratingCount && (
+        {ratingCount !== undefined && (
           <Text>
             Összesen <b>{ratingCount}</b> felhasználó értékelte a versenyt.
           </Text>
@@ -87,7 +87,7 @@ export const ResultDetailsPage = () => {
         <AgeGroupRoleSelector />
       </Stack>
       <Heading size="md">Kategóriák szerinti eredmények</Heading>
-      <CategoryBarChart event={event} setSelectedCategoryId={setSelectedCategoryId} />
+      <CategoriesBarChart event={event} setSelectedCategoryId={setSelectedCategoryId} />
       <Heading size="md">Szempontok szerinti eredmények</Heading>
       <VStack gap={0.5} alignItems="flex-start" width={['100%', '100%', '33%']}>
         <FormLabel>Kategória</FormLabel>
