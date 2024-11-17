@@ -68,35 +68,36 @@ export const EventResultTable = () => {
                 />
               ))}
             </TR>
-            {er.stages.map((s) => (
-              <TR
-                key={s.stageId}
-                index={i}
-                eventId={er.eventId}
-                hovered={hoveredEventId === er.eventId}
-                setHoverEventId={setHoveredEventId}
-              >
-                <TD>
-                  <Text m={1} ml={5}>
-                    {s.stageName}
-                  </Text>
-                </TD>
-                {includeTotal && <EventResultCell resultItems={s.results.find((r) => !r.categoryId && !r.criterionId)?.items ?? []} />}
+            {er.stages.length > 1 &&
+              er.stages.map((s) => (
+                <TR
+                  key={s.stageId}
+                  index={i}
+                  eventId={er.eventId}
+                  hovered={hoveredEventId === er.eventId}
+                  setHoverEventId={setHoveredEventId}
+                >
+                  <TD>
+                    <Text m={1} ml={5}>
+                      {s.stageName}
+                    </Text>
+                  </TD>
+                  {includeTotal && <EventResultCell resultItems={s.results.find((r) => !r.categoryId && !r.criterionId)?.items ?? []} />}
 
-                {categories.map((c) => (
-                  <EventResultCell
-                    key={`cat-${c.id}-${er.eventId}-${s.stageId}`}
-                    resultItems={s.results.find((r) => r.categoryId === c.id)?.items ?? []}
-                  />
-                ))}
-                {criteria.map((c) => (
-                  <EventResultCell
-                    key={`crit-${c.id}-${er.eventId}-${s.stageId}`}
-                    resultItems={s.results.find((r) => r.criterionId === c.id)?.items ?? []}
-                  />
-                ))}
-              </TR>
-            ))}
+                  {categories.map((c) => (
+                    <EventResultCell
+                      key={`cat-${c.id}-${er.eventId}-${s.stageId}`}
+                      resultItems={s.results.find((r) => r.categoryId === c.id)?.items ?? []}
+                    />
+                  ))}
+                  {criteria.map((c) => (
+                    <EventResultCell
+                      key={`crit-${c.id}-${er.eventId}-${s.stageId}`}
+                      resultItems={s.results.find((r) => r.criterionId === c.id)?.items ?? []}
+                    />
+                  ))}
+                </TR>
+              ))}
           </Fragment>
         ))}
       </tbody>
