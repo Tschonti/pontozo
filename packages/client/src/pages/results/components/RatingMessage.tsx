@@ -57,11 +57,11 @@ export const RatingMessage = ({ ratingWithMessage: pem, refetchMessages }: Props
               <VStack alignItems="flex-start" gap={1}>
                 <Text fontWeight="bold">Névtelen felhasználó</Text>
                 <HStack>
-                  <Badge colorScheme={ratingRoleColor[pem.role]} variant="solid">
+                  <Badge bg={ratingRoleColor[pem.role]} variant="solid">
                     {translateRole[pem.role]}
                   </Badge>
                   {pem.role === RatingRole.COMPETITOR && (
-                    <Badge colorScheme={ageGroupColor[pem.ageGroup]} variant="solid">
+                    <Badge bg={ageGroupColor[pem.ageGroup]} variant="solid">
                       {translateAgeGroup[pem.ageGroup]}
                     </Badge>
                   )}

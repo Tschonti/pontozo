@@ -1,8 +1,8 @@
-import { Button, Heading, HStack, Link as ChakraLink, Stack, Text, useToast, VStack } from '@chakra-ui/react'
+import { Button, Heading, HStack, Stack, Text, useToast, VStack } from '@chakra-ui/react'
 import { EventState, RatingRole, ratingRoleArray } from '@pontozo/common'
 import { useEffect, useState } from 'react'
-import { FaArrowLeft } from 'react-icons/fa'
-import { Link, useParams } from 'react-router-dom'
+import { FaArrowLeft, FaDatabase, FaMedal } from 'react-icons/fa'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useRatingContext } from 'src/api/contexts/useRatingContext'
 import { useStartRatingMutation } from 'src/api/hooks/ratingHooks'
 import { EventRatingStateBadge } from 'src/components/commons/EventRatingStateBadge'
@@ -21,6 +21,7 @@ import { StageListItem } from './components/StageListItem'
 
 export const EventDetailsPage = () => {
   const { eventId } = useParams()
+  const nav = useNavigate()
   const dbQuery = useFetchEvent(+eventId!)
   const { isLoggedIn } = useAuthContext()
   const toast = useToast()
@@ -81,14 +82,29 @@ export const EventDetailsPage = () => {
     <VStack alignItems="flex-start" spacing={3}>
       <HelmetTitle title={`Pontoz-O | ${event.name}`} />
       <Heading>{event.name} értékelése</Heading>
-      <EventRatingStateBadge state={event.state} />
-      <Heading size="md">{formatDateRange(event.startDate, event.endDate)}</Heading>
+      <HStack w="100%">
+        <Heading size="md">{formatDateRange(event.startDate, event.endDate)}</Heading>
+        <EventRatingStateBadge state={event.state} />
+      </HStack>
       <Text>
         <b>Rendező{event.organisers.length > 1 && 'k'}:</b> {event.organisers.map((o) => o.shortName).join(', ')}
       </Text>
-      <ChakraLink color="brand.500" fontWeight="bold" href={`http://adatbank.mtfsz.hu/esemeny/show/esemeny_id/${event.id}`} target="_blank">
-        MTFSZ Adatbank esemény
-      </ChakraLink>
+      <HStack flexWrap="wrap">
+        {event.state === EventState.RESULTS_READY && (
+          <Button onClick={() => nav(`${PATHS.RESULTS}/${eventId}`)} leftIcon={<FaMedal />} colorScheme="brand">
+            Értékelés eredményei
+          </Button>
+        )}
+
+        <Button
+          leftIcon={<FaDatabase />}
+          onClick={() => window.open(`http://adatbank.mtfsz.hu/esemeny/show/esemeny_id/${event.id}`, '_blank', 'noopener,noreferrer')}
+          colorScheme="red"
+          bg="mtfszRed"
+        >
+          MTFSZ Adatbank
+        </Button>
+      </HStack>
       <Heading size="md" mt={3}>
         Szerepkör
       </Heading>

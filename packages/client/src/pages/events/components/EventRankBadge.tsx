@@ -10,7 +10,7 @@ type Props = {
 export const EventRankBadge = ({ event, stage, fontSize }: Props) => {
   const realRank = (event?.highestRank as Rank) || (stage?.rank as Rank) || Rank.REGIONAL
   return (
-    <Badge variant="solid" colorScheme={rankColor[realRank]} fontSize={fontSize}>
+    <Badge variant="solid" bg={rankColor[realRank]} fontSize={fontSize}>
       {translateRank[realRank]}
     </Badge>
   )

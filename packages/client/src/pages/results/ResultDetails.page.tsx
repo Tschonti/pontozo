@@ -1,7 +1,8 @@
-import { Box, FormLabel, Heading, HStack, Link as ChakraLink, Select, Stack, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, FormLabel, Heading, HStack, Select, Stack, Text, VStack } from '@chakra-ui/react'
 import { ALL_ROLES, PublicEventMessage } from '@pontozo/common'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { FaDatabase, FaStar } from 'react-icons/fa'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useResultTableContext } from 'src/api/contexts/useResultTableContext'
 import { useFetchEventMessages, useFetchEventResults } from 'src/api/hooks/resultHooks'
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
@@ -18,6 +19,7 @@ import { RatingMessage } from './components/RatingMessage'
 
 export const ResultDetailsPage = () => {
   const { eventId } = useParams()
+  const nav = useNavigate()
   const { data: event, isLoading, error } = useFetchEventResults(+eventId!)
   const { data: messageData, isLoading: messagesLoading, error: messagesError, refetch } = useFetchEventMessages(+eventId!)
   const [filteredMessages, setFilteredMessages] = useState<PublicEventMessage[]>([])
@@ -80,9 +82,19 @@ export const ResultDetailsPage = () => {
           </Text>
         )}
       </Box>
-      <ChakraLink color="brand.500" fontWeight="bold" href={`http://adatbank.mtfsz.hu/esemeny/show/esemeny_id/${event.id}`} target="_blank">
-        MTFSZ Adatbank esemény
-      </ChakraLink>
+      <HStack flexWrap="wrap">
+        <Button onClick={() => nav(`${PATHS.EVENTS}/${eventId}`)} leftIcon={<FaStar />} colorScheme="brand">
+          Értékelési oldal
+        </Button>
+        <Button
+          leftIcon={<FaDatabase />}
+          onClick={() => window.open(`http://adatbank.mtfsz.hu/esemeny/show/esemeny_id/${event.id}`, '_blank', 'noopener,noreferrer')}
+          colorScheme="red"
+          bg="mtfszRed"
+        >
+          MTFSZ Adatbank
+        </Button>
+      </HStack>
       <Stack direction={['column', 'column', 'row']} gap={2} w="100%">
         <AgeGroupRoleSelector />
       </Stack>

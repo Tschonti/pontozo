@@ -17,9 +17,9 @@ export const translateRole: RoleDict = {
 
 export const ratingRoleColor: RoleDict = {
   [RatingRole.COACH]: 'blue',
-  [RatingRole.COMPETITOR]: 'brand',
+  [RatingRole.COMPETITOR]: 'brand.500',
   [RatingRole.JURY]: 'orange',
-  [RatingRole.ORGANISER]: 'red',
+  [RatingRole.ORGANISER]: 'mtfszRed',
 }
 
 export const getRoleDescription: RoleDict = {
@@ -58,8 +58,8 @@ export const translateAgeGroup: AgeGroupDictionary = {
 
 export const ageGroupColor: AgeGroupDictionary = {
   [AgeGroup.YOUTH]: 'purple',
-  [AgeGroup.ELITE]: 'red',
-  [AgeGroup.MASTER]: 'brand',
+  [AgeGroup.ELITE]: 'mtfszRed',
+  [AgeGroup.MASTER]: 'brand.500',
 }
 
 export const translateUR: UserRoleDictionary = {
@@ -69,7 +69,7 @@ export const translateUR: UserRoleDictionary = {
 }
 
 export const urColor: UserRoleDictionary = {
-  [UserRole.COACH]: 'brand',
+  [UserRole.COACH]: 'brand.500',
   [UserRole.SITE_ADMIN]: 'purple',
   [UserRole.JURY]: 'orange',
 }
@@ -98,9 +98,9 @@ export const translateRank: RankDict = {
 }
 
 export const rankColor: RankDict = {
-  [EventRank.REGIONAL]: 'brand',
+  [EventRank.REGIONAL]: 'brand.500',
   [EventRank.NATIONAL]: 'orange',
-  [EventRank.FEATURED]: 'red',
+  [EventRank.FEATURED]: 'mtfszRed',
   [EventRank.NONE]: 'gray',
 }
 
@@ -127,7 +127,7 @@ export const translateEventState: EventStateDict = {
 }
 
 export const eventStateColor: EventStateDict = {
-  [EventState.RATEABLE]: 'brand',
+  [EventState.RATEABLE]: 'brand.500',
   [EventState.VALIDATING]: 'gray',
   [EventState.ACCUMULATING]: 'gray',
   [EventState.RESULTS_READY]: 'orange',
