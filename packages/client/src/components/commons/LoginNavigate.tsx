@@ -4,11 +4,12 @@ import { LocalStorageKeys } from 'src/util/localStorageKeys'
 import { PATHS } from 'src/util/paths'
 
 export const LoginNavigate = () => {
-  const { pathname } = useLocation()
+  const { pathname, search } = useLocation()
 
   useEffect(() => {
-    localStorage.setItem(LocalStorageKeys.REDIRECT_ROUTE, pathname)
-  }, [pathname])
+    console.log(pathname + search)
+    localStorage.setItem(LocalStorageKeys.REDIRECT_ROUTE, pathname + search)
+  }, [pathname, search])
 
   return <Navigate to={PATHS.LOGIN} />
 }
