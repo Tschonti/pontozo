@@ -13,7 +13,7 @@ The setup for local development is time-consuming and requires access to some re
 You'll need the following applications:
 
 - [VS Code](https://code.visualstudio.com/) with the [Azure Functions extension v1.10.4 or above](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions) and the [Nx Console extension](https://marketplace.visualstudio.com/items?itemName=nrwl.angular-console)
-- [Node.js 18.x or above](https://nodejs.org/en)
+- [Node.js 20.x or above](https://nodejs.org/en)
 - [Azure Functions Core Tools v4.0.5382 or above](https://github.com/Azure/azure-functions-core-tools/blob/v4.x/README.md#windows)
 - [Azurite VS Code extension](https://marketplace.visualstudio.com/items?itemName=Azurite.azurite)
 
