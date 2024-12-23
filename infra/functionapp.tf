@@ -54,7 +54,7 @@ resource "azurerm_windows_function_app" "function-app" {
     application_insights_connection_string = azurerm_application_insights.appinsights.connection_string
 
     application_stack {
-      node_version = "~18"
+      node_version = "~20"
     }
 
     cors {
