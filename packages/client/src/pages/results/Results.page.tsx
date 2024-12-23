@@ -1,13 +1,14 @@
-import { Checkbox, FormLabel, Heading, Select, Stack, Text, VStack } from '@chakra-ui/react'
+import { Checkbox, FormLabel, Heading, Select, Stack, VStack } from '@chakra-ui/react'
 import { ChangeEvent } from 'react'
 import { useResultTableContext } from 'src/api/contexts/useResultTableContext'
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
+import { LoadingSpinner } from 'src/components/commons/LoadingSpinner'
 import { AgeGroupRoleSelector } from './components/AgeGroupRoleSelector'
 import { CriteriaDrawer } from './components/CriteriaDrawer'
 import { EventResultTable } from './components/table/EventResultTable'
 
 export const ResultsPage = () => {
-  const { selectedSeasonId, seasonsData, selectedSeasonChange, nationalOnly, setNationalOnly, sendResultRequest, sortedEvents } =
+  const { selectedSeasonId, seasonsData, selectedSeasonChange, nationalOnly, setNationalOnly, sendResultRequest, resultsLoading } =
     useResultTableContext()
 
   const nationalOnlyChange = (event: ChangeEvent) => {
@@ -39,13 +40,7 @@ export const ResultsPage = () => {
         {window.innerWidth < 768 ? <CriteriaDrawer isMobile /> : <CriteriaDrawer isMobile={false} />}
       </Stack>
 
-      {sortedEvents.length ? (
-        <EventResultTable />
-      ) : (
-        <Text textAlign="center" fontStyle="italic">
-          Ebben a szezonban nincs a szűrőknek megfelelő versenyről eredmény.
-        </Text>
-      )}
+      {resultsLoading ? <LoadingSpinner /> : <EventResultTable />}
     </>
   )
 }

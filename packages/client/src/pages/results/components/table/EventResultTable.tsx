@@ -1,7 +1,6 @@
 import { Text } from '@chakra-ui/react'
 import { Fragment, useState } from 'react'
 import { useResultTableContext } from 'src/api/contexts/useResultTableContext'
-import { LoadingSpinner } from 'src/components/commons/LoadingSpinner'
 import { EventResultCell } from '../EventResultCell'
 import { CriterionHeader } from './CriterionHeader'
 import { TD } from './TD'
@@ -10,10 +9,14 @@ import { TR } from './TR'
 
 export const EventResultTable = () => {
   const [hoveredEventId, setHoveredEventId] = useState<number | undefined>(undefined)
-  const { resultsLoading, resultsData, includeTotal, sortOrder, sortCriterion, sortedEvents, sortByCrit } = useResultTableContext()
+  const { resultsData, includeTotal, sortOrder, sortCriterion, sortedEvents, sortByCrit } = useResultTableContext()
 
-  if (!resultsData || resultsLoading) {
-    return <LoadingSpinner />
+  if (!resultsData || sortedEvents.length === 0) {
+    return (
+      <Text textAlign="center" fontStyle="italic">
+        Ebben a szezonban nincs a szűrőknek megfelelő versenyről eredmény.
+      </Text>
+    )
   }
   const { categories, criteria } = resultsData
   return (
