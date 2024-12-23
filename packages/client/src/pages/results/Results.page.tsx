@@ -18,7 +18,7 @@ export const ResultsPage = () => {
 
   return (
     <>
-      <HelmetTitle title="Pontoz-O" />
+      <HelmetTitle title="Pontoz-O | Értékelt versenyek" />
       <Heading my={5}>Értékelt versenyek</Heading>
       <Stack direction={['column', 'column', 'row']} gap={2}>
         <VStack gap={0.5} alignItems="flex-start" width={['100%', '100%', '33%']}>
