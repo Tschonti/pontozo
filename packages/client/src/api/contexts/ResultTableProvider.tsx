@@ -2,12 +2,11 @@ import { AgeGroup, ALL_AGE_GROUPS, ALL_ROLES, EventResult, RatingRole } from '@p
 import { ChangeEvent, PropsWithChildren, useEffect, useState } from 'react'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { ResultTableState } from 'src/pages/results/types/ResultTableState'
+import { LocalStorageKeys } from 'src/util/localStorageKeys'
 import { PATHS } from 'src/util/paths'
 import { sortEvents } from 'src/util/resultItemHelpers'
 import { useFetchEventResultsMutation, useFetchSeasonsMutation } from '../hooks/resultHooks'
 import { CriterionId, ResultTableContext, SortOrder } from './ResultTableContext'
-
-const FILTER_LS_KEY = 'FILTER_LS_KEY'
 
 type Props = {
   minimal?: boolean
@@ -30,7 +29,7 @@ export const ResultTableProvider = ({ children, minimal = false }: Props) => {
 
   useEffect(() => {
     if (minimal) return
-    const saved = localStorage.getItem(FILTER_LS_KEY)
+    const saved = localStorage.getItem(LocalStorageKeys.FILTER_LS_KEY)
     if (!saved) {
       seasonsMutation.mutate(undefined)
       resultsMutation.mutate({ categoryIds: [], criterionIds: [], nationalOnly: false, includeTotal: true })
@@ -88,7 +87,7 @@ export const ResultTableProvider = ({ children, minimal = false }: Props) => {
   const saveToLocalStorage = (newValues: Partial<ResultTableState>) => {
     if (minimal) return
     localStorage.setItem(
-      FILTER_LS_KEY,
+      LocalStorageKeys.FILTER_LS_KEY,
       JSON.stringify({
         seasonId: newValues.seasonId ?? seasonsMutation.data?.selectedSeason.id,
         categoryIds: newValues.categoryIds ?? selectedCategoryIds,

@@ -3,7 +3,9 @@ import { RatingStatus } from '@pontozo/common'
 import { createPortal } from 'react-dom'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { useParams } from 'react-router-dom'
+import { useAuthContext } from 'src/api/contexts/useAuthContext'
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
+import { LoginNavigate } from 'src/components/commons/LoginNavigate'
 import { useRatingContext } from '../../api/contexts/useRatingContext'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { CategoryWithCriteriaList } from './components/CategoryWithCriteriaList'
@@ -13,8 +15,13 @@ import { SubmitRatingModal } from './components/SubmitRatingModal'
 
 export const RatingPage = () => {
   const { ratingId } = useParams()
+  const { isLoggedIn } = useAuthContext()
   const { infoLoading, nextCategory, previousCategory, hasNext, hasPrev, eventRatingInfo, currentStage } = useRatingContext()
   const [isDesktop] = useMediaQuery('(min-width: 800px)')
+
+  if (!isLoggedIn) {
+    return <LoginNavigate />
+  }
 
   if (infoLoading) {
     return <LoadingSpinner />

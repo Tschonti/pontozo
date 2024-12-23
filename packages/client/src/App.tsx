@@ -7,6 +7,7 @@ import { AuthorizedPage } from './pages/authorized/Authorized.page'
 import { ErrorPage } from './pages/error/error.page'
 import { EventDetailsPage } from './pages/events/EventDetails.page'
 import { IndexPage } from './pages/events/Index.page'
+import { LoginPage } from './pages/Login.page'
 import { ProfilePage } from './pages/profile/Profile.page'
 import { RatingPage } from './pages/ratings/Rating.page'
 import { ResultDetailsPage } from './pages/results/ResultDetails.page'
@@ -31,6 +32,7 @@ export const App = () => {
           <Route path={PATHS.INDEX}>
             <Route index element={<IndexPage />} />
             <Route path={PATHS.ERROR} element={<ErrorPage />} />
+            <Route path={PATHS.LOGIN} element={<LoginPage />} />
             <Route path={PATHS.ADMIN} element={<AdminIndex />} />
             <Route path={PATHS.AUTHORIZED} element={<AuthorizedPage />} />
             <Route path={PATHS.PROFILE} element={<ProfilePage />} />

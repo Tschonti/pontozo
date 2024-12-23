@@ -1,25 +1,18 @@
-import { Button, Heading, HStack, SimpleGrid, Text, useToast } from '@chakra-ui/react'
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Button, Heading, HStack, SimpleGrid, Text } from '@chakra-ui/react'
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
+import { LoginNavigate } from 'src/components/commons/LoginNavigate'
 import { useAuthContext } from '../../api/contexts/useAuthContext'
 import { useFecthUserRatedEvents } from '../../api/hooks/eventQueryHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
-import { PATHS } from '../../util/paths'
 import { EventListItem } from '../events/components/EventListItem'
 
 export const ProfilePage = () => {
   const { loggedInUser, onLogout, isLoggedIn } = useAuthContext()
   const eventQuery = useFecthUserRatedEvents()
-  const toast = useToast()
-  const nav = useNavigate()
 
-  useEffect(() => {
-    if (!isLoggedIn) {
-      toast({ title: 'Nem vagy bejelentkezve!', status: 'error' })
-      nav(PATHS.INDEX)
-    }
-  }, [isLoggedIn, toast, nav])
+  if (!isLoggedIn) {
+    return <LoginNavigate />
+  }
 
   return (
     <>

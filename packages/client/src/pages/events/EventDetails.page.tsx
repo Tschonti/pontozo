@@ -2,11 +2,12 @@ import { Button, Heading, HStack, Link as ChakraLink, Stack, Text, useToast, VSt
 import { EventState, RatingRole, ratingRoleArray } from '@pontozo/common'
 import { useEffect, useState } from 'react'
 import { FaArrowLeft } from 'react-icons/fa'
-import { Link, Navigate, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useRatingContext } from 'src/api/contexts/useRatingContext'
 import { useStartRatingMutation } from 'src/api/hooks/ratingHooks'
 import { EventRatingStateBadge } from 'src/components/commons/EventRatingStateBadge'
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
+import { LoginNavigate } from 'src/components/commons/LoginNavigate'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { formatDateRange } from 'src/util/dateHelpers'
 import { onError } from 'src/util/onError'
@@ -60,9 +61,9 @@ export const EventDetailsPage = () => {
   }
 
   if (!isLoggedIn) {
-    toast({ title: 'Jelentkezz be az oldal megtekintéséhez!', status: 'warning' })
-    return <Navigate to={PATHS.INDEX} />
+    return <LoginNavigate />
   }
+
   if (dbQuery.isLoading) {
     return <LoadingSpinner />
   }
