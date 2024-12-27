@@ -1,4 +1,4 @@
-import { ArrayNotEmpty, ArrayUnique, IsBoolean, IsEnum, IsInt, IsNotEmpty, IsOptional } from 'class-validator'
+import { ArrayNotEmpty, ArrayUnique, IsBoolean, IsEnum, IsNotEmpty, IsOptional } from 'class-validator'
 import { CriterionRating } from './criterionRatings'
 import { RatingRole } from './eventRatings'
 import { Season } from './seasons'
@@ -15,8 +15,6 @@ export interface Criterion {
   nationalOnly: boolean
   stageSpecific: boolean
   allowEmpty: boolean
-  competitorWeight: number
-  organiserWeight: number
   roles: RatingRole[]
 }
 
@@ -63,14 +61,6 @@ export class CreateCriteria {
 
   @IsBoolean()
   allowEmpty: boolean
-
-  @IsOptional()
-  @IsInt()
-  competitorWeight?: number
-
-  @IsOptional()
-  @IsInt()
-  organiserWeight?: number
 
   @IsEnum(RatingRole, { each: true })
   @ArrayNotEmpty()

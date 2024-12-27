@@ -2,6 +2,7 @@ import { Criterion as ICriterion } from '@pontozo/common'
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { CategoryToCriterion } from './CategoryToCriterion'
 import CriterionRating from './CriterionRating'
+import { CriterionWeight } from './CriterionWeight'
 import { RatingResult } from './RatingResult'
 
 @Entity()
@@ -39,12 +40,6 @@ class Criterion implements Omit<ICriterion, 'roles'> {
   @Column()
   allowEmpty: boolean
 
-  @Column({ nullable: true })
-  competitorWeight: number
-
-  @Column({ nullable: true })
-  organiserWeight: number
-
   @OneToMany(() => CriterionRating, (r) => r.criterion, { eager: false })
   ratings: CriterionRating[]
 
@@ -58,6 +53,9 @@ class Criterion implements Omit<ICriterion, 'roles'> {
 
   @OneToMany(() => CategoryToCriterion, (ctc) => ctc.criterion, { cascade: true })
   categories: CategoryToCriterion[]
+
+  @OneToMany(() => CriterionWeight, (w) => w.criterion, { eager: false })
+  weights: CriterionWeight[]
 }
 
 export default Criterion

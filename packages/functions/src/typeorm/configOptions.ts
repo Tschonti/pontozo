@@ -6,6 +6,7 @@ import { CategoryToCriterion } from './entities/CategoryToCriterion'
 import Club from './entities/Club'
 import Criterion from './entities/Criterion'
 import CriterionRating from './entities/CriterionRating'
+import { CriterionWeight } from './entities/CriterionWeight'
 import Event from './entities/Event'
 import EventRating from './entities/EventRating'
 import { RatingResult } from './entities/RatingResult'
@@ -24,6 +25,7 @@ import { EventState1705779906213 } from './migrations/1705779906213-event_state'
 import { AddInvalidatedState1711307184824 } from './migrations/1711307184824-add_invalidated_state'
 import { AddAlertTable1711394423616 } from './migrations/1711394423616-add_alert_table'
 import { RatingMessageTextType1728838819007 } from './migrations/1728838819007-rating_message_text_type'
+import { CriterionWeightTable1735293625488 } from './migrations/1735293625488-criterion-weight-table'
 
 export const DBConfig: SqlServerConnectionOptions = {
   type: 'mssql',
@@ -50,6 +52,7 @@ export const DBConfig: SqlServerConnectionOptions = {
     Club,
     SeasonCriterionCount,
     RatingResult,
+    CriterionWeight,
   ],
   subscribers: [],
   migrations: [
@@ -63,6 +66,7 @@ export const DBConfig: SqlServerConnectionOptions = {
     AddInvalidatedState1711307184824,
     AddAlertTable1711394423616,
     RatingMessageTextType1728838819007,
+    CriterionWeightTable1735293625488,
   ],
   options: { encrypt: ENCRYPT },
 }
