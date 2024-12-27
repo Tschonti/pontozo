@@ -12,6 +12,7 @@ import { ProfilePage } from './pages/profile/Profile.page'
 import { RatingPage } from './pages/ratings/Rating.page'
 import { ResultDetailsPage } from './pages/results/ResultDetails.page'
 import { ResultsPage } from './pages/results/Results.page'
+import { WeightAdjustmentPage } from './pages/seasons/WeightAdjustment.page'
 import { PATHS } from './util/paths'
 
 const AdminIndex = lazy(() => import('./pages/adminIndex/AdminIndex.page'))
@@ -57,6 +58,7 @@ export const App = () => {
             <Route path={PATHS.SEASONS}>
               <Route path=":seasonId">
                 <Route path="edit" element={<SeasonCreatePage />} />
+                <Route path="weights" element={<WeightAdjustmentPage />} />
               </Route>
               <Route path="new">
                 <Route index element={<SeasonCreatePage />} />

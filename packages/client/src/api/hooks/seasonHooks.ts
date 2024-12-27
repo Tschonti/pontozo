@@ -1,5 +1,14 @@
-import { CreateResponse, CreateSeason, PontozoError, Season, SeasonWithCategories } from '@pontozo/common'
+import {
+  CreateCriterionWeight,
+  CreateResponse,
+  CreateSeason,
+  PontozoError,
+  Season,
+  SeasonWithCategories,
+  SeasonWithCriterionWeights,
+} from '@pontozo/common'
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { queryClient } from 'src/util/queryClient'
 import { functionAxios } from '../../util/axiosConfig'
 
 export const useFetchSeasons = () => {
@@ -15,6 +24,25 @@ export const useFetchSeason = (seasonId: number) => {
       refetchInterval: false,
       enabled: seasonId > 0,
     }
+  )
+}
+
+export const useFetchSeasonWeights = (seasonId?: string) => {
+  return useQuery<SeasonWithCriterionWeights, PontozoError>(
+    ['fetchSeasonWeights', seasonId],
+    async () => (await functionAxios.get(`/seasons/${seasonId}/weights`)).data,
+    {
+      retry: false,
+      refetchInterval: false,
+      enabled: !!seasonId,
+    }
+  )
+}
+
+export const useSetWeightsMutations = (seasonId: string, criterionId: number) => {
+  return useMutation<unknown, PontozoError, CreateCriterionWeight>(
+    async (formdata) => await functionAxios.put(`/seasons/${seasonId}/weights/${criterionId}`, formdata),
+    { onSuccess: () => queryClient.invalidateQueries(['fetchSeasonWeights', seasonId]) }
   )
 }
 
