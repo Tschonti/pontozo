@@ -19,7 +19,6 @@ export interface Criterion {
 }
 
 export interface CriterionWeight {
-  id: number
   criterionId: number
   seasonId: number
   competitorWeight?: number

@@ -7,6 +7,10 @@ import { handleException } from '../../util/handleException'
 import { PontozoResponse } from '../../util/pontozoResponse'
 import { validateId } from '../../util/validation'
 
+/**
+ * Function that returns all the categories, criteria and their weights.
+ * Called when an admin opens the season weight adjustment page.
+ */
 export const getWeights = async (req: HttpRequest, context: InvocationContext): Promise<PontozoResponse<SeasonWithCriterionWeights>> => {
   try {
     await getUserFromHeaderAndAssertAdmin(req, context)

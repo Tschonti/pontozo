@@ -7,6 +7,12 @@ import { getAppDataSource } from '../../typeorm/getConfig'
 import { handleException } from '../../util/handleException'
 import { validateId } from '../../util/validation'
 
+/**
+ * Function to copy all the weights of criteria from one season to another.
+ * Called when an admin selects a source season to copy from on the season weight adjustment page.
+ * It finds all the criteria of the source season that are also included in the desitnation season
+ * and creates a new criterionWeight record for each with the new season id, or updates it.
+ */
 export const copyWeights = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
     await getUserFromHeaderAndAssertAdmin(req, context)

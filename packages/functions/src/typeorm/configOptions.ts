@@ -25,7 +25,7 @@ import { EventState1705779906213 } from './migrations/1705779906213-event_state'
 import { AddInvalidatedState1711307184824 } from './migrations/1711307184824-add_invalidated_state'
 import { AddAlertTable1711394423616 } from './migrations/1711394423616-add_alert_table'
 import { RatingMessageTextType1728838819007 } from './migrations/1728838819007-rating_message_text_type'
-import { CriteriaWeightTable1735297080260 } from './migrations/1735297080260-criteria-weight-table'
+import { CriterionWeight1735301875393 } from './migrations/1735301875393-criterion-weight'
 
 export const DBConfig: SqlServerConnectionOptions = {
   type: 'mssql',
@@ -66,7 +66,7 @@ export const DBConfig: SqlServerConnectionOptions = {
     AddInvalidatedState1711307184824,
     AddAlertTable1711394423616,
     RatingMessageTextType1728838819007,
-    CriteriaWeightTable1735297080260,
+    CriterionWeight1735301875393,
   ],
   options: { encrypt: ENCRYPT },
 }
