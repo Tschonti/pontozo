@@ -1,5 +1,6 @@
 import {
   Alert,
+  AlertDescription,
   AlertIcon,
   AlertTitle,
   Badge,
@@ -43,7 +44,6 @@ export default function () {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<CreateCriterionForm>({
     values: {
@@ -54,8 +54,6 @@ export default function () {
       text1: data?.text1 || 'Gyenge',
       text2: data?.text2 || 'Megfelelő',
       text3: data?.text3 || 'Kiváló',
-      competitorWeight: data?.competitorWeight || 0,
-      organiserWeight: data?.organiserWeight || 0,
       stageSpecific: !!data?.stageSpecific,
       nationalOnly: !!data?.nationalOnly,
       allowEmpty: !!data?.allowEmpty,
@@ -90,8 +88,6 @@ export default function () {
 
     const data: CreateCriteria = {
       ...restOfData,
-      competitorWeight: competitorAllowed ? restOfData.competitorWeight : undefined,
-      organiserWeight: juryAllowed ? restOfData.organiserWeight : undefined,
       roles,
     }
     if (criterionId === -1) {
@@ -218,40 +214,10 @@ export default function () {
         </VStack>
       </SimpleGrid>
 
-      <SimpleGrid columns={[1, 1, 2]} spacing={5} w="100%">
-        {(watch('competitorAllowed') || !criterionEditable) && (
-          <FormControl isInvalid={!!errors.competitorWeight}>
-            <FormLabel>Versenyző/Edző értékelés súlya</FormLabel>
-            <Input
-              type="number"
-              {...register('competitorWeight', {
-                disabled: !criterionEditable,
-                valueAsNumber: true,
-                validate: (val, formVal) => !formVal.competitorAllowed || val > 0,
-                deps: ['competitorAllowed'],
-              })}
-              bg="white"
-            />
-            <FormErrorMessage>Kötelező megadni a szempont súlyát a szerepkörhöz.</FormErrorMessage>
-          </FormControl>
-        )}
-        {(watch('juryAllowed') || !criterionEditable) && (
-          <FormControl isInvalid={!!errors.organiserWeight}>
-            <FormLabel>Rendező/Zsűri értékelés súlya</FormLabel>
-            <Input
-              type="number"
-              {...register('organiserWeight', {
-                disabled: !criterionEditable,
-                valueAsNumber: true,
-                validate: (val, formVal) => !formVal.juryAllowed || val > 0,
-                deps: ['juryAllowed'],
-              })}
-              bg="white"
-            />
-            <FormErrorMessage>Kötelező megadni a szempont súlyát a szerepkörhöz.</FormErrorMessage>
-          </FormControl>
-        )}
-      </SimpleGrid>
+      <Alert status="info">
+        <AlertIcon />
+        <AlertDescription>A szerepkörökhöz tartozó súlyértéket az egyes szezonok oldalán tudod beállítani!</AlertDescription>
+      </Alert>
 
       <Flex width="100%" justifyContent="space-between">
         <Button as={Link} to={PATHS.CRITERIA} leftIcon={<FaArrowLeft />}>
