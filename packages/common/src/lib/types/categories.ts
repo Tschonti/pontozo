@@ -23,8 +23,8 @@ export class CreateCategory {
 
 export type CreateCategoryForm = Omit<CategoryWithCriteria, 'id'>
 
-export interface CategoryWithCriteria extends Category {
-  criteria: Criterion[]
+export interface CategoryWithCriteria<T = Criterion> extends Category {
+  criteria: T[]
 }
 
 export interface CategoryWithSeasons extends Category {

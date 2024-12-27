@@ -1,6 +1,7 @@
 import { ArrayUnique, IsDateString, IsInt, IsNotEmpty, Min } from 'class-validator'
 import { IsLaterThan } from '../util/customValidators'
 import { Category, CategoryWithCriteria } from './categories'
+import { CriterionWithWeight } from './criteria'
 
 export interface Season {
   id: number
@@ -42,4 +43,8 @@ export interface CreateSeasonForm extends Omit<SeasonWithCategories, 'id' | 'sta
 export interface AllSeasonsAndOne {
   selectedSeason: SeasonWithEverything
   allSeasons: Season[]
+}
+
+export interface SeasonWithCriterionWeights extends Season {
+  categories: CategoryWithCriteria<CriterionWithWeight>[]
 }
