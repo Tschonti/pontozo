@@ -1,9 +1,10 @@
+import { CriterionWeight as ICriterionWeight } from '@pontozo/common'
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 import Criterion from './Criterion'
 import Season from './Season'
 
 @Entity()
-export class CriterionWeight {
+export class CriterionWeight implements ICriterionWeight {
   @PrimaryGeneratedColumn()
   id: number
 
@@ -19,7 +20,9 @@ export class CriterionWeight {
   @Column()
   seasonId: number
 
+  @Column({ nullable: true, type: 'float' })
   competitorWeight?: number
 
+  @Column({ nullable: true, type: 'float' })
   organiserWeight?: number
 }

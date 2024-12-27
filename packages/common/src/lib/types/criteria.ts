@@ -18,8 +18,20 @@ export interface Criterion {
   roles: RatingRole[]
 }
 
+export interface CriterionWeight {
+  id: number
+  criterionId: number
+  seasonId: number
+  competitorWeight?: number
+  organiserWeight?: number
+}
+
 export interface CriterionWithSeason extends Criterion {
   seasons: Season[]
+}
+
+export interface CriterionWithWeight extends Criterion {
+  weight?: CriterionWeight
 }
 
 export interface CriterionDetails extends Criterion {
