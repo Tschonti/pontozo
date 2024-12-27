@@ -1,5 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
-import { CreateCriteria, PontozoException, RatingRole } from '@pontozo/common'
+import { CreateCriteria } from '@pontozo/common'
 import { plainToClass } from 'class-transformer'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Criterion from '../../typeorm/entities/Criterion'
@@ -13,13 +13,6 @@ export const createCriteria = async (req: HttpRequest, context: InvocationContex
     validateBody(req)
     const dto = plainToClass(CreateCriteria, await req.json())
     await validateWithWhitelist(dto)
-
-    if (
-      (dto.roles.includes(RatingRole.COMPETITOR) && !dto.competitorWeight) ||
-      (dto.roles.includes(RatingRole.ORGANISER) && !dto.organiserWeight)
-    ) {
-      throw new PontozoException('A szempont súlyát kötelező megadni!', 400)
-    }
 
     const criterionRepo = (await getAppDataSource(context)).getRepository(Criterion)
     const res = await criterionRepo.insert({ ...dto, roles: JSON.stringify(dto.roles) })

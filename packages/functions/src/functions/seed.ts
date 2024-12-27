@@ -21,8 +21,6 @@ const terep = [
     nationalOnly: false,
     stageSpecific: true,
     allowEmpty: false,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
@@ -36,8 +34,6 @@ const terep = [
     nationalOnly: false,
     stageSpecific: true,
     allowEmpty: true,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
@@ -50,8 +46,6 @@ const terep = [
     nationalOnly: false,
     stageSpecific: true,
     allowEmpty: true,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
@@ -65,8 +59,6 @@ const terep = [
     nationalOnly: false,
     stageSpecific: true,
     allowEmpty: true,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
@@ -79,8 +71,6 @@ const terep = [
     nationalOnly: false,
     stageSpecific: true,
     allowEmpty: true,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
 ]
@@ -96,8 +86,6 @@ const terkep = [
     nationalOnly: false,
     stageSpecific: true,
     allowEmpty: true,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
@@ -110,8 +98,6 @@ const terkep = [
     nationalOnly: false,
     stageSpecific: true,
     allowEmpty: false,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
@@ -124,8 +110,6 @@ const terkep = [
     nationalOnly: false,
     stageSpecific: true,
     allowEmpty: false,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
 ]
@@ -142,8 +126,6 @@ const vk = [
     nationalOnly: false,
     stageSpecific: false,
     allowEmpty: false,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
@@ -156,8 +138,6 @@ const vk = [
     nationalOnly: true,
     stageSpecific: false,
     allowEmpty: false,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
@@ -170,8 +150,6 @@ const vk = [
     nationalOnly: true,
     stageSpecific: false,
     allowEmpty: true,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
@@ -184,8 +162,6 @@ const vk = [
     nationalOnly: true,
     stageSpecific: false,
     allowEmpty: true,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
@@ -198,8 +174,6 @@ const vk = [
     nationalOnly: true,
     stageSpecific: false,
     allowEmpty: false,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
@@ -212,8 +186,6 @@ const vk = [
     nationalOnly: true,
     stageSpecific: false,
     allowEmpty: false,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
@@ -226,8 +198,6 @@ const vk = [
     nationalOnly: true,
     stageSpecific: false,
     allowEmpty: true,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
@@ -240,8 +210,6 @@ const vk = [
     nationalOnly: true,
     stageSpecific: false,
     allowEmpty: true,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
@@ -254,8 +222,6 @@ const vk = [
     nationalOnly: true,
     stageSpecific: false,
     allowEmpty: true,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
 ]
@@ -271,8 +237,6 @@ const rajt = [
     nationalOnly: true,
     stageSpecific: true,
     allowEmpty: true,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
@@ -285,8 +249,6 @@ const rajt = [
     nationalOnly: true,
     stageSpecific: true,
     allowEmpty: false,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
@@ -299,8 +261,6 @@ const rajt = [
     nationalOnly: false,
     stageSpecific: true,
     allowEmpty: false,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
@@ -313,8 +273,6 @@ const rajt = [
     nationalOnly: true,
     stageSpecific: true,
     allowEmpty: false,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
 ]
@@ -330,8 +288,6 @@ const szabalyzat = [
     nationalOnly: false,
     stageSpecific: false,
     allowEmpty: true,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
@@ -344,8 +300,6 @@ const szabalyzat = [
     nationalOnly: false,
     stageSpecific: false,
     allowEmpty: true,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
@@ -357,8 +311,6 @@ const szabalyzat = [
     nationalOnly: false,
     stageSpecific: false,
     allowEmpty: false,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["ORGANISER", "JURY"]',
   },
   {
@@ -371,8 +323,6 @@ const szabalyzat = [
     nationalOnly: false,
     stageSpecific: false,
     allowEmpty: false,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["ORGANISER", "JURY"]',
   },
 ]
@@ -389,8 +339,6 @@ const kommunikáció = [
     nationalOnly: false,
     stageSpecific: false,
     allowEmpty: true,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
@@ -403,8 +351,6 @@ const kommunikáció = [
     nationalOnly: true,
     stageSpecific: false,
     allowEmpty: true,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
   {
@@ -417,8 +363,6 @@ const kommunikáció = [
     nationalOnly: true,
     stageSpecific: false,
     allowEmpty: true,
-    competitorWeight: 1,
-    organiserWeight: 1,
     roles: '["COMPETITOR", "COACH","ORGANISER", "JURY"]',
   },
 ]
