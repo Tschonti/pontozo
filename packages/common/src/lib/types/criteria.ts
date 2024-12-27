@@ -1,4 +1,4 @@
-import { ArrayNotEmpty, ArrayUnique, IsBoolean, IsEnum, IsNotEmpty, IsOptional } from 'class-validator'
+import { ArrayNotEmpty, ArrayUnique, IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsOptional, Min } from 'class-validator'
 import { CriterionRating } from './criterionRatings'
 import { RatingRole } from './eventRatings'
 import { Season } from './seasons'
@@ -78,4 +78,14 @@ export class CreateCriteria {
   @ArrayNotEmpty()
   @ArrayUnique()
   roles: RatingRole[]
+}
+
+export class CreateCriterionWeight {
+  @IsNumber()
+  @Min(0)
+  competitorWeight: number
+
+  @IsNumber()
+  @Min(0)
+  organiserWeight: number
 }
