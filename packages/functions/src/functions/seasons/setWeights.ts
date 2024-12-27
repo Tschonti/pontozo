@@ -8,6 +8,11 @@ import { getAppDataSource } from '../../typeorm/getConfig'
 import { handleException } from '../../util/handleException'
 import { validateBody, validateId, validateWithWhitelist } from '../../util/validation'
 
+/**
+ * Function to update the weights for a specific season and criterion.
+ * Organiser and competitor weights have to be sent in the request body.
+ * Called when an admin finishes typing in any field on the season weight adjustment page.
+ */
 export const setWeights = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
     await getUserFromHeaderAndAssertAdmin(req, context)
