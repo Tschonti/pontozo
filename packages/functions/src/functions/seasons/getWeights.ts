@@ -34,7 +34,7 @@ export const getWeights = async (req: HttpRequest, context: InvocationContext): 
           ...stc.category,
           criteria: stc.category.criteria.map((ctc) => ({
             ...ctc.criterion,
-            weights: ctc.criterion.weights.find((cw) => cw.seasonId === id),
+            weight: ctc.criterion.weights.find((cw) => cw.seasonId === id),
             roles: JSON.parse(ctc.criterion.roles),
           })),
         })),

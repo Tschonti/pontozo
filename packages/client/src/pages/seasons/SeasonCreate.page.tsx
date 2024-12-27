@@ -17,7 +17,7 @@ import {
 import { CreateSeason, CreateSeasonForm } from '@pontozo/common'
 import { useEffect } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
-import { FaArrowLeft } from 'react-icons/fa'
+import { FaArrowLeft, FaBalanceScaleLeft } from 'react-icons/fa'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ConfirmDialogButton } from 'src/components/commons/ConfirmDialogButton'
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
@@ -39,6 +39,7 @@ export default function () {
   const { data, isLoading, isFetching, error } = useFetchSeason(seasonId)
   const seasonEditable = new Date(data?.startDate ?? new Date(Date.now() + 1000)) > new Date()
   const toast = useToast()
+  const nav = useNavigate()
 
   const form = useForm<CreateSeasonForm>({
     values: {
@@ -107,7 +108,12 @@ export default function () {
   return (
     <VStack spacing={5} alignItems="flex-start">
       <HelmetTitle title="Pontoz-O Admin | Szezon szerkesztése" />
-      <Heading>{seasonId === -1 ? 'Új szezon' : 'Szezon szerkesztése'}</Heading>
+      <HStack justify="space-between" w="100%" alignItems="center">
+        <Heading>{seasonId === -1 ? 'Új szezon' : 'Szezon szerkesztése'}</Heading>
+        <Button leftIcon={<FaBalanceScaleLeft />} colorScheme="brand" onClick={() => nav(`${PATHS.SEASONS}/${seasonId}/weights`)}>
+          Súlyok beallítása
+        </Button>
+      </HStack>
 
       {!seasonEditable && (
         <Alert status="error">
