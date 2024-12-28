@@ -108,12 +108,17 @@ export default function () {
   return (
     <VStack spacing={5} alignItems="flex-start">
       <HelmetTitle title="Pontoz-O Admin | Szezon szerkesztése" />
-      <HStack justify="space-between" w="100%" alignItems="center">
+      <Stack direction={{ base: 'column', sm: 'row' }} justify="space-between" w="100%" alignItems={{ base: 'flex-start', sm: 'center' }}>
         <Heading>{seasonId === -1 ? 'Új szezon' : 'Szezon szerkesztése'}</Heading>
-        <Button leftIcon={<FaBalanceScaleLeft />} colorScheme="brand" onClick={() => nav(`${PATHS.SEASONS}/${seasonId}/weights`)}>
+        <Button
+          width={{ base: '100%', sm: 'auto' }}
+          leftIcon={<FaBalanceScaleLeft />}
+          colorScheme="brand"
+          onClick={() => nav(`${PATHS.SEASONS}/${seasonId}/weights`)}
+        >
           Súlyok beallítása
         </Button>
-      </HStack>
+      </Stack>
 
       {!seasonEditable && (
         <Alert status="error">

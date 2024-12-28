@@ -1,4 +1,4 @@
-import { Button, Heading, HStack, SimpleGrid, Text, VStack } from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon, Button, Heading, HStack, SimpleGrid, Stack, Text, VStack } from '@chakra-ui/react'
 import { useMemo } from 'react'
 import { FaEdit, FaMedal } from 'react-icons/fa'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -30,12 +30,24 @@ export const WeightAdjustmentPage = () => {
   if (isLoading || !data) return <LoadingSpinner />
   return (
     <VStack alignItems="flex-start">
-      <HStack justify="space-between" w="100%" alignItems="center">
+      <Stack direction={{ base: 'column', md: 'row' }} justify="space-between" w="100%" alignItems={{ base: 'flex-start', md: 'center' }}>
         <Heading>{data.name} szezon súlyainak beállítása</Heading>
-        <Button leftIcon={<FaEdit />} colorScheme="brand" onClick={() => nav(`${PATHS.SEASONS}/${seasonId}/edit`)}>
+        <Button
+          width={{ base: '100%', md: 'auto' }}
+          leftIcon={<FaEdit />}
+          colorScheme="brand"
+          onClick={() => nav(`${PATHS.SEASONS}/${seasonId}/edit`)}
+        >
           Szeszon szerkesztése
         </Button>
-      </HStack>
+      </Stack>
+
+      <Alert status="warning" display={{ base: 'flex', md: 'none' }}>
+        <AlertIcon />
+        <AlertDescription>
+          Ezt az oldalt lehetőleg egy nagyobb képernyőről használd, sajnos mobiltelefonra nehezen optimalizálható!
+        </AlertDescription>
+      </Alert>
 
       <Text>Blablabla</Text>
       <VStack gap={1} alignItems="flex-start">
