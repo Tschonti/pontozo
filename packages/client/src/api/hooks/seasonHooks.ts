@@ -46,6 +46,12 @@ export const useSetWeightsMutations = (seasonId: string, criterionId: number) =>
   )
 }
 
+export const useCopyWeightsMutations = (destSeasonId: string) => {
+  return useMutation<unknown, PontozoError, string>(
+    async (sourceSeasonId) => await functionAxios.put(`/seasons/${destSeasonId}/copyWeights/${sourceSeasonId}`)
+  )
+}
+
 export const useCreateSeasonMutation = () => {
   return useMutation<CreateResponse[], PontozoError, CreateSeason>(
     async (formData) => (await functionAxios.post(`/seasons`, formData)).data
