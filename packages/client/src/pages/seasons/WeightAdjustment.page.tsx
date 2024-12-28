@@ -1,8 +1,10 @@
 import { Button, Heading, HStack, SimpleGrid, Text, VStack } from '@chakra-ui/react'
+import { useMemo } from 'react'
 import { FaEdit } from 'react-icons/fa'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useFetchSeasonWeights } from 'src/api/hooks/seasonHooks'
 import { LoadingSpinner } from 'src/components/commons/LoadingSpinner'
+import { criterionWeightReducer } from 'src/util/criterionWeightHelper'
 import { PATHS } from 'src/util/paths'
 import { CategoryWeights } from './components/CategoryWeights'
 
@@ -10,6 +12,20 @@ export const WeightAdjustmentPage = () => {
   const { seasonId } = useParams()
   const { isLoading, data } = useFetchSeasonWeights(seasonId)
   const nav = useNavigate()
+
+  const totalWeightSum = useMemo(() => {
+    if (!data) return 0
+    return data.categories.reduce((catSum, category) => catSum + category.criteria.reduce(criterionWeightReducer('both'), 0), 0)
+  }, [data])
+
+  const maxCategory = useMemo(() => {
+    if (!data) return 0
+    return data.categories.reduce((max, category) => {
+      const sum = category.criteria.reduce(criterionWeightReducer('both'), 0)
+      if (sum > max) return sum
+      return max
+    }, 0)
+  }, [data])
 
   if (isLoading || !data) return <LoadingSpinner />
   return (
@@ -22,9 +38,48 @@ export const WeightAdjustmentPage = () => {
       </HStack>
 
       <Text>Blablabla</Text>
-      <SimpleGrid alignItems="center" templateColumns="8fr 1fr 1fr" columnGap={2} rowGap={1} width={{ base: '100%', lg: '70%' }}>
+      <SimpleGrid
+        bg="gray.100"
+        padding={2}
+        rounded="md"
+        alignItems="center"
+        templateColumns={{ base: '17fr 2fr 2fr', lg: '17fr 2fr 2fr 10fr' }}
+        width="100%"
+        columnGap={2}
+        rowGap={1}
+      >
+        <Text>
+          <b>Szempont neve</b>
+        </Text>
+        <Text color="brand.500" textAlign="center">
+          <b>
+            Versenyző, <br />
+            Edző
+            <br />
+            súlya
+          </b>
+        </Text>
+        <Text color="mtfszRed" textAlign="center">
+          <b>
+            Rendező, <br />
+            Zsűri
+            <br />
+            súlya
+          </b>
+        </Text>
+        <Text textAlign="center" display={{ base: 'none', lg: 'block' }}>
+          <b>Súlyok teljes összege: {totalWeightSum.toFixed(2)}</b>
+        </Text>
+      </SimpleGrid>
+      <SimpleGrid
+        alignItems="center"
+        templateColumns={{ base: '1fr 16fr 2fr 2fr', lg: '1fr 16fr 2fr 2fr 10fr' }}
+        width="100%"
+        columnGap={2}
+        rowGap={1}
+      >
         {data.categories.map((c) => (
-          <CategoryWeights key={c.id} category={c} seasonId={seasonId ?? ''} />
+          <CategoryWeights key={c.id} category={c} seasonId={seasonId ?? ''} totalWeightSum={maxCategory} />
         ))}
       </SimpleGrid>
     </VStack>

@@ -29,8 +29,8 @@ export const setWeights = async (req: HttpRequest, context: InvocationContext): 
     const seasonRepo = ads.getRepository(Season)
     const weights = await weightRepo.findOne({ where: { seasonId, criterionId } })
     if (weights) {
-      weights.organiserWeight = dto.organiserWeight
-      weights.competitorWeight = dto.competitorWeight
+      if (dto.organiserWeight !== undefined) weights.organiserWeight = dto.organiserWeight
+      if (dto.competitorWeight !== undefined) weights.competitorWeight = dto.competitorWeight
       weightRepo.save(weights)
     } else {
       const season = await seasonRepo.findOne({
@@ -46,8 +46,8 @@ export const setWeights = async (req: HttpRequest, context: InvocationContext): 
       await weightRepo.insert({
         seasonId,
         criterionId,
-        organiserWeight: dto.organiserWeight,
-        competitorWeight: dto.competitorWeight,
+        organiserWeight: dto.organiserWeight ?? 1,
+        competitorWeight: dto.competitorWeight ?? 1,
       })
     }
 
