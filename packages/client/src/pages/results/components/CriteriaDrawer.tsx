@@ -134,10 +134,10 @@ export const CriteriaDrawer = ({ isMobile }: Props) => {
                 </Alert>
               )}
               <Text>
-                <span style={{ fontWeight: 'bold' }}>(V)</span> - Teljes versenyre vonatkozó szempont/kategória
+                <b>(V)</b> - Teljes versenyre vonatkozó szempont/kategória
               </Text>
               <Text mb={4}>
-                <span style={{ fontWeight: 'bold' }}>(F)</span> - Futamra vonatkozó szempont/kategória
+                <b>(F)</b> - Futamra vonatkozó szempont/kategória
               </Text>
 
               <CheckboxOrRadio isMobile={isMobile} isChecked={includeTotal} onChange={includeTotalChange}>

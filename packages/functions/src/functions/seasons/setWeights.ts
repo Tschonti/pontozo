@@ -1,5 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
-import { CreateCriterionWeight, PontozoException } from '@pontozo/common'
+import { CreateCriterionWeight, Criterion, PontozoException, RatingRole } from '@pontozo/common'
 import { plainToClass } from 'class-transformer'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import { CriterionWeight } from '../../typeorm/entities/CriterionWeight'
@@ -40,14 +40,26 @@ export const setWeights = async (req: HttpRequest, context: InvocationContext): 
       if (!season) {
         throw new PontozoException('A szezon nem található!', 404)
       }
-      if (!season.categories.some((stc) => stc.category.criteria.some((ctc) => ctc.criterionId === criterionId))) {
+      let criterion: Criterion
+      for (const stc of season.categories) {
+        for (const ctc of stc.category.criteria) {
+          if (ctc.criterionId === criterionId) {
+            criterion = { ...ctc.criterion, roles: JSON.parse(ctc.criterion.roles) }
+            break
+          }
+        }
+        if (criterion) break
+      }
+      if (!criterion) {
         throw new PontozoException('A szempont nem található a szenzonban!', 404)
       }
+      const orgAllowed = criterion.roles.includes(RatingRole.ORGANISER) || criterion.roles.includes(RatingRole.JURY)
+      const compAllowed = criterion.roles.includes(RatingRole.COMPETITOR) || criterion.roles.includes(RatingRole.COACH)
       await weightRepo.insert({
         seasonId,
         criterionId,
-        organiserWeight: dto.organiserWeight ?? 1,
-        competitorWeight: dto.competitorWeight ?? 1,
+        organiserWeight: dto.organiserWeight ?? (orgAllowed ? 1 : 0),
+        competitorWeight: dto.competitorWeight ?? (compAllowed ? 1 : 0),
       })
     }
 
