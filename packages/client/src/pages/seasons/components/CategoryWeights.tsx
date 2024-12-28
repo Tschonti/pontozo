@@ -1,7 +1,7 @@
-import { Box, IconButton, Text, Tooltip, useDisclosure } from '@chakra-ui/react'
+import { Box, HStack, IconButton, Text, Tooltip, useDisclosure } from '@chakra-ui/react'
 import { CategoryWithCriteria, CriterionWithWeight, RatingRole } from '@pontozo/common'
 import { useMemo } from 'react'
-import { FaCaretDown, FaCaretRight } from 'react-icons/fa'
+import { FaCaretDown, FaCaretRight, FaMedal } from 'react-icons/fa'
 import { criterionWeightReducer, getWeight } from 'src/util/criterionWeightHelper'
 import { WeightBar } from './WeightBar'
 import { WeightInput } from './WeightInput'
@@ -26,7 +26,19 @@ export const CategoryWeights = ({ category, seasonId, totalWeightSum }: Props) =
         icon={isOpen ? <FaCaretDown /> : <FaCaretRight />}
       />
       <Text>
-        <b>{category.name}</b>
+        <b>
+          {category.name}{' '}
+          {category.criteria.every((cc) => cc.stageSpecific) && (
+            <Tooltip hasArrow placement="top" label={'Futamra vonatkozó kategória'}>
+              (F)
+            </Tooltip>
+          )}
+          {category.criteria.every((cc) => !cc.stageSpecific) && (
+            <Tooltip hasArrow placement="top" label={'Teljes versenyre vonatkozó kategória'}>
+              (V)
+            </Tooltip>
+          )}
+        </b>
       </Text>
       <Text textAlign="center">
         <Tooltip hasArrow placement="left" label="A kategória szempontjainak versenyzőkre és edzőkre vonatkozó súlyösszege.">
@@ -47,7 +59,25 @@ export const CategoryWeights = ({ category, seasonId, totalWeightSum }: Props) =
         category.criteria.map((cc) => (
           <>
             <Box />
-            <Text w="100%">{cc.name}</Text>
+            <HStack w="100%">
+              <Text>
+                {cc.name}{' '}
+                <Tooltip
+                  hasArrow
+                  placement="top"
+                  label={cc.stageSpecific ? 'Futamra vonatkozó szempont' : 'Teljes versenyre vonatkozó szempont'}
+                >
+                  <b>({cc.stageSpecific ? 'F' : 'V'})</b>
+                </Tooltip>
+              </Text>
+              {cc.nationalOnly && (
+                <Tooltip hasArrow placement="top" label="Csak országos és kiemelt rangsoló versenyekre vonatkozó szempont">
+                  <span>
+                    <FaMedal />
+                  </span>
+                </Tooltip>
+              )}
+            </HStack>
 
             <WeightInput
               seasonId={seasonId}
