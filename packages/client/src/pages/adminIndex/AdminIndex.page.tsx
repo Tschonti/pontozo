@@ -56,7 +56,7 @@ export default function () {
       <VStack>
         {data.length > 0 ? (
           data.map((a) => (
-            <Alert variant="left-accent" status={alertLevelToChakraStatus[a.level]} justifyContent="space-between">
+            <Alert key={a.id} variant="left-accent" status={alertLevelToChakraStatus[a.level]} justifyContent="space-between">
               <HStack gap={1}>
                 <AlertIcon />
                 <AlertTitle>{a.description}</AlertTitle>

@@ -82,9 +82,13 @@ export class CreateCriteria {
 export class CreateCriterionWeight {
   @IsNumber()
   @Min(0)
-  competitorWeight: number
+  @IsOptional()
+  competitorWeight?: number
 
   @IsNumber()
   @Min(0)
-  organiserWeight: number
+  @IsOptional()
+  organiserWeight?: number
 }
+
+export type CriterionWeightKey = 'competitorWeight' | 'organiserWeight'

@@ -1,6 +1,6 @@
 import { HStack, Text } from '@chakra-ui/react'
 import { FaCaretDown, FaCaretUp } from 'react-icons/fa'
-import { CriterionId, SortOrder } from './EventResultTable'
+import { CriterionId, SortOrder } from 'src/api/contexts/ResultTableContext'
 
 type Props = {
   sortOrder: SortOrder

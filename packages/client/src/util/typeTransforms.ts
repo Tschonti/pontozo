@@ -1,4 +1,4 @@
-import { DbEvent, getHighestRank, MtfszEvent, MtfszUser, Rank, stageFilter, UserPreview } from '@pontozo/common'
+import { DbEvent, EventState, getHighestRank, MtfszEvent, MtfszUser, Rank, stageFilter, UserPreview } from '@pontozo/common'
 
 export const transformUser = (u: MtfszUser): UserPreview => ({
   userDOB: u.szul_dat,
@@ -29,5 +29,5 @@ export const transformEvent = (e: MtfszEvent): DbEvent => ({
     shortName: c.rovid_nev_1,
     longName: c.nev_1,
   })),
-  rateable: true,
+  state: EventState.RATEABLE,
 })
