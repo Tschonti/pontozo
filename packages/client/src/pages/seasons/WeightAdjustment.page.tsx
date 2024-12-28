@@ -7,6 +7,7 @@ import { LoadingSpinner } from 'src/components/commons/LoadingSpinner'
 import { criterionWeightReducer } from 'src/util/criterionWeightHelper'
 import { PATHS } from 'src/util/paths'
 import { CategoryWeights } from './components/CategoryWeights'
+import { SourceSeasonSelectorModal } from './components/SourceSeasonSelectorModal'
 
 export const WeightAdjustmentPage = () => {
   const { seasonId } = useParams()
@@ -62,6 +63,7 @@ export const WeightAdjustmentPage = () => {
           <Text>- Csak országos és kiemelt rangsoló versenyekre vonatkozó szempont</Text>
         </HStack>
       </VStack>
+      <SourceSeasonSelectorModal currentSeasonId={seasonId ?? ''} />
       <SimpleGrid
         bg="gray.100"
         padding={2}

@@ -1,7 +1,7 @@
 import { Box, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper } from '@chakra-ui/react'
 import { Criterion, CriterionWeightKey, RatingRole } from '@pontozo/common'
 import debounce from 'lodash.debounce'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSetWeightsMutations } from 'src/api/hooks/seasonHooks'
 
 type Props = {
@@ -19,6 +19,10 @@ export const WeightInput = ({ roles, criterion, seasonId, defaultValue, weightKe
     return roles.some((r) => asSet.has(r))
   }, [criterion, roles])
   const [value, setValue] = useState<string>(`${weightEditable ? defaultValue : 0}`)
+
+  useEffect(() => {
+    setValue(`${defaultValue}`)
+  }, [defaultValue])
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleDebounceChange = useCallback(
@@ -44,7 +48,6 @@ export const WeightInput = ({ roles, criterion, seasonId, defaultValue, weightKe
         size="sm"
         clampValueOnBlur={false}
         min={0}
-        precision={2}
         step={0.1}
         value={value}
         onChange={onValueChange}
