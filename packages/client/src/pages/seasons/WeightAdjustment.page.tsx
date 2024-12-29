@@ -1,6 +1,6 @@
-import { Alert, AlertDescription, AlertIcon, Button, Heading, HStack, SimpleGrid, Stack, Text, VStack } from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon, Button, Heading, HStack, SimpleGrid, Stack, Text, Tooltip, VStack } from '@chakra-ui/react'
 import { useMemo } from 'react'
-import { FaEdit, FaMedal } from 'react-icons/fa'
+import { FaEdit, FaMedal, FaRedoAlt } from 'react-icons/fa'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useFetchSeasonWeights } from 'src/api/hooks/seasonHooks'
 import { LoadingSpinner } from 'src/components/commons/LoadingSpinner'
@@ -49,8 +49,49 @@ export const WeightAdjustmentPage = () => {
           Ezt az oldalt lehetőleg egy nagyobb képernyőről használd, sajnos mobiltelefonra nehezen optimalizálható!
         </AlertDescription>
       </Alert>
+      <Heading mt={4} size="md" as="h2">
+        Tudnivalók
+      </Heading>
+      <Text textAlign="justify">
+        Egy verseny értékeléseinek összesítésekor nem érdemes minden szempontra érkező értékelést ugyanakkora súllyal számolni, hiszen
+        például sokkal fontosabb a pályák vagy a térképek minősége, mint a kiegészítő szolgáltatások. Ugyanígy egyes felhasználók (pl.
+        ellenőrzőbíró) értékelését is tekinthetjük értékesebbnek. Ezen az oldalon tudod beállítani, hogy az adott szezonban milyen
+        súlyozásai legyenek az egyes szempontoknak, szerepköröknek, amik alapján a végleges pontszám számolódik.
+      </Text>
+      <Text textAlign="justify">
+        Az itt megadott súlyértékek nem egy adott felhasználó értékelésére vonatkoznak, hanem az adott szerepkörben leadott értékelések
+        átlagára. Nézzünk egy példát: egy szempontot 10 versenyző értékelt, átlagosan 2,5-ra, valamint 5 rendező, 1,5-re. Ha a versenyzői
+        súly 2, míg a rendezői súly 3, a végleges összpontszám a következőképp alakul: <b>(2 * 2,5 + 3 * 1,5)/(2 + 3) = 1,9</b>. (Amennyiben
+        minden értékelésnek azonos súlya lenne, az átlag 2,167 lenne. Mivel a rendezőknek nagyobb súlya volt és átlagosan rosszabbul
+        értékelték, a pontszám is alacsonyabb lett.) A versenyzőket és az edzőket (akik nem feltétlen indultak el a versenyen, de
+        tanítványaik alapján van benyomásuk) egyenrangúnak tartjuk, ugyanígy a rendezőket és MTFSZ Zsűriket is.
+      </Text>
 
-      <Text>Blablabla</Text>
+      <Text textAlign="justify">
+        Fontos megemlíteni a futamspecifikus szempontokat, ezeket minden felhasználó futamonkénti értékeli. Az összpontszám számításakor az
+        egyes futamokra érkezett értékelések átlagolásra kerülnek a súlyok alkalmazása előtt, minden futam azonos súllyal számít.
+      </Text>
+
+      <Text textAlign="justify">
+        <b>
+          Az oldalon egy érték átírása azonnal átírja az értéket az adatbázisban, nem kell semmilyen mentés gombra kattintani. Azonban az
+          értékelések eredményei nem számolódnak újra minden súlyérték változásakor, csakis ha azt manuálisan elindítod (coming soon).
+        </b>
+      </Text>
+
+      <Heading mt={4} size="md" as="h2">
+        Műveletek
+      </Heading>
+      <HStack gap={2}>
+        <SourceSeasonSelectorModal currentSeasonId={seasonId ?? ''} />
+        <Button isDisabled colorScheme="red" leftIcon={<FaRedoAlt />}>
+          Pontok újraszámítása
+        </Button>
+      </HStack>
+
+      <Heading mt={4} size="md" as="h2">
+        Jelmagyarázat
+      </Heading>
       <VStack gap={1} alignItems="flex-start">
         <Text>
           <b>(V)</b> - Teljes versenyre vonatkozó szempont/kategória
@@ -63,7 +104,7 @@ export const WeightAdjustmentPage = () => {
           <Text>- Csak országos és kiemelt rangsoló versenyekre vonatkozó szempont</Text>
         </HStack>
       </VStack>
-      <SourceSeasonSelectorModal currentSeasonId={seasonId ?? ''} />
+
       <SimpleGrid
         bg="gray.100"
         padding={2}
@@ -78,20 +119,28 @@ export const WeightAdjustmentPage = () => {
           <b>Szempont neve</b>
         </Text>
         <Text color="brand.500" textAlign="center">
-          <b>
-            Versenyző, <br />
-            Edző
-            <br />
-            súlya
-          </b>
+          <Tooltip
+            placement="top"
+            hasArrow
+            label="Az összes versenyző és edző szerepkörben értékelt felhasználó értékelései ilyen súllyal fognak az összpontszámba számítani."
+          >
+            <b>
+              Versenyző <br />
+              Edző
+            </b>
+          </Tooltip>
         </Text>
         <Text color="mtfszRed" textAlign="center">
-          <b>
-            Rendező, <br />
-            Zsűri
-            <br />
-            súlya
-          </b>
+          <Tooltip
+            placement="top"
+            hasArrow
+            label="Az összes rendező és MTFSZ Zsűri szerepkörben értékelt felhasználó értékelései ilyen súllyal fognak az összpontszámba számítani."
+          >
+            <b>
+              Rendező <br />
+              Zsűri
+            </b>
+          </Tooltip>
         </Text>
         <Text textAlign="center" display={{ base: 'none', lg: 'block' }}>
           <b>Súlyok teljes összege: {totalWeightSum.toFixed(2)}</b>
