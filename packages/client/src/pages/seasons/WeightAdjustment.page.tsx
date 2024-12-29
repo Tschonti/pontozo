@@ -2,8 +2,11 @@ import { Alert, AlertDescription, AlertIcon, Button, Heading, HStack, SimpleGrid
 import { useMemo } from 'react'
 import { FaEdit, FaMedal, FaRedoAlt } from 'react-icons/fa'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useAuthContext } from 'src/api/contexts/useAuthContext'
 import { useFetchSeasonWeights } from 'src/api/hooks/seasonHooks'
 import { LoadingSpinner } from 'src/components/commons/LoadingSpinner'
+import { LoginNavigate } from 'src/components/commons/LoginNavigate'
+import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { criterionWeightReducer } from 'src/util/criterionWeightHelper'
 import { PATHS } from 'src/util/paths'
 import { CategoryWeights } from './components/CategoryWeights'
@@ -11,8 +14,9 @@ import { SourceSeasonSelectorModal } from './components/SourceSeasonSelectorModa
 
 export const WeightAdjustmentPage = () => {
   const { seasonId } = useParams()
-  const { isLoading, data } = useFetchSeasonWeights(seasonId)
+  const { isLoading, data, error } = useFetchSeasonWeights(seasonId)
   const nav = useNavigate()
+  const { isLoggedIn } = useAuthContext()
 
   const totalWeightSum = useMemo(() => {
     if (!data) return 0
@@ -27,6 +31,13 @@ export const WeightAdjustmentPage = () => {
       return max
     }, 0)
   }, [data])
+
+  if (!isLoggedIn) {
+    return <LoginNavigate />
+  }
+  if (error) {
+    return <NavigateWithError error={error} to={PATHS.INDEX} />
+  }
 
   if (isLoading || !data) return <LoadingSpinner />
   return (
