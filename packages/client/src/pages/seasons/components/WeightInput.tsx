@@ -2,7 +2,7 @@ import { Box, NumberDecrementStepper, NumberIncrementStepper, NumberInput, Numbe
 import { Criterion, CriterionWeightKey, RatingRole } from '@pontozo/common'
 import debounce from 'lodash.debounce'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useSetWeightsMutations } from 'src/api/hooks/seasonHooks'
+import { useSetWeightsMutation } from 'src/api/hooks/seasonHooks'
 
 type Props = {
   roles: RatingRole[]
@@ -13,7 +13,7 @@ type Props = {
 }
 
 export const WeightInput = ({ roles, criterion, seasonId, defaultValue, weightKey }: Props) => {
-  const { mutate } = useSetWeightsMutations(seasonId, criterion.id)
+  const { mutate } = useSetWeightsMutation(seasonId, criterion.id)
   const weightEditable = useMemo(() => {
     const asSet = new Set(criterion.roles)
     return roles.some((r) => asSet.has(r))

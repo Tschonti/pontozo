@@ -39,17 +39,21 @@ export const useFetchSeasonWeights = (seasonId?: string) => {
   )
 }
 
-export const useSetWeightsMutations = (seasonId: string, criterionId: number) => {
+export const useSetWeightsMutation = (seasonId: string, criterionId: number) => {
   return useMutation<unknown, PontozoError, CreateCriterionWeight>(
     async (formdata) => await functionAxios.put(`/seasons/${seasonId}/weights/${criterionId}`, formdata),
     { onSuccess: () => queryClient.invalidateQueries(['fetchSeasonWeights', seasonId]) }
   )
 }
 
-export const useCopyWeightsMutations = (destSeasonId: string) => {
+export const useCopyWeightsMutation = (destSeasonId: string) => {
   return useMutation<unknown, PontozoError, string>(
     async (sourceSeasonId) => await functionAxios.put(`/seasons/${destSeasonId}/copyWeights/${sourceSeasonId}`)
   )
+}
+
+export const useRecalculateSeasonMutation = (seasonId: string) => {
+  return useMutation<unknown, PontozoError>(async () => await functionAxios.post(`/seasons/${seasonId}/recalculate/`))
 }
 
 export const useCreateSeasonMutation = () => {

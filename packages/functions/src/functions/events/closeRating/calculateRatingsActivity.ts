@@ -14,6 +14,11 @@ import { ActivityOutput } from './closeRatingOrchestrator'
 
 export const calculateAvgRatingActivityName = 'calculateAvgRatingActivity'
 
+/**
+ * Durable Functions activity that calculates all the avarages of the ratings for a given event. It stores the result in the DB and in Redis.
+ * @param eventId ID of the event to calculate the results for
+ * @returns whether the operation succeeded and the eventId
+ */
 const calculateAvgRating: ActivityHandler = async (eventId: number, context: InvocationContext): Promise<ActivityOutput> => {
   try {
     const ads = new DataSource(DBConfig)

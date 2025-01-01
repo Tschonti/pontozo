@@ -9,6 +9,10 @@ import { validateRatingsActivityName } from './validateRatingsActivity'
 export const orchestratorName = 'closeRatingOrchestrator'
 export type ActivityOutput = { eventId: number; success: boolean }
 
+/**
+ * Durable Functions orchestrator function that executes the activies that validate and accumulate the ratings of finished events.
+ * TODO better docs, maybe diagrams?
+ */
 const orchestrator: OrchestrationHandler = function* (context: OrchestrationContext) {
   const events: { eventId: number; state: EventState }[] = context.df.getInput()
   context.log(`Orchestrator function started, starting the validation of ratings for ${events.length} event(s).`)

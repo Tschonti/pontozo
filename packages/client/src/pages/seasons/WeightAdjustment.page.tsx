@@ -1,6 +1,6 @@
 import { Alert, AlertDescription, AlertIcon, Button, Heading, HStack, SimpleGrid, Stack, Text, Tooltip, VStack } from '@chakra-ui/react'
 import { useMemo } from 'react'
-import { FaEdit, FaMedal, FaRedoAlt } from 'react-icons/fa'
+import { FaEdit, FaMedal } from 'react-icons/fa'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAuthContext } from 'src/api/contexts/useAuthContext'
 import { useFetchSeasonWeights } from 'src/api/hooks/seasonHooks'
@@ -10,6 +10,7 @@ import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { criterionWeightReducer } from 'src/util/criterionWeightHelper'
 import { PATHS } from 'src/util/paths'
 import { CategoryWeights } from './components/CategoryWeights'
+import { RecalculateModal } from './components/RecalculateModal'
 import { SourceSeasonSelectorModal } from './components/SourceSeasonSelectorModal'
 
 export const WeightAdjustmentPage = () => {
@@ -86,7 +87,8 @@ export const WeightAdjustmentPage = () => {
       <Text textAlign="justify">
         <b>
           Az oldalon egy érték átírása azonnal átírja az értéket az adatbázisban, nem kell semmilyen mentés gombra kattintani. Azonban az
-          értékelések eredményei nem számolódnak újra minden súlyérték változásakor, csakis ha azt manuálisan elindítod (coming soon).
+          értékelések eredményei nem számolódnak újra minden súlyérték változásakor, csakis ha azt manuálisan elindítod a lenti piros
+          gombbal.
         </b>
       </Text>
 
@@ -95,9 +97,7 @@ export const WeightAdjustmentPage = () => {
       </Heading>
       <HStack gap={2}>
         <SourceSeasonSelectorModal currentSeasonId={seasonId ?? ''} />
-        <Button isDisabled colorScheme="red" leftIcon={<FaRedoAlt />}>
-          Pontok újraszámítása
-        </Button>
+        <RecalculateModal seasonId={seasonId ?? ''} />
       </HStack>
 
       <Heading mt={4} size="md" as="h2">

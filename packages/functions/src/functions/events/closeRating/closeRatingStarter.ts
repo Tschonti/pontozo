@@ -9,7 +9,7 @@ import { orchestratorName } from './closeRatingOrchestrator'
 
 /**
  * Called automatically every night to make events that have been rateable for more than ~8 days unrateable.
- * Also deletes them from the cache. TODO
+ * Then it starts the closeRating orchestration that will eventually validate and accumulate the ratings.
  */
 const closeRatingStarter = async (myTimer: Timer, context: InvocationContext): Promise<void> => {
   try {

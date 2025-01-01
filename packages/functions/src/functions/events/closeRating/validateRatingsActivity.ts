@@ -9,6 +9,11 @@ import { ActivityOutput } from './closeRatingOrchestrator'
 
 export const validateRatingsActivityName = 'validateRatingsActivity'
 
+/**
+ * Durable Functions activity that validates all the ratings for a given event. For now it does nothing, just a placeholder TODO
+ * @param eventId ID of the event whose ratings wil be validated
+ * @returns whether the operation succeeded and the eventId
+ */
 const validateRatings: ActivityHandler = async (eventId: number, context: InvocationContext): Promise<ActivityOutput> => {
   try {
     const ads = await new DataSource(DBConfig).initialize()

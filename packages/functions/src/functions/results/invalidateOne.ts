@@ -1,24 +1,26 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { AlertLevel, EventState } from '@pontozo/common'
-import { getRedisClient } from '../../redis/redisClient'
 import { newAlertItem } from '../../service/alert.service'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Event from '../../typeorm/entities/Event'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { handleException } from '../../util/handleException'
 
+/**
+ * A util function to invalidate the rating results of an event. It sets its state to 'INVALIDATED',
+ * so the next time the closeRating orchestrator will be run, the results will be recalculated for this event as well.
+ * It can't be called from the client, only manualy with an admin JWT.
+ */
 export const invalidateOneResult = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
   try {
     const user = await getUserFromHeaderAndAssertAdmin(req, context)
     const eventId = parseInt(req.params.eventId)
     const ads = await getAppDataSource(context)
     const eventRepo = ads.getRepository(Event)
-    const redisClient = await getRedisClient(context)
 
     const event = await eventRepo.findOne({ where: { id: eventId } })
     event.state = EventState.INVALIDATED
     await eventRepo.save(event)
-    await redisClient.del(`ratingResult:${eventId}`)
     await newAlertItem({
       ads,
       context,

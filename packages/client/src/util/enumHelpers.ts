@@ -131,5 +131,5 @@ export const eventStateColor: EventStateDict = {
   [EventState.VALIDATING]: 'gray',
   [EventState.ACCUMULATING]: 'gray',
   [EventState.RESULTS_READY]: 'orange',
-  [EventState.INVALIDATED]: 'yellow',
+  [EventState.INVALIDATED]: 'mtfszRed',
 }

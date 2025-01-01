@@ -14,14 +14,14 @@ import {
 } from '@chakra-ui/react'
 import { ChangeEvent, useMemo, useState } from 'react'
 import { FaFileImport } from 'react-icons/fa'
-import { useCopyWeightsMutations, useFetchSeasons } from 'src/api/hooks/seasonHooks'
+import { useCopyWeightsMutation, useFetchSeasons } from 'src/api/hooks/seasonHooks'
 import { LoadingSpinner } from 'src/components/commons/LoadingSpinner'
 import { queryClient } from 'src/util/queryClient'
 
 export const SourceSeasonSelectorModal = ({ currentSeasonId }: { currentSeasonId: string }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isLoading, data } = useFetchSeasons()
-  const { mutate } = useCopyWeightsMutations(currentSeasonId)
+  const { mutate } = useCopyWeightsMutation(currentSeasonId)
   const [selectedSeasonId, setSelectedSeasonId] = useState<string>()
   const toast = useToast()
 
