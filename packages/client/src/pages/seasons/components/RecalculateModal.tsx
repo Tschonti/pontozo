@@ -29,6 +29,14 @@ export const RecalculateModal = ({ seasonId }: { seasonId: string }) => {
           status: 'success',
         })
       },
+      onError: (error) => {
+        console.error(error)
+        toast({
+          title: 'Hiba az újraszámítás kezdeményezése közben!',
+          description: error.message,
+          status: 'error',
+        })
+      },
     })
   }
 
