@@ -7,6 +7,7 @@ import { AuthorizedPage } from './pages/authorized/Authorized.page'
 import { ErrorPage } from './pages/error/error.page'
 import { EventDetailsPage } from './pages/events/EventDetails.page'
 import { IndexPage } from './pages/events/Index.page'
+import { ImpressumPage } from './pages/impressum/Impressum.page'
 import { LoginPage } from './pages/Login.page'
 import { ProfilePage } from './pages/profile/Profile.page'
 import { RatingPage } from './pages/ratings/Rating.page'
@@ -103,6 +104,9 @@ export const App = () => {
                 />
               </Route>
             </Route>
+          </Route>
+          <Route path={PATHS.IMPRESSUM}>
+            <Route index element={<ImpressumPage />} />
           </Route>
         </Routes>
       </Suspense>

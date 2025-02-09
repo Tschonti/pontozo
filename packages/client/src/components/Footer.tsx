@@ -24,7 +24,10 @@ export const Footer: FC = () => {
             <Link href="https://mtfsz.hu" color="brand.500" isExternal>
               MTFSZ
             </Link>{' '}
-            megbízásából.
+            megbízásából.{' '}
+            <Link href="/impressum" color="brand.500">
+              Impresszum
+            </Link>
           </Text>
         </Stack>
 
