@@ -14,9 +14,7 @@ import { APIM_HOST, APIM_KEY } from '../../util/env'
  */
 export const importEvents = async (myTimer: Timer, context: InvocationContext): Promise<void> => {
   try {
-    const pevents = getRateableEvents(APIM_KEY, APIM_HOST)
-    const pads = getAppDataSource(context)
-    const [events, ads] = await Promise.all([pevents, pads])
+    const ads = await getAppDataSource(context)
 
     const eventRepo = ads.getRepository(Event)
     const stageRepo = ads.getRepository(Stage)
@@ -28,7 +26,8 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
       context.log('No active season, skipping event import...')
       return
     }
-    const eventCountBefore = await eventRepo.count()
+
+    const [events, eventCountBefore] = await Promise.all([getRateableEvents(APIM_KEY, APIM_HOST), eventRepo.count()])
     const eventsToSave = events.map((e) => {
       const event = eventRepo.create({
         id: e.esemeny_id,

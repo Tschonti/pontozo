@@ -24,6 +24,6 @@ provider "azapi" {
 }
 
 resource "azurerm_resource_group" "pontozo-rg" {
-  name     = "pontozo"
+  name     = "pontozo-next"
   location = "Poland Central"
 }
