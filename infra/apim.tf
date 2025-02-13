@@ -160,25 +160,16 @@ resource "azurerm_api_management_api_policy" "mtfsz-api-policy" {
 XML
 }
 
-# resource "azapi_resource" "auth-provider" {
-#   type      = "Microsoft.ApiManagement/service/authorizationProviders@2023-05-01-preview"
-#   name      = "mtfsz"
-#   parent_id = azurerm_api_management.apim.id
-#   body = jsonencode({
-#     properties = {
-#       displayName      = "MTFSZ"
-#       identityProvider = "oauth2"
-#       oauth2 = {
-#         grantTypes = {
-#           clientCredentials = {
-#             authorizationUrl = "https://adatbank2.mtfsz.hu/oauth/v2/auth"
-#             tokenUrl         = "https://adatbank2.mtfsz.hu/oauth/v2/token"
-#           }
-#         }
-#       }
-#     }
-#   })
-# }
+resource "azurerm_api_management_logger" "apim-logger" {
+  name                = "pontozo-apim-logger"
+  api_management_name = azurerm_api_management.apim.name
+  resource_group_name = azurerm_resource_group.pontozo-rg.name
+  resource_id         = azurerm_application_insights.appinsights.id
+
+  application_insights {
+    instrumentation_key = azurerm_application_insights.appinsights.instrumentation_key
+  }
+}
 
 
 resource "azurerm_api_management_subscription" "backend-sub" {
