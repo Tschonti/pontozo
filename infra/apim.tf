@@ -171,6 +171,19 @@ resource "azurerm_api_management_logger" "apim-logger" {
   }
 }
 
+resource "azurerm_api_management_api_diagnostic" "mtfsz-api-diagnostic" {
+  identifier               = "applicationinsights"
+  resource_group_name      = azurerm_resource_group.pontozo-rg.name
+  api_management_name      = azurerm_api_management.apim.name
+  api_name                 = azurerm_api_management_api.mtfsz-api.name
+  api_management_logger_id = azurerm_api_management_logger.apim-logger.id
+
+  sampling_percentage       = 5.0
+  always_log_errors         = true
+  verbosity                 = "verbose"
+  http_correlation_protocol = "W3C"
+}
+
 
 resource "azurerm_api_management_subscription" "backend-sub" {
   api_management_name = azurerm_api_management.apim.name
