@@ -62,7 +62,8 @@ export default function () {
                 <AlertTitle>{a.description}</AlertTitle>
               </HStack>
               <AlertDescription>
-                {new Date(a.timestamp).toLocaleDateString('hu')} {new Date(a.timestamp).toLocaleTimeString('hu')}
+                {new Date(a.timestamp).toLocaleDateString('hu', { timeZone: 'Europe/Budapest' })}{' '}
+                {new Date(a.timestamp).toLocaleTimeString('hu', { timeZone: 'Europe/Budapest' })}
               </AlertDescription>
             </Alert>
           ))
