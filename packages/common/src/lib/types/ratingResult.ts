@@ -12,7 +12,10 @@ export interface RatingResult {
   stageId?: number
   criterionId?: number
   categoryId?: number
-  items: RatingResultItem[]
+  items?: RatingResultItem[]
+  score: number
+  competitorWeight?: number
+  organiserWeight?: number
 }
 
 export interface RatingResultWithJoins extends RatingResult {
