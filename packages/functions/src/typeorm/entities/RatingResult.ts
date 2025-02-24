@@ -43,6 +43,15 @@ export class RatingResult implements Omit<IRatingResult, 'items' | 'criterion'> 
   @ManyToOne(() => Category, (c) => c.ratingResults, { onDelete: 'CASCADE', nullable: true })
   category?: Category
 
-  @Column({ type: 'text' })
-  items: string
+  @Column({ type: 'text', nullable: true })
+  items?: string
+
+  @Column({ nullable: true, type: 'real' })
+  organiserWeight?: number
+
+  @Column({ nullable: true, type: 'real' })
+  competitorWeight?: number
+
+  @Column({ type: 'real' })
+  score: number
 }
