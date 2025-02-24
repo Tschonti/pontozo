@@ -48,9 +48,9 @@ export const MultiSelect = <T extends string | number | boolean | object>({ allT
           {selected.length === options.length
             ? allText
             : options
-              .filter((o) => selected.includes(o.value))
-              .map((s) => s.label)
-              .join(', ')}
+                .filter((o) => selected.includes(o.value))
+                .map((s) => s.label)
+                .join(', ')}
         </Text>
         <FaChevronDown color="#1a202c" size="11px" />
       </HStack>

@@ -1,30 +1,29 @@
-import { Text, Tooltip } from '@chakra-ui/react'
-import { RatingResultItem } from '@pontozo/common'
+import { Text } from '@chakra-ui/react'
+import { RatingResult } from '@pontozo/common'
 import { useResultTableContext } from 'src/api/contexts/useResultTableContext'
 import { getResultItem } from 'src/util/resultItemHelpers'
 import { TD } from './table/TD'
 
 interface Props {
-  resultItems: RatingResultItem[]
+  ratingResult?: RatingResult
   bold?: boolean
 }
 
-export const EventResultCell = ({ resultItems, bold = false }: Props) => {
-  const { selectedAgeGroups, selectedRoles } = useResultTableContext()
-  const item = getResultItem(resultItems, selectedRoles, selectedAgeGroups)
-  if (!item)
+export const EventResultCell = ({ ratingResult, bold = false }: Props) => {
+  const { selectedAgeGroups, selectedRoles, filtersApplied } = useResultTableContext()
+  const item = getResultItem(ratingResult?.items ?? [], selectedRoles, selectedAgeGroups)
+  if (!ratingResult) {
+    return <TD centered>-</TD>
+  }
+  if (!filtersApplied || !item)
     return (
       <TD centered>
-        <Tooltip hasArrow label="Teljes versenyre vonatkozó szempont">
-          -
-        </Tooltip>
+        <Text fontWeight={bold ? 'semibold' : 'normal'}>{ratingResult.score === -1 ? '-' : ratingResult.score.toFixed(2)}</Text>
       </TD>
     )
   return (
     <TD centered>
-      <Tooltip hasArrow label={item.count + ' értékelés alapján'}>
-        <Text fontWeight={bold ? 'semibold' : 'normal'}>{item.average === -1 ? '-' : item.average.toFixed(2)}</Text>
-      </Tooltip>
+      <Text fontWeight={bold ? 'semibold' : 'normal'}>{item.average === -1 ? '-' : item.average.toFixed(2)}</Text>
     </TD>
   )
 }

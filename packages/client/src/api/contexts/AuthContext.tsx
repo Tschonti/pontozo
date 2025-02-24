@@ -24,9 +24,9 @@ export const AuthContext = createContext<AuthContextType>({
   loggedInUser: undefined,
   loggedInUserLoading: false,
   loggedInUserError: undefined,
-  onLoginSuccess: () => { },
-  onLogout: () => { },
-  refetchUser: async () => { },
+  onLoginSuccess: () => {},
+  onLogout: () => {},
+  refetchUser: async () => {},
 })
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {

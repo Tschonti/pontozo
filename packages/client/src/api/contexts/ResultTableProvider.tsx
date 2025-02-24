@@ -156,6 +156,7 @@ export const ResultTableProvider = ({ children, minimal = false }: Props) => {
         includeTotal,
         sortCriterion,
         sortOrder,
+        filtersApplied: selectedRoles.length < ALL_ROLES.length || selectedAgeGroups.length < ALL_AGE_GROUPS.length,
         setSelectedCriterionIds,
         setSelectedCategoryIds,
         setSelectedRoles,
