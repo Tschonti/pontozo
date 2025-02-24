@@ -37,12 +37,14 @@ type CriterionResult<T> = ResulstPerRoleAndGroup<T> & {
 
 type CategoryTempResults = Record<number, CriterionResult<TempAverage>>
 
+type StageResults = ResulstPerRoleAndGroup<Average> & { stageId: number }
+
 type CriterionResultWithAvg = CriterionResult<Average> & {
   criterionId?: number
-  stages?: (ResulstPerRoleAndGroup<Average> & { stageId: number })[]
+  stages?: StageResults[]
 }
 
-type CategoryWithCriteriaResults = Category & {
+export type CategoryWithCriteriaResults = Category & {
   criteriaResults: CriterionResultWithAvg[]
   score: number
   sumOfWeight: number
@@ -147,15 +149,33 @@ const calcAvgForCriterion = (tempResult: ResulstPerRoleAndGroup<TempAverage>, re
   })
 }
 
+const calclateRoleAvgForStageSpecificCriterion = (average: Average, stages: StageResults[], stageFinder: (sr: StageResults) => Average) => {
+  let stagesWithNoRatings = 0
+  average.count = stages.reduce((count, stage) => {
+    const newCount = stageFinder(stage).count
+    if (newCount === 0) {
+      stagesWithNoRatings++
+    }
+    return count + newCount
+  }, 0)
+  average.average =
+    average.count === 0
+      ? -1
+      : stages.reduce((sum, stage) => {
+          const newAverage = stageFinder(stage).average
+          if (newAverage === -1) {
+            return sum
+          }
+          return sum + newAverage
+        }, 0) /
+        (stages.length - stagesWithNoRatings)
+}
+
 const calcGeneralAvgForStageSepcificCriterion = (results: CriterionResultWithAvg) => {
   ALL_ROLES.forEach((rr) => {
-    results[rr].count = results.stages.reduce((count, stage) => count + stage[rr].count, 0)
-    results[rr].average =
-      results[rr].count === 0 ? -1 : results.stages.reduce((sum, stage) => sum + stage[rr].average, 0) / results.stages.length
+    calclateRoleAvgForStageSpecificCriterion(results[rr], results.stages, (sr) => sr[rr])
     ALL_AGE_GROUPS.forEach((ag) => {
-      results[ag][rr].count = results.stages.reduce((count, stage) => count + stage[ag][rr].count, 0)
-      results[ag][rr].average =
-        results[ag][rr].count === 0 ? -1 : results.stages.reduce((sum, stage) => sum + stage[ag][rr].average, 0) / results.stages.length
+      calclateRoleAvgForStageSpecificCriterion(results[ag][rr], results.stages, (sr) => sr[ag][rr])
     })
   })
 }

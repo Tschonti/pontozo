@@ -9,7 +9,13 @@ import Event from '../../../typeorm/entities/Event'
 import EventRating from '../../../typeorm/entities/EventRating'
 import { RatingResult } from '../../../typeorm/entities/RatingResult'
 import { parseRatingResults } from '../../../util/parseRatingResults'
-import { accumulateCriteria, calculateScoresForStage, extractStageResults, mapToRatingResults } from '../../../util/ratingAverage'
+import {
+  accumulateCriteria,
+  calculateScoresForStage,
+  CategoryWithCriteriaResults,
+  extractStageResults,
+  mapToRatingResults,
+} from '../../../util/ratingAverage'
 import { ActivityOutput } from './closeRatingOrchestrator'
 
 export const calculateAvgRatingActivityName = 'calculateAvgRatingActivity'
@@ -50,12 +56,12 @@ const calculateAvgRating: ActivityHandler = async (eventId: number, context: Inv
     const stageSpecificCategories = categories.filter((cat) => !cat.criteria.some((crit) => !crit.stageSpecific))
 
     const catResult = accumulateCriteria(eventRatings, categories, event.stages)
-    // TODO only one stage???
-    const results = extractStageResults(catResult, stageSpecificCategories, event.stages)
-    const rootScores = [catResult, ...results].map((res) => calculateScoresForStage(res))
-    const rris = [catResult, ...results].map((result, idx) => mapToRatingResults(event.id, result, rootScores[idx]))
-
-    const redisClient = await getRedisClient(context)
+    let stageResults: CategoryWithCriteriaResults[][] = []
+    if (event.stages.length > 1) {
+      stageResults = extractStageResults(catResult, stageSpecificCategories, event.stages)
+    }
+    const rootScores = [catResult, ...stageResults].map((res) => calculateScoresForStage(res))
+    const rris = [catResult, ...stageResults].map((result, idx) => mapToRatingResults(event.id, result, rootScores[idx]))
 
     await ads.manager.transaction(async (transactionalEntityManager) => {
       const promises = rris.map(async (sr) => {
@@ -75,6 +81,7 @@ const calculateAvgRating: ActivityHandler = async (eventId: number, context: Inv
     })
     const { season, ...restOfEvent } = event
     const parsed = parseRatingResults(insertedResults, restOfEvent)
+    const redisClient = await getRedisClient(context)
     await redisClient.set(`ratingResult:${event.id}`, JSON.stringify(parsed))
     context.log(`Results of event:${event.id} saved to cache.`)
 
