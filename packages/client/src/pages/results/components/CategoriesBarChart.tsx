@@ -3,7 +3,7 @@ import { EventWithResults, RatingResultWithJoins, StageWithResults } from '@pont
 import { Bar, BarChart, CartesianGrid, Legend, Text, Tooltip, XAxis, YAxis } from 'recharts'
 import { useResultTableContext } from 'src/api/contexts/useResultTableContext'
 import { chartColors } from 'src/util/chartColors'
-import { getResultItem } from 'src/util/resultItemHelpers'
+import { getCriterionScore } from 'src/util/resultItemHelpers'
 import { BarChartData } from '../types/BarChartData'
 
 type Props = {
@@ -15,7 +15,7 @@ export const CategoriesBarChart = ({ event, setSelectedCategoryId }: Props) => {
   const { selectedAgeGroups, selectedRoles } = useResultTableContext()
 
   const parseEventData = (rootResult: RatingResultWithJoins, stages: StageWithResults[]): BarChartData[] => {
-    const rootValue = +(getResultItem(rootResult.items, selectedRoles, selectedAgeGroups)?.average ?? -1).toFixed(2)
+    const rootValue = +(getCriterionScore(rootResult.items, selectedRoles, selectedAgeGroups)?.average ?? -1).toFixed(2)
     const rootOutput: BarChartData = {
       name: 'Összesített átlag',
       event: rootValue < 0 ? '-' : rootValue,
@@ -23,7 +23,7 @@ export const CategoriesBarChart = ({ event, setSelectedCategoryId }: Props) => {
     if (stages.length > 1) {
       stages.forEach((s) => {
         if (s.ratingResults) {
-          const stageValue = +(getResultItem(s.ratingResults.items, selectedRoles, selectedAgeGroups)?.average ?? -1).toFixed(2)
+          const stageValue = +(getCriterionScore(s.ratingResults.items, selectedRoles, selectedAgeGroups)?.average ?? -1).toFixed(2)
           rootOutput[s.id] = stageValue < 0 ? '-' : stageValue
         }
       })
@@ -31,7 +31,7 @@ export const CategoriesBarChart = ({ event, setSelectedCategoryId }: Props) => {
     return [
       rootOutput,
       ...(rootResult.children?.map((r) => {
-        const rootValue = +(getResultItem(r.items, selectedRoles, selectedAgeGroups)?.average ?? -1).toFixed(2)
+        const rootValue = +(getCriterionScore(r.items, selectedRoles, selectedAgeGroups)?.average ?? -1).toFixed(2)
         const output: BarChartData = {
           categoryId: r.categoryId,
           name: r.category?.name ?? '',
@@ -41,7 +41,7 @@ export const CategoriesBarChart = ({ event, setSelectedCategoryId }: Props) => {
           stages.forEach((s) => {
             if (s.ratingResults) {
               const stageValue = +(
-                getResultItem(
+                getCriterionScore(
                   s.ratingResults.children?.find((c) => c.categoryId === r.categoryId)?.items ?? [],
                   selectedRoles,
                   selectedAgeGroups

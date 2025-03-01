@@ -10,33 +10,41 @@ import {
 } from '@pontozo/common'
 import { SortOrder } from 'src/api/contexts/ResultTableContext'
 
-export const getResultItem = (
-  resultItems: RatingResultItem[],
-  roles: RatingRole[],
-  ageGroups: AgeGroup[]
-): RatingResultItem | undefined => {
-  if (roles.length === ALL_ROLES.length && ageGroups.length === ALL_AGE_GROUPS.length) {
-    return resultItems.find((ri) => !ri.role && !ri.ageGroup)
-  } else if (roles.length < ALL_ROLES.length) {
-    let sum = 0
-    let count = 0
-    resultItems.forEach((ri) => {
-      if (ri.role && roles.includes(ri.role as RatingRole)) {
-        sum += ri.average * ri.count
-        count += ri.count
-      }
-    })
-    return generateResultItem(count, sum)
+export const getCriterionScore = (result: RatingResult, roles: RatingRole[], ageGroups: AgeGroup[]): number => {
+  if ((roles.length === ALL_ROLES.length && ageGroups.length === ALL_AGE_GROUPS.length) || !result.items) {
+    return result.score
   } else {
-    let sum = 0
-    let count = 0
-    resultItems.forEach((ri) => {
-      if (ri.ageGroup && ageGroups.includes(ri.ageGroup as AgeGroup)) {
-        sum += ri.average * ri.count
-        count += ri.count
-      }
-    })
-    return generateResultItem(count, sum)
+    const aggregated = ageGroups
+      .map((ag) => {
+        const [competitor, coach, organiser, jury] = ALL_ROLES.map((rr) =>
+          roles.includes(rr)
+            ? result.items?.find((rri) => rri.role === rr && rri.ageGroup === ag) ?? { count: 0, average: -1 }
+            : { count: 0, average: -1 }
+        )
+
+        return {
+          compCount: competitor.count + coach.count,
+          compSum: competitor.count * competitor.average + coach.count * coach.average,
+          orgCount: organiser.count + jury.count,
+          orgSum: organiser.count * organiser.average + jury.count * jury.average,
+        }
+      })
+      .reduce(
+        (sum, agc) => ({
+          compCount: sum.compCount + agc.compCount,
+          compSum: sum.compSum + agc.compSum,
+          orgCount: sum.orgCount + agc.orgCount,
+          orgSum: sum.orgSum + agc.orgSum,
+        }),
+        { compCount: 0, compSum: 0, orgCount: 0, orgSum: 0 }
+      )
+
+    if (aggregated.compCount + aggregated.orgCount === 0) return -1
+    return (
+      ((aggregated.compCount > 0 ? (result.competitorWeight ?? 1) * (aggregated.compSum / aggregated.compCount) : 0) +
+        (aggregated.orgCount > 0 ? (result.organiserWeight ?? 1) * (aggregated.orgSum / aggregated.orgCount) : 0)) /
+      ((aggregated.compCount ? result.competitorWeight ?? 1 : 0) + (aggregated.orgCount ? result.organiserWeight ?? 1 : 0))
+    )
   }
 }
 
@@ -48,9 +56,9 @@ export const sortEvents = (
   ageGroups: AgeGroup[]
 ) => {
   return [...eventResults].sort((er1, er2) => {
-    const rri1 = getResultItem((er1.results.find(ratingResultFinder)?.items ?? []) as RatingResultItem[], roles, ageGroups)
-    const rri2 = getResultItem((er2.results.find(ratingResultFinder)?.items ?? []) as RatingResultItem[], roles, ageGroups)
-    return (sortOrder === 'desc' ? -1 : 1) * ((rri1?.average || 0) - (rri2?.average || 0))
+    const rri1 = getCriterionScore(er1.results.find(ratingResultFinder) as RatingResult, roles, ageGroups)
+    const rri2 = getCriterionScore(er2.results.find(ratingResultFinder) as RatingResult, roles, ageGroups)
+    return (sortOrder === 'desc' ? -1 : 1) * (rri1 - rri2)
   })
 }
 

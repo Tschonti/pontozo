@@ -113,14 +113,11 @@ const addToTempResults = (results: CategoryTempResults, cr: CriterionRating, age
     results[cr.criterionId] = createEmptyTempResults()
   }
 
-  // only calculate general averages if the criterion is not stage specific
-  if (!cr.stageId) {
-    results[cr.criterionId][role].count++
-    results[cr.criterionId][role].sum += cr.value
+  results[cr.criterionId][role].count++
+  results[cr.criterionId][role].sum += cr.value
 
-    results[cr.criterionId][ageGroup][role].count++
-    results[cr.criterionId][ageGroup][role].sum += cr.value
-  }
+  results[cr.criterionId][ageGroup][role].count++
+  results[cr.criterionId][ageGroup][role].sum += cr.value
 
   if (cr.stageId && !results[cr.criterionId].stages?.[cr.stageId]) {
     if (!results[cr.criterionId].stages) {
@@ -145,37 +142,6 @@ const calcAvgForCriterion = (tempResult: ResulstPerRoleAndGroup<TempAverage>, re
     ALL_AGE_GROUPS.forEach((ag) => {
       results[ag][rr].count = tempResult[ag][rr].count
       results[ag][rr].average = tempResult[ag][rr].count === 0 ? -1 : tempResult[ag][rr].sum / tempResult[ag][rr].count
-    })
-  })
-}
-
-const calclateRoleAvgForStageSpecificCriterion = (average: Average, stages: StageResults[], stageFinder: (sr: StageResults) => Average) => {
-  let stagesWithNoRatings = 0
-  average.count = stages.reduce((count, stage) => {
-    const newCount = stageFinder(stage).count
-    if (newCount === 0) {
-      stagesWithNoRatings++
-    }
-    return count + newCount
-  }, 0)
-  average.average =
-    average.count === 0
-      ? -1
-      : stages.reduce((sum, stage) => {
-          const newAverage = stageFinder(stage).average
-          if (newAverage === -1) {
-            return sum
-          }
-          return sum + newAverage
-        }, 0) /
-        (stages.length - stagesWithNoRatings)
-}
-
-const calcGeneralAvgForStageSepcificCriterion = (results: CriterionResultWithAvg) => {
-  ALL_ROLES.forEach((rr) => {
-    calclateRoleAvgForStageSpecificCriterion(results[rr], results.stages, (sr) => sr[rr])
-    ALL_AGE_GROUPS.forEach((ag) => {
-      calclateRoleAvgForStageSpecificCriterion(results[ag][rr], results.stages, (sr) => sr[ag][rr])
     })
   })
 }
@@ -207,7 +173,6 @@ export const accumulateCriteria = (
       }
 
       if (tempResult) {
-        // for stage specific criteria, the root scores are based on the results of the stages, for normal criteria they are calculated from the general temp results.
         if (tempResult.stages) {
           Object.keys(tempResult.stages).forEach((stageId) => {
             calcAvgForCriterion(
@@ -215,10 +180,8 @@ export const accumulateCriteria = (
               results.stages.find((s) => s.stageId === parseInt(stageId))
             )
           })
-          calcGeneralAvgForStageSepcificCriterion(results)
-        } else {
-          calcAvgForCriterion(tempResult, results)
         }
+        calcAvgForCriterion(tempResult, results)
       }
 
       return results
