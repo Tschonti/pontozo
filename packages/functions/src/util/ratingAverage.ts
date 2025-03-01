@@ -270,12 +270,6 @@ export const calculateScoresForStage = (results: CategoryWithCriteriaResults[]) 
 
 const mapCriterionResultToRRI = (critRes: CriterionResultWithAvg): RatingResultItem[] => {
   const rris: RatingResultItem[] = []
-  ALL_ROLES.forEach((rr) => {
-    const result = critRes[rr]
-    if (result.count > 0) {
-      rris.push({ ...result, role: rr })
-    }
-  })
   ALL_AGE_GROUPS.forEach((ag) => {
     ALL_ROLES.forEach((rr) => {
       const result = critRes[ag][rr]
