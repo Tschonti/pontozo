@@ -8,6 +8,7 @@ import Season from '../../typeorm/entities/Season'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { currentSeasonFilter } from '../../util/currentSeasonFilter'
 import { handleException } from '../../util/handleException'
+import { parseRatingResultsWithChildren } from '../../util/parseRatingResults'
 import { PontozoResponse } from '../../util/pontozoResponse'
 
 export const getEventResults = async (req: HttpRequest, context: InvocationContext): Promise<PontozoResponse<EventResultList>> => {
@@ -62,19 +63,18 @@ export const getEventResults = async (req: HttpRequest, context: InvocationConte
         { criterionId: In(criteria.map((c) => c.id)), eventId: In(filteredEvents.map((e) => e.id)) },
         includeTotal ? { categoryId: IsNull(), criterionId: IsNull() } : undefined,
       ],
+      relations: { children: { children: true } },
     })
     const eventResults: EventResult[] = filteredEvents
       .map((e) => ({
         eventId: e.id,
         eventName: e.name,
         startDate: e.startDate,
-        results: results.filter((r) => r.eventId === e.id && !r.stageId).map((r) => ({ ...r, items: JSON.parse(r.items ?? '[]') })),
+        results: results.filter((r) => r.eventId === e.id && !r.stageId).map(parseRatingResultsWithChildren),
         stages: e.stages.map((s) => ({
           stageId: s.id,
           stageName: s.name,
-          results: results
-            .filter((r) => r.eventId === e.id && r.stageId === s.id)
-            .map((r) => ({ ...r, items: JSON.parse(r.items ?? '[]') })),
+          results: results.filter((r) => r.eventId === e.id && r.stageId === s.id).map(parseRatingResultsWithChildren),
         })),
       }))
       .filter((er) => er.results.some((r) => r.score > -1))

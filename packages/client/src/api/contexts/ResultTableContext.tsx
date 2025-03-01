@@ -15,7 +15,6 @@ export type ResultTableContextType = {
   selectedRoles: RatingRole[]
   sortCriterion?: CriterionId
   sortOrder: SortOrder
-  filtersApplied: boolean
 
   setSelectedCategoryIds: (newValue: number[]) => void
   setSelectedCriterionIds: (newValue: number[]) => void
@@ -45,7 +44,6 @@ export const ResultTableContext = createContext<ResultTableContextType>({
   selectedRoles: [],
   sortCriterion: undefined,
   sortOrder: 'desc',
-  filtersApplied: false,
 
   setSelectedCategoryIds: () => {},
   setSelectedCriterionIds: () => {},
