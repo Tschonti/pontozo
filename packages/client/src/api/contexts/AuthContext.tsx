@@ -37,12 +37,14 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const { mutate: verifyUserRoles } = useValidateUserRolesMutation()
 
   useEffect(() => {
-    verifyUserRoles(undefined, {
-      onSuccess: (res) => {
-        Cookies.set(CookieKeys.JWT_TOKEN, res.token, { expires: 2 })
-      },
-    })
-  }, [verifyUserRoles])
+    if (isLoggedIn) {
+      verifyUserRoles(undefined, {
+        onSuccess: (res) => {
+          Cookies.set(CookieKeys.JWT_TOKEN, res.token, { expires: 2 })
+        },
+      })
+    }
+  }, [verifyUserRoles, isLoggedIn])
 
   const onLoginSuccess = (jwt: string) => {
     Cookies.set(CookieKeys.JWT_TOKEN, jwt, { expires: 2 })
