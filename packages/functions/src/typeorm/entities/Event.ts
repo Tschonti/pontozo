@@ -59,6 +59,9 @@ class Event implements DbEvent {
 
   @Column()
   seasonId: number
+
+  @Column({ type: 'datetime', nullable: true })
+  scoresCalculatedAt?: Date
 }
 
 export default Event

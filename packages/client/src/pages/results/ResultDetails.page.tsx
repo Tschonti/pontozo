@@ -38,7 +38,7 @@ export const ResultDetailsPage = () => {
             !critRes.criterion.stageSpecific &&
             critRes.criterion.roles.length === ALL_ROLES.length
           ) {
-            setRatingCount(critRes.items.find((rri) => !rri.ageGroup && !rri.role)?.count)
+            setRatingCount(critRes.items?.find((rri) => !rri.ageGroup && !rri.role)?.count)
             return
           }
         }
@@ -79,6 +79,11 @@ export const ResultDetailsPage = () => {
         {ratingCount !== undefined && (
           <Text>
             Összesen <b>{ratingCount}</b> felhasználó értékelte a versenyt.
+          </Text>
+        )}
+        {event.scoresCalculatedAt && (
+          <Text>
+            Az eredmények számításának időpontja: <b>{new Date(event.scoresCalculatedAt).toLocaleTimeString('hu')}</b>
           </Text>
         )}
       </Box>
