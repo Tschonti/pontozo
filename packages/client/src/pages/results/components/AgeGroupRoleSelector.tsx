@@ -31,7 +31,6 @@ export const AgeGroupRoleSelector = () => {
       newArray = [...selectedAgeGroups, option.value]
     }
     setSelectedAgeGroups(newArray)
-    // setSelectedRoles(ALL_ROLES)
     saveToLocalStorage({ ageGroups: newArray })
   }
 
@@ -45,7 +44,6 @@ export const AgeGroupRoleSelector = () => {
     } else {
       newArray = [...selectedRoles, option.value]
     }
-    // setSelectedAgeGroups(ALL_AGE_GROUPS)
     setSelectedRoles(newArray)
     saveToLocalStorage({ roles: newArray })
   }
