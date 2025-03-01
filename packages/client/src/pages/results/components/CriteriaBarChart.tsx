@@ -21,7 +21,7 @@ export const CriteriaBarChart = ({ event, selectedCategoryId }: Props) => {
       event.ratingResults.children
         ?.find((cat) => cat.categoryId === selectedCategoryId)
         ?.children?.map((r) => {
-          const rootValue = +(getScore(r, selectedRoles, selectedAgeGroups) ?? -1).toFixed(2)
+          const rootValue = +(getScore(selectedRoles, selectedAgeGroups, r) ?? -1).toFixed(2)
           const output: BarChartData = {
             name: r.criterion?.name ?? '',
             event: rootValue < 0 ? '-' : rootValue,
@@ -31,11 +31,11 @@ export const CriteriaBarChart = ({ event, selectedCategoryId }: Props) => {
               if (s.ratingResults) {
                 const stageValue = +(
                   getScore(
+                    selectedRoles,
+                    selectedAgeGroups,
                     s.ratingResults.children
                       ?.find((cat) => cat.categoryId === selectedCategoryId)
-                      ?.children?.find((c) => c.criterionId === r.criterionId)!,
-                    selectedRoles,
-                    selectedAgeGroups
+                      ?.children?.find((c) => c.criterionId === r.criterionId)
                   ) ?? -1
                 ).toFixed(2)
                 output[s.id] = stageValue < 0 ? '-' : stageValue

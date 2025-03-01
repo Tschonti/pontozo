@@ -8,9 +8,8 @@ import { useFetchEventMessages, useFetchEventResults } from 'src/api/hooks/resul
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { LoadingSpinner } from 'src/components/commons/LoadingSpinner'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
-import { formatDateRange } from 'src/util/dateHelpers'
+import { formatDate, formatDateRange } from 'src/util/dateHelpers'
 import { PATHS } from 'src/util/paths'
-import { filterEventMessages } from 'src/util/resultItemHelpers'
 import { EventRankBadge } from '../events/components/EventRankBadge'
 import { AgeGroupRoleSelector } from './components/AgeGroupRoleSelector'
 import { CategoriesBarChart } from './components/CategoriesBarChart'
@@ -28,9 +27,15 @@ export const ResultDetailsPage = () => {
 
   useEffect(() => {
     if (messageData?.messages) {
-      setFilteredMessages(filterEventMessages(messageData.messages, selectedRoles, selectedAgeGroups))
+      setFilteredMessages(messageData.messages.filter((m) => selectedRoles.includes(m.role) && selectedAgeGroups.includes(m.ageGroup)))
     }
   }, [messageData, selectedAgeGroups, selectedRoles])
+
+  useEffect(() => {
+    if (event) {
+      setSelectedCategoryId(event.ratingResults.children?.[0].categoryId)
+    }
+  }, [event])
 
   if (isLoading) {
     return <LoadingSpinner />
@@ -61,7 +66,7 @@ export const ResultDetailsPage = () => {
         </Text>
         {event.scoresCalculatedAt && (
           <Text>
-            Az eredmények számításának időpontja: <b>{new Date(event.scoresCalculatedAt).toLocaleTimeString('hu')}</b>
+            Az eredmények számításának időpontja: <b>{formatDate(event.scoresCalculatedAt)}</b>
           </Text>
         )}
       </Box>

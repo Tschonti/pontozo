@@ -9,7 +9,7 @@ import { EventRatingStateBadge } from 'src/components/commons/EventRatingStateBa
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { LoginNavigate } from 'src/components/commons/LoginNavigate'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
-import { formatDateRange } from 'src/util/dateHelpers'
+import { formatDateRange, getRatingEndDate, getRatingResultPublishedDate } from 'src/util/dateHelpers'
 import { onError } from 'src/util/onError'
 import { useAuthContext } from '../../api/contexts/useAuthContext'
 import { useFetchEvent } from '../../api/hooks/eventQueryHooks'
@@ -86,9 +86,17 @@ export const EventDetailsPage = () => {
         <Heading size="md">{formatDateRange(event.startDate, event.endDate)}</Heading>
         <EventRatingStateBadge state={event.state} />
       </HStack>
-      <Text>
-        <b>Rendező{event.organisers.length > 1 && 'k'}:</b> {event.organisers.map((o) => o.shortName).join(', ')}
-      </Text>
+      <VStack alignItems="flex-start">
+        <Text>
+          <b>Rendező{event.organisers.length > 1 && 'k'}:</b> {event.organisers.map((o) => o.shortName).join(', ')}
+        </Text>
+        <Text>
+          <b>Értékelhető:</b> {getRatingEndDate(new Date(event.endDate ?? event.startDate))}-ig
+        </Text>
+        <Text>
+          <b>Értékelési eredmények várható publikálása:</b> {getRatingResultPublishedDate(new Date(event.endDate ?? event.startDate))}
+        </Text>
+      </VStack>
       <HStack flexWrap="wrap">
         {event.state === EventState.RESULTS_READY && (
           <Button onClick={() => nav(`${PATHS.RESULTS}/${eventId}`)} leftIcon={<FaMedal />} colorScheme="brand">

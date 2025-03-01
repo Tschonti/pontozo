@@ -15,7 +15,7 @@ export const CategoriesBarChart = ({ event, setSelectedCategoryId }: Props) => {
   const { selectedAgeGroups, selectedRoles } = useResultTableContext()
 
   const parseEventData = (rootResult: RatingResultWithJoins, stages: StageWithResults[]): BarChartData[] => {
-    const rootValue = +(getScore(rootResult, selectedRoles, selectedAgeGroups) ?? -1).toFixed(2)
+    const rootValue = +(getScore(selectedRoles, selectedAgeGroups, rootResult) ?? -1).toFixed(2)
     const rootOutput: BarChartData = {
       name: 'Összesített átlag',
       event: rootValue < 0 ? '-' : rootValue,
@@ -23,7 +23,7 @@ export const CategoriesBarChart = ({ event, setSelectedCategoryId }: Props) => {
     if (stages.length > 1) {
       stages.forEach((s) => {
         if (s.ratingResults) {
-          const stageValue = +(getScore(s.ratingResults, selectedRoles, selectedAgeGroups) ?? -1).toFixed(2)
+          const stageValue = +(getScore(selectedRoles, selectedAgeGroups, s.ratingResults) ?? -1).toFixed(2)
           rootOutput[s.id] = stageValue < 0 ? '-' : stageValue
         }
       })
@@ -31,7 +31,7 @@ export const CategoriesBarChart = ({ event, setSelectedCategoryId }: Props) => {
     return [
       rootOutput,
       ...(rootResult.children?.map((r) => {
-        const rootValue = +(getScore(r, selectedRoles, selectedAgeGroups) ?? -1).toFixed(2)
+        const rootValue = +(getScore(selectedRoles, selectedAgeGroups, r) ?? -1).toFixed(2)
         const output: BarChartData = {
           categoryId: r.categoryId,
           name: r.category?.name ?? '',
@@ -41,9 +41,12 @@ export const CategoriesBarChart = ({ event, setSelectedCategoryId }: Props) => {
           stages.forEach((s) => {
             if (s.ratingResults) {
               const stageValue = +(
-                getScore(s.ratingResults.children?.find((c) => c.categoryId === r.categoryId)!, selectedRoles, selectedAgeGroups) ?? -1
-              ) // TODO
-                .toFixed(2)
+                getScore(
+                  selectedRoles,
+                  selectedAgeGroups,
+                  s.ratingResults.children?.find((c) => c.categoryId === r.categoryId)
+                ) ?? -1
+              ).toFixed(2)
               output[s.id] = stageValue < 0 ? '-' : stageValue
             }
           })
