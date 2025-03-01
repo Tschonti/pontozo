@@ -28,7 +28,7 @@ export const EventResultTable = () => {
           </TH>
           {includeTotal && (
             <TH onClick={() => sortByCrit('total')} centered>
-              <CriterionHeader name="Összesített átlag" criterionId="total" sortOrder={sortOrder} sortCriterion={sortCriterion} />
+              <CriterionHeader name="Összpontszám" criterionId="total" sortOrder={sortOrder} sortCriterion={sortCriterion} />
             </TH>
           )}
           {categories.map((c) => (

@@ -107,7 +107,7 @@ export const ResultDetailsPage = () => {
         </Text>
       )}
       {filteredMessages.map((pem) => (
-        <RatingMessage ratingWithMessage={pem} refetchMessages={refetch} />
+        <RatingMessage key={pem.eventRatingId} ratingWithMessage={pem} refetchMessages={refetch} />
       ))}
     </VStack>
   )

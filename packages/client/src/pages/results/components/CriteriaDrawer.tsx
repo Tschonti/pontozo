@@ -124,8 +124,8 @@ export const CriteriaDrawer = ({ isMobile }: Props) => {
             <VStack alignItems="flex-start" gap={1}>
               <Text textAlign="justify">
                 {isMobile
-                  ? "Itt választhatod ki, mely szempont vagy kategória szerint szeretnéd megtekinteni az értékelés eredményeit. A kategóriáknál a hozzá tartozó szempontok átlagai, az 'Összesített átlag' esetében pedig minden szempont átlaga fog megjelenni."
-                  : "Itt választhatod ki, mely szempontok és kategóriák szerint szeretnéd megtekinteni az értékelés eredményeit. A kategóriáknál a hozzá tartozó szempontok átlagai, az 'Összesített átlag' esetében pedig minden szempont átlaga fog megjelenni."}
+                  ? "Itt választhatod ki, mely szempont vagy kategória szerint szeretnéd megtekinteni az értékelés eredményeit. A kategóriáknál a hozzá tartozó szempontok súlyozott átlagai, az 'Összpontszám' esetében pedig minden szempont súlyozott átlaga fog megjelenni."
+                  : "Itt választhatod ki, mely szempontok és kategóriák szerint szeretnéd megtekinteni az értékelés eredményeit. A kategóriáknál a hozzá tartozó szempontok súlyozott átlagai, az 'Összpontszám' esetében pedig minden szempont súlyozott átlaga fog megjelenni."}
               </Text>
               {isMobile && (
                 <Alert my={1} status="warning">
@@ -141,7 +141,7 @@ export const CriteriaDrawer = ({ isMobile }: Props) => {
               </Text>
 
               <CheckboxOrRadio isMobile={isMobile} isChecked={includeTotal} onChange={includeTotalChange}>
-                Összesített átlag
+                Összpontszám
               </CheckboxOrRadio>
 
               {seasonsData?.selectedSeason?.categories.map((c) => (

@@ -55,7 +55,9 @@ export const getEventResults = async (req: HttpRequest, context: InvocationConte
     const categoriesQuery = categoryRepo.find({ where: { id: In(categoryIds) } })
     const criteriaQuery = criterionRepo.find({ where: { id: In(criterionIds) } })
     const [categories, criteria] = await Promise.all([categoriesQuery, criteriaQuery])
-    const filteredEvents = season.events.filter((e) => e.state === EventState.RESULTS_READY && (!nationalOnly || isHigherRank(e)))
+    const filteredEvents = season.events.filter(
+      (e) => e.state === EventState.RESULTS_READY && (!nationalOnly || isHigherRank(e)) && e.totalRatingCount > 0
+    )
 
     const results = await resultsRepo.find({
       where: [
@@ -77,7 +79,6 @@ export const getEventResults = async (req: HttpRequest, context: InvocationConte
           results: results.filter((r) => r.eventId === e.id && r.stageId === s.id).map(parseRatingResultsWithChildren),
         })),
       }))
-      .filter((er) => er.results.some((r) => r.score > -1))
       .sort((e1, e2) => e1.startDate.localeCompare(e2.startDate))
     const { events, ...rawSeason } = season
 

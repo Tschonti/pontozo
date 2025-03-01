@@ -17,7 +17,7 @@ export const CategoriesBarChart = ({ event, setSelectedCategoryId }: Props) => {
   const parseEventData = (rootResult: RatingResultWithJoins, stages: StageWithResults[]): BarChartData[] => {
     const rootValue = +(getScore(selectedRoles, selectedAgeGroups, rootResult) ?? -1).toFixed(2)
     const rootOutput: BarChartData = {
-      name: 'Összesített átlag',
+      name: 'Összpontszám',
       event: rootValue < 0 ? '-' : rootValue,
     }
     if (stages.length > 1) {
