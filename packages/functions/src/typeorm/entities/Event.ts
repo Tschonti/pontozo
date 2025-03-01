@@ -62,6 +62,9 @@ class Event implements DbEvent {
 
   @Column({ type: 'datetime', nullable: true })
   scoresCalculatedAt?: Date
+
+  @Column({ default: 0 })
+  totalRatingCount: number
 }
 
 export default Event

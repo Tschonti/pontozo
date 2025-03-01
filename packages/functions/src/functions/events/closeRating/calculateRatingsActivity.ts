@@ -71,9 +71,12 @@ const calculateAvgRating: ActivityHandler = async (eventId: number, context: Inv
       })
       await Promise.all(promises)
       const now = new Date()
-      await transactionalEntityManager.getRepository(Event).update(eventId, { state: EventState.RESULTS_READY, scoresCalculatedAt: now })
+      await transactionalEntityManager
+        .getRepository(Event)
+        .update(eventId, { state: EventState.RESULTS_READY, scoresCalculatedAt: now, totalRatingCount: eventRatings.length })
       event.state = EventState.RESULTS_READY
       event.scoresCalculatedAt = now
+      event.totalRatingCount = eventRatings.length
     })
     context.log(`Results of event:${event.id} saved to db.`)
 

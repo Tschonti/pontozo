@@ -1,5 +1,5 @@
 import { Box, Button, FormLabel, Heading, HStack, Select, Stack, Text, VStack } from '@chakra-ui/react'
-import { ALL_ROLES, PublicEventMessage } from '@pontozo/common'
+import { PublicEventMessage } from '@pontozo/common'
 import { useEffect, useState } from 'react'
 import { FaDatabase, FaStar } from 'react-icons/fa'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -25,26 +25,6 @@ export const ResultDetailsPage = () => {
   const [filteredMessages, setFilteredMessages] = useState<PublicEventMessage[]>([])
   const { selectedAgeGroups, selectedRoles } = useResultTableContext()
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>()
-  const [ratingCount, setRatingCount] = useState<number>()
-
-  useEffect(() => {
-    if (event) {
-      setSelectedCategoryId(event.ratingResults.children?.[0].categoryId)
-      for (const catRes of event.ratingResults.children!) {
-        for (const critRes of catRes.children!) {
-          if (
-            critRes.criterion &&
-            !critRes.criterion.allowEmpty &&
-            !critRes.criterion.stageSpecific &&
-            critRes.criterion.roles.length === ALL_ROLES.length
-          ) {
-            setRatingCount(critRes.items?.find((rri) => !rri.ageGroup && !rri.role)?.count)
-            return
-          }
-        }
-      }
-    }
-  }, [event])
 
   useEffect(() => {
     if (messageData?.messages) {
@@ -76,11 +56,9 @@ export const ResultDetailsPage = () => {
         <Text>
           <b>Rendező{event.organisers.length > 1 && 'k'}:</b> {event.organisers.map((o) => o.shortName).join(', ')}
         </Text>
-        {ratingCount !== undefined && (
-          <Text>
-            Összesen <b>{ratingCount}</b> felhasználó értékelte a versenyt.
-          </Text>
-        )}
+        <Text>
+          Összesen <b>{event.totalRatingCount}</b> felhasználó értékelte a versenyt.
+        </Text>
         {event.scoresCalculatedAt && (
           <Text>
             Az eredmények számításának időpontja: <b>{new Date(event.scoresCalculatedAt).toLocaleTimeString('hu')}</b>
