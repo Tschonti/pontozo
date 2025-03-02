@@ -18,8 +18,8 @@ export const sortEvents = (
   ageGroups: AgeGroup[]
 ) => {
   return [...eventResults].sort((er1, er2) => {
-    const rri1 = getCriterionScore(er1.results.find(ratingResultFinder) as RatingResult, roles, ageGroups)
-    const rri2 = getCriterionScore(er2.results.find(ratingResultFinder) as RatingResult, roles, ageGroups)
+    const rri1 = getScore(roles, ageGroups, er1.results.find(ratingResultFinder))
+    const rri2 = getScore(roles, ageGroups, er2.results.find(ratingResultFinder))
     return (sortOrder === 'desc' ? -1 : 1) * (rri1 - rri2)
   })
 }
