@@ -9,6 +9,7 @@ export interface INavItem {
 export const navItems: INavItem[] = [
   { label: 'ÉRTÉKELHETŐ VERSENYEK', path: PATHS.INDEX, shown: () => true },
   { label: 'ÉRTÉKELT VERSENYEK', path: PATHS.RESULTS, shown: () => true },
+  { label: 'GYIK', path: PATHS.FAQ, shown: () => true },
   { label: 'ADMIN', path: PATHS.ADMIN, shown: (l, a) => l && a },
   { label: 'PROFIL', path: PATHS.PROFILE, shown: (l) => l },
 ]

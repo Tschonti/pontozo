@@ -1,6 +1,7 @@
 import { Box, Container, Flex, HStack, Link, Stack, Text } from '@chakra-ui/react'
 import { FC } from 'react'
 import { FaEnvelope, FaGithub, FaGlobe, FaLinkedin } from 'react-icons/fa'
+import { HashLink } from 'react-router-hash-link'
 import { ColorfulExternalLink } from './commons/ColorfulExternalLink'
 
 export const Footer: FC = () => {
@@ -25,9 +26,9 @@ export const Footer: FC = () => {
               MTFSZ
             </Link>{' '}
             megbízásából.{' '}
-            <Link href="/impressum" color="brand.500">
+            <HashLink to="/faq#impressum" style={{ color: '#0a723a' }}>
               Impresszum
-            </Link>
+            </HashLink>
           </Text>
         </Stack>
 

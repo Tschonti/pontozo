@@ -53,7 +53,7 @@ export const SubmitRatingModal = ({ variant, color, colorScheme }: Props) => {
                 szövegdobozban.
               </Text>
               <Text>
-                Az értékelés eredményei a verseny lezárta után nyolc nappal kerülnek publikálásra, tehát nézz vissza ekkor:{' '}
+                Az értékelés eredményei várhatóan a verseny lezárta után nyolc nappal kerülnek publikálásra, tehát nézz vissza ekkor:{' '}
                 <b>{getRatingResultPublishedDate(new Date(eventRatingInfo?.endDate ?? eventRatingInfo?.startDate ?? ''))}</b>
               </Text>
             </VStack>

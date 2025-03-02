@@ -10,6 +10,7 @@ import {
   DrawerHeader,
   DrawerOverlay,
   Text,
+  Tooltip,
   useDisclosure,
   useToast,
   VStack,
@@ -141,7 +142,9 @@ export const CriteriaDrawer = ({ isMobile }: Props) => {
               </Text>
 
               <CheckboxOrRadio isMobile={isMobile} isChecked={includeTotal} onChange={includeTotalChange}>
-                Összpontszám
+                <Tooltip hasArrow placement="right" label="A GYIK-ben olvasható, hogy ez a pontszám hogyan tevődik össze">
+                  Összpontszám
+                </Tooltip>
               </CheckboxOrRadio>
 
               {seasonsData?.selectedSeason?.categories.map((c) => (

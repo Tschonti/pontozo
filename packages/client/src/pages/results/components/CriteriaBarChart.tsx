@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/react'
-import { EventWithResults } from '@pontozo/common'
+import { EventWithResults, Rank } from '@pontozo/common'
 import { useEffect, useState } from 'react'
 import { Bar, BarChart, CartesianGrid, Legend, Text, Tooltip, XAxis, YAxis } from 'recharts'
 import { useResultTableContext } from 'src/api/contexts/useResultTableContext'
@@ -20,7 +20,8 @@ export const CriteriaBarChart = ({ event, selectedCategoryId }: Props) => {
     setChartData(
       event.ratingResults.children
         ?.find((cat) => cat.categoryId === selectedCategoryId)
-        ?.children?.map((r) => {
+        ?.children?.filter((crit) => !crit.criterion?.nationalOnly || [Rank.NATIONAL, Rank.FEATURED].includes(event.highestRank))
+        ?.map((r) => {
           const rootValue = +(getScore(selectedRoles, selectedAgeGroups, r) ?? -1).toFixed(2)
           const output: BarChartData = {
             name: r.criterion?.name ?? '',
