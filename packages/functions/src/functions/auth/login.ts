@@ -1,8 +1,8 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { PontozoException } from '@pontozo/common'
 import * as jwt from 'jsonwebtoken'
-import { DataSource } from 'typeorm'
 import { getToken, getUser } from '../../service/mtfsz.service'
+import { EmailRecipient } from '../../typeorm/entities/EmailRecipient'
 import UserRoleAssignment from '../../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { FRONTEND_URL, JWT_SECRET } from '../../util/env'
@@ -18,10 +18,18 @@ export const login = async (req: HttpRequest, context: InvocationContext): Promi
     const oauthToken = await getToken(authorizationCode)
     const user = await getUser(oauthToken.access_token)
     const dataSource = await getAppDataSource(context)
-    let roles = []
-    if (dataSource instanceof DataSource) {
-      context.log('Logging in from DB')
-      roles = (await dataSource.getRepository(UserRoleAssignment).find({ where: { userId: user.szemely_id } })).map((r) => r.role)
+    const roles = (await dataSource.getRepository(UserRoleAssignment).find({ where: { userId: user.szemely_id } })).map((r) => r.role)
+    const emailRepo = dataSource.getRepository(EmailRecipient)
+    const userEmail = await emailRepo.findOne({ where: { userId: user.szemely_id } })
+    if (!userEmail) {
+      const emailRecord = new EmailRecipient()
+      emailRecord.userId = user.szemely_id
+      emailRecord.email = user.email
+      await emailRepo.save(emailRecord)
+    } else if (userEmail.email !== user.email) {
+      userEmail.email = user.email
+      userEmail.restricted = false
+      await emailRepo.save(userEmail)
     }
 
     const jwtToken = jwt.sign({ ...user, roles }, JWT_SECRET, { expiresIn: '2 days' })
