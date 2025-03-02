@@ -12,5 +12,5 @@ export enum PATHS {
   PROFILE = '/profile',
   ADMIN = '/admin',
   ERROR = '/error',
-  IMPRESSUM = '/impressum',
+  FAQ = '/faq',
 }

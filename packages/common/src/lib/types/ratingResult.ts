@@ -12,7 +12,14 @@ export interface RatingResult {
   stageId?: number
   criterionId?: number
   categoryId?: number
-  items: RatingResultItem[]
+  items?: RatingResultItem[]
+  score: number
+  competitorWeight?: number
+  organiserWeight?: number
+}
+
+export interface RatingResultWithChildren extends RatingResult {
+  children?: RatingResultWithChildren[]
 }
 
 export interface RatingResultWithJoins extends RatingResult {
@@ -48,7 +55,7 @@ export interface EventResult {
   eventId: number
   eventName: string
   startDate: string
-  results: RatingResult[]
+  results: RatingResultWithChildren[]
   stages: StageResult[]
 }
 
@@ -66,5 +73,5 @@ export interface EventMessages {
 export interface StageResult {
   stageId: number
   stageName: string
-  results: RatingResult[]
+  results: RatingResultWithChildren[]
 }

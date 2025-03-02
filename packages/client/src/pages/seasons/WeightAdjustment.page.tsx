@@ -72,16 +72,11 @@ export const WeightAdjustmentPage = () => {
       </Text>
       <Text textAlign="justify">
         Az itt megadott súlyértékek nem egy adott felhasználó értékelésére vonatkoznak, hanem az adott szerepkörben leadott értékelések
-        átlagára. Nézzünk egy példát: egy szempontot 10 versenyző értékelt, átlagosan 2,5-ra, valamint 5 rendező, 1,5-re. Ha a versenyzői
+        átlagára. Nézzünk egy példát: egy szempontot 10 versenyző értékelt, átlagosan 2,5-re, valamint 5 rendező, 1,5-re. Ha a versenyzői
         súly 2, míg a rendezői súly 3, a végleges összpontszám a következőképp alakul: <b>(2 * 2,5 + 3 * 1,5)/(2 + 3) = 1,9</b>. (Amennyiben
         minden értékelésnek azonos súlya lenne, az átlag 2,167 lenne. Mivel a rendezőknek nagyobb súlya volt és átlagosan rosszabbul
         értékelték, a pontszám is alacsonyabb lett.) A versenyzőket és az edzőket (akik nem feltétlen indultak el a versenyen, de
         tanítványaik alapján van benyomásuk) egyenrangúnak tartjuk, ugyanígy a rendezőket és MTFSZ Zsűriket is.
-      </Text>
-
-      <Text textAlign="justify">
-        Fontos megemlíteni a futamspecifikus szempontokat, ezeket minden felhasználó futamonkénti értékeli. Az összpontszám számításakor az
-        egyes futamokra érkezett értékelések átlagolásra kerülnek a súlyok alkalmazása előtt, minden futam azonos súllyal számít.
       </Text>
 
       <Text textAlign="justify">

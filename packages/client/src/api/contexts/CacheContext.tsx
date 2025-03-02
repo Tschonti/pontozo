@@ -16,7 +16,7 @@ export type CacheContextType = {
 export const CacheContext = createContext<CacheContextType>({
   dbQueryLoading: true,
   eventDataLoading: true,
-  refetchEventData: () => { },
+  refetchEventData: () => {},
   eventData: undefined,
   eventDataError: undefined,
 })

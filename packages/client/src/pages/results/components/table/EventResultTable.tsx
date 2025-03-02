@@ -28,7 +28,7 @@ export const EventResultTable = () => {
           </TH>
           {includeTotal && (
             <TH onClick={() => sortByCrit('total')} centered>
-              <CriterionHeader name="Összesített átlag" criterionId="total" sortOrder={sortOrder} sortCriterion={sortCriterion} />
+              <CriterionHeader name="Összpontszám" criterionId="total" sortOrder={sortOrder} sortCriterion={sortCriterion} />
             </TH>
           )}
           {categories.map((c) => (
@@ -53,20 +53,18 @@ export const EventResultTable = () => {
                 </Text>
               </TD>
 
-              {includeTotal && (
-                <EventResultCell resultItems={er.results.find((r) => !r.categoryId && !r.criterionId)?.items ?? []} bold={true} />
-              )}
+              {includeTotal && <EventResultCell ratingResult={er.results.find((r) => !r.categoryId && !r.criterionId)} bold={true} />}
               {categories.map((c) => (
                 <EventResultCell
                   key={`cat-${c.id}-${er.eventId}`}
-                  resultItems={er.results.find((r) => r.categoryId === c.id)?.items ?? []}
+                  ratingResult={er.results.find((r) => r.categoryId === c.id)}
                   bold={true}
                 />
               ))}
               {criteria.map((c) => (
                 <EventResultCell
                   key={`crit-${c.id}-${er.eventId}`}
-                  resultItems={er.results.find((r) => r.criterionId === c.id)?.items ?? []}
+                  ratingResult={er.results.find((r) => r.criterionId === c.id)}
                   bold={true}
                 />
               ))}
@@ -85,18 +83,18 @@ export const EventResultTable = () => {
                       {s.stageName}
                     </Text>
                   </TD>
-                  {includeTotal && <EventResultCell resultItems={s.results.find((r) => !r.categoryId && !r.criterionId)?.items ?? []} />}
+                  {includeTotal && <EventResultCell ratingResult={s.results.find((r) => !r.categoryId && !r.criterionId)} />}
 
                   {categories.map((c) => (
                     <EventResultCell
                       key={`cat-${c.id}-${er.eventId}-${s.stageId}`}
-                      resultItems={s.results.find((r) => r.categoryId === c.id)?.items ?? []}
+                      ratingResult={s.results.find((r) => r.categoryId === c.id)}
                     />
                   ))}
                   {criteria.map((c) => (
                     <EventResultCell
                       key={`crit-${c.id}-${er.eventId}-${s.stageId}`}
-                      resultItems={s.results.find((r) => r.criterionId === c.id)?.items ?? []}
+                      ratingResult={s.results.find((r) => r.criterionId === c.id)}
                     />
                   ))}
                 </TR>

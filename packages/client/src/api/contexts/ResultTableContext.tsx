@@ -45,18 +45,18 @@ export const ResultTableContext = createContext<ResultTableContextType>({
   sortCriterion: undefined,
   sortOrder: 'desc',
 
-  setSelectedCategoryIds: () => { },
-  setSelectedCriterionIds: () => { },
-  setIncludeTotal: () => { },
-  setNationalOnly: () => { },
-  setSelectedAgeGroups: () => { },
-  setSelectedRoles: () => { },
+  setSelectedCategoryIds: () => {},
+  setSelectedCriterionIds: () => {},
+  setIncludeTotal: () => {},
+  setNationalOnly: () => {},
+  setSelectedAgeGroups: () => {},
+  setSelectedRoles: () => {},
 
   resultsLoading: true,
   sortedEvents: [],
 
-  selectedSeasonChange: () => { },
-  sendResultRequest: () => { },
-  sortByCrit: () => { },
-  saveToLocalStorage: () => { },
+  selectedSeasonChange: () => {},
+  sendResultRequest: () => {},
+  sortByCrit: () => {},
+  saveToLocalStorage: () => {},
 })

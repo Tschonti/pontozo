@@ -1,5 +1,5 @@
 import { app, HttpRequest, InvocationContext } from '@azure/functions'
-import { EventResult, EventResultList, EventState, isHigherRank, PontozoException, RatingResultItem } from '@pontozo/common'
+import { EventResult, EventResultList, EventState, isHigherRank, PontozoException } from '@pontozo/common'
 import { In, IsNull, LessThan } from 'typeorm'
 import Category from '../../typeorm/entities/Category'
 import Criterion from '../../typeorm/entities/Criterion'
@@ -8,6 +8,7 @@ import Season from '../../typeorm/entities/Season'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { currentSeasonFilter } from '../../util/currentSeasonFilter'
 import { handleException } from '../../util/handleException'
+import { parseRatingResultsWithChildren } from '../../util/parseRatingResults'
 import { PontozoResponse } from '../../util/pontozoResponse'
 
 export const getEventResults = async (req: HttpRequest, context: InvocationContext): Promise<PontozoResponse<EventResultList>> => {
@@ -31,7 +32,7 @@ export const getEventResults = async (req: HttpRequest, context: InvocationConte
     let season: Season
     const ads = await getAppDataSource(context)
     const seasonRepo = ads.getRepository(Season)
-    const categorynRepo = ads.getRepository(Category)
+    const categoryRepo = ads.getRepository(Category)
     const criterionRepo = ads.getRepository(Criterion)
     const resultsRepo = ads.getRepository(RatingResult)
 
@@ -51,10 +52,12 @@ export const getEventResults = async (req: HttpRequest, context: InvocationConte
       throw new PontozoException('Nem található a szezon!', 404)
     }
 
-    const categoriesQuery = categorynRepo.find({ where: { id: In(categoryIds) } })
+    const categoriesQuery = categoryRepo.find({ where: { id: In(categoryIds) } })
     const criteriaQuery = criterionRepo.find({ where: { id: In(criterionIds) } })
     const [categories, criteria] = await Promise.all([categoriesQuery, criteriaQuery])
-    const filteredEvents = season.events.filter((e) => e.state === EventState.RESULTS_READY && (!nationalOnly || isHigherRank(e)))
+    const filteredEvents = season.events.filter(
+      (e) => e.state === EventState.RESULTS_READY && (!nationalOnly || isHigherRank(e)) && e.totalRatingCount > 0
+    )
 
     const results = await resultsRepo.find({
       where: [
@@ -62,20 +65,20 @@ export const getEventResults = async (req: HttpRequest, context: InvocationConte
         { criterionId: In(criteria.map((c) => c.id)), eventId: In(filteredEvents.map((e) => e.id)) },
         includeTotal ? { categoryId: IsNull(), criterionId: IsNull() } : undefined,
       ],
+      relations: { children: { children: true } },
     })
     const eventResults: EventResult[] = filteredEvents
       .map((e) => ({
         eventId: e.id,
         eventName: e.name,
         startDate: e.startDate,
-        results: results.filter((r) => r.eventId === e.id && !r.stageId).map((r) => ({ ...r, items: JSON.parse(r.items) })),
+        results: results.filter((r) => r.eventId === e.id && !r.stageId).map(parseRatingResultsWithChildren),
         stages: e.stages.map((s) => ({
           stageId: s.id,
           stageName: s.name,
-          results: results.filter((r) => r.eventId === e.id && r.stageId === s.id).map((r) => ({ ...r, items: JSON.parse(r.items) })),
+          results: results.filter((r) => r.eventId === e.id && r.stageId === s.id).map(parseRatingResultsWithChildren),
         })),
       }))
-      .filter((er) => er.results.some((r) => (r.items as RatingResultItem[]).find((rri) => !rri.ageGroup && !rri.role)?.count > 0))
       .sort((e1, e2) => e1.startDate.localeCompare(e2.startDate))
     const { events, ...rawSeason } = season
 

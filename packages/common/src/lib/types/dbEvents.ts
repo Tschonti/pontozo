@@ -11,6 +11,8 @@ export interface DbEvent {
   seasonId: number
   organisers: Club[]
   stages?: DbStage[]
+  scoresCalculatedAt?: Date
+  totalRatingCount: number
 }
 
 export enum EventState {

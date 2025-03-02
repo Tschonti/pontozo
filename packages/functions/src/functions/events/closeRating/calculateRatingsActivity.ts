@@ -9,7 +9,13 @@ import Event from '../../../typeorm/entities/Event'
 import EventRating from '../../../typeorm/entities/EventRating'
 import { RatingResult } from '../../../typeorm/entities/RatingResult'
 import { parseRatingResults } from '../../../util/parseRatingResults'
-import { accumulateStage, StageResult } from '../../../util/ratingAverage'
+import {
+  accumulateCriteria,
+  calculateScoresForStage,
+  CategoryWithCriteriaResults,
+  extractStageResults,
+  mapToRatingResults,
+} from '../../../util/ratingAverage'
 import { ActivityOutput } from './closeRatingOrchestrator'
 
 export const calculateAvgRatingActivityName = 'calculateAvgRatingActivity'
@@ -31,7 +37,7 @@ const calculateAvgRating: ActivityHandler = async (eventId: number, context: Inv
     })
     const eventPromise = eventRepo.findOne({
       where: { id: eventId, state: EventState.ACCUMULATING },
-      relations: { season: { categories: { category: { criteria: { criterion: true } } } }, stages: true, organisers: true },
+      relations: { season: { categories: { category: { criteria: { criterion: { weights: true } } } } }, stages: true, organisers: true },
     })
 
     const [eventRatings, event] = await Promise.all([eventRatingsPrmoise, eventPromise])
@@ -42,45 +48,45 @@ const calculateAvgRating: ActivityHandler = async (eventId: number, context: Inv
 
     const categories = event.season.categories.map((stc) => ({
       ...stc.category,
-      criteria: stc.category.criteria.map((ctc) => ctc.criterion),
+      criteria: stc.category.criteria.map((ctc) => {
+        const { weights, ...criterion } = ctc.criterion
+        return { ...criterion, roles: JSON.parse(ctc.criterion.roles), weight: weights.find((w) => w.seasonId === event.seasonId) }
+      }),
     }))
-    const categoriesWithStageCrit = categories.filter((c) => c.criteria.some((crit) => crit.stageSpecific))
+    const stageSpecificCategories = categories.filter((cat) => !cat.criteria.some((crit) => !crit.stageSpecific))
 
-    const allEvent = accumulateStage({
-      eventId,
-      categories,
-      eventRatings,
-    })
-    let stages: StageResult[] = []
+    const catResult = accumulateCriteria(eventRatings, categories, event.stages)
+    let stageResults: CategoryWithCriteriaResults[][] = []
     if (event.stages.length > 1) {
-      stages = event.stages.map((s) =>
-        accumulateStage({
-          eventId,
-          stageId: s.id,
-          categories: categoriesWithStageCrit,
-          eventRatings,
-        })
-      )
+      stageResults = extractStageResults(catResult, stageSpecificCategories, event.stages)
     }
+    const rootScores = [catResult, ...stageResults].map((res) => calculateScoresForStage(res))
+    const rris = [catResult, ...stageResults].map((result, idx) => mapToRatingResults(event.id, result, rootScores[idx]))
+
     await ads.manager.transaction(async (transactionalEntityManager) => {
-      const promises = [allEvent, ...stages].map(async (sr) => {
+      const promises = rris.map(async (sr) => {
         await transactionalEntityManager.save(sr.root)
         await transactionalEntityManager.save(sr.categories)
         await transactionalEntityManager.save(sr.criteria)
       })
       await Promise.all(promises)
-      await transactionalEntityManager.getRepository(Event).update(eventId, { state: EventState.RESULTS_READY })
+      const now = new Date()
+      await transactionalEntityManager
+        .getRepository(Event)
+        .update(eventId, { state: EventState.RESULTS_READY, scoresCalculatedAt: now, totalRatingCount: eventRatings.length })
       event.state = EventState.RESULTS_READY
+      event.scoresCalculatedAt = now
+      event.totalRatingCount = eventRatings.length
     })
     context.log(`Results of event:${event.id} saved to db.`)
 
-    const redisClient = await getRedisClient(context)
-    const results = await ads.getRepository(RatingResult).find({
-      where: { eventId: eventId, parentId: IsNull() },
+    const insertedResults = await ads.getRepository(RatingResult).find({
+      where: { eventId, parentId: IsNull() },
       relations: { children: { category: true, children: { criterion: true } } },
     })
     const { season, ...restOfEvent } = event
-    const parsed = parseRatingResults(results, restOfEvent)
+    const parsed = parseRatingResults(insertedResults, restOfEvent)
+    const redisClient = await getRedisClient(context)
     await redisClient.set(`ratingResult:${event.id}`, JSON.stringify(parsed))
     context.log(`Results of event:${event.id} saved to cache.`)
 

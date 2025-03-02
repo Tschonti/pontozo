@@ -1,6 +1,6 @@
 import { Box, HStack, IconButton, Text, Tooltip, useDisclosure } from '@chakra-ui/react'
 import { CategoryWithCriteria, CriterionWithWeight, RatingRole } from '@pontozo/common'
-import { useMemo } from 'react'
+import { Fragment, useMemo } from 'react'
 import { FaCaretDown, FaCaretRight, FaMedal } from 'react-icons/fa'
 import { criterionWeightReducer, getWeight } from 'src/util/criterionWeightHelper'
 import { WeightBar } from './WeightBar'
@@ -57,7 +57,7 @@ export const CategoryWeights = ({ category, seasonId, totalWeightSum }: Props) =
       )}
       {isOpen &&
         category.criteria.map((cc) => (
-          <>
+          <Fragment key={cc.id}>
             <Box />
             <HStack w="100%">
               <Text>
@@ -97,7 +97,7 @@ export const CategoryWeights = ({ category, seasonId, totalWeightSum }: Props) =
               greenPercent={(getWeight(cc, 'competitorWeight') / totalWeightSum) * 100}
               redPercent={(getWeight(cc, 'organiserWeight') / totalWeightSum) * 100}
             />
-          </>
+          </Fragment>
         ))}
     </>
   )

@@ -77,6 +77,11 @@ export const GoToRatingButton = ({ eventWithRating, onStartClick, startDisabled,
                 kategóriát kitöltesz, majd a végén véglegesíted azt. Minden versenyt a lezárultát követő nyolc napban lehet értékelni,
                 ezután már nem fogod tudni változtatni vagy véglegesíteni az értékelésed.
               </Text>
+              <Text>
+                Az értékelésed véglegesítése előtt lesz lehetőséged szöveges visszajelzést is küldeni a rendezőknek. Ez publikusan, de név
+                nélkül fog megjelenni az értékelés eredményeivel együtt. Az alkalmazás adminisztrátorai azonban látják, ki írta, így arra
+                kérünk, konstruktív kritkát fogalmazz meg.
+              </Text>
               <Text>Az értékelés anonim, az eredmények csak összesítve lesznek publikálva.</Text>
             </VStack>
           </ModalBody>
