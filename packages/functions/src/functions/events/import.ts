@@ -1,7 +1,10 @@
 import { app, InvocationContext, Timer } from '@azure/functions'
-import { AlertLevel, getHighestRank, getRateableEvents, stageFilter } from '@pontozo/common'
+import { AlertLevel, EventImportedNotificationOptions, getHighestRank, getRateableEvents, Rank, stageFilter } from '@pontozo/common'
+import { IsNull, Not } from 'typeorm'
 import { newAlertItem } from '../../service/alert.service'
+import { sendEventImportEmail } from '../../service/email.service'
 import Club from '../../typeorm/entities/Club'
+import { EmailRecipient } from '../../typeorm/entities/EmailRecipient'
 import Event from '../../typeorm/entities/Event'
 import Season from '../../typeorm/entities/Season'
 import Stage from '../../typeorm/entities/Stage'
@@ -20,6 +23,7 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
     const stageRepo = ads.getRepository(Stage)
     const clubRepo = ads.getRepository(Club)
     const seasonRepo = ads.getRepository(Season)
+    const emailRepo = ads.getRepository(EmailRecipient)
 
     const season = await seasonRepo.findOne({ where: currentSeasonFilter })
     if (season === null) {
@@ -27,53 +31,81 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
       return
     }
 
-    const [events, eventCountBefore] = await Promise.all([getRateableEvents(APIM_KEY, APIM_HOST), eventRepo.count()])
-    const eventsToSave = events.map((e) => {
-      const event = eventRepo.create({
-        id: e.esemeny_id,
-        name: e.nev_1,
-        type: e.tipus,
-        startDate: e.datum_tol,
-        endDate: e.datum_ig,
-        highestRank: getHighestRank(e),
-        seasonId: season.id,
-        stages: [],
-        organisers: [],
+    const [events, eventsOfTheSeason] = await Promise.all([
+      getRateableEvents(APIM_KEY, APIM_HOST),
+      eventRepo.find({ where: { seasonId: season.id } }),
+    ])
+    const eventIdsOfTheSeason = eventsOfTheSeason.map((e) => e.id)
+    const eventsToSave = events
+      .filter((e) => new Date(new Date(e.datum_tol).setHours(23)) > season.startDate && !eventIdsOfTheSeason.includes(e.esemeny_id))
+      .map((e) => {
+        const event = eventRepo.create({
+          id: e.esemeny_id,
+          name: e.nev_1,
+          type: e.tipus,
+          startDate: e.datum_tol,
+          endDate: e.datum_ig,
+          highestRank: getHighestRank(e),
+          seasonId: season.id,
+          stages: [],
+          organisers: [],
+        })
+
+        event.stages.push(
+          ...e.programok.filter(stageFilter).map((s, idx) =>
+            stageRepo.create({
+              id: s.program_id,
+              eventId: event.id,
+              name: s.nev_1 ?? `${idx + 1}. futam`,
+              disciplineId: s.futam.versenytav_id,
+              startTime: s.idopont_tol,
+              endTime: s.idopont_ig,
+              rank: s.futam.rangsorolo,
+            })
+          )
+        )
+
+        event.organisers.push(
+          ...e.rendezok.map((o) =>
+            clubRepo.create({
+              id: o.szervezet_id,
+              code: o.kod,
+              shortName: o.rovid_nev_1,
+              longName: o.nev_1,
+            })
+          )
+        )
+        return event
       })
-
-      event.stages.push(
-        ...e.programok.filter(stageFilter).map((s, idx) =>
-          stageRepo.create({
-            id: s.program_id,
-            eventId: event.id,
-            name: s.nev_1 ?? `${idx + 1}. futam`,
-            disciplineId: s.futam.versenytav_id,
-            startTime: s.idopont_tol,
-            endTime: s.idopont_ig,
-            rank: s.futam.rangsorolo,
-          })
-        )
-      )
-
-      event.organisers.push(
-        ...e.rendezok.map((o) =>
-          clubRepo.create({
-            id: o.szervezet_id,
-            code: o.kod,
-            shortName: o.rovid_nev_1,
-            longName: o.nev_1,
-          })
-        )
-      )
-      return event
-    })
 
     await eventRepo.save(eventsToSave)
 
-    const eventCountAfter = await eventRepo.count()
-    const created = eventCountAfter - eventCountBefore
     if (eventsToSave.length > 0) {
-      await newAlertItem({ ads, context, desc: `${created} events created, ${eventsToSave.length - created} updated in db` })
+      await newAlertItem({ ads, context, desc: `${eventsToSave.length} events imported` })
+
+      const emailRecipients = await emailRepo.find({
+        where: { eventImportedNotifications: Not(EventImportedNotificationOptions.NONE), restricted: false, email: Not(IsNull()) },
+      })
+      const nationalEvents = eventsToSave.filter((e) => e.highestRank !== Rank.REGIONAL)
+      const responses = await Promise.all(
+        emailRecipients.map((er) =>
+          sendEventImportEmail(
+            er,
+            er.eventImportedNotifications === EventImportedNotificationOptions.ALL ? eventsToSave : nationalEvents,
+            context
+          )
+        )
+      )
+      if (responses.some((r) => !r)) {
+        const emailsToRestrict = emailRecipients
+          .filter((_, idx) => !responses[idx])
+          .map((user) => {
+            newAlertItem({ context, desc: `Failed to send email to ${user.email}`, level: AlertLevel.WARN })
+            user.restricted = true
+            return user
+          })
+        await emailRepo.save(emailsToRestrict)
+      }
     }
   } catch (error) {
     await newAlertItem({ context, desc: `Error during event import: ${error}`, level: AlertLevel.ERROR })
