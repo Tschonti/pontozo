@@ -87,7 +87,7 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
         where: { eventImportedNotifications: Not(EventImportedNotificationOptions.NONE), restricted: false, email: Not(IsNull()) },
       })
       const nationalEvents = eventsToSave.filter((e) => e.highestRank !== Rank.REGIONAL)
-      const responses = await Promise.all(
+      await Promise.all(
         emailRecipients.map((er) =>
           sendEventImportEmail(
             er,
@@ -96,16 +96,6 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
           )
         )
       )
-      if (responses.some((r) => !r)) {
-        const emailsToRestrict = emailRecipients
-          .filter((_, idx) => !responses[idx])
-          .map((user) => {
-            newAlertItem({ context, desc: `Failed to send email to ${user.email}`, level: AlertLevel.WARN })
-            user.restricted = true
-            return user
-          })
-        await emailRepo.save(emailsToRestrict)
-      }
     }
   } catch (error) {
     await newAlertItem({ context, desc: `Error during event import: ${error}`, level: AlertLevel.ERROR })

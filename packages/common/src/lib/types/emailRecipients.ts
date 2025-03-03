@@ -1,3 +1,5 @@
+import { IsEmail, IsEnum, IsOptional } from 'class-validator'
+
 export interface EmailRecipient {
   userId: number
   email?: string
@@ -16,4 +18,18 @@ export enum EventImportedNotificationOptions {
   NONE = 'NONE',
   ONLY_NATIONAL = 'ONLY_NATIONAL',
   ALL = 'ALL',
+}
+
+export class UpdateEmailRecipient {
+  @IsOptional()
+  @IsEmail()
+  email?: string
+
+  @IsOptional()
+  @IsEnum(ResultNotificationOptions)
+  resultNotifications?: ResultNotificationOptions
+
+  @IsOptional()
+  @IsEnum(ResultNotificationOptions)
+  eventImportedNotifications?: EventImportedNotificationOptions
 }
