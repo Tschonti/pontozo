@@ -1,10 +1,11 @@
-import { Button, Heading, HStack, SimpleGrid, Text } from '@chakra-ui/react'
+import { Button, Heading, HStack, SimpleGrid, Stack, Text } from '@chakra-ui/react'
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { LoginNavigate } from 'src/components/commons/LoginNavigate'
 import { useAuthContext } from '../../api/contexts/useAuthContext'
 import { useFecthUserRatedEvents } from '../../api/hooks/eventQueryHooks'
 import { LoadingSpinner } from '../../components/commons/LoadingSpinner'
 import { EventListItem } from '../events/components/EventListItem'
+import { NotificationPreferencesModal } from './components/NotificationPreferencesModal'
 
 export const ProfilePage = () => {
   const { loggedInUser, onLogout, isLoggedIn } = useAuthContext()
@@ -17,12 +18,15 @@ export const ProfilePage = () => {
   return (
     <>
       <HelmetTitle title="Pontoz-O | Profil" />
-      <HStack w="100%" justify="space-between">
+      <Stack direction={['column', 'column', 'row']} w="100%" justify="space-between" alignItems="flex-start">
         <Heading>{loggedInUser?.nev}</Heading>
-        <Button onClick={() => onLogout()} colorScheme="brand">
-          Kijelentkezés
-        </Button>
-      </HStack>
+        <HStack alignItems="flex-end">
+          <NotificationPreferencesModal />
+          <Button onClick={() => onLogout()} colorScheme="red">
+            Kijelentkezés
+          </Button>
+        </HStack>
+      </Stack>
 
       <Heading mt={5} size="md">
         Értékelt versenyeid
