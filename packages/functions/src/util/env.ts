@@ -21,3 +21,4 @@ export const FRONTEND_URL = env.get('FRONTEND_URL').default('http://localhost:30
 export const ADMINS = env.get('ADMINS').default('[]').asJsonArray()
 export const ENV = env.get('ENV').default('development').asString()
 export const ACS_CONNECTION_STRING = env.get('ACS_CONNECTION_STRING').default('').asString()
+export const ACS_EMAIL_SENDER = env.get('ACS_EMAIL_SENDER').default('<donotreply@pontozo-notification.mtfsz.hu>').asString()

@@ -4,7 +4,7 @@ import { AlertLevel, EmailRecipient } from '@pontozo/common'
 import * as ejs from 'ejs'
 import * as path from 'path'
 import Event from '../typeorm/entities/Event'
-import { ACS_CONNECTION_STRING } from '../util/env'
+import { ACS_CONNECTION_STRING, ACS_EMAIL_SENDER } from '../util/env'
 import { newAlertItem } from './alert.service'
 
 const POLLER_WAIT_TIME = 5
@@ -39,7 +39,7 @@ const renderEmail = async (templateName: 'eventsImported' | 'resultsPublished', 
 
 const sendEmail = async (recipient: EmailRecipient, subject: string, content: string, context: InvocationContext): Promise<void> => {
   const message: EmailMessage = {
-    senderAddress: '<donotreply@pontozo-notification.mtfsz.hu>',
+    senderAddress: ACS_EMAIL_SENDER,
     content: {
       subject: `[Pontoz-O] ${subject}`,
       html: content,

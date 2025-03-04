@@ -1,5 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
-import { PontozoException } from '@pontozo/common'
+import { EventImportedNotificationOptions, PontozoException, ResultNotificationOptions } from '@pontozo/common'
 import * as jwt from 'jsonwebtoken'
 import { getToken, getUser } from '../../service/mtfsz.service'
 import { EmailRecipient } from '../../typeorm/entities/EmailRecipient'
@@ -25,6 +25,9 @@ export const login = async (req: HttpRequest, context: InvocationContext): Promi
       const emailRecord = new EmailRecipient()
       emailRecord.userId = user.szemely_id
       emailRecord.email = user.email
+      // TODO only temporary
+      emailRecord.eventImportedNotifications = EventImportedNotificationOptions.ALL
+      emailRecord.resultNotifications = ResultNotificationOptions.ALL
       await emailRepo.save(emailRecord)
     } else if (userEmail.email !== user.email) {
       userEmail.email = user.email
