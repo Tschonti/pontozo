@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "targets": {
-    "build": {
+    "build-code": {
       "executor": "@nxazure/func:build"
     },
     "start": {
@@ -13,6 +13,27 @@
         "default": {
           "port": 3000
         }
+      }
+    },
+    "copy-templates": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["cp -r ./packages/functions/src/templates ./packages/functions/dist/packages/functions/src/templates"],
+        "parallel": false
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["nx run functions:build-code", "nx run functions:copy-templates"],
+        "parallel": false
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["nx run functions:build", "cd packages/functions && func start "],
+        "parallel": false
       }
     },
     "publish": {
