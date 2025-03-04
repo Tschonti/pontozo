@@ -4,10 +4,12 @@ import { OrchestrationContext, OrchestrationHandler } from 'durable-functions'
 import { newAlertItem } from '../../../service/alert.service'
 import { calculateAvgRatingActivityName } from './calculateRatingsActivity'
 import { deletePreviousResultsActivityName } from './deletePreviousResultsActivity'
+import { sendNotificationsActivityName } from './sendNotificationsActivity'
 import { validateRatingsActivityName } from './validateRatingsActivity'
 
 export const orchestratorName = 'closeRatingOrchestrator'
 export type ActivityOutput = { eventId: number; success: boolean }
+export type CalculateRatingsActivityOutput = ActivityOutput & { actualResults: boolean }
 
 /**
  * Durable Functions orchestrator function that executes the activies that validate and accumulate the ratings of finished events.
@@ -51,7 +53,7 @@ const orchestrator: OrchestrationHandler = function* (context: OrchestrationCont
 
   context.log(`Validation finished, starting the average rating calculation for ${accumulationInput.length} event(s).`)
   const parallelAccumulationTasks: df.Task[] = accumulationInput.map((eId) => context.df.callActivity(calculateAvgRatingActivityName, eId))
-  const accumulationResults: ActivityOutput[] = yield context.df.Task.all(parallelAccumulationTasks)
+  const accumulationResults: CalculateRatingsActivityOutput[] = yield context.df.Task.all(parallelAccumulationTasks)
 
   const accumulationSuccess = accumulationResults.filter((r) => r.success)
   if (accumulationSuccess.length < accumulationInput.length) {
@@ -66,6 +68,13 @@ const orchestrator: OrchestrationHandler = function* (context: OrchestrationCont
       context,
       desc: `Accumulation of rating results finished for ${accumulationSuccess.length} event(s)!`,
     })
+    const eventsWithMeaningfulResults = accumulationSuccess.filter((r) => r.actualResults).map((r) => r.eventId)
+    if (eventsWithMeaningfulResults.length > 0) {
+      const success = yield context.df.callActivity(sendNotificationsActivityName, eventsWithMeaningfulResults)
+      if (!success) {
+        newAlertItem({ context, desc: 'Email notification sending failed!', level: AlertLevel.ERROR })
+      }
+    }
   }
 
   context.log(`Orchestrator function finished`)

@@ -9,21 +9,51 @@ const POLLER_WAIT_TIME = 5
 
 export const sendEventImportEmail = async (recipient: EmailRecipient, events: Event[], context: InvocationContext): Promise<void> => {
   if (events.length === 0) return
-  const message: EmailMessage = {
-    senderAddress: '<donotreply@pontozo-notification.mtfsz.hu>',
-    content: {
-      subject: '[Pontoz-O] Új értékelhető versenyek!',
-      html: `
+  sendEmail(
+    recipient,
+    'Új értékelhető versenyek!',
+    `
           <html>
             <body>
               <h1>Új értékelhető versenyek!</h1>
               <ul>
               ${events.map((e) => `<li><a href="https://pontozo.mtfsz.hu/events/${e.id}">${e.name}</a></li>`).join(' ')}
               </ul>
-              <a href="https://pontozo.mtfsz.hu/">Osszes ertekelheto verseny</a>
+              <a href="https://pontozo.mtfsz.hu/">Összes értékelhető verseny</a>
             </body>
           </html>
         `,
+    context
+  )
+}
+
+export const sendResultsReadyEmail = async (recipient: EmailRecipient, events: Event[], context: InvocationContext): Promise<void> => {
+  if (events.length === 0) return
+  sendEmail(
+    recipient,
+    'Új értékelési eredmények kerültek publikálásra!',
+    `
+          <html>
+            <body>
+              <h1>Új értékelési eredmények kerültek publikálásra!</h1>
+              <p>A következő versenyek értékelési eredményei publikálásra kerültek a Versenyértékelő portálon:</p>
+              <ul>
+              ${events.map((e) => `<li><a href="https://pontozo.mtfsz.hu/results/${e.id}">${e.name}</a></li>`).join(' ')}
+              </ul>
+              <a href="https://pontozo.mtfsz.hu/results">Összes értékelési eredmény</a>
+            </body>
+          </html>
+        `,
+    context
+  )
+}
+
+const sendEmail = async (recipient: EmailRecipient, subject: string, content: string, context: InvocationContext): Promise<void> => {
+  const message: EmailMessage = {
+    senderAddress: '<donotreply@pontozo-notification.mtfsz.hu>',
+    content: {
+      subject: `[Pontoz-O] ${subject}`,
+      html: content,
     },
     recipients: {
       to: [
@@ -53,7 +83,7 @@ export const sendEventImportEmail = async (recipient: EmailRecipient, events: Ev
     poller.poll()
 
     await new Promise((resolve) => setTimeout(resolve, POLLER_WAIT_TIME * 1000))
-    timeElapsed += 10
+    timeElapsed += POLLER_WAIT_TIME
 
     if (timeElapsed > 18 * POLLER_WAIT_TIME) {
       context.error(`Polling timed out while sending email to User #${recipient.userId}`)
