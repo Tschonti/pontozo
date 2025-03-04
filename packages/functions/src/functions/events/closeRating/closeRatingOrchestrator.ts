@@ -4,14 +4,31 @@ import { OrchestrationContext, OrchestrationHandler } from 'durable-functions'
 import { newAlertItem } from '../../../service/alert.service'
 import { calculateAvgRatingActivityName } from './calculateRatingsActivity'
 import { deletePreviousResultsActivityName } from './deletePreviousResultsActivity'
+import { sendNotificationsActivityName } from './sendNotificationsActivity'
 import { validateRatingsActivityName } from './validateRatingsActivity'
 
 export const orchestratorName = 'closeRatingOrchestrator'
 export type ActivityOutput = { eventId: number; success: boolean }
+export type CalculateRatingsActivityOutput = ActivityOutput & { actualResults: boolean }
 
 /**
  * Durable Functions orchestrator function that executes the activies that validate and accumulate the ratings of finished events.
- * TODO better docs, maybe diagrams?
+ *
+ * Inputs: List of events to close. For each event, the eventId and the EventState
+ *
+ * Steps:
+ * 1. DeletePreviousResults
+ *    If some events have already started the proccess of closing before, the previous results have to be cleaned up.
+ *    This activity is only called if there are events not in the VALIDATING state and only once. All the eventIds that are not in the validating state are passed as inputs.
+ * 2. ValidateRatings
+ *    Activity to validate the ratings of an event. Currently just a placeholder, does nothing.
+ *    The activity is called in parallel for all the events in VALIDATING or INVALIDATED states.
+ * 3. CalculateAvgRating
+ *    Activity to calculate the rating scores for an event.
+ *    Called in parallel for all events whose ratings were successfully validated and events that are in the ACCUMULATING phase (because previous accumulation failed)
+ * 4. SendNotifications
+ *    Activity to send notifications to subscribed users about the newly published rating results.
+ *    Only called if at least event has been closed with meaningful results (more than one rating). Called just once with the events that have meaningful results.
  */
 const orchestrator: OrchestrationHandler = function* (context: OrchestrationContext) {
   const events: { eventId: number; state: EventState }[] = context.df.getInput()
@@ -51,7 +68,7 @@ const orchestrator: OrchestrationHandler = function* (context: OrchestrationCont
 
   context.log(`Validation finished, starting the average rating calculation for ${accumulationInput.length} event(s).`)
   const parallelAccumulationTasks: df.Task[] = accumulationInput.map((eId) => context.df.callActivity(calculateAvgRatingActivityName, eId))
-  const accumulationResults: ActivityOutput[] = yield context.df.Task.all(parallelAccumulationTasks)
+  const accumulationResults: CalculateRatingsActivityOutput[] = yield context.df.Task.all(parallelAccumulationTasks)
 
   const accumulationSuccess = accumulationResults.filter((r) => r.success)
   if (accumulationSuccess.length < accumulationInput.length) {
@@ -66,6 +83,13 @@ const orchestrator: OrchestrationHandler = function* (context: OrchestrationCont
       context,
       desc: `Accumulation of rating results finished for ${accumulationSuccess.length} event(s)!`,
     })
+    const eventsWithMeaningfulResults = accumulationSuccess.filter((r) => r.actualResults).map((r) => r.eventId)
+    if (eventsWithMeaningfulResults.length > 0) {
+      const success = yield context.df.callActivity(sendNotificationsActivityName, eventsWithMeaningfulResults)
+      if (!success) {
+        newAlertItem({ context, desc: 'Email notification sending failed!', level: AlertLevel.ERROR })
+      }
+    }
   }
 
   context.log(`Orchestrator function finished`)

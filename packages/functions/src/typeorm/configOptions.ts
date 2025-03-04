@@ -7,6 +7,7 @@ import Club from './entities/Club'
 import Criterion from './entities/Criterion'
 import CriterionRating from './entities/CriterionRating'
 import { CriterionWeight } from './entities/CriterionWeight'
+import { EmailRecipient } from './entities/EmailRecipient'
 import Event from './entities/Event'
 import EventRating from './entities/EventRating'
 import { RatingResult } from './entities/RatingResult'
@@ -29,6 +30,7 @@ import { CriterionWeight1735301875393 } from './migrations/1735301875393-criteri
 import { AddScoreToResults1740328668244 } from './migrations/1740328668244-addScoreToResults'
 import { AddCalculatedAtToEvents1740847926741 } from './migrations/1740847926741-addCalculatedAtToEvents'
 import { AddTotalRatingCounToEvent1740848520212 } from './migrations/1740848520212-addTotalRatingCounToEvent'
+import { AddEmailRecipientTable1740941432082 } from './migrations/1740941432082-addEmailRecipientTable'
 
 export const DBConfig: SqlServerConnectionOptions = {
   type: 'mssql',
@@ -56,6 +58,7 @@ export const DBConfig: SqlServerConnectionOptions = {
     SeasonCriterionCount,
     RatingResult,
     CriterionWeight,
+    EmailRecipient,
   ],
   subscribers: [],
   migrations: [
@@ -73,6 +76,7 @@ export const DBConfig: SqlServerConnectionOptions = {
     AddScoreToResults1740328668244,
     AddCalculatedAtToEvents1740847926741,
     AddTotalRatingCounToEvent1740848520212,
+    AddEmailRecipientTable1740941432082,
   ],
   options: { encrypt: ENCRYPT },
 }

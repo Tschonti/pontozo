@@ -8,8 +8,8 @@ const formatDate = (d: Date) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getD
 export const getRateableEvents = async (apiKey: string, apiManagementHost: string): Promise<MtfszEvent[]> => {
   const url = new URL('esemenyek', apiManagementHost)
   const today = new Date()
-  const twoWeeksAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000)
-  url.searchParams.append('datum_tol', formatDate(twoWeeksAgo))
+  const sevenDaysAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000)
+  url.searchParams.append('datum_tol', formatDate(sevenDaysAgo))
   url.searchParams.append('datum_ig', formatDate(today))
   url.searchParams.append('exclude_deleted', 'true')
   const res = await axios.get<MtfszFetchResult<MtfszEvent>>(url.toString(), {

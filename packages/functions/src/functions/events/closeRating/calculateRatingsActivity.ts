@@ -16,7 +16,7 @@ import {
   extractStageResults,
   mapToRatingResults,
 } from '../../../util/ratingAverage'
-import { ActivityOutput } from './closeRatingOrchestrator'
+import { CalculateRatingsActivityOutput } from './closeRatingOrchestrator'
 
 export const calculateAvgRatingActivityName = 'calculateAvgRatingActivity'
 
@@ -25,7 +25,10 @@ export const calculateAvgRatingActivityName = 'calculateAvgRatingActivity'
  * @param eventId ID of the event to calculate the results for
  * @returns whether the operation succeeded and the eventId
  */
-const calculateAvgRating: ActivityHandler = async (eventId: number, context: InvocationContext): Promise<ActivityOutput> => {
+const calculateAvgRating: ActivityHandler = async (
+  eventId: number,
+  context: InvocationContext
+): Promise<CalculateRatingsActivityOutput> => {
   try {
     const ads = new DataSource(DBConfig)
     await ads.initialize()
@@ -43,7 +46,7 @@ const calculateAvgRating: ActivityHandler = async (eventId: number, context: Inv
     const [eventRatings, event] = await Promise.all([eventRatingsPrmoise, eventPromise])
     if (!event) {
       context.warn(`Event:${eventId} not found or is in invalid state, cancelling accumulation.`)
-      return { success: false, eventId }
+      return { success: false, eventId, actualResults: false }
     }
 
     const categories = event.season.categories.map((stc) => ({
@@ -90,10 +93,10 @@ const calculateAvgRating: ActivityHandler = async (eventId: number, context: Inv
     await redisClient.set(`ratingResult:${event.id}`, JSON.stringify(parsed))
     context.log(`Results of event:${event.id} saved to cache.`)
 
-    return { success: true, eventId }
+    return { success: true, eventId, actualResults: parsed.ratingResults.score > -1 }
   } catch (e) {
     context.error(`Error in calculate average rating activity for event:${eventId}: ${e}`)
-    return { success: false, eventId }
+    return { success: false, eventId, actualResults: false }
   }
 }
 df.app.activity(calculateAvgRatingActivityName, { handler: calculateAvgRating })
