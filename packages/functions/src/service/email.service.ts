@@ -90,7 +90,7 @@ const catch429Policy = (context: InvocationContext) => ({
   async sendRequest(request, next) {
     const response = await next(request)
     if (response.status === 429) {
-      newAlertItem({ context, desc: 'Email sending quota reached', level: AlertLevel.WARN })
+      await newAlertItem({ context, desc: 'Email sending quota reached', level: AlertLevel.WARN })
     }
     return response
   },

@@ -1,9 +1,9 @@
-import { AlertLevel, EventState } from '@pontozo/common'
+import { EventState } from '@pontozo/common'
 import * as df from 'durable-functions'
 import { OrchestrationContext, OrchestrationHandler } from 'durable-functions'
-import { newAlertItem } from '../../../service/alert.service'
 import { calculateAvgRatingActivityName } from './calculateRatingsActivity'
 import { deletePreviousResultsActivityName } from './deletePreviousResultsActivity'
+import { publishOrchestrationResultsActivityName } from './publishOrchestrationResults'
 import { sendNotificationsActivityName } from './sendNotificationsActivity'
 import { validateRatingsActivityName } from './validateRatingsActivity'
 
@@ -29,6 +29,8 @@ export type CalculateRatingsActivityOutput = ActivityOutput & { actualResults: b
  * 4. SendNotifications
  *    Activity to send notifications to subscribed users about the newly published rating results.
  *    Only called if at least event has been closed with meaningful results (more than one rating). Called just once with the events that have meaningful results.
+ * 5. PublishOrchestrationResults
+ *    If the accumulation succeeded for at least one event, this activity is called once to save the Alert to the DB to notify the admins that the accumulation has finished.
  */
 const orchestrator: OrchestrationHandler = function* (context: OrchestrationContext) {
   const events: { eventId: number; state: EventState }[] = context.df.getInput()
@@ -42,7 +44,6 @@ const orchestrator: OrchestrationHandler = function* (context: OrchestrationCont
       eventsToRedo.map((e) => e.eventId)
     )
     if (!success) {
-      newAlertItem({ context, desc: 'Deletion of previous rating results failed!', level: AlertLevel.ERROR })
       return
     }
   }
@@ -58,38 +59,17 @@ const orchestrator: OrchestrationHandler = function* (context: OrchestrationCont
     ...events.filter((e) => e.state === EventState.ACCUMULATING).map((e) => e.eventId),
   ]
 
-  if (validationSuccess.length < parallelValidationTasks.length) {
-    newAlertItem({
-      context,
-      desc: `Validation of ${parallelValidationTasks.length - validationSuccess.length} event(s) failed!`,
-      level: AlertLevel.WARN,
-    })
-  }
-
   context.log(`Validation finished, starting the average rating calculation for ${accumulationInput.length} event(s).`)
   const parallelAccumulationTasks: df.Task[] = accumulationInput.map((eId) => context.df.callActivity(calculateAvgRatingActivityName, eId))
   const accumulationResults: CalculateRatingsActivityOutput[] = yield context.df.Task.all(parallelAccumulationTasks)
 
   const accumulationSuccess = accumulationResults.filter((r) => r.success)
-  if (accumulationSuccess.length < accumulationInput.length) {
-    newAlertItem({
-      context,
-      desc: `Accumulation of rating results failed for ${accumulationInput.length - accumulationSuccess.length} event(s)!`,
-      level: AlertLevel.WARN,
-    })
-  }
   if (accumulationSuccess.length > 0) {
-    newAlertItem({
-      context,
-      desc: `Accumulation of rating results finished for ${accumulationSuccess.length} event(s)!`,
-    })
     const eventsWithMeaningfulResults = accumulationSuccess.filter((r) => r.actualResults).map((r) => r.eventId)
     if (eventsWithMeaningfulResults.length > 0) {
-      const success = yield context.df.callActivity(sendNotificationsActivityName, eventsWithMeaningfulResults)
-      if (!success) {
-        newAlertItem({ context, desc: 'Email notification sending failed!', level: AlertLevel.ERROR })
-      }
+      yield context.df.callActivity(sendNotificationsActivityName, eventsWithMeaningfulResults)
     }
+    yield context.df.callActivity(publishOrchestrationResultsActivityName, accumulationSuccess.length)
   }
 
   context.log(`Orchestrator function finished`)

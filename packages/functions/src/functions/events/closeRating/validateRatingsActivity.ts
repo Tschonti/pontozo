@@ -1,8 +1,9 @@
 import { InvocationContext } from '@azure/functions'
-import { EventState } from '@pontozo/common'
+import { AlertLevel, EventState } from '@pontozo/common'
 import * as df from 'durable-functions'
 import { ActivityHandler } from 'durable-functions'
 import { DataSource } from 'typeorm'
+import { newAlertItem } from '../../../service/alert.service'
 import { DBConfig } from '../../../typeorm/configOptions'
 import Event from '../../../typeorm/entities/Event'
 import { ActivityOutput } from './closeRatingOrchestrator'
@@ -35,7 +36,12 @@ const validateRatings: ActivityHandler = async (eventId: number, context: Invoca
     await ads.manager.save(event)
     return { success: true, eventId }
   } catch (e) {
-    context.error(`Error in validate ratings activity for event:${eventId}: ${e}`)
+    context.error(`Validation of event:${eventId} failed: ${e}`)
+    await newAlertItem({
+      context,
+      desc: `Validation of event:${eventId} failed!`,
+      level: AlertLevel.ERROR,
+    })
     return { success: false, eventId }
   }
 }

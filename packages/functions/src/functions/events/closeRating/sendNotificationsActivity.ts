@@ -1,8 +1,9 @@
 import { InvocationContext } from '@azure/functions'
-import { RatingStatus, ResultNotificationOptions } from '@pontozo/common'
+import { AlertLevel, RatingStatus, ResultNotificationOptions } from '@pontozo/common'
 import * as df from 'durable-functions'
 import { ActivityHandler } from 'durable-functions'
 import { In } from 'typeorm'
+import { newAlertItem } from '../../../service/alert.service'
 import { sendResultsReadyEmail } from '../../../service/email.service'
 import { EmailRecipient } from '../../../typeorm/entities/EmailRecipient'
 import Event from '../../../typeorm/entities/Event'
@@ -43,6 +44,7 @@ const calculateAvgRating: ActivityHandler = async (eventIds: number[], context: 
     return true
   } catch (e) {
     context.error('error in send notification activity: ', e)
+    await newAlertItem({ context, desc: 'Email notification sending failed!', level: AlertLevel.ERROR })
     return false
   }
 }

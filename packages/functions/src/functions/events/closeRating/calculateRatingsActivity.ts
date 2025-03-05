@@ -1,9 +1,10 @@
 import { InvocationContext } from '@azure/functions'
-import { EventState, RatingStatus } from '@pontozo/common'
+import { AlertLevel, EventState, RatingStatus } from '@pontozo/common'
 import * as df from 'durable-functions'
 import { ActivityHandler } from 'durable-functions'
 import { DataSource, IsNull } from 'typeorm'
 import { getRedisClient } from '../../../redis/redisClient'
+import { newAlertItem } from '../../../service/alert.service'
 import { DBConfig } from '../../../typeorm/configOptions'
 import Event from '../../../typeorm/entities/Event'
 import EventRating from '../../../typeorm/entities/EventRating'
@@ -96,6 +97,11 @@ const calculateAvgRating: ActivityHandler = async (
     return { success: true, eventId, actualResults: parsed.ratingResults.score > -1 }
   } catch (e) {
     context.error(`Error in calculate average rating activity for event:${eventId}: ${e}`)
+    await newAlertItem({
+      context,
+      desc: `Error in calculate average rating activity for event:${eventId}!`,
+      level: AlertLevel.ERROR,
+    })
     return { success: false, eventId, actualResults: false }
   }
 }

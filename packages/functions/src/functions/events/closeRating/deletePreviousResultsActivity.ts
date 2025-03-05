@@ -1,8 +1,10 @@
 import { InvocationContext } from '@azure/functions'
+import { AlertLevel } from '@pontozo/common'
 import * as df from 'durable-functions'
 import { ActivityHandler } from 'durable-functions'
 import { DataSource, In } from 'typeorm'
 import { getRedisClient } from '../../../redis/redisClient'
+import { newAlertItem } from '../../../service/alert.service'
 import { DBConfig } from '../../../typeorm/configOptions'
 import { RatingResult } from '../../../typeorm/entities/RatingResult'
 
@@ -36,7 +38,8 @@ const deletePreviousResults: ActivityHandler = async (eventIds: number[], contex
     await redisClient.del(eventIds.map((eId) => `ratingResult:${eId}`))
     return true
   } catch (e) {
-    context.error(`Error in deleting previous results: ${e}`)
+    context.error(`Deletion of previous rating results failed: ${e}`)
+    await newAlertItem({ context, desc: `Deletion of previous rating results failed!`, level: AlertLevel.ERROR })
     return false
   }
 }
