@@ -98,7 +98,7 @@ export const NotificationPreferencesModal = () => {
                   {preferences?.restricted && (
                     <Alert mb={2} status="error">
                       <AlertIcon />
-                      Korábban nem sikerült kézbesíteni az értesítést az e-mail címedre, ezért letiltottuk azt. Kérlek adj meg egy új,
+                      Korábban nem sikerült kézbesíteni egy értesítést az e-mail címedre, ezért letiltottuk azt. Kérlek adj meg egy új,
                       érvényes e-mail címet az értesítések bekapcsolásához.
                     </Alert>
                   )}

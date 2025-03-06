@@ -7,12 +7,6 @@ variable "FA_FUNCTIONS_URL" {
   type = string
 }
 
-// TODO remove
-variable "ACS_CONNECTION_STRING" {
-  type      = string
-  sensitive = true
-}
-
 variable "DB_PWD" {
   type      = string
   sensitive = true
@@ -69,7 +63,7 @@ resource "azurerm_windows_function_app" "function-app" {
   }
 
   app_settings = {
-    "ACS_CONNECTION_STRING"    = var.ACS_CONNECTION_STRING // TODO get dynamically from terraform instance
+    "ACS_CONNECTION_STRING"    = azurerm_communication_service.acs.primary_connection_string
     "ADMINS"                   = var.FA_ADMINS
     "APIM_HOST"                = azurerm_api_management.apim.gateway_url
     "APIM_KEY"                 = azurerm_api_management_subscription.backend-sub.primary_key
