@@ -1,6 +1,6 @@
 import { app, HttpRequest, InvocationContext } from '@azure/functions'
 import { EventWithRating, PontozoException } from '@pontozo/common'
-import { getUserFromHeader } from '../../service/auth.service'
+import { getUserFromHeaderIfPresent } from '../../service/auth.service'
 import Event from '../../typeorm/entities/Event'
 import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
@@ -15,13 +15,13 @@ export const getOneEvent = async (req: HttpRequest, context: InvocationContext):
   try {
     const eventId = validateId(req)
 
-    const user = getUserFromHeader(req)
+    const user = getUserFromHeaderIfPresent(req)
     const ads = await getAppDataSource(context)
     const eventQuery = ads.getRepository(Event).findOne({ where: { id: eventId }, relations: { organisers: true, stages: true } })
     const userRatingQuery = ads
       .getRepository(EventRating)
-      .findOne({ where: { eventId: eventId, userId: user.szemely_id }, relations: { stages: true } })
-    const [event, userRating] = await Promise.all([eventQuery, userRatingQuery])
+      .findOne({ where: { eventId: eventId, userId: user?.szemely_id }, relations: { stages: true } })
+    const [event, userRating] = await Promise.all([eventQuery, user ? userRatingQuery : Promise.resolve(undefined)])
 
     if (!event) {
       throw new PontozoException('A verseny nem található!', 404)

@@ -6,6 +6,7 @@ import { PLayout } from './components/commons/PLayout'
 import { AuthorizedPage } from './pages/authorized/Authorized.page'
 import { ErrorPage } from './pages/error/error.page'
 import { EventDetailsPage } from './pages/events/EventDetails.page'
+import { EventRedirectPage } from './pages/events/EventRedirect.page'
 import { IndexPage } from './pages/events/Index.page'
 import { FAQPage } from './pages/faq/FAQ.page'
 import { LoginPage } from './pages/Login.page'
@@ -78,6 +79,11 @@ export const App = () => {
             <Route path={PATHS.EVENTS}>
               <Route path=":eventId">
                 <Route index element={<EventDetailsPage />} />
+              </Route>
+            </Route>
+            <Route path={PATHS.EVENT_REDIRECT}>
+              <Route path=":eventId">
+                <Route index element={<EventRedirectPage />} />
               </Route>
             </Route>
             <Route path={PATHS.RATINGS}>

@@ -7,6 +7,7 @@ export enum PATHS {
   SEASONS = '/admin/seasons',
   USERS = '/admin/users',
   EVENTS = '/events',
+  EVENT_REDIRECT = '/event-redirect',
   RATINGS = '/ratings',
   AUTHORIZED = '/authorized',
   PROFILE = '/profile',

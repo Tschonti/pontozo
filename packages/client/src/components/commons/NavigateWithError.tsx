@@ -15,5 +15,5 @@ export const NavigateWithError = ({ error, to }: Props) => {
     toast({ title: error.message, status: 'error' })
   }, [toast, error])
 
-  return <Navigate to={to} />
+  return <Navigate replace to={to} />
 }

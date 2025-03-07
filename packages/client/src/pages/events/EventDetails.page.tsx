@@ -1,4 +1,4 @@
-import { Button, Heading, HStack, Stack, Text, useToast, VStack } from '@chakra-ui/react'
+import { Alert, AlertIcon, AlertTitle, Button, Heading, HStack, Stack, Text, useToast, VStack } from '@chakra-ui/react'
 import { EventState, RatingRole, ratingRoleArray } from '@pontozo/common'
 import { useEffect, useState } from 'react'
 import { FaArrowLeft, FaDatabase, FaMedal } from 'react-icons/fa'
@@ -7,7 +7,6 @@ import { useRatingContext } from 'src/api/contexts/useRatingContext'
 import { useStartRatingMutation } from 'src/api/hooks/ratingHooks'
 import { EventRatingStateBadge } from 'src/components/commons/EventRatingStateBadge'
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
-import { LoginNavigate } from 'src/components/commons/LoginNavigate'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
 import { formatDateRange, getRatingEndDate, getRatingResultPublishedDate } from 'src/util/dateHelpers'
 import { onError } from 'src/util/onError'
@@ -61,10 +60,6 @@ export const EventDetailsPage = () => {
     }
   }
 
-  if (!isLoggedIn) {
-    return <LoginNavigate />
-  }
-
   if (dbQuery.isLoading) {
     return <LoadingSpinner />
   }
@@ -113,6 +108,12 @@ export const EventDetailsPage = () => {
           MTFSZ Adatbank
         </Button>
       </HStack>
+      {!isLoggedIn && (
+        <Alert status="warning">
+          <AlertIcon />
+          <AlertTitle>A verseny értékeléséhez először jelentkezz be!</AlertTitle>
+        </Alert>
+      )}
       <Heading size="md" mt={3}>
         Szerepkör
       </Heading>
@@ -126,7 +127,7 @@ export const EventDetailsPage = () => {
           role={r}
           onSelected={() => setRole(r)}
           selected={role === r}
-          disabled={!!userRating || event.state !== EventState.RATEABLE}
+          disabled={!!userRating || event.state !== EventState.RATEABLE || !isLoggedIn}
         />
       ))}
       <Heading size="md" mt={3}>
@@ -142,7 +143,7 @@ export const EventDetailsPage = () => {
           <StageListItem
             stage={s}
             key={s.id}
-            disabled={!!userRating || event.state !== EventState.RATEABLE}
+            disabled={!!userRating || event.state !== EventState.RATEABLE || !isLoggedIn}
             onChecked={(c) => onItemChecked(c, s.id)}
             checked={stageIds.includes(s.id)}
           />
@@ -155,7 +156,7 @@ export const EventDetailsPage = () => {
           isLoading={startRating.isLoading || dbQuery.isLoading}
           eventWithRating={dbQuery.data}
           onStartClick={onStartClick}
-          startDisabled={!role || !stageIds.length}
+          startDisabled={!role || !stageIds.length || !isLoggedIn}
           continueDisabled={event.state !== EventState.RATEABLE}
         />
       </HStack>

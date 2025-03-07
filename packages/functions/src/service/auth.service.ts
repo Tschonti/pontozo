@@ -19,6 +19,14 @@ export const getUserFromHeader = (req: HttpRequest): DbUser => {
   }
 }
 
+export const getUserFromHeaderIfPresent = (req: HttpRequest): DbUser | undefined => {
+  const authHeader = req.headers.get('Authorization')
+  if (!authHeader) {
+    return
+  }
+  return getUserFromHeader(req)
+}
+
 export const getUserFromHeaderAndAssertAdmin = async (req: HttpRequest, context: InvocationContext): Promise<DbUser> => {
   const user = getUserFromHeader(req)
   context.log(`User #${user.szemely_id} attempting to access entity reserved for admins`)
