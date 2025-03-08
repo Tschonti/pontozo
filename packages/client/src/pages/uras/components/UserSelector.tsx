@@ -130,7 +130,9 @@ export const UserSelector = ({ setUser, user, edit }: Props) => {
                       {u.vezeteknev} {u.keresztnev}
                     </Heading>
 
-                    <Text>{u.szul_dat}</Text>
+                    <Text>
+                      Szül.: {u.szul_dat}, személy ID: {u.szemely_id}
+                    </Text>
                   </Box>
                 ))}
             </VStack>

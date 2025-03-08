@@ -10,7 +10,7 @@ import Season from '../../typeorm/entities/Season'
 import Stage from '../../typeorm/entities/Stage'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { currentSeasonFilter } from '../../util/currentSeasonFilter'
-import { APIM_HOST, APIM_KEY } from '../../util/env'
+import { APIM_HOST, APIM_KEY, ENV } from '../../util/env'
 
 /**
  * Called every noon automatically to import events from MTFSZ DB.
@@ -83,19 +83,21 @@ export const importEvents = async (myTimer: Timer, context: InvocationContext): 
     if (eventsToSave.length > 0) {
       await newAlertItem({ ads, context, desc: `${eventsToSave.length} events imported` })
 
-      const emailRecipients = await emailRepo.find({
-        where: { eventImportedNotifications: Not(EventImportedNotificationOptions.NONE), restricted: false, email: Not(IsNull()) },
-      })
-      const nationalEvents = eventsToSave.filter((e) => e.highestRank !== Rank.REGIONAL)
-      await Promise.all(
-        emailRecipients.map((er) =>
-          sendEventImportEmail(
-            er,
-            er.eventImportedNotifications === EventImportedNotificationOptions.ALL ? eventsToSave : nationalEvents,
-            context
+      if (ENV === 'production') {
+        const emailRecipients = await emailRepo.find({
+          where: { eventImportedNotifications: Not(EventImportedNotificationOptions.NONE), restricted: false, email: Not(IsNull()) },
+        })
+        const nationalEvents = eventsToSave.filter((e) => e.highestRank !== Rank.REGIONAL)
+        await Promise.all(
+          emailRecipients.map((er) =>
+            sendEventImportEmail(
+              er,
+              er.eventImportedNotifications === EventImportedNotificationOptions.ALL ? eventsToSave : nationalEvents,
+              context
+            )
           )
         )
-      )
+      }
     }
   } catch (error) {
     await newAlertItem({ context, desc: `Error during event import: ${error}`, level: AlertLevel.ERROR })

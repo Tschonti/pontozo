@@ -24,8 +24,8 @@ const calculateAvgRating: ActivityHandler = async (eventIds: number[], context: 
     const eventRatingRepo = ads.getRepository(EventRating)
     const [events, recipientsOfAll, recipientsOfRated] = await Promise.all([
       ads.getRepository(Event).find({ where: { id: In(eventIds) } }),
-      emailRepo.find({ where: { resultNotifications: ResultNotificationOptions.ALL } }),
-      emailRepo.find({ where: { resultNotifications: ResultNotificationOptions.ONLY_RATED } }),
+      emailRepo.find({ where: { resultNotifications: ResultNotificationOptions.ALL, restricted: false } }),
+      emailRepo.find({ where: { resultNotifications: ResultNotificationOptions.ONLY_RATED, restricted: false } }),
     ])
     await Promise.all([
       ...recipientsOfAll.map((r) => sendResultsReadyEmail(r, events, context)),

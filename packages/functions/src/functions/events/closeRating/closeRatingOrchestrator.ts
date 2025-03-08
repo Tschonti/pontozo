@@ -1,6 +1,7 @@
 import { EventState } from '@pontozo/common'
 import * as df from 'durable-functions'
 import { OrchestrationContext, OrchestrationHandler } from 'durable-functions'
+import { ENV } from '../../../util/env'
 import { calculateAvgRatingActivityName } from './calculateRatingsActivity'
 import { deletePreviousResultsActivityName } from './deletePreviousResultsActivity'
 import { publishOrchestrationResultsActivityName } from './publishOrchestrationResults'
@@ -66,7 +67,7 @@ const orchestrator: OrchestrationHandler = function* (context: OrchestrationCont
   const accumulationSuccess = accumulationResults.filter((r) => r.success)
   if (accumulationSuccess.length > 0) {
     const eventsWithMeaningfulResults = accumulationSuccess.filter((r) => r.actualResults).map((r) => r.eventId)
-    if (eventsWithMeaningfulResults.length > 0) {
+    if (eventsWithMeaningfulResults.length > 0 && ENV === 'production') {
       yield context.df.callActivity(sendNotificationsActivityName, eventsWithMeaningfulResults)
     }
     yield context.df.callActivity(publishOrchestrationResultsActivityName, accumulationSuccess.length)

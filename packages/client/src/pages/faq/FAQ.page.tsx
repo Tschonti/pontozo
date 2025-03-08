@@ -61,7 +61,7 @@ const faqItems: { title: string; paragraphs: string[] }[] = [
 export const FAQPage = () => {
   return (
     <VStack gap={4} alignItems="flex-start">
-      <Helmet title="Gyakran Ismételt Kérdések" />
+      <Helmet title="Pontoz-O | GYIK" />
       <Heading>Gyakran Ismételt Kérdések</Heading>
       <Accordion w="100%" bg="white" defaultIndex={[...faqItems.map((_, i) => i), faqItems.length]} allowMultiple>
         {faqItems.map((q) => (

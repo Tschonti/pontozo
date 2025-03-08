@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, AlertTitle, Heading, Link, SimpleGrid, Text } from '@chakra-ui/react'
+import { Heading, SimpleGrid, Text } from '@chakra-ui/react'
 import { useFetchRateableEventsFromDb } from 'src/api/hooks/eventQueryHooks'
 import { HelmetTitle } from 'src/components/commons/HelmetTitle'
 import { NavigateWithError } from 'src/components/commons/NavigateWithError'
@@ -21,16 +21,7 @@ export const IndexPage = () => {
   return (
     <>
       <HelmetTitle title="Pontoz-O" />
-      <Alert status="warning" my={2}>
-        <AlertIcon />
-        <AlertTitle>
-          Az oldal még fejlesztés alatt áll! Visszajelzéseket és hibajelentéseket{' '}
-          <Link href="mailto:feketesamu@gmail.com?subject=Pontoz-O visszajelzés" isExternal color="brand.500">
-            emailben
-          </Link>{' '}
-          várok.
-        </AlertTitle>
-      </Alert>
+
       <Heading my={5}>Értékelhető versenyek</Heading>
       {data.length > 0 ? (
         <SimpleGrid spacing={4} columns={[1, 1, 2]}>
