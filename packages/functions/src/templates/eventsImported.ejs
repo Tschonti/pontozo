@@ -8,7 +8,7 @@
       Új értékelhető versenyek lettek importálva a Pontoz-O rendszerbe! A következő 8 napban van lehetőséged értékelni őket.
     </p>
     <div style="width: 100%">
-      <% events.forEach(function(e) { %> <%-include('event',{path: `results`, eventId: e.id, name: e.name, date: e.startDate})%> <% }) %>
+      <% events.forEach(function(e) { %> <%-include('event',{path: `events`, eventId: e.id, name: e.name, date: e.startDate})%> <% }) %>
     </div>
     <a style="text-decoration: none; color: black" target="_blank" href="https://pontozo.mtfsz.hu/"
       ><button

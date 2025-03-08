@@ -1,15 +1,11 @@
 import { HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
-import { DbUser, PontozoError, PontozoException } from '@pontozo/common'
-import { getUserFromHeader } from '../service/auth.service'
+import { PontozoError, PontozoException } from '@pontozo/common'
+import { getUserFromHeaderIfPresent } from '../service/auth.service'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const handleException = (req: HttpRequest, context: InvocationContext, error: any): HttpResponseInit => {
-  let user: DbUser
-  try {
-    user = getUserFromHeader(req)
-  } catch {
-    user = null
-  }
+  const user = getUserFromHeaderIfPresent(req)
+
   if (error instanceof PontozoException) {
     if (user) {
       context.log(`User #${user.szemely_id} encountered the following normal error: ${JSON.stringify(error.getError())}`)
