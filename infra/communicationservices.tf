@@ -34,6 +34,8 @@ resource "azurerm_eventgrid_system_topic_event_subscription" "acs-email-events" 
   }
 
   azure_function_endpoint {
-    function_id = format("%s%s", azurerm_windows_function_app.function-app.id, "/functions/emailDeliveryCallback")
+    function_id                       = format("%s%s", azurerm_windows_function_app.function-app.id, "/functions/emailDeliveryCallback")
+    max_events_per_batch              = 10
+    preferred_batch_size_in_kilobytes = 64
   }
 }
