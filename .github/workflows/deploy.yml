@@ -43,10 +43,10 @@ jobs:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@v4
 
-      - name: Setup Node 20 Environment
+      - name: Setup Node 22 Environment
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: 'Resolve Project Dependencies Using Npm'
         shell: bash

@@ -2,10 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">=3.96.0"
-    }
-    azapi = {
-      source = "azure/azapi"
+      version = ">=4.22.0"
     }
   }
   cloud {
@@ -18,6 +15,16 @@ terraform {
 
 provider "azurerm" {
   features {}
+  resource_provider_registrations = "core"
+  resource_providers_to_register = [
+    "Microsoft.ApiManagement",
+    "Microsoft.Cache",
+    "Microsoft.Communication",
+    "Microsoft.EventGrid",
+    "Microsoft.Sql",
+    "Microsoft.Storage",
+    "Microsoft.Web"
+  ]
 }
 
 resource "azurerm_resource_group" "pontozo-rg" {
