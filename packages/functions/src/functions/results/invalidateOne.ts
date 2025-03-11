@@ -1,5 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
-import { AlertLevel, EventState } from '@pontozo/common'
+import { AlertLevel, EventState, PontozoException } from '@pontozo/common'
 import { newAlertItem } from '../../service/alert.service'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import Event from '../../typeorm/entities/Event'
@@ -19,6 +19,9 @@ export const invalidateOneResult = async (req: HttpRequest, context: InvocationC
     const eventRepo = ads.getRepository(Event)
 
     const event = await eventRepo.findOne({ where: { id: eventId } })
+    if (!event) {
+      throw new PontozoException('A verseny nem található!', 404)
+    }
     event.state = EventState.INVALIDATED
     await eventRepo.save(event)
     await newAlertItem({
@@ -27,6 +30,9 @@ export const invalidateOneResult = async (req: HttpRequest, context: InvocationC
       desc: `User:${user.szemely_id} invalidated the rating results of event:${eventId}`,
       level: AlertLevel.WARN,
     })
+    return {
+      status: 204,
+    }
   } catch (error) {
     return handleException(req, context, error)
   }

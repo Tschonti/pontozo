@@ -35,6 +35,13 @@ export const copyWeights = async (req: HttpRequest, context: InvocationContext):
     })
     const [destSeason, sourceSeason] = await Promise.all([destSeasonPromise, sourceSeasonPromise])
 
+    if (!destSeason) {
+      throw new PontozoException('A cél szezon nem található!', 404)
+    }
+    if (!sourceSeason) {
+      throw new PontozoException('A forrás szezon nem található!', 404)
+    }
+
     const destCriterionIds = new Set(destSeason.categories.map((stc) => stc.category.criteria.map((ctc) => ctc.criterionId)).flat())
     const criteriaToCopy = sourceSeason.categories
       .map((stc) =>

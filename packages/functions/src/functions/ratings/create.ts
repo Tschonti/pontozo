@@ -56,7 +56,7 @@ export const createRating = async (req: HttpRequest, context: InvocationContext)
       jsonBody: res,
     }
   } catch (e) {
-    switch (e.constructor) {
+    switch (e?.constructor) {
       case QueryFailedError:
         if ((e as QueryFailedError).message.startsWith('Error: Violation of UNIQUE KEY constraint')) {
           return {

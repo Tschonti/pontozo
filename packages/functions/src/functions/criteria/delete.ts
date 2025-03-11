@@ -12,7 +12,7 @@ export const deleteCriterion = async (req: HttpRequest, context: InvocationConte
     const criterionRepo = (await getAppDataSource(context)).getRepository(Criterion)
     const res = await criterionRepo.delete({ id })
 
-    if (res.affected > 0) {
+    if (typeof res.affected === 'number' && res.affected > 0) {
       context.log(`User #${user.szemely_id} deleted criterion #${id}`)
     }
     return {

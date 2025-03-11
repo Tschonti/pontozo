@@ -29,7 +29,7 @@ export const getEventResults = async (req: HttpRequest, context: InvocationConte
         ?.map((s) => parseInt(s))
         .filter((n) => !isNaN(n)) ?? []
 
-    let season: Season
+    let season: Season | null
     const ads = await getAppDataSource(context)
     const seasonRepo = ads.getRepository(Season)
     const categoryRepo = ads.getRepository(Category)
@@ -63,7 +63,7 @@ export const getEventResults = async (req: HttpRequest, context: InvocationConte
       where: [
         { categoryId: In(categories.map((c) => c.id)), eventId: In(filteredEvents.map((e) => e.id)) },
         { criterionId: In(criteria.map((c) => c.id)), eventId: In(filteredEvents.map((e) => e.id)) },
-        includeTotal ? { categoryId: IsNull(), criterionId: IsNull() } : undefined,
+        includeTotal ? { categoryId: IsNull(), criterionId: IsNull() } : {},
       ],
       relations: { children: { children: true } },
     })

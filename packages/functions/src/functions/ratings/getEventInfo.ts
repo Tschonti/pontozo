@@ -1,7 +1,6 @@
 import { app, HttpRequest, InvocationContext } from '@azure/functions'
-import { CategoryWithCriteria, EventRatingInfo, isHigherRank, PontozoException } from '@pontozo/common'
+import { CategoryWithCriteria, Criterion, EventRatingInfo, isHigherRank, PontozoException } from '@pontozo/common'
 import { getUserFromHeader } from '../../service/auth.service'
-import Criterion from '../../typeorm/entities/Criterion'
 import EventRating from '../../typeorm/entities/EventRating'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { handleException } from '../../util/handleException'
@@ -48,8 +47,8 @@ export const getEventInfo = async (req: HttpRequest, context: InvocationContext)
             } as Criterion
           })
           .filter((c) => c.roles.includes(eventRating.role) && (isHigherRank(event) || !c.nationalOnly))
-        const eventCriteria = []
-        const stageCriteria = []
+        const eventCriteria: Criterion[] = []
+        const stageCriteria: Criterion[] = []
         filteredCriteria.forEach((c) => {
           if (c.stageSpecific) {
             stageCriteria.push(c)

@@ -25,5 +25,5 @@ export const useUpdateUraMutation = (uraId: number) => {
 }
 
 export const useDeleteUraMutation = (uraId: number) => {
-  return useMutation<CreateResponse[], PontozoError>(async () => (await functionAxios.delete(`/uras/${uraId}`)).data)
+  return useMutation<unknown, PontozoError>(async () => (await functionAxios.delete(`/uras/${uraId}`)).data)
 }

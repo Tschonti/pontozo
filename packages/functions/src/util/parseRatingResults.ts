@@ -18,12 +18,12 @@ export const parseRatingResults = (results: RR_DB[], event: DbEvent): EventWithR
   }))
   return {
     ...event,
-    ratingResults: parsed.find((r) => !r.stageId),
-    stages: event.stages.map((s) => ({ ...s, ratingResults: parsed.find((r) => r.stageId === s.id) })),
+    ratingResults: parsed.find((r) => !r.stageId) as RatingResultWithJoins,
+    stages: event.stages?.map((s) => ({ ...s, ratingResults: parsed.find((r) => r.stageId === s.id) })) ?? [],
   }
 }
 
-const parseCriterion = (c: Criterion_DB | undefined): Criterion_DTO => {
+const parseCriterion = (c: Criterion_DB | undefined): Criterion_DTO | undefined => {
   if (!c) return undefined
   return {
     ...c,
@@ -36,7 +36,7 @@ export const parseRatingResultsWithChildren = (result: RR_DB): RatingResultWithC
   items: JSON.parse(result.items ?? '[]'),
   children: result.children?.map((c) => ({
     ...c,
-    items: JSON.parse(c.items),
+    items: JSON.parse(c.items ?? '[]'),
     // Trust me, I'm smarter than TypeScript
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     children: c.children?.map((cc) => ({ ...cc, items: JSON.parse(cc.items ?? '[]') } as any)),

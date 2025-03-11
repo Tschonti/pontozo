@@ -22,7 +22,7 @@ export const getMessages = async (req: HttpRequest, context: InvocationContext):
       jsonBody: {
         messages: ratingsWithMessages.map((er) => ({
           eventRatingId: er.id,
-          message: er.message,
+          message: er.message as string,
           role: er.role,
           ageGroup: getAgeGroupFromAge(er.raterAge),
         })),

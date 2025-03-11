@@ -7,7 +7,7 @@ export const validateWithWhitelist = async (object: object): Promise<void> => {
   if (errors.length > 0) {
     throw new PontozoException(
       `Validation failed: ${errors
-        .map((e) => Object.values(e.constraints))
+        .map((e) => Object.values(e.constraints ? e.constraints : []))
         .flat()
         .join(', ')}`,
       400

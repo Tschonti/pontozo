@@ -47,9 +47,12 @@ export const updateSeason = async (req: HttpRequest, context: InvocationContext)
     dto.categoryIds.forEach((cId, idx) => {
       if (!newStcs.map((stc) => stc.category.id).includes(cId)) {
         const newStc = new SeasonToCategory()
-        newStc.category = categories.find((c) => c.id === cId)
-        newStc.order = idx
-        newStcs.push(newStc)
+        const category = categories.find((c) => c.id === cId)
+        if (category) {
+          newStc.category = category
+          newStc.order = idx
+          newStcs.push(newStc)
+        }
       }
     })
     season.categories = newStcs

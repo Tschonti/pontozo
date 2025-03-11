@@ -1,7 +1,7 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { GetCriterionRatings, PontozoException } from '@pontozo/common'
 import { plainToClass } from 'class-transformer'
-import { In } from 'typeorm'
+import { In, IsNull } from 'typeorm'
 import { getUserFromHeader } from '../../service/auth.service'
 import CriterionRating from '../../typeorm/entities/CriterionRating'
 import EventRating from '../../typeorm/entities/EventRating'
@@ -32,7 +32,7 @@ export const getCriterionRatings = async (req: HttpRequest, context: InvocationC
     if (eventRating.userId !== user.szemely_id) {
       throw new PontozoException('Nincs jogosultságod a szempontok lekéréshez', 403)
     }
-    const stageId = dto.stageId || null
+    const stageId = dto.stageId || IsNull()
     const ratings = await criterionRatingRepo.find({ where: { criterionId: In(dto.criterionIds), eventRatingId: eventRating.id, stageId } })
 
     return {

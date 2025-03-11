@@ -21,7 +21,7 @@ export const getOneEvent = async (req: HttpRequest, context: InvocationContext):
     const userRatingQuery = ads
       .getRepository(EventRating)
       .findOne({ where: { eventId: eventId, userId: user?.szemely_id }, relations: { stages: true } })
-    const [event, userRating] = await Promise.all([eventQuery, user ? userRatingQuery : Promise.resolve(undefined)])
+    const [event, userRating] = await Promise.all([eventQuery, user ? userRatingQuery : Promise.resolve(null)])
 
     if (!event) {
       throw new PontozoException('A verseny nem található!', 404)

@@ -19,6 +19,9 @@ export const updateURA = async (req: HttpRequest, context: InvocationContext): P
 
     const uraRepo = (await getAppDataSource(context)).getRepository(UserRoleAssignment)
     const ura = await uraRepo.findOne({ where: { id } })
+    if (!ura) {
+      throw new PontozoException('Kinevezés nem található!', 404)
+    }
     const user = await getUserById(ura.userId)
 
     ura.role = dto.role
@@ -33,7 +36,7 @@ export const updateURA = async (req: HttpRequest, context: InvocationContext): P
       jsonBody: await uraRepo.save(ura),
     }
   } catch (e) {
-    switch (e.constructor) {
+    switch (e?.constructor) {
       case QueryFailedError:
         if ((e as QueryFailedError).message.startsWith('Error: Violation of UNIQUE KEY constraint')) {
           return {

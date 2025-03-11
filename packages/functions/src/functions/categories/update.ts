@@ -32,7 +32,7 @@ export const updateCategory = async (req: HttpRequest, context: InvocationContex
     }
     category.name = dto.name
     category.description = dto.description
-    const newCtcs = []
+    const newCtcs: CategoryToCriterion[] = []
     category.criteria.forEach(async (ctc) => {
       if (dto.criterionIds.includes(ctc.criterion.id)) {
         newCtcs.push(ctc)
@@ -48,9 +48,12 @@ export const updateCategory = async (req: HttpRequest, context: InvocationContex
     dto.criterionIds.forEach((cId, idx) => {
       if (!newCtcs.map((ctc) => ctc.criterion.id).includes(cId)) {
         const newCtc = new CategoryToCriterion()
-        newCtc.criterion = criteria.find((c) => c.id === cId)
-        newCtc.order = idx
-        newCtcs.push(newCtc)
+        const criterion = criteria.find((c) => c.id === cId)
+        if (criterion) {
+          newCtc.criterion = criterion
+          newCtc.order = idx
+          newCtcs.push(newCtc)
+        }
       }
     })
     category.criteria = newCtcs

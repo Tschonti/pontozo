@@ -50,7 +50,7 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
       throw new PontozoException('Ezen szempont értékelése nem engedett a te szerepköröddel!', 403)
     }
     if (dto.value >= 0 || dto.value < -1) {
-      if (!criterion[`text${dto.value}`]) {
+      if (!criterion[`text${dto.value}` as keyof Criterion]) {
         throw new PontozoException('Érvénytelen értékelés!', 400)
       }
     } else if (!criterion.allowEmpty) {
@@ -71,7 +71,7 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
 
     const criterionRatingRepo = ads.getRepository(CriterionRating)
     const rating = await criterionRatingRepo.findOneBy({ criterion: { id: dto.criterionId }, eventRating: { id }, stageId: dto.stageId })
-    let result: InsertResult
+    let result: InsertResult | undefined = undefined
     if (rating === null) {
       result = await criterionRatingRepo.insert({
         criterion: { id: dto.criterionId },
@@ -85,7 +85,7 @@ export const rateOne = async (req: HttpRequest, context: InvocationContext): Pro
     }
 
     context.log(
-      `User #${user.szemely_id} saved CriterionRating #${result ? result.identifiers[0].id : rating.id} for Event #${
+      `User #${user.szemely_id} saved CriterionRating #${result ? result.identifiers[0].id : rating?.id} for Event #${
         eventRating.eventId
       }, Criterion #${criterion.id}`
     )

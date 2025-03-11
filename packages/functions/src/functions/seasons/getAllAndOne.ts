@@ -1,5 +1,5 @@
 import { app, HttpRequest, InvocationContext } from '@azure/functions'
-import { AllSeasonsAndOne } from '@pontozo/common'
+import { AllSeasonsAndOne, PontozoException } from '@pontozo/common'
 import { LessThan } from 'typeorm'
 import Season from '../../typeorm/entities/Season'
 import { getAppDataSource } from '../../typeorm/getConfig'
@@ -13,7 +13,7 @@ export const getAllAndOneSeasons = async (req: HttpRequest, context: InvocationC
     const ads = await getAppDataSource(context)
     const seasonRepo = ads.getRepository(Season)
     const seasons = await seasonRepo.find({ where: { startDate: LessThan(now) }, order: { endDate: 'DESC' } })
-    let selectedSeason: Season
+    let selectedSeason: Season | undefined | null
     if (seasonId) {
       selectedSeason = seasons.find((s) => s.id === parseInt(seasonId))
     }
@@ -24,6 +24,9 @@ export const getAllAndOneSeasons = async (req: HttpRequest, context: InvocationC
       where: { id: selectedSeason.id },
       relations: { categories: { category: { criteria: { criterion: true } } } },
     })
+    if (!selectedSeason) {
+      throw new PontozoException('A szezon nem található!', 404)
+    }
     return {
       jsonBody: {
         selectedSeason: {

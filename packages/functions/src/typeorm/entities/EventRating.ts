@@ -39,7 +39,7 @@ class EventRating implements IEventRating {
   status: RatingStatus
 
   @Column({ nullable: true, type: 'nvarchar', length: 'max' })
-  message?: string
+  message?: string | null
 
   @Column()
   @Check("role in('COMPETITOR', 'COACH', 'ORGANISER', 'JURY')")

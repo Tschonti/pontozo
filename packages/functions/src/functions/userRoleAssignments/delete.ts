@@ -14,12 +14,14 @@ export const deleteURA = async (req: HttpRequest, context: InvocationContext): P
     const [redisClient, ads] = await Promise.all([getRedisClient(context), getAppDataSource(context)])
     const uraRepo = ads.getRepository(UserRoleAssignment)
     const ura = await uraRepo.findOne({ where: { id } })
-    const res = await uraRepo.delete({ id })
-    await redisClient.hDel(`user:${ura.userId}`, `${id}`)
+    if (ura) {
+      await uraRepo.delete({ id })
+      await redisClient.hDel(`user:${ura.userId}`, `${id}`)
 
-    context.log(`User #${user.szemely_id} deleted URA #${id}`)
+      context.log(`User #${user.szemely_id} deleted URA #${id}`)
+    }
     return {
-      jsonBody: res,
+      status: 204,
     }
   } catch (error) {
     return handleException(req, context, error)

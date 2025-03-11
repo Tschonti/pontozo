@@ -1,4 +1,5 @@
 import { EmailClient, EmailMessage, KnownEmailSendStatus } from '@azure/communication-email'
+import { PipelinePolicy } from '@azure/core-rest-pipeline'
 import { InvocationContext } from '@azure/functions'
 import { AlertLevel, EmailRecipient } from '@pontozo/common'
 import * as ejs from 'ejs'
@@ -38,6 +39,7 @@ const renderEmail = async (templateName: 'eventsImported' | 'resultsPublished', 
 }
 
 const sendEmail = async (recipient: EmailRecipient, subject: string, content: string, context: InvocationContext): Promise<void> => {
+  if (!recipient.email) return
   const message: EmailMessage = {
     senderAddress: ACS_EMAIL_SENDER,
     content: {
@@ -80,12 +82,12 @@ const sendEmail = async (recipient: EmailRecipient, subject: string, content: st
     }
   }
 
-  if (poller.getResult().status !== KnownEmailSendStatus.Succeeded) {
-    context.error(poller.getResult().error)
+  if (poller.getResult()?.status !== KnownEmailSendStatus.Succeeded) {
+    context.error(poller.getResult()?.error)
   }
 }
 
-const catch429Policy = (context: InvocationContext) => ({
+const catch429Policy = (context: InvocationContext): PipelinePolicy => ({
   name: 'catch429Policy',
   async sendRequest(request, next) {
     const response = await next(request)

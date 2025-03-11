@@ -12,7 +12,7 @@ export const deleteCategory = async (req: HttpRequest, context: InvocationContex
     const categoryRepo = (await getAppDataSource(context)).getRepository(Category)
     const res = await categoryRepo.delete({ id })
 
-    if (res.affected > 0) {
+    if (typeof res.affected === 'number' && res.affected > 0) {
       context.log(`User #${user.szemely_id} deleted category #${id}`)
     }
     return {

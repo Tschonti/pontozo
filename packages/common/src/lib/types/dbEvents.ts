@@ -25,9 +25,11 @@ export enum EventState {
 
 export interface EventWithRating {
   event: DbEvent
-  userRating?: EventRating & {
-    stages: DbStage[]
-  }
+  userRating?:
+    | (EventRating & {
+        stages: DbStage[]
+      })
+    | null
 }
 
 export enum Rank {

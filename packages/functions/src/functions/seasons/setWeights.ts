@@ -40,7 +40,7 @@ export const setWeights = async (req: HttpRequest, context: InvocationContext): 
       if (!season) {
         throw new PontozoException('A szezon nem található!', 404)
       }
-      let criterion: Criterion
+      let criterion: Criterion | null = null
       for (const stc of season.categories) {
         for (const ctc of stc.category.criteria) {
           if (ctc.criterionId === criterionId) {

@@ -32,7 +32,7 @@ export const createURA = async (req: HttpRequest, context: InvocationContext): P
       jsonBody: res.raw,
     }
   } catch (e) {
-    switch (e.constructor) {
+    switch (e?.constructor) {
       case QueryFailedError:
         if ((e as QueryFailedError).message.startsWith('Error: Violation of UNIQUE KEY constraint')) {
           return {

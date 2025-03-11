@@ -26,17 +26,6 @@ export const useFetchRateableEventsFromDb = () => {
   )
 }
 
-export const useFetchRateableEventsFromCache = () => {
-  return useQuery<DbEvent[], PontozoError>(
-    ['fetchEventsCached'],
-    async () => {
-      const res = await functionAxios.get<DbEvent[]>('cached/events/rateable')
-      return res.data.sort((e1, e2) => -e1.startDate.localeCompare(e2.startDate))
-    },
-    { retry: false, enabled: false } // cache likely won't be used in the future
-  )
-}
-
 export const useFetchEvent = (eventId: number) => {
   return useQuery<EventWithRating, PontozoError>(
     ['fetchEvent', eventId],
@@ -45,17 +34,6 @@ export const useFetchEvent = (eventId: number) => {
       return res.data
     },
     { retry: false, enabled: !isNaN(eventId) && eventId > 0 }
-  )
-}
-
-export const useFetchEventFromCache = (eventId: number, enabled: boolean) => {
-  return useQuery<EventWithRating, PontozoError>(
-    ['fetchEventCached', eventId],
-    async () => {
-      const res = await functionAxios.get(`cached/events/getOne/${eventId}`)
-      return res.data
-    },
-    { retry: false, enabled: enabled && !isNaN(eventId) && eventId > 0 }
   )
 }
 

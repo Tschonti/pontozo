@@ -35,7 +35,7 @@ const calculateAvgRating: ActivityHandler = async (eventIds: number[], context: 
         })
         return sendResultsReadyEmail(
           r,
-          eventsRated.map((er) => events.find((e) => e.id === er.eventId)),
+          eventsRated.map((er) => events.find((e) => e.id === er.eventId)).filter((e) => !!e),
           context
         )
       }),

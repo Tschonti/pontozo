@@ -23,6 +23,7 @@ export const deleteMessage = async (req: HttpRequest, context: InvocationContext
     }
     rating.message = null
     await ratingRepo.save(rating)
+    return { status: 204 }
   } catch (error) {
     return handleException(req, context, error)
   }

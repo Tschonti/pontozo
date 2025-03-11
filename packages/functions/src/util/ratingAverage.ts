@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   AgeGroup,
   ALL_AGE_GROUPS,
@@ -27,7 +28,7 @@ type TempAverage = {
 type ResultsPerRole<T> = { [R in RatingRole]: T }
 type ResulstPerRoleAndGroup<T> = ResultsPerRole<T> & {
   [G in AgeGroup]: ResultsPerRole<T>
-} & { score?: number; sumOfWeight?: number }
+} & { score: number; sumOfWeight: number }
 
 type CriterionResult<T> = ResulstPerRoleAndGroup<T> & {
   stages?: Record<number, ResulstPerRoleAndGroup<T>>
@@ -80,6 +81,8 @@ const createEmptyTempResults = (): ResulstPerRoleAndGroup<TempAverage> => ({
     [RatingRole.ORGANISER]: { count: 0, sum: 0 },
     [RatingRole.JURY]: { count: 0, sum: 0 },
   },
+  score: -1,
+  sumOfWeight: 0,
 })
 
 const createEmptyResults = (): ResulstPerRoleAndGroup<Average> => ({
@@ -106,6 +109,7 @@ const createEmptyResults = (): ResulstPerRoleAndGroup<Average> => ({
     [RatingRole.JURY]: { count: 0, average: -1 },
   },
   score: -1,
+  sumOfWeight: 0,
 })
 
 const addToTempResults = (results: CategoryTempResults, cr: CriterionRating, ageGroup: AgeGroup, role: RatingRole) => {
@@ -123,15 +127,15 @@ const addToTempResults = (results: CategoryTempResults, cr: CriterionRating, age
     if (!results[cr.criterionId].stages) {
       results[cr.criterionId].stages = {}
     }
-    results[cr.criterionId].stages[cr.stageId] = createEmptyTempResults()
+    results[cr.criterionId].stages![cr.stageId] = createEmptyTempResults()
   }
 
   if (cr.stageId) {
-    results[cr.criterionId].stages[cr.stageId][role].count++
-    results[cr.criterionId].stages[cr.stageId][role].sum += cr.value
+    results[cr.criterionId].stages![cr.stageId][role].count++
+    results[cr.criterionId].stages![cr.stageId][role].sum += cr.value
 
-    results[cr.criterionId].stages[cr.stageId][ageGroup][role].count++
-    results[cr.criterionId].stages[cr.stageId][ageGroup][role].sum += cr.value
+    results[cr.criterionId].stages![cr.stageId][ageGroup][role].count++
+    results[cr.criterionId].stages![cr.stageId][ageGroup][role].sum += cr.value
   }
 }
 
@@ -175,10 +179,7 @@ export const accumulateCriteria = (
       if (tempResult) {
         if (tempResult.stages) {
           Object.keys(tempResult.stages).forEach((stageId) => {
-            calcAvgForCriterion(
-              tempResult.stages[stageId],
-              results.stages.find((s) => s.stageId === parseInt(stageId))
-            )
+            calcAvgForCriterion(tempResult.stages![parseInt(stageId)], results.stages!.find((s) => s.stageId === parseInt(stageId))!)
           })
         }
         calcAvgForCriterion(tempResult, results)
@@ -199,12 +200,12 @@ export const extractStageResults = (
 ): CategoryWithCriteriaResults[][] => {
   return stages.map((s) =>
     categories.map((cat) => {
-      const catRes = results.find((cr) => cr.id === cat.id)
+      const catRes = results.find((cr) => cr.id === cat.id)!
       return {
         ...catRes,
         stageId: s.id,
         criteriaResults: catRes.criteriaResults.map((critRes) => ({
-          ...critRes.stages.find((critStage) => critStage.stageId === s.id),
+          ...critRes.stages!.find((critStage) => critStage.stageId === s.id)!,
           organiserWeight: critRes.organiserWeight,
           competitorWeight: critRes.competitorWeight,
           criterionId: critRes.criterionId,
@@ -245,8 +246,8 @@ const calculateCriterionScore = (critRes: ResulstPerRoleAndGroup<Average>, compW
 export const calculateScoresForStage = (results: CategoryWithCriteriaResults[]) => {
   results.forEach((catRes) => {
     catRes.criteriaResults.forEach((critRes) => {
-      calculateCriterionScore(critRes, critRes.competitorWeight, critRes.organiserWeight)
-      critRes.stages?.forEach((s) => calculateCriterionScore(s, critRes.competitorWeight, critRes.organiserWeight))
+      calculateCriterionScore(critRes, critRes.competitorWeight ?? 1, critRes.organiserWeight ?? 1)
+      critRes.stages?.forEach((s) => calculateCriterionScore(s, critRes.competitorWeight ?? 1, critRes.organiserWeight ?? 1))
     })
     const catScore = catRes.criteriaResults.reduce(
       (temp, critRes) => ({
@@ -299,7 +300,7 @@ export const mapToRatingResults = (eventId: number, catResults: CategoryWithCrit
       critRR.competitorWeight = critRes.competitorWeight
       critRR.organiserWeight = critRes.organiserWeight
       critRR.criterionId = critRes.criterionId
-      critRR.score = critRes.score
+      critRR.score = critRes.score ?? -1
       critRR.parent = catRR
       critRR.eventId = eventId
       critRR.items = JSON.stringify(mapCriterionResultToRRI(critRes))

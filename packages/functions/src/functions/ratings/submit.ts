@@ -26,6 +26,10 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
       relations: { ratings: true, event: { season: { criterionCount: true } }, stages: true },
     })
 
+    if (!rating) {
+      throw new PontozoException('Az értékelés nem létezik!', 404)
+    }
+
     if (rating.status === RatingStatus.SUBMITTED) {
       throw new PontozoException('Az értékelés már véglegesítve lett!', 400)
     }
@@ -37,6 +41,9 @@ export const submitOne = async (req: HttpRequest, context: InvocationContext): P
     }
     const { season } = rating.event
     const scc = season.criterionCount.find((cc) => cc.role === rating.role)
+    if (!scc) {
+      throw new PontozoException('A szezon még nem lett inicializálva, kérlek próbáld újra holnap!', 409)
+    }
     let criterionCount = scc.eventSpecificAnyRank + rating.stages.length * scc.stageSpecificAnyRank
     if (isHigherRank(rating.event)) {
       criterionCount += scc.eventSpecificHigherRank + rating.stages.length * scc.stageSpecificHigherRank

@@ -14,6 +14,7 @@ enum EmailDeliveryStatus {
 
 export async function emailDeliveryCallback(event: EventGridEvent, context: InvocationContext): Promise<void> {
   context.log('event grid event recieved:', event)
+  if (!event.data) return
   const deliveryStatus = event.data.status as EmailDeliveryStatus
   const ads = await getAppDataSource(context)
   if (deliveryStatus === EmailDeliveryStatus.Quarantined || deliveryStatus === EmailDeliveryStatus.FilteredSpam) {
