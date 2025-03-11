@@ -42,7 +42,7 @@ const recalculateRatingsInSeason = async (req: HttpRequest, context: InvocationC
       await ads.getRepository(Event).save(invalidatedEvents)
       const client = df.getClient(context)
       const instanceId = await client.startNew(orchestratorName, {
-        input: invalidatedEvents.map((e) => ({ eventId: e.id, state: e.state })),
+        input: { sendNotification: false, events: invalidatedEvents.map((e) => ({ eventId: e.id, state: e.state })) },
       })
       context.log(`Started orchestration with ID = '${instanceId}'.`)
     } else {

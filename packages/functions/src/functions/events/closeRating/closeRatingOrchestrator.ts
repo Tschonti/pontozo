@@ -11,6 +11,10 @@ import { validateRatingsActivityName } from './validateRatingsActivity'
 export const orchestratorName = 'closeRatingOrchestrator'
 export type ActivityOutput = { eventId: number; success: boolean }
 export type CalculateRatingsActivityOutput = ActivityOutput & { actualResults: boolean }
+export type OrchestratorParams = {
+  sendNotification: boolean
+  events: { eventId: number; state: EventState }[]
+}
 
 /**
  * Durable Functions orchestrator function that executes the activies that validate and accumulate the ratings of finished events.
@@ -29,12 +33,14 @@ export type CalculateRatingsActivityOutput = ActivityOutput & { actualResults: b
  *    Called in parallel for all events whose ratings were successfully validated and events that are in the ACCUMULATING phase (because previous accumulation failed)
  * 4. SendNotifications
  *    Activity to send notifications to subscribed users about the newly published rating results.
- *    Only called if at least event has been closed with meaningful results (more than one rating). Called just once with the events that have meaningful results.
+ *    Only called if at least event has been closed with meaningful results (more than one rating),
+ *    the app is running in production mode and the orchestration was initiated by the close rating starter (called automatically at night), not the manual recalculate function.
+ *    Called just once with the events that have meaningful results.
  * 5. PublishOrchestrationResults
  *    If the accumulation succeeded for at least one event, this activity is called once to save the Alert to the DB to notify the admins that the accumulation has finished.
  */
 const orchestrator: OrchestrationHandler = function* (context: OrchestrationContext) {
-  const events: { eventId: number; state: EventState }[] = context.df.getInput()
+  const { events, sendNotification }: OrchestratorParams = context.df.getInput()
   context.log(`Orchestrator function started, starting the validation of ratings for ${events.length} event(s).`)
 
   const eventsToRedo = events.filter((e) => e.state !== EventState.VALIDATING)
@@ -67,7 +73,7 @@ const orchestrator: OrchestrationHandler = function* (context: OrchestrationCont
   const accumulationSuccess = accumulationResults.filter((r) => r.success)
   if (accumulationSuccess.length > 0) {
     const eventsWithMeaningfulResults = accumulationSuccess.filter((r) => r.actualResults).map((r) => r.eventId)
-    if (eventsWithMeaningfulResults.length > 0 && ENV === 'production') {
+    if (eventsWithMeaningfulResults.length > 0 && ENV === 'production' && sendNotification) {
       yield context.df.callActivity(sendNotificationsActivityName, eventsWithMeaningfulResults)
     }
     yield context.df.callActivity(publishOrchestrationResultsActivityName, accumulationSuccess.length)

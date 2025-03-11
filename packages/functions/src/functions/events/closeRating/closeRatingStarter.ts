@@ -34,7 +34,9 @@ const closeRatingStarter = async (myTimer: Timer, context: InvocationContext): P
     const toClose = [...toArchive, ...eventsWithoutResults.filter((e) => e.state !== EventState.RATEABLE)]
     if (toClose.length > 0) {
       const client = df.getClient(context)
-      const instanceId = await client.startNew(orchestratorName, { input: toClose.map((e) => ({ eventId: e.id, state: e.state })) })
+      const instanceId = await client.startNew(orchestratorName, {
+        input: { sendNotification: true, events: toClose.map((e) => ({ eventId: e.id, state: e.state })) },
+      })
       context.log(`Started orchestration with ID = '${instanceId}'.`)
     }
   } catch (error) {
