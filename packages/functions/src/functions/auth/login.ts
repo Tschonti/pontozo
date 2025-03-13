@@ -28,13 +28,9 @@ export const login = async (req: HttpRequest, context: InvocationContext): Promi
       emailRecord.eventImportedNotifications = EventImportedNotificationOptions.ONLY_NATIONAL
       emailRecord.resultNotifications = ResultNotificationOptions.ONLY_RATED
       await emailRepo.save(emailRecord)
-    } else if (userEmail.email !== user.email) {
-      userEmail.email = user.email
-      userEmail.restricted = false
-      await emailRepo.save(userEmail)
     }
 
-    const jwtToken = jwt.sign({ ...user, roles }, JWT_SECRET, { expiresIn: '2 days' })
+    const jwtToken = jwt.sign({ ...user, roles }, JWT_SECRET, { expiresIn: '7 days' })
     context.log(`User #${user.szemely_id} signed in`)
     return {
       status: 302,

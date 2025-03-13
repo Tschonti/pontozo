@@ -10,3 +10,5 @@ export const useUserDataQuery = (enabled: boolean) =>
 
 export const useValidateUserRolesMutation = () =>
   useMutation<AuthToken, PontozoError>(async () => (await functionAxios.get<AuthToken>('auth/verify')).data)
+
+export const usePurgeUserMutation = () => useMutation<unknown, PontozoError>(async () => (await functionAxios.delete('users')).data)

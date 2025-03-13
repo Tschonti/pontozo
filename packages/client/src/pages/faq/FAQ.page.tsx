@@ -4,6 +4,12 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Box,
   Button,
   Heading,
@@ -11,11 +17,17 @@ import {
   Image,
   Link,
   Text,
+  useDisclosure,
+  useToast,
   VStack,
 } from '@chakra-ui/react'
+import { useRef } from 'react'
 import { Helmet } from 'react-helmet'
-import { FaEnvelope, FaGithub, FaLinkedin } from 'react-icons/fa'
+import { FaEnvelope, FaExclamationTriangle, FaGithub, FaLinkedin } from 'react-icons/fa'
+import { useAuthContext } from 'src/api/contexts/useAuthContext'
+import { usePurgeUserMutation } from 'src/api/hooks/authHooks'
 import { ColorfulExternalLink } from 'src/components/commons/ColorfulExternalLink'
+import { PATHS } from 'src/util/paths'
 
 const faqItems: { title: string; paragraphs: string[] }[] = [
   {
@@ -48,22 +60,52 @@ const faqItems: { title: string; paragraphs: string[] }[] = [
     ],
   },
   {
+    title: 'Meg mernék esküdni, hogy az egyik verseny pontszáma korábban még más volt. Hogy lehetséges ez?',
+    paragraphs: [
+      `Habár próbáljuk elkerülni, időnként (főleg a kezdeti időszakban) előfordulhat, hogy szezon közben változtatunk a szempontok súlyain,
+      majd újraszámoljuk a versenyek eredményeit. Egy verseny eredmény oldalán mindig látod, hogy mikor lett kiszámolva a jelenlegi ponszám.
+      Azt azonban garantáljuk, hogy azonos szezonban lévő versenyek mindigy ugyanazon szempontok és súlyok alapján lettek kiértékelve.`,
+    ],
+  },
+  {
     title: 'Valóban anonim az értékelésem?',
     paragraphs: [
       `A rendszer felhasználókhoz kapcsol minden értékelést, ez elengedhetetlen ahhoz, hogy később szerkeszd vagy megtekintsd a saját értékelésed.
       Az értékelések publikus eredményei azonban csak az összesített értékeléseket tartalmazzák, azok soha nem vezethetőek vissza egy adott személyre.
       Az adatbázisban tárolt, felhasználókhoz köthető értékelési adatokat harmadik féllel (például versenyrendezői csapattal) soha nem osztjuk meg.
-      Ez igaz a szempontokra leadott és a szöveges értékelésekre is. Fenntartjuk a jogát, hogy amennyiben egy szöveges értékelést nem tartunk konstruktívank, töröljük azt.`,
+      Ez igaz a szempontokra leadott és a szöveges értékelésekre is. Fenntartjuk a jogát, hogy amennyiben egy szöveges értékelést nem tartunk konstruktívnak, töröljük azt.`,
     ],
   },
 ]
 
 export const FAQPage = () => {
+  const { isLoggedIn, onLogout } = useAuthContext()
+  const { isLoading, mutateAsync } = usePurgeUserMutation()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const cancelRef = useRef(null)
+  const toast = useToast()
+
+  const onPurge = async () => {
+    try {
+      await mutateAsync()
+      toast({ title: 'Az adataidat sikeresen töröltük.', status: 'success' })
+      onClose()
+      onLogout(PATHS.FAQ)
+    } catch (e) {
+      console.error(e)
+      toast({ title: 'A fiókod törlése nem sikerült', status: 'error' })
+    }
+  }
   return (
     <VStack gap={4} alignItems="flex-start">
       <Helmet title="Pontoz-O | GYIK" />
       <Heading>Gyakran Ismételt Kérdések</Heading>
-      <Accordion w="100%" bg="white" defaultIndex={[...faqItems.map((_, i) => i), faqItems.length]} allowMultiple>
+      <Accordion
+        w="100%"
+        bg="white"
+        defaultIndex={[...faqItems.map((_, i) => i), faqItems.length, faqItems.length + 1, faqItems.length + 2]}
+        allowMultiple
+      >
         {faqItems.map((q) => (
           <AccordionItem key={q.title}>
             <h2>
@@ -97,7 +139,7 @@ export const FAQPage = () => {
           <AccordionPanel pb={4} justifyItems="center">
             <VStack justifyItems="center">
               <Image width={250} height={250} src="/img/samu.jpg" rounded="100%" />
-              <Heading fontSize={50} transform="auto" skewX={-10} style={{ fontVariant: 'small-caps' }}>
+              <Heading textAlign="center" fontSize={50} transform="auto" skewX={-10} style={{ fontVariant: 'small-caps' }}>
                 Fekete Sámuel
               </Heading>
               <HStack>
@@ -161,6 +203,108 @@ export const FAQPage = () => {
               >
                 GitHub repository
               </Button>
+            </VStack>
+          </AccordionPanel>
+        </AccordionItem>
+        <AccordionItem>
+          <h2 id="privacy-notice">
+            <AccordionButton>
+              <Box fontWeight="bold" as="span" flex="1" textAlign="left">
+                Hogyan kezeli az alkalmazás az adataimat?
+              </Box>
+              <AccordionIcon />
+            </AccordionButton>
+          </h2>
+          <AccordionPanel pb={4} justifyItems="center">
+            <VStack alignItems="flex-start">
+              <Text textAlign="justify">
+                A rendszer elsődleges adatforrása az MTFSZ adatbázisa. Bejelentkezéskor innen kérjük le a felhasználó adatait, azonban azok
+                közül kizárólag az e-mail címet, az MTFSZ személy azonosítót és a születési dátumot tároljuk. Az e-mail címet kizárólag
+                rendszerértesítések küldése érdekében tároljuk. Amennyiben semmiképpen nem szeretnél e-mailben értesítést kapni, a
+                profilodon található Értesítési beállítások menüben törölheted az e-mail címed.
+              </Text>
+
+              <Text textAlign="justify">
+                Az adatokat a Microsoft Azure Poland Central nevű régiójában (adatközpontjában) tároljuk, harmadik félnek soha nem adjuk ki.
+                Amennyiben szeretnéd az összes, hozzád kapcsolható adatot törölni a rendszerből, nyomd meg az alábbi gombot. Ezzel az e-mail
+                címed és az általad leadott értékelések törlésre kerülnek, valamint ki leszel jelentkeztetve. Ha újra bejelentkezel, ismét
+                használhatod az alkalmazást, azonban a korábban törölt értékeléseid nem visszaállíthatóak. Az általad értékelt versenyek
+                értékelési eredményeit nem befolyásolja az értékeléseid törlése, hiszen azok az értékelés lezárultakor számolódnak ki és nem
+                tartalmaznak személyre visszavezethető adatot. Ha viszont a későbbiekben egy verseny pontszáma valamilyen okból
+                újraszámolódik, akkor már a te értékelésed nélkül fog ez megtörténni.
+              </Text>
+              <Button
+                alignSelf="center"
+                onClick={onOpen}
+                isDisabled={!isLoggedIn}
+                color="white"
+                bg="black"
+                _hover={{ bg: 'gray.700' }}
+                leftIcon={<FaExclamationTriangle />}
+                aria-label="Fiókom és adataim törlése"
+              >
+                Fiókom és adataim törlése
+              </Button>
+              <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
+                <AlertDialogOverlay>
+                  <AlertDialogContent>
+                    <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                      Fiókom és adataim törlése
+                    </AlertDialogHeader>
+
+                    <AlertDialogBody textAlign="justify">
+                      Biztos vagy benne? Ezzel az e-mail címed és az általad leadott értékelések törlésre kerülnek, valamint ki leszel
+                      jelentkeztetve. Ha újra bejelentkezel, ismét használhatod az alkalmazást, azonban a korábban törölt értékeléseid nem
+                      visszaállíthatóak. Az általad értékelt versenyek értékelési eredményeit nem befolyásolja az értékeléseid törlése,
+                      hiszen azok az értékelés lezárultakor számolódnak ki és nem tartalmaznak személyre visszavezethető adatot. Ha viszont
+                      a későbbiekben egy verseny pontszáma valamilyen okból újraszámolódik, akkor már a te értékelésed nélkül fog ez
+                      megtörténni.
+                    </AlertDialogBody>
+
+                    <AlertDialogFooter>
+                      <Button ref={cancelRef} onClick={onClose}>
+                        Mégse
+                      </Button>
+                      <Button
+                        colorScheme="red"
+                        onClick={onPurge}
+                        ml={3}
+                        color="white"
+                        bg="black"
+                        isLoading={isLoading}
+                        _hover={{ bg: 'gray.700' }}
+                        leftIcon={<FaExclamationTriangle />}
+                      >
+                        Törlés
+                      </Button>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialogOverlay>
+              </AlertDialog>
+            </VStack>
+          </AccordionPanel>
+        </AccordionItem>
+        <AccordionItem>
+          <h2 id="cookie-notice">
+            <AccordionButton>
+              <Box fontWeight="bold" as="span" flex="1" textAlign="left">
+                Használ sütiket az alkalmazás?
+              </Box>
+              <AccordionIcon />
+            </AccordionButton>
+          </h2>
+          <AccordionPanel pb={4} justifyItems="center">
+            <VStack alignItems="flex-start">
+              <Text textAlign="justify">
+                Az alkalmazás elsősorban a működéshez elegendhetetlen sütiket használ. Sütiben tároljuk a téged azonosító tokent, mely
+                kijelentkezéskor vagy 7 nap után törlődik a böngésződből.
+              </Text>
+
+              <Text textAlign="justify">
+                Ezen kívül az oldal forgalmát a Microsoft Azure Application Insights rendszere méri, mely szintén használ sütiket a
+                felhasználók azonosításához. Időnként az IP-cím is küldésre kerül, azonban ezt soha nem tárolja, csak az egyes kérésekhez ez
+                alapján tud geolokációs információt (ország, régió, város) rendelni.
+              </Text>
             </VStack>
           </AccordionPanel>
         </AccordionItem>

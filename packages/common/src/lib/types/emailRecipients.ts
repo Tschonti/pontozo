@@ -30,6 +30,6 @@ export class UpdateEmailRecipient {
   resultNotifications?: ResultNotificationOptions
 
   @IsOptional()
-  @IsEnum(ResultNotificationOptions)
+  @IsEnum(EventImportedNotificationOptions)
   eventImportedNotifications?: EventImportedNotificationOptions
 }

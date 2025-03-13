@@ -5,6 +5,7 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  HStack,
   Input,
   Modal,
   ModalBody,
@@ -13,6 +14,15 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverFooter,
+  PopoverHeader,
+  PopoverTrigger,
+  Portal,
   Radio,
   RadioGroup,
   Text,
@@ -23,19 +33,25 @@ import {
 import { EventImportedNotificationOptions, ResultNotificationOptions, UpdateEmailRecipient } from '@pontozo/common'
 import { useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { useFetchEmailPreferencesMutation, useUpdateEmailPreferencesMutation } from 'src/api/hooks/emailRecipientHooks'
+import {
+  useFetchEmailPreferencesMutation,
+  useOptOutEmailPreferencesMutation,
+  useUpdateEmailPreferencesMutation,
+} from 'src/api/hooks/emailRecipientHooks'
 import { LoadingSpinner } from 'src/components/commons/LoadingSpinner'
 
 export const NotificationPreferencesModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { data: preferences, isLoading: fetchLoading, mutate: fetchPreferences } = useFetchEmailPreferencesMutation()
   const { isLoading: patchLoading, mutate: patchPreferences } = useUpdateEmailPreferencesMutation()
+  const { isLoading: optOutLoading, mutate: optOut } = useOptOutEmailPreferencesMutation()
   const toast = useToast()
   const {
     register,
     handleSubmit,
     setValue,
     watch,
+    reset,
     formState: { errors },
   } = useForm<UpdateEmailRecipient>({
     defaultValues: {
@@ -56,6 +72,7 @@ export const NotificationPreferencesModal = () => {
   const onModalOpened = () => {
     onOpen()
     fetchPreferences()
+    reset()
   }
 
   const onSubmit: SubmitHandler<UpdateEmailRecipient> = (data) => {
@@ -66,6 +83,19 @@ export const NotificationPreferencesModal = () => {
       },
       onSuccess: () => {
         toast({ title: 'A preferenciáid elmentettük.', status: 'success' })
+        onClose()
+      },
+    })
+  }
+
+  const onDeleteEmail = () => {
+    optOut(undefined, {
+      onError: (error) => {
+        console.error(error)
+        toast({ title: 'Nem sikerült a mentés!', description: error.message, status: 'error' })
+      },
+      onSuccess: () => {
+        toast({ title: 'Az e-mail címed töröltük.', status: 'success' })
         onClose()
       },
     })
@@ -149,19 +179,40 @@ export const NotificationPreferencesModal = () => {
             )}
           </ModalBody>
 
-          <ModalFooter>
-            <Button colorScheme="gray" mr={3} onClick={onClose}>
-              Mégse
-            </Button>
-            <Button
-              isDisabled={Object.keys(errors).length > 0}
-              type="submit"
-              colorScheme="brand"
-              isLoading={patchLoading}
-              onClick={handleSubmit(onSubmit)}
-            >
-              Mentés
-            </Button>
+          <ModalFooter justifyContent="space-between">
+            <Popover>
+              <PopoverTrigger>
+                <Button colorScheme="red">E-mail cím törlése</Button>
+              </PopoverTrigger>
+              <Portal>
+                <PopoverContent>
+                  <PopoverArrow />
+                  <PopoverHeader fontWeight="bold">Biztosan törlöd az e-mail címed?</PopoverHeader>
+                  <PopoverCloseButton />
+                  <PopoverBody>Ezzel leiratkozol az e-mail értesítésekről.</PopoverBody>
+                  <PopoverFooter>
+                    <Button isLoading={optOutLoading} colorScheme="red" onClick={onDeleteEmail}>
+                      E-mail cím törlése
+                    </Button>
+                  </PopoverFooter>
+                </PopoverContent>
+              </Portal>
+            </Popover>
+
+            <HStack>
+              <Button colorScheme="gray" onClick={onClose}>
+                Mégse
+              </Button>
+              <Button
+                isDisabled={Object.keys(errors).length > 0}
+                type="submit"
+                colorScheme="brand"
+                isLoading={patchLoading}
+                onClick={handleSubmit(onSubmit)}
+              >
+                Mentés
+              </Button>
+            </HStack>
           </ModalFooter>
         </ModalContent>
       </Modal>

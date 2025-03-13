@@ -8,6 +8,10 @@ export const useUpdateEmailPreferencesMutation = () => {
   )
 }
 
+export const useOptOutEmailPreferencesMutation = () => {
+  return useMutation<unknown, PontozoError>(async () => (await functionAxios.patch(`/emails/optOut`)).data)
+}
+
 export const useFetchEmailPreferencesMutation = () => {
   return useMutation<EmailRecipient, PontozoError>(async () => (await functionAxios.get(`/emails/mine`)).data)
 }
