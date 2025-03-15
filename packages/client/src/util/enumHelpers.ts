@@ -27,7 +27,7 @@ export const getRoleDescription: RoleDict = {
   [RatingRole.COACH]:
     'Ha az MTFSZ felvett téged az edzők listájára, ebben a szerepkörben a tanítványaid elmondása alapján akkor is értékelheted a versenyt, ha nem indultál el rajta.',
   [RatingRole.ORGANISER]:
-    'A versenyen rendezőként vettél részt, emiatt nagyobb rálátásod volt a versenyre, így több szempont alapján értékelheted.',
+    'A versenybíróság elnöke és a verseny ellenőrző bírói választhatják, akiknek nagyobb rálátásuk volt a versenyre, így több szempont alapján értékelhetnek.',
   [RatingRole.JURY]:
     'Az MTFSZ által kijelölt zsűrik választhatják, akiknek nagyobb rálátásuk volt a versenyre, így több szempont alapján értékelhetnek.',
 }

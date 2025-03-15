@@ -14,8 +14,7 @@ export const RoleListItem = ({ role, disabled = false, selected, onSelected }: P
   const { loggedInUser } = useAuthContext()
   const forbidden =
     (role === RatingRole.COACH && !loggedInUser?.roles.map((r) => r.toString()).includes(RatingRole.COACH)) ||
-    (role === RatingRole.JURY && !loggedInUser?.roles.map((r) => r.toString()).includes(RatingRole.JURY)) ||
-    role === RatingRole.ORGANISER // TODO remove
+    (role === RatingRole.JURY && !loggedInUser?.roles.map((r) => r.toString()).includes(RatingRole.JURY))
   const reallyDisabled = disabled || forbidden
 
   const onSelect = () => {
