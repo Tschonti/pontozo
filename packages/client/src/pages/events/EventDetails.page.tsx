@@ -137,7 +137,7 @@ export const EventDetailsPage = () => {
         Futamok
       </Heading>
       <Stack w="100%" direction={['column', 'column', 'row']} justify="space-between">
-        <Text>Válaszd ki, mely futamokon álltál rajthoz.</Text>
+        <Text>Válaszd ki, mely futamokon álltál rajthoz/mely futamokat szeretnéd értékelni.</Text>
         {stageIds.length === 0 && <Text color="red">Legalább egy futamot válassz ki!</Text>}
       </Stack>
       {event.stages
