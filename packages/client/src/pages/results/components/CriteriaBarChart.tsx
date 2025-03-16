@@ -3,7 +3,7 @@ import { EventWithResults, Rank } from '@pontozo/common'
 import { useEffect, useState } from 'react'
 import { Bar, BarChart, CartesianGrid, Legend, Text, Tooltip, XAxis, YAxis } from 'recharts'
 import { useResultTableContext } from 'src/api/contexts/useResultTableContext'
-import { chartColors } from 'src/util/chartColors'
+import { chartColors, yAxisTickFormatter } from 'src/util/chartHelpers'
 import { getScore } from 'src/util/resultItemHelpers'
 import { BarChartData } from '../types/BarChartData'
 
@@ -68,7 +68,7 @@ export const CriteriaBarChart = ({ event, selectedCategoryId }: Props) => {
             </Text>
           )}
         />
-        <YAxis type="number" domain={[0, 3]} tickCount={4} />
+        <YAxis type="number" width={100} tickFormatter={yAxisTickFormatter} domain={[0, 3]} tickCount={4} />
         {!isMobile && <Tooltip cursor={{ fillOpacity: 0.4 }} />}
         <Legend />
         <Bar name="Teljes verseny" dataKey="event" fill={chartColors[0]} />

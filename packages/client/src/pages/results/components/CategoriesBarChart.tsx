@@ -2,7 +2,7 @@ import { Box } from '@chakra-ui/react'
 import { EventWithResults, RatingResultWithJoins, StageWithResults } from '@pontozo/common'
 import { Bar, BarChart, CartesianGrid, Legend, Text, Tooltip, XAxis, YAxis } from 'recharts'
 import { useResultTableContext } from 'src/api/contexts/useResultTableContext'
-import { chartColors } from 'src/util/chartColors'
+import { chartColors, yAxisTickFormatter } from 'src/util/chartHelpers'
 import { getScore } from 'src/util/resultItemHelpers'
 import { BarChartData } from '../types/BarChartData'
 
@@ -81,7 +81,7 @@ export const CategoriesBarChart = ({ event, setSelectedCategoryId }: Props) => {
             </Text>
           )}
         />
-        <YAxis type="number" domain={[0, 3]} tickCount={4} />
+        <YAxis width={100} tickFormatter={yAxisTickFormatter} type="number" domain={[0, 3]} tickCount={4} />
         <Legend />
         {!isMobile && <Tooltip cursor={{ fillOpacity: 0.4 }} />}
         <Bar name="Teljes verseny" dataKey="event" fill={chartColors[0]} onClick={(e) => onChartClick(e.categoryId)} />
