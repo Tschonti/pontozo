@@ -30,6 +30,8 @@ export interface EventWithRating {
         stages: DbStage[]
       })
     | null
+  submittedRatingCount: number
+  editingNow: number
 }
 
 export enum Rank {

@@ -71,7 +71,7 @@ export const EventDetailsPage = () => {
       />
     )
   }
-  const { event, userRating } = dbQuery.data
+  const { event, userRating, editingNow, submittedRatingCount } = dbQuery.data
 
   return (
     <VStack alignItems="flex-start" spacing={3}>
@@ -91,6 +91,19 @@ export const EventDetailsPage = () => {
         <Text>
           <b>Értékelési eredmények várható publikálása:</b> {getRatingResultPublishedDate(new Date(event.endDate ?? event.startDate))}
         </Text>
+        {event.state === EventState.RATEABLE && submittedRatingCount === 0 && (
+          <Text>Még senki nem értékelte ezt a versenyt, legyél te az első!</Text>
+        )}
+        {event.state === EventState.RATEABLE && submittedRatingCount > 0 && (
+          <Text>
+            Eddig <b>{submittedRatingCount}</b> felhasználó értékelte a versenyt{' '}
+            {editingNow > 0 && (
+              <span>
+                , <b>{editingNow}</b> épp most értékel
+              </span>
+            )}
+          </Text>
+        )}
       </VStack>
       <HStack flexWrap="wrap">
         {event.state === EventState.RESULTS_READY && (
