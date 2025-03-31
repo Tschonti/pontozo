@@ -3,6 +3,10 @@ variable "FA_ADMINS" {
   sensitive = true
 }
 
+variable "ACS_EMAIL_SENDER" {
+  type = string
+}
+
 variable "FA_FUNCTIONS_URL" {
   type = string
 }
@@ -64,6 +68,7 @@ resource "azurerm_windows_function_app" "function-app" {
 
   app_settings = {
     "ACS_CONNECTION_STRING"    = azurerm_communication_service.acs.primary_connection_string
+    "ACS_EMAIL_SENDER"         = var.ACS_EMAIL_SENDER
     "ADMINS"                   = var.FA_ADMINS
     "APIM_HOST"                = azurerm_api_management.apim.gateway_url
     "APIM_KEY"                 = azurerm_api_management_subscription.backend-sub.primary_key

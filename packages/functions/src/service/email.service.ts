@@ -43,7 +43,7 @@ const sendEmail = async (recipient: EmailRecipient, subject: string, content: st
   const message: EmailMessage = {
     senderAddress: ACS_EMAIL_SENDER,
     content: {
-      subject: `[Pontoz-O] ${subject}`,
+      subject,
       html: content,
     },
     recipients: {
