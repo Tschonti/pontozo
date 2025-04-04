@@ -39,3 +39,21 @@ resource "azurerm_eventgrid_system_topic_event_subscription" "acs-email-events" 
     preferred_batch_size_in_kilobytes = 64
   }
 }
+
+resource "azurerm_monitor_diagnostic_setting" "acs-diagnostic-setting" {
+  name                       = "pontozo-acs-email-diagnostics"
+  target_resource_id         = azurerm_communication_service.acs.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.law.id
+
+  enabled_log {
+    category = "EmailSendMailOperational"
+  }
+
+  enabled_log {
+    category = "EmailStatusUpdateOperational"
+  }
+
+  enabled_log {
+    category = "EmailUserEngagementOperational"
+  }
+}
