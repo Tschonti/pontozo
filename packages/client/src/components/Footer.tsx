@@ -45,7 +45,7 @@ export const Footer: FC = () => {
             <ColorfulExternalLink url="https://github.com/Tschonti" hoverColor="brand.500">
               <FaGlobe size={25} />
             </ColorfulExternalLink>
-            <ColorfulExternalLink url="mailto:feketesamu@gmail.com" hoverColor="brand.500">
+            <ColorfulExternalLink url="mailto:pontozo@mtfsz.hu" hoverColor="brand.500">
               <FaEnvelope size={25} />
             </ColorfulExternalLink>
             <ColorfulExternalLink url="https://www.linkedin.com/in/samuel-fekete/" hoverColor="brand.500">

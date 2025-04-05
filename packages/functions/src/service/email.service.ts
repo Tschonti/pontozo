@@ -42,6 +42,7 @@ const sendEmail = async (recipient: EmailRecipient, subject: string, content: st
   if (!recipient.email) return
   const message: EmailMessage = {
     senderAddress: ACS_EMAIL_SENDER,
+    replyTo: [{ address: 'pontozo@mtfsz.hu', displayName: 'Pontoz-O Support' }],
     content: {
       subject,
       html: content,
