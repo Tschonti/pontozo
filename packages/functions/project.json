@@ -18,7 +18,9 @@
     "copy-templates": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["cp -r ./packages/functions/src/templates ./packages/functions/dist/packages/functions/src/templates"],
+        "commands": [
+          "cp -r ./packages/functions/src/templates ./packages/functions/dist/packages/functions/src/templates && cp -r src/functions/util/google8bc4d33afc7bc848.html dist/packages/functions/src/functions/util/"
+        ],
         "parallel": false
       }
     },
