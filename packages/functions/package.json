@@ -7,7 +7,7 @@
   },
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "tsc -p tsconfig.build.json && cp -r src/templates dist/packages/functions/src/templates",
+    "build": "tsc -p tsconfig.build.json && cp -r src/templates dist/packages/functions/src/templates && cp -r src/functions/util/google8bc4d33afc7bc848.html dist/packages/functions/src/functions/util/",
     "watch": "tsc -w",
     "prestart": "npm run build",
     "start": "func start",
