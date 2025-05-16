@@ -1,9 +1,9 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
-import { getRedisClient } from '../../redis/redisClient'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import UserRoleAssignment from '../../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { handleException } from '../../util/handleException'
+import { getRedisClient } from '../../util/redisClient'
 import { validateId } from '../../util/validation'
 
 export const deleteURA = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {

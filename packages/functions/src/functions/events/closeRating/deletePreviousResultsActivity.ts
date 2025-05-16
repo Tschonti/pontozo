@@ -3,10 +3,10 @@ import { AlertLevel } from '@pontozo/common'
 import * as df from 'durable-functions'
 import { ActivityHandler } from 'durable-functions'
 import { DataSource, In } from 'typeorm'
-import { getRedisClient } from '../../../redis/redisClient'
 import { newAlertItem } from '../../../service/alert.service'
 import { DBConfig } from '../../../typeorm/configOptions'
 import { RatingResult } from '../../../typeorm/entities/RatingResult'
+import { getRedisClient } from '../../../util/redisClient'
 
 export const deletePreviousResultsActivityName = 'deletePreviousResultsActivity'
 

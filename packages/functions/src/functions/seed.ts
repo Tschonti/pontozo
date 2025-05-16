@@ -1,6 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { UserRole } from '@pontozo/common'
-import { getRedisClient } from '../redis/redisClient'
 import { getUserFromHeaderAndAssertAdmin } from '../service/auth.service'
 import Category from '../typeorm/entities/Category'
 import Criterion from '../typeorm/entities/Criterion'
@@ -9,6 +8,7 @@ import UserRoleAssignment from '../typeorm/entities/UserRoleAssignment'
 import { getAdminDataSource } from '../typeorm/getConfig'
 import { ADMINS } from '../util/env'
 import { handleException } from '../util/handleException'
+import { getRedisClient } from '../util/redisClient'
 
 const terep = [
   {

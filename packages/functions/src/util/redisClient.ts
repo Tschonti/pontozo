@@ -1,6 +1,6 @@
 import { InvocationContext } from '@azure/functions'
 import { createClient } from 'redis'
-import { ENV, REDIS_HOST, REDIS_PORT, REDIS_PWD } from '../util/env'
+import { ENV, REDIS_HOST, REDIS_PORT, REDIS_PWD } from './env'
 
 export const getRedisClient = async (ctx: InvocationContext) => {
   const client = createClient({

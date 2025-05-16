@@ -1,13 +1,13 @@
 import { app, HttpRequest, InvocationContext } from '@azure/functions'
 import { EventState, EventWithResults, PontozoException } from '@pontozo/common'
 import { IsNull } from 'typeorm'
-import { getRedisClient } from '../../redis/redisClient'
 import Event from '../../typeorm/entities/Event'
 import { RatingResult } from '../../typeorm/entities/RatingResult'
 import { getAppDataSource } from '../../typeorm/getConfig'
 import { handleException } from '../../util/handleException'
 import { parseRatingResults } from '../../util/parseRatingResults'
 import { PontozoResponse } from '../../util/pontozoResponse'
+import { getRedisClient } from '../../util/redisClient'
 import { validateId } from '../../util/validation'
 
 export const getOneResult = async (req: HttpRequest, context: InvocationContext): Promise<PontozoResponse<EventWithResults>> => {

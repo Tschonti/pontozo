@@ -6,3 +6,5 @@ test
 node_modules/@types/
 node_modules/azure-functions-core-tools/
 node_modules/typescript/
+docker-compose.yml
+src/

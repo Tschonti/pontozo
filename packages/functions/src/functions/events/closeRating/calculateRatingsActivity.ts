@@ -3,7 +3,6 @@ import { AlertLevel, EventState, RatingStatus } from '@pontozo/common'
 import * as df from 'durable-functions'
 import { ActivityHandler } from 'durable-functions'
 import { DataSource, IsNull } from 'typeorm'
-import { getRedisClient } from '../../../redis/redisClient'
 import { newAlertItem } from '../../../service/alert.service'
 import { DBConfig } from '../../../typeorm/configOptions'
 import Event from '../../../typeorm/entities/Event'
@@ -17,6 +16,7 @@ import {
   extractStageResults,
   mapToRatingResults,
 } from '../../../util/ratingAverage'
+import { getRedisClient } from '../../../util/redisClient'
 import { CalculateRatingsActivityOutput } from './closeRatingOrchestrator'
 
 export const calculateAvgRatingActivityName = 'calculateAvgRatingActivity'

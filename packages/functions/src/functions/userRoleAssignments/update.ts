@@ -2,11 +2,11 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/fu
 import { PontozoException, UpdateURA } from '@pontozo/common'
 import { plainToClass } from 'class-transformer'
 import { QueryFailedError } from 'typeorm'
-import { getRedisClient } from '../../redis/redisClient'
 import { getUserFromHeaderAndAssertAdmin } from '../../service/auth.service'
 import { getUserById } from '../../service/mtfsz.service'
 import UserRoleAssignment from '../../typeorm/entities/UserRoleAssignment'
 import { getAppDataSource } from '../../typeorm/getConfig'
+import { getRedisClient } from '../../util/redisClient'
 import { validateBody, validateId, validateWithWhitelist } from '../../util/validation'
 
 export const updateURA = async (req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
